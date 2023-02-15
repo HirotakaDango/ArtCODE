@@ -1,3 +1,4 @@
+<div style="margin-right: 10px; margin-left: 10px;">
 <h1>ArtCODE</h1>
 
 <h2>Screenshots</h2>
@@ -5,6 +6,9 @@
 
 <h4>This is simple image sharing and upload using PHP without any database. Yet this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
 
-<h4>for "manager/password/index.php" you can change the password | password = "admin"</h4>
+<h4>For admin panel to manage file, you can go to "manager/password/index.php". You can change the password in "manager/password/index.php" to access management.php = "admin"</h4>
 
 <h4you can make it as PWA</h4>
+
+<h4 style="font-weight: bold;">Note, you need to install sqlite database exrension to run this file</h4>
+</div>
