@@ -50,7 +50,7 @@
         </div>
       </nav>
     </center>
-    <h4 class="fw-bold fs-5" style="margin-left: 10px;">Your Artworks: <?php echo $count; ?></h4>
+    <h4 class="fw-bold text-secondary fs-5" style="margin-left: 10px;"><i class="bi bi-images"></i> <?php echo $count; ?></h4>
     <div class="images">
       <?php while ($image = $result->fetchArray()): ?>
         <div class="image-container">
