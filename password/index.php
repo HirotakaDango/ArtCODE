@@ -38,7 +38,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
         </style>
         </head>
         <body>
-            <center><h1 style="color: dark; margin-top: 50px; font-family: sans-serif;">MY IDE</h1></center>
+            <center><h1 style="color: dark; margin-top: 50px; font-family: sans-serif;">FILE MANAGER</h1></center>
             <form action="' . $_SERVER['PHP_SELF'] . '" method="get">
                 <input type="password" name="p" placeholder="Enter password">
                 <input type="submit" value="Submit">
