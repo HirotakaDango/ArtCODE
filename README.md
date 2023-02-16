@@ -4,7 +4,7 @@
 <h2>Screenshots</h2>
 <center><img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example.png"></center>
 
-<h4>This is simple image sharing and upload using PHP without any database. Yet this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
+<h4>This is simple image sharing and upload using PHP with sqlite database. Yet this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
 
 <h4>For admin panel to manage file, you can go to "manager/password/index.php". You can change the password in "manager/password/index.php" to access management.php = "admin"</h4>
 
