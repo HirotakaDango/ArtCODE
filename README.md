@@ -11,4 +11,15 @@
 <h4>you can make it as PWA</h4>
 
 <h4 style="font-weight: bold;">Note, you need to install sqlite database extension to run the sqlite database!</h4>
+
+<div style="margin-right: 10px; margin-left: 10px;">
+<h4>Features:</h4>
+<br>
+<ul>
+<li>user register and login to upload image, can't upload if not register or login</li>
+<li>user can delete their post</li>
+<li>user can download image from download button</li>
+<li>generate thumbnail to save bandwidth</li>
+</ul>
+</div>
 </div>
