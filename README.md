@@ -10,5 +10,5 @@
 
 <h4you can make it as PWA</h4>
 
-<h4 style="font-weight: bold;">Note, you need to install sqlite database exrension to run this file</h4>
+<h4 style="font-weight: bold;">Note, you need to install sqlite database extension to run the sqlite database!</h4>
 </div>
