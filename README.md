@@ -8,7 +8,7 @@
 
 <h4>For admin panel to manage file, you can go to "manager/password/index.php". You can change the password in "manager/password/index.php" to access management.php = "admin"</h4>
 
-<h4you can make it as PWA</h4>
+<h4>you can make it as PWA</h4>
 
 <h4 style="font-weight: bold;">Note, you need to install sqlite database extension to run the sqlite database!</h4>
 </div>
