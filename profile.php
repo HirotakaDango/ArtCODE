@@ -29,7 +29,7 @@
       <nav class="navbar fixed-top bg-light shadow" style="padding-bottom: 7px; padding-top: 7px;">
         <div class="bb1 container">
           <a class="nav-link" href=""><i class="bi bi-discord"></i></a>
-          <a class="nav-link px-2 text-secondary" href="imgupload.php"><i class="bi bi-cloud-arrow-up-fill"></i></i></a>
+          <a class="nav-link px-2 text-secondary" href="imgupload.php"><i class="bi bi-cloud-arrow-up-fill"></i></a>
           <h1 style="color: gray; margin-top: 7px;" class="nav-link px-2 text-secondary"><a class="nav-link border-bottom" href="index.php">ArtCODE LITE</a></h1>
           <a class="nav-link px-2 text-secondary" href="profile.php"><i class="bi bi-person-circle"></i></a>
           <div class="dropdown">
