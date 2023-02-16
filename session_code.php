@@ -19,6 +19,9 @@
     $result = $stmt->execute();
     $user = $result->fetchArray();
     if ($user) {
+      $session_id = session_id();
+      setcookie('session_id', $session_id, time() + 604800, '/');
+      setcookie('username', $username, time() + 604800, '/');
       $_SESSION['username'] = $username;
       header("Location: index.php");
       exit;
@@ -42,9 +45,20 @@
       $stmt->bindValue(':username', $username);
       $stmt->bindValue(':password', $password);
       $stmt->execute();
+      $session_id = session_id();
+      setcookie('session_id', $session_id, time() + 604800, '/');
+      setcookie('username', $username, time() + 604800, '/');
       $_SESSION['username'] = $username;
       header("Location: index.php");
       exit;
+    }
+  } else {
+    // Check if the session ID cookie exists and restore the session if it does
+    if (isset($_COOKIE['session_id'])) {
+      session_id($_COOKIE['session_id']);
+    }
+    if (isset($_COOKIE['username'])) {
+      $_SESSION['username'] = $_COOKIE['username'];
     }
   }
 ?>
