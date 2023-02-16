@@ -13,6 +13,12 @@
   $stmt = $db->prepare("SELECT * FROM images WHERE username = :username ORDER BY id DESC");
   $stmt->bindValue(':username', $username);
   $result = $stmt->execute();
+
+  // Count the number of images uploaded by the current user
+  $count = 0;
+  while ($image = $result->fetchArray()) {
+    $count++;
+  }
 ?>
 
 <html lang="en">
@@ -28,7 +34,7 @@
     <center style="margin-bottom: 60px; font-weight: 800; color: gray;">
       <nav class="navbar fixed-top bg-light shadow" style="padding-bottom: 7px; padding-top: 7px;">
         <div class="bb1 container">
-          <a class="nav-link" href=""><i class="bi bi-discord"></i></a>
+          <a class="nav-link" href="https://discord.gg/KhgFJV2N6J"><i class="bi bi-discord"></i></a>
           <a class="nav-link px-2 text-secondary" href="imgupload.php"><i class="bi bi-cloud-arrow-up-fill"></i></a>
           <h1 style="color: gray; margin-top: 7px;" class="nav-link px-2 text-secondary"><a class="nav-link border-bottom" href="index.php">ArtCODE LITE</a></h1>
           <a class="nav-link px-2 text-secondary" href="profile.php"><i class="bi bi-person-circle"></i></a>
@@ -44,7 +50,7 @@
         </div>
       </nav>
     </center>
-
+    <h4 class="fw-bold fs-5" style="margin-left: 10px;">Your Artworks: <?php echo $count; ?></h4>
     <div class="images">
       <?php while ($image = $result->fetchArray()): ?>
         <div class="image-container">
