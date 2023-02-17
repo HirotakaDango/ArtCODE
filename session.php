@@ -34,8 +34,8 @@
         <div class="modal-body p-4 pt-0">
           <form class="" action="session_code.php" method="post">
             <div class="form-floating mb-3">
-              <input name="username" type="username" class="form-control rounded-3" id="floatingInput" placeholder="yourname">
-              <label for="floatingInput">Username</label>
+              <input name="username" type="email" class="form-control rounded-3" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating mb-3">
               <input name="password" type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password">
@@ -52,8 +52,8 @@
         <div class="modal-body p-4 pt-0">
           <form class="" action="session_code.php" method="post">
             <div class="form-floating mb-3">
-              <input name="username" type="username" class="form-control rounded-3" id="floatingInput" placeholder="yourname">
-              <label for="floatingInput">Username</label>
+              <input name="username" type="email" class="form-control rounded-3" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating mb-3">
               <input name="password" type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password">
