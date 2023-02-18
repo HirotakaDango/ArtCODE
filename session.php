@@ -13,7 +13,8 @@
       <div id="login-form">
         <br>
         <center><h1><i class="bi bi-person-circle"></i></h1></center>
-        <center><h2 class="mb-5 fw-bold">WELCOME BACK</h2></center>
+        <center><h2 class="fw-bold">WELCOME BACK!</h2></center>
+        <center><h2 class="mb-5 fw-bold">LOGIN TO CONTINUE</h2></center>
         <div class="modal-body p-4 pt-0">
           <form class="" action="session_code.php" method="post">
             <div class="form-floating mb-3">
