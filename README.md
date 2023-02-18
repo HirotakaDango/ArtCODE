@@ -3,12 +3,12 @@
 
 <h2>Screenshots</h2>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); grid-gap: 2px; justify-content: center; margin-right: 3px; margin-left: 3px;">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693022846.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693038531.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693062565.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693077592.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693091923.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693113004.png">
+<img style="width: 100%; height: auto; object-fit: cover; height: 200px;" src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693022846.png">
+<img style="width: 100%; height: auto; object-fit: cover; height: 200px;" src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693038531.png">
+<img style="width: 100%; height: auto; object-fit: cover; height: 200px;" src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693062565.png">
+<img style="width: 100%; height: auto; object-fit: cover; height: 200px;" src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693077592.png">
+<img style="width: 100%; height: auto; object-fit: cover; height: 200px;" src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693091923.png">
+<img style="width: 100%; height: auto; object-fit: cover; height: 200px;" src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693113004.png">
 </div>
 
 <h4>This is simple image sharing and upload using PHP with sqlite database. In this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
