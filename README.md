@@ -3,14 +3,10 @@
 
 <h2>Screenshots</h2>
 
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693022846.png">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693038531.png">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693062565.png">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693077592.png">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693091923.png">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693113004.png">
-</div>
+| Column 1 | Column 2 | Column 3 |
+| -------- | -------- | -------- |
+| [![Image 1](https://example.com/image1.png)](https://example.com) | [![Image 2](https://example.com/image2.png)](https://example.com) | [![Image 3](https://example.com/image3.png)](https://example.com) |
+| [![Image 4](https://example.com/image4.png)](https://example.com) | [![Image 5](https://example.com/image5.png)](https://example.com) | [![Image 6](https://example.com/image6.png)](https://example.com) |
 
 <h4>This is simple image sharing and upload using PHP with sqlite database. In this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
 
