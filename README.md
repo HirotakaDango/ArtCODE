@@ -2,7 +2,12 @@
 <h1>ArtCODE</h1>
 
 <h2>Screenshots</h2>
-<center><img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example.png"></center>
+<center><img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693022846.png"></center>
+<center><img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693038531.png"></center>
+<center><img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693062565.png"></center>
+<center><img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693077592.png"></center>
+<center><img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693091923.png"></center>
+<center><img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693113004.png"></center>
 
 <h4>This is simple image sharing and upload using PHP with sqlite database. In this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
 
