@@ -2,13 +2,14 @@
 <h1>ArtCODE</h1>
 
 <h2>Screenshots</h2>
-<div>
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693022846.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693038531.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693062565.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693077592.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693091923.png">
-<img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693113004.png">
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693022846.png">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693038531.png">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693062565.png">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693077592.png">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693091923.png">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/chrome_screenshot_1676693113004.png">
 </div>
 
 <h4>This is simple image sharing and upload using PHP with sqlite database. In this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
