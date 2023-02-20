@@ -4,7 +4,7 @@
 <h2>Screenshots</h2>
 
 |  |  |  |
-| -------- | -------- | --- |
+|  |  |  |
 | [![Image 1](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/1.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/1.png) | [![Image 2](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/2.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/2.png) | [![Image 3](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/3.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/3.png) |
 | [![Image 4](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/4.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/4.png) | [![Image 5](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/5.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/5.png) | [![Image 6](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/6.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/6.png) |
 
