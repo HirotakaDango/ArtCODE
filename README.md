@@ -24,6 +24,7 @@
 <li>user can delete their post</li>
 <li>user can download image from download button</li>
 <li>generate thumbnail to save bandwidth</li>
+<li>add image to your favorite</li>
 </ul>
 </div>
 </div>
