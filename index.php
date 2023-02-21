@@ -29,7 +29,7 @@
     <center style="margin-bottom: 60px; font-weight: 800; color: gray;">
       <nav class="navbar fixed-top bg-light shadow" style="padding-bottom: 7px; padding-top: 7px;">
         <div class="bb1 container">
-          <a class="nav-link" href=""><i class="bi bi-discord"></i></a>
+          <a class="nav-link" href="https://discord.gg/KhgFJV2N6J"><i class="bi bi-discord"></i></a>
           <a class="nav-link px-2 text-secondary" href="imgupload.php"><i class="bi bi-cloud-arrow-up-fill"></i></a>
           <h1 style="color: gray; margin-top: 7px;" class="nav-link px-2 text-secondary"><a class="nav-link border-bottom" href="index.php">ArtCODE LITE</a></h1>
           <a class="nav-link px-2 text-secondary" href="favorite.php"><i class="bi bi-heart-fill"></i></a>
@@ -44,7 +44,7 @@
           </div>
         </div>
       </nav>
-    </center>
+    </center> 
     <div class="images">
       <?php while ($image = $result->fetchArray()): ?>
         <div class="image-container">
@@ -58,12 +58,12 @@
           ?>
             <form action="favorite.php" method="POST">
               <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
-              <button style="margin-top: -38px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger" name="unfavorite">Unfavorite</button>
+              <button style="margin-top: -38px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger rounded-5 fw-bold" name="unfavorite">Unfavorite</button>
             </form>
           <?php } else { ?>
             <form action="favorite.php" method="POST">
               <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
-              <button style="margin-top: -38px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-secondary" name="favorite"><i class="bi bi-heart"></i></button>
+              <button style="margin-top: -38px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger rounded-5 fw-bold" name="favorite"><i class="bi bi-heart"></i></button>
             </form>
           <?php } ?>
           </div>
@@ -88,6 +88,11 @@
 
 
     <style>
+    body nav.dark-mode {
+      background-color: #333;
+      color: #f0f0f0;
+    } 
+    
     .image-container {
       margin-bottom: -16px;  
     }
@@ -167,6 +172,27 @@
       transition: 0.3s;
     } 
     </style>
+<script>
+    const toggleSwitch = document.querySelector('#dark-mode-toggle');
+    const body = document.querySelector('body');
+    
+    // Set initial state of toggle based on user preference
+    if (localStorage.getItem('dark-mode') === 'enabled') {
+      toggleSwitch.checked = true;
+      body.classList.add('dark-mode');
+    }
+    
+    // Listen for toggle change events
+    toggleSwitch.addEventListener('change', () => {
+      if (toggleSwitch.checked) {
+        localStorage.setItem('dark-mode', 'enabled');
+        body.classList.add('dark-mode');
+      } else {
+        localStorage.setItem('dark-mode', null);
+        body.classList.remove('dark-mode');
+      }
+    });
+</script>
 <script>
 // Get the modal
 var modal = document.getElementById("myModal");
