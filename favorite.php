@@ -67,24 +67,51 @@
         </div>
       </nav>
     </center>
-    <div class="container">
-      <div class="row">
+   <style>
+      .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-gap: 20px;
+      }
+
+      .card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        width: 100%;
+        height: auto;
+      }
+
+      .card a {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      }
+      
+      .card img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      }
+    </style>
+    <div class="container-fluid">
+      <h1 class="text-center mt-3 text-secondary fw-bold">MY FAVORITES</h1>
+      <div class="card-container">
         <?php while ($image = $result->fetchArray()): ?>
-          <div class="col-md-3 mb-3">
             <div class="card">
               <a href="images/<?php echo $image['filename']; ?>"><img class="card-img-top" src="thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['filename']; ?>"></a>
               <div class="card-body">
                 <form method="POST">
                   <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
-                  <button type="submit" class="btn btn-danger" name="unfavorite"><i class="bi bi-heart-fill"></i> Unfavorite</button>
+                  <button type="submit" class="form-control bg-danger fw-bold text-white" name="unfavorite"><i class="bi bi-heart-fill"></i> Unfavorite</button>
                 </form>
               </div>
             </div>
-          </div>
-        <?php endwhile; ?>
+        <?php endwhile; ?> 
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
-  </body
+  </body>
 </html>
