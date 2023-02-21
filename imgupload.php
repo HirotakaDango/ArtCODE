@@ -35,99 +35,51 @@
           </div>
         </div>
       </nav>
-    </center>
+    </center> 
     <section class="gallery-links">
-        <div class="wrapper">
-            <h2 style="font-family: sans-serif; float: center; color: gray; font-weight: 800;">UPLOAD IMAGE</h2>
-
-            <img id="file-ip-1-preview" style="height: 400px; border-radius: 15px; width: 95%; margin-bottom: 15px; margin-top: 20px;">
-            <div class="gallery-upload">
-                <form action="upload.php" method="post" enctype="multipart/form-data">
-                       
-                  <?php if (isset($_GET['error'])): ?>
-                        <p><?php echo $_GET['error']; ?></p>
-                  <?php endif ?>
-                    </br>
-                    <div class="upload-btn-wrapper">
-                        <label for="file-ip-1" hidden>upload</label>
-                        <button class="btn1">browse</button>
-                        <input type="file" name="image" type="file" id="file-ip-1" accept="image/*" onchange="showPreview(event);">
-                    </div>
-                    <div class="upload-btn-wrapper">
-                        <input type="submit" 
-                               name="submit" 
-                               value="upload" 
-                               class="btn1">  
-                    </div>
-                </form>
-            </div>
+      <center>
+        <div class="container">
+          <br>
+          <h2 style="font-family: sans-serif; float: center; color: gray; font-weight: 800;">UPLOAD IMAGE</h2>
+          <img id="file-ip-1-preview" style="height: 350px; border-radius: 8px; width: 100%; margin-bottom: 15px; margin-top: 20px;">
+          <div class="gallery-upload">
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+              <input class="form-control" type="file" name="image" type="file" id="file-ip-1" accept="image/*" onchange="showPreview(event);">
+              <input class="btn btn-primary fw-bold w-100 mt-3" type="submit" name="submit" value="upload">
+            </form>
+          </div>
         </div>
+      </center>
     </section>
 <style>
-input[type=text] {
-  padding:10px;
-  border: 2px solid #eee;
-  width: 90%;
-  margin: auto;
-  margin-bottom: 10px;
-  border-radius: 15px;
-}
-
-.btn1 {
-  padding: 10px;
-  margin: 10px; 
-  border: 8px solid #eee;
-  border-radius: 15px;
-  color: gray;
-  font-weight: 700;
-  padding: 8px 20px;
-}
-
-.gallery-links {
-    text-align: center;
-}
-
-.gallery-upload {
-    text-align: center;
-}
-
 img {
     text-align: center;
     object-fit: cover;
     margin: auto;
     border: 4px solid #e6e5e3;
 }
-
-.center {
-    text-align: center;
-}
-
-.btn {
-    border: 2px solid #eee;
-    color: gray;
-    background-color: #eee;
-    padding: 8px 20px;
-    border-radius: 15px;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.upload-btn-wrapper input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-}
-
-.upload-btn-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-}
-
 </style>
-
+<script>
+    const toggleSwitch = document.querySelector('#dark-mode-toggle');
+    const body = document.querySelector('body');
+    
+    // Set initial state of toggle based on user preference
+    if (localStorage.getItem('dark-mode') === 'enabled') {
+      toggleSwitch.checked = true;
+      body.classList.add('dark-mode');
+    }
+    
+    // Listen for toggle change events
+    toggleSwitch.addEventListener('change', () => {
+      if (toggleSwitch.checked) {
+        localStorage.setItem('dark-mode', 'enabled');
+        body.classList.add('dark-mode');
+      } else {
+        localStorage.setItem('dark-mode', null);
+        body.classList.remove('dark-mode');
+      }
+    });
+</script>
 <script>
           function showPreview(event){
   if(event.target.files.length > 0){
