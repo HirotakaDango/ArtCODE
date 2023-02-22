@@ -76,11 +76,11 @@
       <a class="dirdown" id="downloadBtn" href="" download>
         <button type="button" class="btn btn-secondary mt-2 download-btn"><i class="bi bi-cloud-arrow-down-fill"></i> Download</button>
       </a>
-      <span class="close">&times;</span>
+      <span class="close btn btn-secondary mt-2"><i class="bi bi-x"></i></span>
       <center>
         <div style="width: 80%; margin-bottom: -8px;">
-          <button class="btn btn-secondary float-start" id="prevBtn"><i class="bi bi-arrow-left-circle-fill"></i></button> 
-          <button class="btn btn-secondary float-end" id="nextBtn"><i class="bi bi-arrow-right-circle-fill"></i></button>
+          <button class="btn btn-secondary mt-2 next" id="prevBtn"><i class="bi bi-arrow-left-circle-fill"></i></button> 
+          <button class="btn btn-secondary mt-2 previous" id="nextBtn"><i class="bi bi-arrow-right-circle-fill"></i></button>
         </div>
       </center>
       <center><img class="modal-content" id="img01"/></center>
@@ -140,19 +140,19 @@
     }
 
     .modal-content {
-      max-width: 95%;
+      max-width: 99%;
       max-height: auto;
-      margin-top: 50px
     }
 
     .close {
       position: absolute;
       top: 4px;
-      right: 35px;
+      right: 95px;
       color: gray;
-      font-size: 40px;
+      font-size: 24px;
       font-weight: bold;
       transition: 0.3s;
+      color: white;
     }
 
     .close:hover,
@@ -165,9 +165,29 @@
     .dirdown {
       position: absolute;
       top: 4px;
-      left: 35px;
+      left: 95px;
       color: #f1f1f1;
       font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+    } 
+    
+    .next {
+      position: absolute;
+      top: 4px;
+      left: 35px;
+      color: #f1f1f1;
+      font-size: 24px;
+      font-weight: bold;
+      transition: 0.3s;
+    } 
+    
+    .previous {
+      position: absolute;
+      top: 4px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 24px;
       font-weight: bold;
       transition: 0.3s;
     } 
