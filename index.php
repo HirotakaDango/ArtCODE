@@ -74,7 +74,7 @@
     <!-- Modal -->
     <div class="modal mt-5" id="myModal">
       <a class="dirdown" id="downloadBtn" href="" download>
-        <button type="button" class="btn btn-secondary mt-2 download-btn"><i class="bi bi-cloud-arrow-down-fill"></i> Download</button>
+        <button type="button" class="btn btn-secondary mt-2 download-btn fw-bold"><i class="bi bi-cloud-arrow-down-fill"></i> Download</button>
       </a>
       <span class="close btn btn-secondary mt-2"><i class="bi bi-x-circle-fill"></i></span>
       <center>
@@ -147,7 +147,7 @@
     .close {
       position: absolute;
       top: 4px;
-      right: 95px;
+      right: 75px;
       color: gray;
       font-size: 24px;
       font-weight: bold;
@@ -165,7 +165,7 @@
     .dirdown {
       position: absolute;
       top: 4px;
-      left: 95px;
+      left: 75px;
       color: #f1f1f1;
       font-size: 40px;
       font-weight: bold;
@@ -175,7 +175,7 @@
     .next {
       position: absolute;
       top: 4px;
-      left: 35px;
+      left: 15px;
       color: #f1f1f1;
       font-size: 24px;
       font-weight: bold;
@@ -185,7 +185,7 @@
     .previous {
       position: absolute;
       top: 4px;
-      right: 35px;
+      right: 15px;
       color: #f1f1f1;
       font-size: 24px;
       font-weight: bold;
