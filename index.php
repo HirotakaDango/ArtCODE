@@ -76,7 +76,7 @@
       <a class="dirdown" id="downloadBtn" href="" download>
         <button type="button" class="btn btn-secondary mt-2 download-btn"><i class="bi bi-cloud-arrow-down-fill"></i> Download</button>
       </a>
-      <span class="close btn btn-secondary mt-2"><i class="bi bi-x"></i></span>
+      <span class="close btn btn-secondary mt-2"><i class="bi bi-x-circle-fill"></i></span>
       <center>
         <div style="width: 80%; margin-bottom: -8px;">
           <button class="btn btn-secondary mt-2 next" id="prevBtn"><i class="bi bi-arrow-left-circle-fill"></i></button> 
