@@ -20,6 +20,8 @@
 <li>user can download image from download button</li>
 <li>generate thumbnail to save bandwidth</li>
 <li>add image to your favorite</li>
+<li>change password</li>
+<li>forum chat</li>
 </ul>
 </div>
 </div>
