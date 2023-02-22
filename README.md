@@ -1,12 +1,7 @@
 <div style="margin-right: 10px; margin-left: 10px;">
 <h1>ArtCODE</h1>
 
-<h2>Screenshots</h2>
-
-|  |  |  |
-| --- | --- | --- |
-| [![Image 1](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/1.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/1.png) | [![Image 2](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/2.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/2.png) | [![Image 3](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/3.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/3.png) |
-| [![Image 4](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/4.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/4.png) | [![Image 5](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/5.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/5.png) | [![Image 6](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/6.png)](https://raw.githubusercontent.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/main/example/6.png) |
+<a style="font-size: 40px; font-weight: 900;" href="https://github.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/tree/main/example">Screenshots</a>
 
 <h4>This is simple image sharing and upload using PHP with sqlite database. And this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
 
