@@ -3,8 +3,6 @@ session_start();
 
 $db = new SQLite3('../message');
 $db_file = '../message';
-$db->exec("CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL);");
-$db->exec("CREATE TABLE messages (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, message TEXT NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE);");
 
 // Create users and messages tables if they don't exist
 try {
