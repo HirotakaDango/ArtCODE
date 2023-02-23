@@ -6,7 +6,7 @@ $db = new SQLite3('database.sqlite');
 $tag = htmlspecialchars($_GET['tag']);
 
 // Retrieve all images with the specified tag
-$stmt = $db->prepare("SELECT * FROM images WHERE tags LIKE :tag");
+$stmt = $db->prepare("SELECT * FROM images WHERE tags LIKE :tag ORDER BY id DESC");
 $stmt->bindValue(':tag', "%{$tag}%");
 $result = $stmt->execute();
 
