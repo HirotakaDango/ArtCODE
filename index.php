@@ -90,11 +90,6 @@
 
 
     <style>
-    body nav.dark-mode {
-      background-color: #333;
-      color: #f0f0f0;
-    } 
-    
     .image-container {
       margin-bottom: -16px;  
     }
@@ -194,27 +189,7 @@
       transition: 0.3s;
     } 
     </style>
-<script>
-    const toggleSwitch = document.querySelector('#dark-mode-toggle');
-    const body = document.querySelector('body');
-    
-    // Set initial state of toggle based on user preference
-    if (localStorage.getItem('dark-mode') === 'enabled') {
-      toggleSwitch.checked = true;
-      body.classList.add('dark-mode');
-    }
-    
-    // Listen for toggle change events
-    toggleSwitch.addEventListener('change', () => {
-      if (toggleSwitch.checked) {
-        localStorage.setItem('dark-mode', 'enabled');
-        body.classList.add('dark-mode');
-      } else {
-        localStorage.setItem('dark-mode', null);
-        body.classList.remove('dark-mode');
-      }
-    });
-</script>
+
 <script>
 // Get the modal
 var modal = document.getElementById("myModal");
