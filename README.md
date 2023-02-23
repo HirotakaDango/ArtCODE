@@ -22,6 +22,7 @@
 <li>add image to your favorite</li>
 <li>change password</li>
 <li>forum chat</li>
+<li>images tags</li>
 </ul>
 </div>
 </div>
