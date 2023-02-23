@@ -44,14 +44,14 @@ if (isset($_FILES['image'])) {
       exit;
     }
 
-    $thumbnail = imagecreatetruecolor(200, 200);
+    $thumbnail = imagecreatetruecolor(300, 300);
 
     if ($thumbnail === false) {
       echo "Error: Failed to create thumbnail.";
       exit;
     }
 
-    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, 200, 200, imagesx($source), imagesy($source));
+    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, 300, 300, imagesx($source), imagesy($source));
 
     switch ($ext) {
       case 'jpg':
