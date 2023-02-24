@@ -102,7 +102,7 @@
       <div class="card-container">
         <?php while ($image = $result->fetchArray()): ?>
             <div class="card">
-              <a href="images/<?php echo $image['filename']; ?>"><img class="card-img-top lazyload" data-src="thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['filename']; ?>"></a>
+              <a href="images/<?php echo $image['filename']; ?>"><img class="card-img-top lazy-load" data-src="thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['filename']; ?>"></a>
               <div class="card-body">
                 <form method="POST">
                   <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
