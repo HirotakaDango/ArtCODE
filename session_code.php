@@ -5,7 +5,7 @@ session_start();
 $db = new SQLite3('database.sqlite');
 
 // Create the users table if it doesn't exist
-$db->exec("CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
 
 // Check if the user is logging in or registering
 if (isset($_POST['login'])) {
