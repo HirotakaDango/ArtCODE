@@ -118,10 +118,6 @@
       transition: transform 0.5s ease-in-out;
     }
 
-    .images a:hover img {
-      transform: scale(1.1);
-    }
-
     .modal {
       display: none;
       position: fixed;
