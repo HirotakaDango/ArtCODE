@@ -68,7 +68,7 @@ $artist = $settings->getCurrentArtist();
 <body>
 
 <div class="container">
-  <h3 class="text-secondary text-center mt-4 fw-bold"><i class="bi bi-gear"></i> Change Artist Name</h3>
+  <h3 class="text-secondary text-center mt-4 fw-bold"><i class="bi bi-gear"></i> Change Your Name</h3>
 
   <form method="post" action="yourname.php">
     <div class="mb-3">
