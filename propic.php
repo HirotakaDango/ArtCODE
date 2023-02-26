@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary fw-bold mb-2">Update</button>
-                <a href="setting.php" type="button" class="btn btn-danger fw-bold">Cancel</a>
+                <a href="setting.php" type="button" class="btn btn-danger fw-bold">Back</a>
               </div>
             </form>
           </div>
