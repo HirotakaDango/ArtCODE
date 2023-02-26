@@ -81,7 +81,7 @@ $images = $query->fetchAll(PDO::FETCH_ASSOC);
                     <img class="img-thumbnail" src="<?php echo $pic; ?>" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 4px;">
                   </div>
                   <div class="col-md-7 order-md-2">
-                    <h3 class="text-secondary ms-1 mt-2"><i class="bi bi-person-circle"></i> <?php echo $artist; ?> <i class="ms-2 bi bi-images"></i> <?php echo count($images); ?> </h3>
+                    <h3 class="text-secondary ms-1 mt-2 fw-bold"><i class="bi bi-person-circle"></i> <?php echo $artist; ?> <i class="ms-2 bi bi-images"></i> <?php echo count($images); ?> </h3>
                     <p class="text-secondary text-center fw-bold"><?php echo $desc; ?></p>
                   </div>      
                 </div> 
