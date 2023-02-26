@@ -82,7 +82,7 @@ if(isset($_POST['submit'])){
               <header class="d-flex justify-content-center py-3">
                 <ul class="nav nav-pills">
                   <li class="nav-item"><button type="submit" class="btn btn-primary me-1 fw-bold" name="submit">Save</button></li>
-                  <li class="nav-item"><a href="setting.php" class="btn btn-danger ms-1 fw-bold">Cancel</a></li>
+                  <li class="nav-item"><a href="setting.php" class="btn btn-danger ms-1 fw-bold">Back</a></li>
                 </ul>
               </header>
             </div>
