@@ -59,7 +59,7 @@ $db->close();
         <textarea class="form-control" id="desc" name="desc" rows="5"><?php echo htmlspecialchars($current_desc); ?></textarea>
       </div>
       <button type="submit" class="btn btn-primary fw-bold">Save</button>
-      <a type="button" href="setting.php" class="btn btn-danger fw-bold">Cancel</a>
+      <a type="button" href="setting.php" class="btn btn-danger fw-bold">Back</a>
     </form>
   </div>
 </body>
