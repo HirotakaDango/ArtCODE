@@ -80,7 +80,10 @@
               <div class="card-body">
                 <div class="row featurette container">
                   <div class="col-md-5 order-md-1">
-                    <img class="img-thumbnail" src="<?php echo $pic; ?>" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 4px;">
+                    <div style="position: relative;">
+                      <img class="img-thumbnail" src="<?php echo $pic; ?>" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 4px;">
+                      <a class="btn-sm" type="button" href="propic.php" style="position: absolute; top: 89%; left: 75%; transform: translate(-90%, -70%);"><i class="bi bi-pencil-fill"></i></a>
+                    </div>
                   </div>
                   <div class="col-md-7 order-md-2">
                     <h3 class="text-secondary ms-1 mt-2 fw-bold"><i class="bi bi-person-circle"></i> <?php echo $artist; ?> <i class="ms-2 bi bi-images"></i> <?php echo $count; ?> </h3>
@@ -93,7 +96,6 @@
         </div>
       </div>
     </center>
-
     <div class="images">
       <?php while ($image = $result->fetchArray()): ?>
         <div class="image-container">
