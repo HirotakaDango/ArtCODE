@@ -24,11 +24,13 @@
         display: inline-block;
         padding: 6px 12px;
         margin: 6px;
-        border-radius: 3px;
+        border-radius: 4px;
         text-decoration: none;
         font-size: 14px;
         line-height: 1;
         font-weight: 800;
+        background-color: #eee;
+        color: #333;
       }
     
       .tag-button:hover {
@@ -80,7 +82,7 @@
       <!-- Display each user's id as a button in a button group -->
       <div class="tag-buttons" role="group" aria-label="User buttons">
         <?php while ($user = $users->fetchArray()): ?>
-          <button type="button" class="btn btn-secondary tag-button artist" onclick="location.href='artist.php?id=<?= $user['id'] ?>'"><?= $user['artist'] ?></button>
+          <button type="button" class="btn tag-button artist" onclick="location.href='artist.php?id=<?= $user['id'] ?>'"><?= $user['artist'] ?></button>
         <?php endwhile; ?>
       </div>
 
