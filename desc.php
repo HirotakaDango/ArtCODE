@@ -52,14 +52,18 @@ $db->close();
 </head>
 <body>
   <div class="container">
-    <h1 class="mt-5 mb-3">Edit Description</h1>
+    <h3 class="mt-4 text-center fw-bold text-secondary">Edit Description</h3>
     <form method="POST">
       <div class="mb-3">
-        <label for="desc" class="form-label">Description</label>
+        <label for="desc" class="form-label text-secondary fw-bold">Description:</label>
         <textarea class="form-control" id="desc" name="desc" rows="5"><?php echo htmlspecialchars($current_desc); ?></textarea>
       </div>
-      <button type="submit" class="btn btn-primary fw-bold">Save</button>
-      <a type="button" href="setting.php" class="btn btn-danger fw-bold">Back</a>
+      <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills">
+          <li class="nav-item"><button type="submit" class="btn btn-primary fw-bold">Save</button></li>
+          <li class="nav-item"><a href="setting.php" class="btn btn-danger ms-1 fw-bold">Back</a></li>
+        </ul>
+      </header>
     </form>
   </div>
 </body>
