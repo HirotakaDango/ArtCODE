@@ -65,7 +65,7 @@
       </nav>
     </center>  
     <div>
-      <h4 class="text-secondary ms-2 fw-bold"><i class="bi bi-people-fill"></i> All Creators</h4>
+      <h4 class="text-secondary ms-2 fw-bold"><i class="bi bi-people-fill"></i> users</h4>
   
       <!-- Add a search input field -->
       <div class="input-group mb-3">
