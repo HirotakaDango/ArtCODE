@@ -4,6 +4,8 @@
     header("Location: session.php");
     exit;
   }
+  
+  $username = $_SESSION['username'];
 
   // Connect to the SQLite database
   $db = new SQLite3('database.sqlite');
@@ -61,7 +63,7 @@
           ?>
             <form action="favorite.php" method="POST">
               <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
-              <button style="margin-top: -74px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger rounded-5 fw-bold" name="unfavorite">Unfavorite</button>
+              <button style="margin-top: -74px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger rounded-5 fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i></button>
             </form>
           <?php } else { ?>
             <form action="favorite.php" method="POST">
