@@ -70,7 +70,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <input type="text" name="message" class="form-control" placeholder="message">
       </div>
       <input type="submit" value="Send" class="btn btn-primary fw-bold w-100">
-      <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['token']); ?>">
+      <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['user_id']); ?>">
     </form>
     <hr>
     <?php foreach ($messages as $message): ?>
