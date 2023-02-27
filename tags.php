@@ -56,6 +56,9 @@ $tags = array_filter($tags);
     </nav>
   </center>  
   <h3 class="text-secondary ms-2 mt-3 fw-bold"><i class="bi bi-tags-fill"></i> tags</h3>
+  <div class="input-group mb-3">
+    <input type="text" class="form-control me-2 ms-2" placeholder="Search tags" id="search-input">
+  </div>
   <!-- Display the tags as a group of buttons -->
   <div class="tag-buttons">
     <?php foreach ($tags as $tag): ?>
@@ -99,6 +102,29 @@ $tags = array_filter($tags);
       background-color: #aaa;
     }
   </style>
+  <script>
+    // Get the search input element
+    const searchInput = document.getElementById('search-input');
+
+    // Get all the tag buttons
+    const tagButtons = document.querySelectorAll('.tag-button');
+
+    // Add an event listener to the search input field
+    searchInput.addEventListener('input', () => {
+      const searchTerm = searchInput.value.toLowerCase();
+
+      // Filter the tag buttons based on the search term
+      tagButtons.forEach(button => {
+        const tag = button.textContent.toLowerCase();
+
+        if (tag.includes(searchTerm)) {
+          button.style.display = 'inline-block';
+        } else {
+          button.style.display = 'none';
+        }
+      });
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
 </body>
