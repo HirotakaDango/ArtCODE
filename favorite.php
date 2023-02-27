@@ -24,7 +24,7 @@
     }
     
     // Redirect to the same page to prevent duplicate form submissions
-    header('Location: ' . $_SERVER['PHP_SELF']);
+    header("Location: index.php");
     exit();
     
   } elseif (isset($_POST['unfavorite'])) {
