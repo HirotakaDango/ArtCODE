@@ -1,8 +1,6 @@
 <div style="margin-right: 10px; margin-left: 10px;">
 <h1>ArtCODE</h1>
 
-<h2 style="font-weight: 900;"><a href="https://github.com/BurgerIsReal01/ArtCODE-with-SQLite-Database/tree/main/example">Screenshots</a></h2>
-
 <h4>This is simple image sharing and upload using PHP with sqlite database. And this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
 
 <h4>For admin panel to manage file, you can go to "manager/password/index.php". You can change the password in "manager/password/index.php" to access management.php = "admin"</h4>
