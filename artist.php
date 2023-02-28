@@ -5,6 +5,8 @@ if (!isset($_SESSION['username'])) {
   exit;
 }
 
+$username = $_SESSION['username'];
+
 // Connect to SQLite database
 $db = new PDO('sqlite:database.sqlite');
 
@@ -18,21 +20,21 @@ $query->execute();
 $user = $query->fetch(PDO::FETCH_ASSOC);
 $artist = $user['artist'];
 
-// Get the artist name for the selected user from the users table
+// Get the description for the selected user from the users table
 $query = $db->prepare('SELECT desc FROM users WHERE id = :id');
 $query->bindParam(':id', $id);
 $query->execute();
 $user = $query->fetch(PDO::FETCH_ASSOC);
 $desc = $user['desc'];
 
-// Get the artist name for the selected user from the users table
+// Get the profile picture for the selected user from the users table
 $query = $db->prepare('SELECT pic FROM users WHERE id = :id');
 $query->bindParam(':id', $id);
 $query->execute();
 $user = $query->fetch(PDO::FETCH_ASSOC);
 $pic = $user['pic'];
 
-// Get the artist name for the selected user from the users table
+// Get the background picture for the selected user from the users table
 $query = $db->prepare('SELECT bgpic FROM users WHERE id = :id');
 $query->bindParam(':id', $id);
 $query->execute();
@@ -40,10 +42,34 @@ $user = $query->fetch(PDO::FETCH_ASSOC);
 $bgpic = $user['bgpic'];
 
 // Get all images for the selected user from the images table
-$query = $db->prepare('SELECT images.filename FROM images JOIN users ON images.username = users.username WHERE users.id = :id ORDER BY images.id DESC');
+$query = $db->prepare('SELECT images.id, images.filename FROM images JOIN users ON images.username = users.username WHERE users.id = :id ORDER BY images.id DESC');
 $query->bindParam(':id', $id);
 $query->execute();
 $images = $query->fetchAll(PDO::FETCH_ASSOC);
+
+// Process any favorite/unfavorite requests
+if (isset($_POST['favorite'])) {
+  $image_id = $_POST['image_id'];
+
+  // Check if the image has already been favorited by the current user
+  $existing_fav = $db->query("SELECT COUNT(*) FROM favorites WHERE username = '{$_SESSION['username']}' AND image_id = $image_id")->fetchColumn();
+
+  if ($existing_fav == 0) {
+    $db->exec("INSERT INTO favorites (username, image_id) VALUES ('{$_SESSION['username']}', $image_id)");
+  }
+
+  // Redirect to the same page to prevent duplicate form submissions
+  header("Location: artist.php?id={$id}");
+  exit();
+
+} elseif (isset($_POST['unfavorite'])) {
+  $image_id = $_POST['image_id'];
+  $db->exec("DELETE FROM favorites WHERE username = '{$_SESSION['username']}' AND image_id = $image_id");
+
+  // Redirect to the same page to prevent duplicate form submissions
+  header("Location: artist.php?id={$id}");
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -99,13 +125,29 @@ $images = $query->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </center>
     <div class="images">
-        <?php foreach ($images as $image): ?>
-            <div>
-                <a class="open-modal" href="#" data-src="images/<?php echo $image['filename']; ?>">
-                    <img class="lazy-load" data-src="thumbnails/<?php echo $image['filename']; ?>">
-                </a>
-            </div>
-        <?php endforeach; ?>
+      <?php foreach ($images as $image): ?>
+        <div class="image-container">
+          <a class="open-modal" href="#" data-src="images/<?php echo $image['filename']; ?>">
+            <img class="lazy-load" data-src="thumbnails/<?php echo $image['filename']; ?>">
+          </a>
+          <div class="favorite-btn">
+            <?php
+              $is_favorited = $db->query("SELECT COUNT(*) FROM favorites WHERE username = '{$_SESSION['username']}' AND image_id = {$image['id']}")->fetchColumn();
+              if ($is_favorited) {
+            ?>
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . urlencode($id); ?>" method="POST">
+              <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
+              <button style="margin-top: -74px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger rounded-5 fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i></button>
+            </form>
+            <?php } else { ?>
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . urlencode($id); ?>" method="POST">
+              <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
+              <button style="margin-top: -74px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger rounded-5 fw-bold" name="favorite"><i class="bi bi-heart"></i></button>
+            </form>
+            <?php } ?>
+          </div>
+        </div>
+      <?php endforeach; ?>
     </div>
     
     <!-- Modal -->
@@ -126,7 +168,7 @@ $images = $query->fetchAll(PDO::FETCH_ASSOC);
     
     <style>
     .image-container {
-      margin-bottom: -16px;  
+      margin-bottom: -24px;  
     }
       
     .images {
@@ -216,80 +258,80 @@ $images = $query->fetchAll(PDO::FETCH_ASSOC);
       transition: 0.3s;
     } 
     </style>
-<script>
-// Get the modal
-var modal = document.getElementById("myModal");
+    <script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
 
-// Get the image and insert it inside the modal
-var modalImg = document.getElementById("img01");
+    // Get the image and insert it inside the modal
+    var modalImg = document.getElementById("img01");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
 
-// Get the download button
-var downloadBtn = document.getElementById("downloadBtn");
+    // Get the download button
+    var downloadBtn = document.getElementById("downloadBtn");
 
-// Get all elements with class "open-modal"
-var elements = document.getElementsByClassName("open-modal");
+    // Get all elements with class "open-modal"
+    var elements = document.getElementsByClassName("open-modal");
 
-// Store the current index of the image in a variable
-var currentIndex;
+    // Store the current index of the image in a variable
+    var currentIndex;
 
-// Store the current position of the page
-var currentPosition;
+    // Store the current position of the page
+    var currentPosition;
 
-// Loop through the elements and add a click event listener to each
-for (var i = 0; i < elements.length; i++) {
-  elements[i].addEventListener("click", function() {
-    currentPosition = window.pageYOffset;
-    currentIndex = Array.from(elements).indexOf(this);
-    modal.style.display = "block";
-    modalImg.src = this.getAttribute("data-src");
-    downloadBtn.href = this.getAttribute("data-src");
-  });
-}
+    // Loop through the elements and add a click event listener to each
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].addEventListener("click", function() {
+        currentPosition = window.pageYOffset;
+        currentIndex = Array.from(elements).indexOf(this);
+        modal.style.display = "block";
+        modalImg.src = this.getAttribute("data-src");
+        downloadBtn.href = this.getAttribute("data-src");
+      });
+    }
 
-// Get the previous button
-var prevBtn = document.getElementById("prevBtn");
+    // Get the previous button
+    var prevBtn = document.getElementById("prevBtn");
 
-// Get the next button
-var nextBtn = document.getElementById("nextBtn");
+    // Get the next button
+    var nextBtn = document.getElementById("nextBtn");
 
-// When the user clicks on the previous button, show the previous image
-prevBtn.addEventListener("click", function() {
-  currentIndex--;
-  if (currentIndex < 0) {
-    currentIndex = elements.length - 1;
-  }
-  modalImg.src = elements[currentIndex].getAttribute("data-src");
-  downloadBtn.href = elements[currentIndex].getAttribute("data-src");
-});
+    // When the user clicks on the previous button, show the previous image
+    prevBtn.addEventListener("click", function() {
+      currentIndex--;
+      if (currentIndex < 0) {
+        currentIndex = elements.length - 1;
+      }
+      modalImg.src = elements[currentIndex].getAttribute("data-src");
+      downloadBtn.href = elements[currentIndex].getAttribute("data-src");
+    });
 
-// When the user clicks on the next button, show the next image
-nextBtn.addEventListener("click", function() {
-  currentIndex++;
-  if (currentIndex >= elements.length) {
-    currentIndex = 0;
-  }
-  modalImg.src = elements[currentIndex].getAttribute("data-src");
-  downloadBtn.href = elements[currentIndex].getAttribute("data-src");
-});
+    // When the user clicks on the next button, show the next image
+    nextBtn.addEventListener("click", function() {
+      currentIndex++;
+      if (currentIndex >= elements.length) {
+        currentIndex = 0;
+      }
+      modalImg.src = elements[currentIndex].getAttribute("data-src");
+      downloadBtn.href = elements[currentIndex].getAttribute("data-src");
+    });
 
-// When the user clicks anywhere outside of the modal, close it
-window.addEventListener("click", function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-    window.scrollTo(0, currentPosition);
-  }
-});
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+        window.scrollTo(0, currentPosition);
+      }
+    });
 
-// When the user clicks on <span> (x), close the modal
-span.addEventListener("click", function() {
-  modal.style.display = "none";
-  window.scrollTo(0, currentPosition);
-});
-</script>
-  <script>
+    // When the user clicks on <span> (x), close the modal
+    span.addEventListener("click", function() {
+      modal.style.display = "none";
+      window.scrollTo(0, currentPosition);
+    });
+    </script> 
+    <script>
       document.addEventListener("DOMContentLoaded", function() {
         let lazyloadImages;
         if("IntersectionObserver" in window) {
@@ -335,7 +377,7 @@ span.addEventListener("click", function() {
           window.addEventListener("orientationChange", lazyload);
         }
       })
-  </script>
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
 </body>
