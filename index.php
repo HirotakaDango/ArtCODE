@@ -91,8 +91,6 @@
       <center><img class="modal-content" id="img01"/></center>
       <div class="mt-5"></div>
     </div>
-
-
     <style>
     .image-container {
       margin-bottom: -24px;  
@@ -185,139 +183,138 @@
       transition: 0.3s;
     }  
     </style>
+    <script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
 
-<script>
-// Get the modal
-var modal = document.getElementById("myModal");
+    // Get the image and insert it inside the modal
+    var modalImg = document.getElementById("img01");
 
-// Get the image and insert it inside the modal
-var modalImg = document.getElementById("img01");
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+    // Get the download button
+    var downloadBtn = document.getElementById("downloadBtn");
 
-// Get the download button
-var downloadBtn = document.getElementById("downloadBtn");
+    // Get all elements with class "open-modal"
+    var elements = document.getElementsByClassName("open-modal");
 
-// Get all elements with class "open-modal"
-var elements = document.getElementsByClassName("open-modal");
+    // Store the current index of the image in a variable
+    var currentIndex;
 
-// Store the current index of the image in a variable
-var currentIndex;
+    // Store the current position of the page
+    var currentPosition;
 
-// Store the current position of the page
-var currentPosition;
+    // Loop through the elements and add a click event listener to each
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].addEventListener("click", function() {
+        currentPosition = window.pageYOffset;
+        currentIndex = Array.from(elements).indexOf(this);
+        modal.style.display = "block";
+        modalImg.src = this.getAttribute("data-src");
+        downloadBtn.href = this.getAttribute("data-src");
+      });
+    }
 
-// Loop through the elements and add a click event listener to each
-for (var i = 0; i < elements.length; i++) {
-  elements[i].addEventListener("click", function() {
-    currentPosition = window.pageYOffset;
-    currentIndex = Array.from(elements).indexOf(this);
-    modal.style.display = "block";
-    modalImg.src = this.getAttribute("data-src");
-    downloadBtn.href = this.getAttribute("data-src");
-  });
-}
+    // Get the previous button
+    var prevBtn = document.getElementById("prevBtn");
 
-// Get the previous button
-var prevBtn = document.getElementById("prevBtn");
+    // Get the next button
+    var nextBtn = document.getElementById("nextBtn");
 
-// Get the next button
-var nextBtn = document.getElementById("nextBtn");
+    // When the user clicks on the previous button, show the previous image
+    prevBtn.addEventListener("click", function() {
+      currentIndex--;
+      if (currentIndex < 0) {
+        currentIndex = elements.length - 1;
+      }
+      modalImg.src = elements[currentIndex].getAttribute("data-src");
+      downloadBtn.href = elements[currentIndex].getAttribute("data-src");
+    });
 
-// When the user clicks on the previous button, show the previous image
-prevBtn.addEventListener("click", function() {
-  currentIndex--;
-  if (currentIndex < 0) {
-    currentIndex = elements.length - 1;
-  }
-  modalImg.src = elements[currentIndex].getAttribute("data-src");
-  downloadBtn.href = elements[currentIndex].getAttribute("data-src");
-});
+    // When the user clicks on the next button, show the next image
+    nextBtn.addEventListener("click", function() {
+      currentIndex++;
+      if (currentIndex >= elements.length) {
+        currentIndex = 0;
+      }
+      modalImg.src = elements[currentIndex].getAttribute("data-src");
+      downloadBtn.href = elements[currentIndex].getAttribute("data-src");
+    });
 
-// When the user clicks on the next button, show the next image
-nextBtn.addEventListener("click", function() {
-  currentIndex++;
-  if (currentIndex >= elements.length) {
-    currentIndex = 0;
-  }
-  modalImg.src = elements[currentIndex].getAttribute("data-src");
-  downloadBtn.href = elements[currentIndex].getAttribute("data-src");
-});
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+        window.scrollTo(0, currentPosition);
+      }
+    });
 
-// When the user clicks anywhere outside of the modal, close it
-window.addEventListener("click", function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-    window.scrollTo(0, currentPosition);
-  }
-});
-
-// When the user clicks on <span> (x), close the modal
-span.addEventListener("click", function() {
-  modal.style.display = "none";
-  window.scrollTo(0, currentPosition);
-});
-</script>
-  <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        let lazyloadImages;
-        if("IntersectionObserver" in window) {
-          lazyloadImages = document.querySelectorAll(".lazy-load");
-          let imageObserver = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(function(entry) {
-              if(entry.isIntersecting) {
-                let image = entry.target;
-                image.src = image.dataset.src;
-                image.classList.remove("lazy-load");
-                imageObserver.unobserve(image);
-              }
-            });
-          });
-          lazyloadImages.forEach(function(image) {
-            imageObserver.observe(image);
-          });
-        } else {
-          let lazyloadThrottleTimeout;
-          lazyloadImages = document.querySelectorAll(".lazy-load");
-
-          function lazyload() {
-            if(lazyloadThrottleTimeout) {
-              clearTimeout(lazyloadThrottleTimeout);
-            }
-            lazyloadThrottleTimeout = setTimeout(function() {
-              let scrollTop = window.pageYOffset;
-              lazyloadImages.forEach(function(img) {
-                if(img.offsetTop < (window.innerHeight + scrollTop)) {
-                  img.src = img.dataset.src;
-                  img.classList.remove('lazy-load');
+    // When the user clicks on <span> (x), close the modal
+    span.addEventListener("click", function() {
+      modal.style.display = "none";
+      window.scrollTo(0, currentPosition);
+    });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          let lazyloadImages;
+          if("IntersectionObserver" in window) {
+            lazyloadImages = document.querySelectorAll(".lazy-load");
+            let imageObserver = new IntersectionObserver(function(entries, observer) {
+              entries.forEach(function(entry) {
+                if(entry.isIntersecting) {
+                  let image = entry.target;
+                  image.src = image.dataset.src;
+                  image.classList.remove("lazy-load");
+                  imageObserver.unobserve(image);
                 }
               });
-              if(lazyloadImages.length == 0) {
-                document.removeEventListener("scroll", lazyload);
-                window.removeEventListener("resize", lazyload);
-                window.removeEventListener("orientationChange", lazyload);
+            });
+            lazyloadImages.forEach(function(image) {
+              imageObserver.observe(image);
+            });
+          } else {
+            let lazyloadThrottleTimeout;
+            lazyloadImages = document.querySelectorAll(".lazy-load");
+
+            function lazyload() {
+              if(lazyloadThrottleTimeout) {
+                clearTimeout(lazyloadThrottleTimeout);
               }
-            }, 20);
+              lazyloadThrottleTimeout = setTimeout(function() {
+                let scrollTop = window.pageYOffset;
+                lazyloadImages.forEach(function(img) {
+                  if(img.offsetTop < (window.innerHeight + scrollTop)) {
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy-load');
+                  }
+                });
+                if(lazyloadImages.length == 0) {
+                  document.removeEventListener("scroll", lazyload);
+                  window.removeEventListener("resize", lazyload);
+                  window.removeEventListener("orientationChange", lazyload);
+                }
+              }, 20);
+            }
+            document.addEventListener("scroll", lazyload);
+            window.addEventListener("resize", lazyload);
+            window.addEventListener("orientationChange", lazyload);
           }
-          document.addEventListener("scroll", lazyload);
-          window.addEventListener("resize", lazyload);
-          window.addEventListener("orientationChange", lazyload);
-        }
-      })
-  </script>
-  <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('sw.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
+        })
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js').then(function(registration) {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+              console.log('ServiceWorker registration failed: ', err);
+            });
           });
-        });
-      }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
   </body>
 </html>
