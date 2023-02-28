@@ -5,6 +5,8 @@ if (!isset($_SESSION['username'])) {
   exit;
 }
 
+$username = $_SESSION['username'];
+  
 // Connect to the SQLite database
 $db = new SQLite3('database.sqlite');
 
@@ -16,10 +18,28 @@ $stmt = $db->prepare("SELECT * FROM images WHERE tags LIKE :tag ORDER BY id DESC
 $stmt->bindValue(':tag', "%{$tag}%");
 $result = $stmt->execute();
 
-// Store the image filenames as an array
-$images = [];
-while ($row = $result->fetchArray()) {
-  $images[] = htmlspecialchars($row['filename']);
+// Process any favorite/unfavorite requests
+if (isset($_POST['favorite'])) {
+  $image_id = $_POST['image_id'];
+
+  // Check if the image has already been favorited by the current user
+  $existing_fav = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE username = '$username' AND image_id = $image_id");
+
+  if ($existing_fav == 0) {
+    $db->exec("INSERT INTO favorites (username, image_id) VALUES ('$username', $image_id)");
+  }
+
+  // Redirect to the same page to prevent duplicate form submissions
+  header("Location: tagged_images.php?tag={$tag}");
+  exit();
+
+} elseif (isset($_POST['unfavorite'])) {
+  $image_id = $_POST['image_id'];
+  $db->exec("DELETE FROM favorites WHERE username = '$username' AND image_id = $image_id");
+
+  // Redirect to the same page to prevent duplicate form submissions
+  header("Location: tagged_images.php?tag={$tag}");
+  exit();
 }
 ?>
 
@@ -54,12 +74,31 @@ while ($row = $result->fetchArray()) {
   </center>  
   <h3 class="text-secondary ms-2 fw-bold"><i class="bi bi-tags-fill"></i> <?php echo $tag; ?></h3>
   <!-- Display the images -->
-  <div class="images">
-    <?php foreach ($images as $filename): ?>
-      <a class="open-modal" href="#" data-src="images/<?php echo $filename; ?>"><img src="thumbnails/<?php echo $filename; ?>"></a>
-    <?php endforeach; ?>
-  </div>
-  
+    <div class="images">
+      <?php while ($image = $result->fetchArray()): ?>
+        <div class="image-container">
+          <a class="open-modal" href="#" data-src="images/<?php echo $image['filename']; ?>">
+            <img class="lazy-load" data-src="thumbnails/<?php echo $image['filename']; ?>">
+          </a>
+          <div class="favorite-btn">
+          <?php
+            $is_favorited = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE username = '$username' AND image_id = {$image['id']}");
+            if ($is_favorited) {
+          ?>
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . '?tag=' . urlencode($tag); ?>" method="POST">
+              <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
+              <button style="margin-top: -74px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger rounded-5 fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i></button>
+            </form>
+          <?php } else { ?>
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . '?tag=' . urlencode($tag); ?>" method="POST">
+              <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
+              <button style="margin-top: -74px; margin-left: 8px; font-size: 10px;" type="submit" class="btn btn-danger rounded-5 fw-bold" name="favorite"><i class="bi bi-heart"></i></button>
+            </form>
+          <?php } ?>
+          </div> 
+        </div>
+      <?php endwhile; ?>
+    </div> 
   <!-- Modal -->
   <div class="modal mt-5" id="myModal">
     <a class="dirdown" id="downloadBtn" href="" download>
@@ -77,6 +116,10 @@ while ($row = $result->fetchArray()) {
   </div>
 
   <style>
+    .image-container {
+      margin-bottom: -24px;  
+    }
+    
     .images {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -98,11 +141,6 @@ while ($row = $result->fetchArray()) {
       height: auto;
       object-fit: cover;
       height: 200px;
-      transition: transform 0.5s ease-in-out;
-    }
-
-    .images a:hover img {
-      transform: scale(1.1);
     }
 
     .modal {
@@ -169,78 +207,78 @@ while ($row = $result->fetchArray()) {
     } 
   </style>
   <script>
-    // Get the modal
-    var modal = document.getElementById("myModal");
+  // Get the modal
+  var modal = document.getElementById("myModal");
 
-    // Get the image and insert it inside the modal
-    var modalImg = document.getElementById("img01");
+  // Get the image and insert it inside the modal
+  var modalImg = document.getElementById("img01");
 
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
 
-    // Get the download button
-    var downloadBtn = document.getElementById("downloadBtn");
+  // Get the download button
+  var downloadBtn = document.getElementById("downloadBtn");
 
-    // Get all elements with class "open-modal"
-    var elements = document.getElementsByClassName("open-modal");
+  // Get all elements with class "open-modal"
+  var elements = document.getElementsByClassName("open-modal");
 
-    // Store the current index of the image in a variable
-    var currentIndex;
+  // Store the current index of the image in a variable
+  var currentIndex;
 
-    // Store the current position of the page
-    var currentPosition;
+  // Store the current position of the page
+  var currentPosition;
 
-    // Loop through the elements and add a click event listener to each
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].addEventListener("click", function() {
-        currentPosition = window.pageYOffset;
-        currentIndex = Array.from(elements).indexOf(this);
-        modal.style.display = "block";
-        modalImg.src = this.getAttribute("data-src");
-        downloadBtn.href = this.getAttribute("data-src");
-      });
+  // Loop through the elements and add a click event listener to each
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].addEventListener("click", function() {
+      currentPosition = window.pageYOffset;
+      currentIndex = Array.from(elements).indexOf(this);
+      modal.style.display = "block";
+      modalImg.src = this.getAttribute("data-src");
+      downloadBtn.href = this.getAttribute("data-src");
+    });
+  }
+
+  // Get the previous button
+  var prevBtn = document.getElementById("prevBtn");
+
+  // Get the next button
+  var nextBtn = document.getElementById("nextBtn");
+
+  // When the user clicks on the previous button, show the previous image
+  prevBtn.addEventListener("click", function() {
+    currentIndex--;
+    if (currentIndex < 0) {
+      currentIndex = elements.length - 1;
     }
+    modalImg.src = elements[currentIndex].getAttribute("data-src");
+    downloadBtn.href = elements[currentIndex].getAttribute("data-src");
+  });
 
-    // Get the previous button
-    var prevBtn = document.getElementById("prevBtn");
+  // When the user clicks on the next button, show the next image
+  nextBtn.addEventListener("click", function() {
+    currentIndex++;
+    if (currentIndex >= elements.length) {
+      currentIndex = 0;
+    }
+    modalImg.src = elements[currentIndex].getAttribute("data-src");
+    downloadBtn.href = elements[currentIndex].getAttribute("data-src");
+  });
 
-    // Get the next button
-    var nextBtn = document.getElementById("nextBtn");
-
-    // When the user clicks on the previous button, show the previous image
-    prevBtn.addEventListener("click", function() {
-      currentIndex--;
-      if (currentIndex < 0) {
-        currentIndex = elements.length - 1;
-      }
-      modalImg.src = elements[currentIndex].getAttribute("data-src");
-      downloadBtn.href = elements[currentIndex].getAttribute("data-src");
-    });
-
-    // When the user clicks on the next button, show the next image
-    nextBtn.addEventListener("click", function() {
-      currentIndex++;
-      if (currentIndex >= elements.length) {
-        currentIndex = 0;
-      }
-      modalImg.src = elements[currentIndex].getAttribute("data-src");
-      downloadBtn.href = elements[currentIndex].getAttribute("data-src");
-    });
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.addEventListener("click", function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-        window.scrollTo(0, currentPosition);
-      }
-    });
-
-    // When the user clicks on <span> (x), close the modal
-    span.addEventListener("click", function() {
+  // When the user clicks anywhere outside of the modal, close it
+  window.addEventListener("click", function(event) {
+    if (event.target == modal) {
       modal.style.display = "none";
       window.scrollTo(0, currentPosition);
-    });
-  </script> 
+    }
+  });
+
+  // When the user clicks on <span> (x), close the modal
+  span.addEventListener("click", function() {
+    modal.style.display = "none";
+    window.scrollTo(0, currentPosition);
+  });
+  </script>
   <script>
       document.addEventListener("DOMContentLoaded", function() {
         let lazyloadImages;
