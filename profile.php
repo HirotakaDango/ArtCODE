@@ -82,7 +82,7 @@
                 <div class="row featurette container">
                   <div class="col-md-5 order-md-1 img-thumbnail" style="background-image: url('<?php echo $bgpic; ?>'); background-size: cover; height: 180px;">
                     <div style="position: relative;">
-                      <img class="img-thumbnail mt-4 rounded-circle" src="<?php echo $pic; ?>" alt="Profile Picture" style="width: 120px; height: 120px; border-radius: 4px; margin-left: -18px;">
+                      <img class="img-thumbnail mt-4 rounded-circle" src="<?php echo $pic; ?>" alt="Profile Picture" style="width: 120px; height: 120px; border-radius: 4px; margin-left: -32px;">
                       <a class="btn-sm btn btn-danger float-start mt-2" type="button" href="setting.php"><i class="bi bi-pencil-fill"></i></a>
                     </div>
                   </div>
