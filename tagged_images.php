@@ -168,79 +168,79 @@ while ($row = $result->fetchArray()) {
       transition: 0.3s;
     } 
   </style>
-<script>
-// Get the modal
-var modal = document.getElementById("myModal");
+  <script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
 
-// Get the image and insert it inside the modal
-var modalImg = document.getElementById("img01");
+    // Get the image and insert it inside the modal
+    var modalImg = document.getElementById("img01");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
 
-// Get the download button
-var downloadBtn = document.getElementById("downloadBtn");
+    // Get the download button
+    var downloadBtn = document.getElementById("downloadBtn");
 
-// Get all elements with class "open-modal"
-var elements = document.getElementsByClassName("open-modal");
+    // Get all elements with class "open-modal"
+    var elements = document.getElementsByClassName("open-modal");
 
-// Store the current index of the image in a variable
-var currentIndex;
+    // Store the current index of the image in a variable
+    var currentIndex;
 
-// Store the current position of the page
-var currentPosition;
+    // Store the current position of the page
+    var currentPosition;
 
-// Loop through the elements and add a click event listener to each
-for (var i = 0; i < elements.length; i++) {
-  elements[i].addEventListener("click", function() {
-    currentPosition = window.pageYOffset;
-    currentIndex = Array.from(elements).indexOf(this);
-    modal.style.display = "block";
-    modalImg.src = this.getAttribute("data-src");
-    downloadBtn.href = this.getAttribute("data-src");
-  });
-}
+    // Loop through the elements and add a click event listener to each
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].addEventListener("click", function() {
+        currentPosition = window.pageYOffset;
+        currentIndex = Array.from(elements).indexOf(this);
+        modal.style.display = "block";
+        modalImg.src = this.getAttribute("data-src");
+        downloadBtn.href = this.getAttribute("data-src");
+      });
+    }
 
-// Get the previous button
-var prevBtn = document.getElementById("prevBtn");
+    // Get the previous button
+    var prevBtn = document.getElementById("prevBtn");
 
-// Get the next button
-var nextBtn = document.getElementById("nextBtn");
+    // Get the next button
+    var nextBtn = document.getElementById("nextBtn");
 
-// When the user clicks on the previous button, show the previous image
-prevBtn.addEventListener("click", function() {
-  currentIndex--;
-  if (currentIndex < 0) {
-    currentIndex = elements.length - 1;
-  }
-  modalImg.src = elements[currentIndex].getAttribute("data-src");
-  downloadBtn.href = elements[currentIndex].getAttribute("data-src");
-});
+    // When the user clicks on the previous button, show the previous image
+    prevBtn.addEventListener("click", function() {
+      currentIndex--;
+      if (currentIndex < 0) {
+        currentIndex = elements.length - 1;
+      }
+      modalImg.src = elements[currentIndex].getAttribute("data-src");
+      downloadBtn.href = elements[currentIndex].getAttribute("data-src");
+    });
 
-// When the user clicks on the next button, show the next image
-nextBtn.addEventListener("click", function() {
-  currentIndex++;
-  if (currentIndex >= elements.length) {
-    currentIndex = 0;
-  }
-  modalImg.src = elements[currentIndex].getAttribute("data-src");
-  downloadBtn.href = elements[currentIndex].getAttribute("data-src");
-});
+    // When the user clicks on the next button, show the next image
+    nextBtn.addEventListener("click", function() {
+      currentIndex++;
+      if (currentIndex >= elements.length) {
+        currentIndex = 0;
+      }
+      modalImg.src = elements[currentIndex].getAttribute("data-src");
+      downloadBtn.href = elements[currentIndex].getAttribute("data-src");
+    });
 
-// When the user clicks anywhere outside of the modal, close it
-window.addEventListener("click", function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-    window.scrollTo(0, currentPosition);
-  }
-});
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+        window.scrollTo(0, currentPosition);
+      }
+    });
 
-// When the user clicks on <span> (x), close the modal
-span.addEventListener("click", function() {
-  modal.style.display = "none";
-  window.scrollTo(0, currentPosition);
-});
-</script>
+    // When the user clicks on <span> (x), close the modal
+    span.addEventListener("click", function() {
+      modal.style.display = "none";
+      window.scrollTo(0, currentPosition);
+    });
+  </script> 
   <script>
       document.addEventListener("DOMContentLoaded", function() {
         let lazyloadImages;
