@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$password = 'dunnoboiiizzz';
+$password = 'admin';
 
 if (isset($_GET['p']) && $_GET['p'] === $password) {
     $_SESSION['authenticated'] = true;
