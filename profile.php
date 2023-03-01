@@ -74,7 +74,7 @@
       </nav>
     </center>  
     <center>
-      <div class="container w-auto mb-2">
+      <div class="container-fluid w-auto mb-2">
         <div class="row justify-content-center">
           <div>
             <div class="card">
@@ -148,8 +148,8 @@
         font-weight: 700;
         padding: 8px 20px;
        }
-  </style>
-  <script>
+    </style>
+    <script>
       document.addEventListener("DOMContentLoaded", function() {
         let lazyloadImages;
         if("IntersectionObserver" in window) {
