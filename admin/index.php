@@ -25,7 +25,7 @@ class UserController {
         'desc' => $_POST['desc']
       ];
       $this->datatable->insert_data($data);
-      header("Location: index.php");
+      header("Location: ../admin/index.php");
       exit();
     }
   }
@@ -40,7 +40,7 @@ class UserController {
         'desc' => $_POST['desc']
       ];
       $this->datatable->update_data($data);
-      header("Location: index.php");
+      header("Location: ../admin/index.php");
       exit();
     }
   }
@@ -49,7 +49,7 @@ class UserController {
     if (isset($_GET['delete'])) {
       $id = $_GET['delete'];
       $this->datatable->delete_data($id);
-      header("Location: index.php");
+      header("Location: ../admin/index.php");
       exit();
     }
   }
