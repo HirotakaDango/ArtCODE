@@ -20,7 +20,7 @@
   $bgpic = $row['bgpic'];
 
   // Count the number of followers
-  $stmt = $db->prepare("SELECT COUNT(*) AS num_followers FROM follower WHERE follower_of_username = :username");
+  $stmt = $db->prepare("SELECT COUNT(*) AS num_followers FROM following WHERE following_username = :username");
   $stmt->bindValue(':username', $username);
   $result = $stmt->execute();
   $row = $result->fetchArray();
@@ -103,7 +103,8 @@
                   <div class="col-md-7 order-md-2">
                     <h3 class="text-secondary mt-2 fw-bold"><?php echo $artist; ?></h3> 
                     <h5 class="text-secondary ms-1 mt-2 fw-bold"><?php echo $num_followers ?> <i class="bi bi-people-fill me-5"></i> <?php echo $num_following ?> <i class="bi bi-person-fill me-5"></i> <?php echo $count; ?> <i class="bi bi-images"></i></h5>
-                    <p class="text-secondary text-center fw-bold"><?php echo $desc; ?></p>                  </div>      
+                    <p class="text-secondary text-center fw-bold"><?php echo $desc; ?></p>
+                  </div>      
                 </div> 
               </div>
             </div>
