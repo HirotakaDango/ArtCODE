@@ -12,8 +12,7 @@
   $db->exec("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, username TEXT, tags TEXT)");
   $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, image_id INTEGER, username TEXT)");
   $db->exec('CREATE TABLE IF NOT EXISTS following (id INTEGER PRIMARY KEY AUTOINCREMENT, follower_username TEXT NOT NULL, following_username TEXT NOT NULL)');
-  $db->exec('CREATE TABLE IF NOT EXISTS follower (id INTEGER PRIMARY KEY AUTOINCREMENT, follower_username TEXT NOT NULL, follower_of_username TEXT NOT NULL)');
-
+  
   // Get all of the images from the database
   $result = $db->query("SELECT * FROM images ORDER BY id DESC");
 ?>
