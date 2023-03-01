@@ -119,6 +119,10 @@ $edit_data = $userController->getEditData();
     </style>
   </head>
   <body>
+   <ul class="me-2 ms-2 mt-2 nav nav-pills nav-fill justify-content-center">
+      <li class="nav-item"><a class="nav-link active" aria-current="page" href="../admin/index.php"><i class="bi bi-person-fill-gear"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="../admin/remove.php"><i class="bi bi-person-fill-exclamation"></i></a></li>
+    </ul>
     <center>
       <div class="container-fluid mt-2">
         <div class="card-container">
