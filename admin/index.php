@@ -167,7 +167,7 @@ $edit_data = $userController->getEditData();
               <p class="text-start ms-3">Password: <?= $row['password'] ?></p>
               <p class="text-start ms-3">Name: <?= $row['artist'] ?></p>
               <p class="text-start ms-3">Bio: <?= $row['desc'] ?></p>
-              <p><a href="?edit=<?= $row['id'] ?>" class="btn btn-warning click"><i class="bi bi-pencil-fill"></i></a> <a href="?delete=<?= $row['id'] ?>" class="btn btn-danger click" onclick="return confirm('Are you sure?')"><i class="bi bi-trash-fill"></i></a></p>
+              <p><a href="?edit=<?= $row['id'] ?>" class="btn btn-warning click"><i class="bi bi-pencil-fill"></i></a></p>
             </div>
           <?php endforeach; ?>
         </div>
