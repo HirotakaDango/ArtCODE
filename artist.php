@@ -104,7 +104,7 @@ if (isset($_POST['favorite'])) {
       </nav>
     </center>  
     <center>
-      <div class="container w-auto mb-2">
+      <div class="container-fluid w-auto mb-2">
         <div class="row justify-content-center">
           <div>
             <div class="card">
