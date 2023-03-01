@@ -127,46 +127,47 @@ $edit_data = $userController->getEditData();
               <h1 class="text-center text-secondary fw-bold">Edit User's Data</h1> 
               <form method="post" enctype="multipart/form-data">
         
-              <input placeholder="" type="hidden" name="id" value="<?= $edit_data['id'] ?>">
+                <input placeholder="" type="hidden" name="id" value="<?= $edit_data['id'] ?>">
           
-              <div class="mb-3">
-                <input type="text" placeholder="email" name="username" value="<?= $edit_data['username'] ?>" class="form-control" required>
-              </div>
+                <div class="mb-3">
+                  <input type="text" placeholder="email" name="username" value="<?= $edit_data['username'] ?>" class="form-control" required>
+                </div>
 
-              <div class="mb-3">
-                <input type="text" placeholder="password" name="password" value="<?= $edit_data['password'] ?>" class="form-control" required>
-              </div>
+                <div class="mb-3">
+                  <input type="text" placeholder="password" name="password" value="<?= $edit_data['password'] ?>" class="form-control" required>
+                </div>
 
-              <div class="mb-3">
-                <input type="text" placeholder="name" name="artist" value="<?= $edit_data['artist'] ?>" class="form-control" required>
-              </div>
+                <div class="mb-3">
+                  <input type="text" placeholder="name" name="artist" value="<?= $edit_data['artist'] ?>" class="form-control" required>
+                </div>
 
-              <div class="mb-3">
-                <input type="text" placeholder="bio" name="desc" value="<?= $edit_data['desc'] ?>" class="form-control" required>
-              </div> 
+                <div class="mb-3">
+                  <input type="text" placeholder="bio" name="desc" value="<?= $edit_data['desc'] ?>" class="form-control" required>
+                </div> 
 
-              <button type="submit" name="update" class="btn btn-primary">Update</button>
-            </form>
-          </div>
-        <?php endif; ?>
-      </div>
-    </div> 
+                <button type="submit" name="update" class="btn btn-primary">Update</button>
+              </form>
+            </div>
+          <?php endif; ?>
+        </div>
+      </div> 
     </center>
     <center>
-    <div class="container-fluid mt-2">
-      <h1 class="text-center text-secondary fw-bold">Users <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-person-fill-add"></i></button></h1>
-      <div class="card-container">
-        <?php foreach ($data as $row): ?>
-          <div class="card text-secondary fw-bold">
-            <p class="text-start ms-3">Email: <?= $row['username'] ?></p>
-            <p class="text-start ms-3">Password: <?= $row['password'] ?></p>
-            <p class="text-start ms-3">Name: <?= $row['artist'] ?></p>
-            <p class="text-start ms-3">Bio: <?= $row['desc'] ?></p>
-            <p><a href="?edit=<?= $row['id'] ?>" class="btn btn-warning click"><i class="bi bi-pencil-fill"></i></a> <a href="?delete=<?= $row['id'] ?>" class="btn btn-danger click" onclick="return confirm('Are you sure?')"><i class="bi bi-trash-fill"></i></a></p>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div> 
+      <div class="container-fluid mt-2">
+        <h1 class="text-center text-secondary fw-bold">Users <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-person-fill-add"></i></button></h1>
+        <div class="card-container">
+          <?php foreach ($data as $row): ?>
+            <div class="card text-secondary fw-bold">
+              <p class="text-start ms-3">User ID: <?= $row['id'] ?></p>
+              <p class="text-start ms-3">Email: <?= $row['username'] ?></p>
+              <p class="text-start ms-3">Password: <?= $row['password'] ?></p>
+              <p class="text-start ms-3">Name: <?= $row['artist'] ?></p>
+              <p class="text-start ms-3">Bio: <?= $row['desc'] ?></p>
+              <p><a href="?edit=<?= $row['id'] ?>" class="btn btn-warning click"><i class="bi bi-pencil-fill"></i></a> <a href="?delete=<?= $row['id'] ?>" class="btn btn-danger click" onclick="return confirm('Are you sure?')"><i class="bi bi-trash-fill"></i></a></p>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div> 
     </center>
     <div>
       <div class="modal fade" id="add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
