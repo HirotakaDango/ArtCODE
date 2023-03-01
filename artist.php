@@ -12,33 +12,13 @@ $db = new PDO('sqlite:database.sqlite');
 
 // Get the ID of the selected user from the URL
 $id = $_GET['id'];
-
-// Get the artist name for the selected user from the users table
-$query = $db->prepare('SELECT artist FROM users WHERE id = :id');
+$query = $db->prepare('SELECT artist, `desc`, `bgpic`, pic, username FROM users WHERE id = :id');
 $query->bindParam(':id', $id);
 $query->execute();
 $user = $query->fetch(PDO::FETCH_ASSOC);
 $artist = $user['artist'];
-
-// Get the description for the selected user from the users table
-$query = $db->prepare('SELECT desc FROM users WHERE id = :id');
-$query->bindParam(':id', $id);
-$query->execute();
-$user = $query->fetch(PDO::FETCH_ASSOC);
 $desc = $user['desc'];
-
-// Get the profile picture for the selected user from the users table
-$query = $db->prepare('SELECT pic FROM users WHERE id = :id');
-$query->bindParam(':id', $id);
-$query->execute();
-$user = $query->fetch(PDO::FETCH_ASSOC);
 $pic = $user['pic'];
-
-// Get the background picture for the selected user from the users table
-$query = $db->prepare('SELECT bgpic FROM users WHERE id = :id');
-$query->bindParam(':id', $id);
-$query->execute();
-$user = $query->fetch(PDO::FETCH_ASSOC);
 $bgpic = $user['bgpic'];
 
 // Get all images for the selected user from the images table
@@ -46,6 +26,46 @@ $query = $db->prepare('SELECT images.id, images.filename FROM images JOIN users 
 $query->bindParam(':id', $id);
 $query->execute();
 $images = $query->fetchAll(PDO::FETCH_ASSOC);
+
+// Check if the logged-in user is already following the selected user
+$query = $db->prepare('SELECT COUNT(*) FROM following WHERE follower_username = :follower_username AND following_username = :following_username');
+$query->bindParam(':follower_username', $username);
+$query->bindParam(':following_username', $user['username']);
+$query->execute();
+$is_following = $query->fetchColumn();
+
+// Get the number of followers for the selected user
+$query = $db->prepare('SELECT COUNT(*) FROM following WHERE following_username = :following_username');
+$query->bindParam(':following_username', $user['username']);
+$query->execute();
+$num_followers = $query->fetchColumn();
+
+// Get the number of people the selected user is following
+$query = $db->prepare('SELECT COUNT(*) FROM following WHERE follower_username = :follower_username');
+$query->bindParam(':follower_username', $user['username']);
+$query->execute();
+$num_following = $query->fetchColumn();
+
+// Handle following/unfollowing actions
+if (isset($_POST['follow'])) {
+  // Add a following relationship between the logged-in user and the selected user
+  $query = $db->prepare('INSERT INTO following (follower_username, following_username) VALUES (:follower_username, :following_username)');
+  $query->bindParam(':follower_username', $username);
+  $query->bindParam(':following_username', $user['username']);
+  $query->execute();
+  $is_following = true;
+  header("Location: artist.php?id={$id}");
+  exit;
+} elseif (isset($_POST['unfollow'])) {
+  // Remove the following relationship between the logged-in user and the selected user
+  $query = $db->prepare('DELETE FROM following WHERE follower_username = :follower_username AND following_username = :following_username');
+  $query->bindParam(':follower_username', $username);
+  $query->bindParam(':following_username', $user['username']);
+  $query->execute();
+  $is_following = false;
+  header("Location: artist.php?id={$id}");
+  exit;
+} 
 
 // Process any favorite/unfavorite requests
 if (isset($_POST['favorite'])) {
@@ -114,9 +134,17 @@ if (isset($_POST['favorite'])) {
                     <img class="img-thumbnail mt-4 rounded-circle" src="<?php echo $pic; ?>" alt="Profile Picture" style="width: 120px; height: 120px; border-radius: 4px;">
                   </div>
                   <div class="col-md-7 order-md-2">
-                    <h3 class="text-secondary ms-1 mt-2 fw-bold"><i class="bi bi-person-circle"></i> <?php echo $artist; ?> <i class="ms-2 bi bi-images"></i> <?php echo count($images); ?> </h3>
+                    <h3 class="text-secondary mt-2 fw-bold"><?php echo $artist; ?></h3> 
+                    <form method="post">
+                      <?php if ($is_following): ?>
+                        <button class="btn btn-danger fw-bold" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> unfollow</button>
+                      <?php else: ?>
+                        <button class="btn btn-primary fw-bold" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> follow</button>
+                      <?php endif; ?>
+                    </form>    
+                    <h5 class="text-secondary ms-1 mt-2 fw-bold"><?php echo $num_followers ?> <i class="bi bi-people-fill me-5"></i> <?php echo $num_following ?> <i class="bi bi-person-fill me-5"></i> <?php echo count($images); ?> <i class="bi bi-images"></i></h5>
                     <p class="text-secondary text-center fw-bold"><?php echo $desc; ?></p>
-                  </div>      
+                  </div>
                 </div> 
               </div>
             </div>
@@ -149,7 +177,6 @@ if (isset($_POST['favorite'])) {
         </div>
       <?php endforeach; ?>
     </div>
-    
     <!-- Modal -->
     <div class="modal mt-5" id="myModal">
       <a class="dirdown" id="downloadBtn" href="" download>
