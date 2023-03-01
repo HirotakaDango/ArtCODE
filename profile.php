@@ -10,7 +10,7 @@
 
   // Get the artist name from the database
   $username = $_SESSION['username'];
-  $stmt = $db->prepare("SELECT artist, pic, desc, bgpic FROM users WHERE username = :username");
+  $stmt = $db->prepare("SELECT artist, pic, `desc`, bgpic FROM users WHERE username = :username");
   $stmt->bindValue(':username', $username);
   $result = $stmt->execute();
   $row = $result->fetchArray();
@@ -18,6 +18,20 @@
   $pic = $row['pic'];
   $desc = $row['desc'];
   $bgpic = $row['bgpic'];
+
+  // Count the number of followers
+  $stmt = $db->prepare("SELECT COUNT(*) AS num_followers FROM follower WHERE follower_of_username = :username");
+  $stmt->bindValue(':username', $username);
+  $result = $stmt->execute();
+  $row = $result->fetchArray();
+  $num_followers = $row['num_followers'];
+
+  // Count the number of following
+  $stmt = $db->prepare("SELECT COUNT(*) AS num_following FROM following WHERE follower_username = :username");
+  $stmt->bindValue(':username', $username);
+  $result = $stmt->execute();
+  $row = $result->fetchArray();
+  $num_following = $row['num_following'];
 
   // Handle the user's click on the "Favorite" button
   if (isset($_POST['favorite'])) {
@@ -87,9 +101,9 @@
                     </div>
                   </div>
                   <div class="col-md-7 order-md-2">
-                    <h3 class="text-secondary ms-1 mt-2 fw-bold"><i class="bi bi-person-circle"></i> <?php echo $artist; ?> <i class="ms-2 bi bi-images"></i> <?php echo $count; ?> </h3>
-                    <p class="text-secondary text-center fw-bold"><?php echo $desc; ?></p>
-                  </div>      
+                    <h3 class="text-secondary mt-2 fw-bold"><?php echo $artist; ?></h3> 
+                    <h5 class="text-secondary ms-1 mt-2 fw-bold"><?php echo $num_followers ?> <i class="bi bi-people-fill me-5"></i> <?php echo $num_following ?> <i class="bi bi-person-fill me-5"></i> <?php echo $count; ?> <i class="bi bi-images"></i></h5>
+                    <p class="text-secondary text-center fw-bold"><?php echo $desc; ?></p>                  </div>      
                 </div> 
               </div>
             </div>
