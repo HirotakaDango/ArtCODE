@@ -55,17 +55,16 @@ if (isset($_POST['remove_user'])) {
     <div class="container">
         <br>
         <center><span class="bg-danger fw-bold text-white rounded fs-2 py-2 px-2">DANGER ZONE</span></center>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
             <?php while ($user = $stmt->fetch(PDO::FETCH_ASSOC)) { ?>
                 <div class="col">
                     <div class="card">
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
                         <div class="card-body">
-                            <h5 class="card-title"><?php echo $user['username']; ?></h5>
+                            <h5 class="card-title">user: <?php echo $user['username']; ?></h5>
                             <p class="card-text"><?php echo $user['image_count']; ?> images</p>
                             <form method="post">
                                 <input type="hidden" name="remove_user" value="<?php echo $user['id']; ?>">
-                                <button type="submit" class="btn btn-danger">Remove</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Remove</button>
                             </form>
                         </div>
                     </div>
