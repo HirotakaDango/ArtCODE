@@ -117,7 +117,7 @@ $edit_data = $userController->getEditData();
     </center>
     <div class="container mt-5">
       <div class="row">
-        <div class="col-md-6">
+        <div class="container">
           <?php foreach ($data as $row): ?>  
             <div class="card mb-3">
               <div class="card-header bg-primary text-white fw-bold">
