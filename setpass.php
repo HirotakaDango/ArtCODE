@@ -73,15 +73,15 @@ if(isset($_POST['submit'])){
         <form method="POST">
             <div class="mb-3">
                 <label class="form-label">Current Password:</label>
-                <input type="password" class="form-control" name="current_password" maxlength="40">
+                <input type="password" class="form-control" name="current_password" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
             </div>
             <div class="mb-3">
                 <label class="form-label">New Password:</label>
-                <input type="password" class="form-control" name="new_password" maxlength="40">
+                <input type="password" class="form-control" name="new_password" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
             </div>
             <div class="mb-3">
                 <label class="form-label">Confirm Password:</label>
-                <input type="password" class="form-control" name="confirm_password" maxlength="40">
+                <input type="password" class="form-control" name="confirm_password" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
             </div>
             <div class="container">
               <header class="d-flex justify-content-center py-3">
