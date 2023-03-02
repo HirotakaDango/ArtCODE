@@ -44,14 +44,20 @@ if (isset($_FILES['image'])) {
       exit;
     }
 
-    $thumbnail = imagecreatetruecolor(300, 300);
+    $original_width = imagesx($source);
+    $original_height = imagesy($source);
+    $ratio = $original_width / $original_height;
+    $thumbnail_width = 300;
+    $thumbnail_height = 300 / $ratio;
+
+    $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
 
     if ($thumbnail === false) {
       echo "Error: Failed to create thumbnail.";
       exit;
     }
 
-    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, 300, 300, imagesx($source), imagesy($source));
+    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height);
 
     switch ($ext) {
       case 'jpg':
@@ -71,7 +77,8 @@ if (isset($_FILES['image'])) {
 
     // Add the image to the database
     $username = $_SESSION['username'];
-    $tags = explode(",", $_POST['tags']);
+    $tags = htmlspecialchars($_POST['tags']);
+    $tags = explode(",", $tags);
     $tags = array_map('trim', $tags); // Remove extra white space from each tag
     $tags = array_filter($tags); // Remove any empty tags
     $tags = array_values($tags); // Reset array indexes
