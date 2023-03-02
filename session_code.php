@@ -9,8 +9,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMEN
 
 // Check if the user is logging in or registering
 if (isset($_POST['login'])) {
-  $username = $_POST['username'];
-  $password = $_POST['password'];
+  $username = htmlspecialchars($_POST['username']);
+  $password = htmlspecialchars($_POST['password']);
 
   // Check if the user exists in the database
   $stmt = $db->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
@@ -36,9 +36,9 @@ if (isset($_POST['login'])) {
     echo "Incorrect username or password.";
   }
 } elseif (isset($_POST['register'])) {
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  $artist = $_POST['artist'];
+  $username = htmlspecialchars($_POST['username']);
+  $password = htmlspecialchars($_POST['password']);
+  $artist = htmlspecialchars($_POST['artist']);
 
   // Check if the username is already taken
   $stmt = $db->prepare("SELECT * FROM users WHERE username = :username");
@@ -72,10 +72,10 @@ if (isset($_POST['login'])) {
 } else {
   // Check if the session ID cookie exists and restore the session if it does
   if (isset($_COOKIE['session_id'])) {
-    session_id($_COOKIE['session_id']);
+    session_id(htmlspecialchars($_COOKIE['session_id']));
   }
   if (isset($_COOKIE['username'])) {
-    $_SESSION['username'] = $_COOKIE['username'];
+    $_SESSION['username'] = htmlspecialchars($_COOKIE['username']);
   }
 }
 ?>
