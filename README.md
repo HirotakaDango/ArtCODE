@@ -1,4 +1,4 @@
-<div style="margin-right: 20px; margin-left: 10px;">
+
 <h1>ArtCODE</h1>
 
 <h4>This is simple image sharing and upload using PHP with sqlite database. And this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
@@ -9,7 +9,6 @@
 
 <h4 style="font-weight: bold;">Note, you need to install sqlite database extension to run the sqlite database!</h4>
 
-<div style="margin-right: 10px; margin-left: 10px;">
 <h4>Features:</h4>
 <br>
 <ul>
@@ -22,5 +21,4 @@
 <li>forum chat</li>
 <li>images tags</li>
 </ul>
-</div>
-</div>
+
