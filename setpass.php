@@ -13,17 +13,18 @@ if(!isset($_SESSION['username'])){
 
 //check if form is submitted
 if(isset($_POST['submit'])){
-    //get input values
-    $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
+    //get input values and limit password length to 40 characters
+    $current_password = substr(htmlspecialchars($_POST['current_password']), 0, 40);
+    $new_password = substr(htmlspecialchars($_POST['new_password']), 0, 40);
+    $confirm_password = substr(htmlspecialchars($_POST['confirm_password']), 0, 40);
     
     //get username from session
     $username = $_SESSION['username'];
     
     //get password from database
-    $query = "SELECT password FROM users WHERE username='$username'";
-    $result = $db->query($query);
+    $stmt = $db->prepare('SELECT password FROM users WHERE username=:username');
+    $stmt->bindValue(':username', $username, SQLITE3_TEXT);
+    $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $password = $row['password'];
     
@@ -32,8 +33,10 @@ if(isset($_POST['submit'])){
         //check if new password and confirm password match
         if($new_password == $confirm_password){
             //update password in database
-            $query = "UPDATE users SET password='$new_password' WHERE username='$username'";
-            $db->query($query);
+            $stmt = $db->prepare('UPDATE users SET password=:new_password WHERE username=:username');
+            $stmt->bindValue(':new_password', $new_password, SQLITE3_TEXT);
+            $stmt->bindValue(':username', $username, SQLITE3_TEXT);
+            $stmt->execute();
             
             //redirect to profile page
             header("Location: setting.php");
@@ -48,6 +51,7 @@ if(isset($_POST['submit'])){
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,15 +73,15 @@ if(isset($_POST['submit'])){
         <form method="POST">
             <div class="mb-3">
                 <label class="form-label">Current Password:</label>
-                <input type="password" class="form-control" name="current_password">
+                <input type="password" class="form-control" name="current_password" maxlength="40">
             </div>
             <div class="mb-3">
                 <label class="form-label">New Password:</label>
-                <input type="password" class="form-control" name="new_password">
+                <input type="password" class="form-control" name="new_password" maxlength="40">
             </div>
             <div class="mb-3">
                 <label class="form-label">Confirm Password:</label>
-                <input type="password" class="form-control" name="confirm_password">
+                <input type="password" class="form-control" name="confirm_password" maxlength="40">
             </div>
             <div class="container">
               <header class="d-flex justify-content-center py-3">
@@ -91,4 +95,4 @@ if(isset($_POST['submit'])){
       <div>
     </div>
 </body>
-</html> 
+</html>
