@@ -118,8 +118,8 @@ $edit_data = $userController->getEditData();
     <div class="container mt-5">
       <div class="row">
         <div class="col-md-6">
-          <div class="card">
-            <?php foreach ($data as $row): ?> 
+          <?php foreach ($data as $row): ?>  
+            <div class="card mb-3">
               <div class="card-header bg-primary text-white fw-bold">
                 <i class="bi bi-people-fill"></i>
                 Users <a href="?edit=<?= $row['id'] ?>" class="btn-sm text-white float-end"><i class="bi bi-pencil-fill"></i></a>
@@ -131,8 +131,8 @@ $edit_data = $userController->getEditData();
                 <p class="text-start ms-3">Name: <?= $row['artist'] ?></p>
                 <p class="text-start ms-3">Bio: <?= $row['desc'] ?></p>
               </div>
-            <?php endforeach; ?> 
-          </div>
+            </div>
+          <?php endforeach; ?> 
         </div>
       </div>
     </div>
