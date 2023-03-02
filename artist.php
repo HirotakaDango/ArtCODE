@@ -137,9 +137,9 @@ if (isset($_POST['favorite'])) {
                     <h3 class="text-secondary mt-2 fw-bold"><?php echo $artist; ?></h3> 
                     <form method="post">
                       <?php if ($is_following): ?>
-                        <button class="btn btn-danger fw-bold" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> unfollow</button>
+                        <button class="btn btn-danger rounded-pill fw-bold" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> unfollow</button>
                       <?php else: ?>
-                        <button class="btn btn-primary fw-bold" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> follow</button>
+                        <button class="btn btn-primary rounded-pill fw-bold" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> follow</button>
                       <?php endif; ?>
                     </form>    
                     <h5 class="text-secondary ms-1 mt-2 fw-bold"><?php echo $num_followers ?> <i class="bi bi-people-fill me-5"></i> <?php echo $num_following ?> <i class="bi bi-person-fill me-5"></i> <?php echo count($images); ?> <i class="bi bi-images"></i></h5>
