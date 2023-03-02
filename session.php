@@ -20,11 +20,11 @@
         <div class="modal-body p-4 pt-0">
           <form class="" action="session_code.php" method="post">
             <div class="form-floating mb-3">
-              <input name="username" type="email" class="form-control rounded-3" id="floatingInput" placeholder="name@example.com">
+              <input name="username" type="email" class="form-control rounded-3" id="floatingInput" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" placeholder="name@example.com">
               <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating mb-3">
-              <input name="password" type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password">
+              <input name="password" type="password" class="form-control rounded-3" id="floatingPassword" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" placeholder="Password">
               <label for="floatingPassword">Password</label>
             </div>
             <button name="login" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Login</button>
@@ -41,15 +41,15 @@
         <div class="modal-body p-4 pt-0">
           <form class="" action="session_code.php" method="post">
              <div class="form-floating mb-3">
-              <input name="artist" type="text" class="form-control rounded-3" id="floatingInput" placeholder="your name">
+              <input name="artist" type="text" class="form-control rounded-3" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" id="floatingInput" placeholder="your name">
               <label for="floatingInput">Your name</label>
             </div>
             <div class="form-floating mb-3">
-              <input name="username" type="email" class="form-control rounded-3" id="floatingInput" placeholder="name@example.com">
+              <input name="username" type="email" class="form-control rounded-3" id="floatingInput" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" placeholder="name@example.com">
               <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating mb-3">
-              <input name="password" type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password">
+              <input name="password" type="password" class="form-control rounded-3" id="floatingPassword" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" placeholder="Password">
               <label for="floatingPassword">Password</label>
             </div>
             <button name="register" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Register</button>
