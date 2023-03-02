@@ -64,10 +64,12 @@ $tags = array_filter($tags);
   <div class="tag-buttons">
     <?php foreach ($tags as $tag): ?>
       <?php
-      // Check if the tag has any associated images
-      $countResult = $db->querySingle("SELECT COUNT(*) FROM images WHERE tags LIKE '%{$tag}%'");
-      if ($countResult > 0):
-      ?>
+        // Check if the tag has any associated images
+        $stmt = $db->prepare("SELECT COUNT(*) FROM images WHERE tags LIKE ?");
+        $stmt->bindValue(1, '%' . $tag . '%');
+        $countResult = $stmt->execute()->fetchArray()[0];
+        if ($countResult > 0):
+        ?>
         <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>"
            class="tag-button">
           <?php echo $tag; ?>
