@@ -1,20 +1,25 @@
 <?php
-  session_start();
-  if (!isset($_SESSION['username'])) {
-    header("Location: session.php");
-    exit;
-  }
-  
-  $username = $_SESSION['username'];
+session_start();
+if (!isset($_SESSION['username'])) {
+  header("Location: session.php");
+  exit;
+}
 
-  // Connect to the SQLite database
-  $db = new SQLite3('database.sqlite');
-  $db->exec("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, username TEXT, tags TEXT)");
-  $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, image_id INTEGER, username TEXT)");
-  $db->exec('CREATE TABLE IF NOT EXISTS following (id INTEGER PRIMARY KEY AUTOINCREMENT, follower_username TEXT NOT NULL, following_username TEXT NOT NULL)');
-  
-  // Get all of the images from the database
-  $result = $db->query("SELECT * FROM images ORDER BY id DESC");
+$username = $_SESSION['username'];
+
+// Connect to the SQLite database using parameterized query
+$db = new SQLite3('database.sqlite');
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, username TEXT, tags TEXT)");
+$stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, image_id INTEGER, username TEXT)");
+$stmt->execute();
+$stmt = $db->prepare('CREATE TABLE IF NOT EXISTS following (id INTEGER PRIMARY KEY AUTOINCREMENT, follower_username TEXT NOT NULL, following_username TEXT NOT NULL)');
+$stmt->execute();
+
+// Get all of the images from the database using parameterized query
+$stmt = $db->prepare("SELECT * FROM images WHERE username = :username ORDER BY id DESC");
+$stmt->bindValue(':username', $username, SQLITE3_TEXT);
+$result = $stmt->execute();
 ?>
 
 <!DOCTYPE html>
