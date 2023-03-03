@@ -1,13 +1,13 @@
 
 <h1>ArtCODE</h1>
 
-<h4>This is simple image sharing and upload using PHP with sqlite database. And this is updated version finally bring sqlite database for CRUD operation and user register/login to upload images</h4>
+<h4>ArtCODE is simple image sharing and upload like Pinterest, Pixiv, Tumblr or etc.</h4>
 
-<h4>For admin panel to manage file, you can go to "manager/password/index.php". You can change the password in "manager/password/index.php" to access management.php = "admin"</h4>
+<h5>You can go to admin panel in admin section to manage user and image. This adminpanel still in developemnt process. You can manage file and folder in password section.</h5>
 
-<h4>you can make it as PWA</h4>
+<h4>You can install ArtCODE as progressive webapp.</h4>
 
-<h4 style="font-weight: bold;">Note, you need to install sqlite database extension to run the sqlite database!</h4>
+<h4>Note, you need to install sqlite database extension to run the sqlite database!</h4>
 
 <h4>Features:</h4>
 <br>
@@ -17,8 +17,12 @@
 <li>user can download image from download button</li>
 <li>generate thumbnail to save bandwidth</li>
 <li>add image to your favorite</li>
-<li>change password</li>
-<li>forum chat</li>
-<li>images tags</li>
+<li>forum chat to discuss something</li>
+<li>image tags so you're not had difficult time to find specific image</li>
+<li>settings page to manage your account</li>
+<li>change password for additional security</li>
+<li>you can change your username</li>
+<li>follow/unfollow button with following/follower count</li>
 </ul>
 
+<h5>Development progress still far from complete. I will update as possible for this zero cost website.</h5>
