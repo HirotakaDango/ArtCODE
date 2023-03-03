@@ -17,8 +17,7 @@ $stmt = $db->prepare('CREATE TABLE IF NOT EXISTS following (id INTEGER PRIMARY K
 $stmt->execute();
 
 // Get all of the images from the database using parameterized query
-$stmt = $db->prepare("SELECT * FROM images WHERE username = :username ORDER BY id DESC");
-$stmt->bindValue(':username', $username, SQLITE3_TEXT);
+$stmt = $db->prepare("SELECT * FROM images ORDER BY id DESC");
 $result = $stmt->execute();
 ?>
 
