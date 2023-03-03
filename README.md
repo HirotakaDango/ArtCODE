@@ -26,3 +26,4 @@
 </ul>
 
 <h5>Development progress still far from complete. I will update as possible for this zero cost website.</h5>
+<h5>Note: This is just my school assignment and I want to develop it to be better.</h5>
