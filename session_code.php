@@ -5,7 +5,7 @@ session_start();
 $db = new SQLite3('database.sqlite');
 
 // Create the users table if it doesn't exist
-$db->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT)");
 
 // Check if the user is logging in or registering
 if (isset($_POST['login'])) {
@@ -19,9 +19,15 @@ if (isset($_POST['login'])) {
   $result = $stmt->execute();
   $user = $result->fetchArray();
   if ($user) {
-    // Generate a unique session ID and store it in a cookie
-    $session_id = uniqid();
-    setcookie('session_id', $session_id, time() + (7 * 24 * 60 * 60), '/');
+    // Generate a new token and store it in the database
+    $token = bin2hex(random_bytes(16));
+    $stmt = $db->prepare("UPDATE users SET token = :token WHERE username = :username");
+    $stmt->bindValue(':token', $token, SQLITE3_TEXT);
+    $stmt->bindValue(':username', $username, SQLITE3_TEXT);
+    $stmt->execute();
+    
+    // Store the token in a cookie
+    setcookie('token', $token, time() + (7 * 24 * 60 * 60), '/');
     
     // Store the username in a cookie
     setcookie('username', $username, time() + (7 * 24 * 60 * 60), '/');
