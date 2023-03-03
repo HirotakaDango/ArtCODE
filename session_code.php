@@ -60,30 +60,23 @@ if (isset($_POST['login'])) {
     $stmt->bindValue(':password', $password, SQLITE3_TEXT);
     $stmt->bindValue(':artist', $artist, SQLITE3_TEXT);
     $stmt->execute();
-    
+  
     // Generate a unique session ID and store it in a cookie
     $session_id = uniqid();
     setcookie('session_id', $session_id, time() + (7 * 24 * 60 * 60), '/');
-    
+  
     // Store the username in a cookie
     setcookie('username', $username, time() + (7 * 24 * 60 * 60), '/');
-    
+  
     // Store the username in the session for future use
     $_SESSION['username'] = $username;
-    
+  
     // Redirect the user to the homepage
     header("Location: index.php");
     exit;
   }
-} else {
-  // Check if the session ID cookie exists and is valid, and restore the session if it is
-  if (isset($_COOKIE['session_id']) && session_id($_COOKIE['session_id'])) {
-    if (isset($_COOKIE['username'])) {
-      $_SESSION['username'] = htmlspecialchars($_COOKIE['username']);
-    }
-  } else {
-    // The session ID cookie is not valid, so do not restore the session
-    unset($_SESSION['username']);
-  }
 }
+
+// The session ID cookie is not valid, so do not restore the session
+unset($_SESSION['username']);
 ?>
