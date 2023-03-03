@@ -76,12 +76,14 @@ if (isset($_POST['login'])) {
     exit;
   }
 } else {
-  // Check if the session ID cookie exists and restore the session if it does
-  if (isset($_COOKIE['session_id'])) {
-    session_id(htmlspecialchars($_COOKIE['session_id']));
-  }
-  if (isset($_COOKIE['username'])) {
-    $_SESSION['username'] = htmlspecialchars($_COOKIE['username']);
+  // Check if the session ID cookie exists and is valid, and restore the session if it is
+  if (isset($_COOKIE['session_id']) && session_id($_COOKIE['session_id'])) {
+    if (isset($_COOKIE['username'])) {
+      $_SESSION['username'] = htmlspecialchars($_COOKIE['username']);
+    }
+  } else {
+    // The session ID cookie is not valid, so do not restore the session
+    unset($_SESSION['username']);
   }
 }
 ?>
