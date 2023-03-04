@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['username'])) {
+  header("Location: session.php");
+  exit;
+}
+
 // Connect to SQLite database
 $db = new PDO('sqlite:database.sqlite');
 
