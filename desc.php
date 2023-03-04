@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $username = $_SESSION['username'];
 
   // Get the user's input
-  $desc = $_POST['desc'];
+  $desc = htmlspecialchars($_POST['desc']);
 
   // Update the user's profile description in the database
   $stmt = $db->prepare('UPDATE users SET desc = :desc WHERE username = :username');
@@ -36,7 +36,7 @@ $stmt = $db->prepare('SELECT desc FROM users WHERE username = :username');
 $stmt->bindValue(':username', $username, SQLITE3_TEXT);
 $result = $stmt->execute();
 $row = $result->fetchArray(SQLITE3_ASSOC);
-$current_desc = $row['desc'];
+$current_desc = htmlspecialchars($row['desc']);
 
 // Close the database connection
 $db->close();
@@ -56,7 +56,7 @@ $db->close();
     <form method="POST">
       <div class="mb-3">
         <label for="desc" class="form-label text-secondary fw-bold">Description:</label>
-        <textarea class="form-control" id="desc" name="desc" rows="5"><?php echo htmlspecialchars($current_desc); ?></textarea>
+        <textarea class="form-control" id="desc" name="desc" rows="5" maxlength="400"><?php echo htmlspecialchars($current_desc); ?></textarea>
       </div>
       <header class="d-flex justify-content-center py-3">
         <ul class="nav nav-pills">
