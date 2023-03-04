@@ -21,7 +21,7 @@ class Settings {
     // Check if the form was submitted
     if (isset($_POST['submit'])) {
       $username = $_SESSION['username'];
-      $artist = $_POST['artist'];
+      $artist = htmlspecialchars($_POST['artist']);
 
       // Update the user's artist name in the database
       $stmt = $this->db->prepare("UPDATE users SET artist = :artist WHERE username = :username");
@@ -45,7 +45,7 @@ class Settings {
     $stmt->bindValue(':username', $username);
     $result = $stmt->execute();
     $user = $result->fetchArray();
-    $artist = $user['artist'];
+    $artist = htmlspecialchars($user['artist']);
     return $artist;
   }
 }
@@ -74,7 +74,7 @@ $artist = $settings->getCurrentArtist();
   <form method="post" action="yourname.php">
     <div class="mb-3">
       <label for="artist" class="form-label text-secondary fw-bold">Your Name: <?php echo $artist; ?></label>
-      <input type="text" class="form-control" id="artist" name="artist" value="<?php echo $artist; ?>">
+      <input type="text" class="form-control" id="artist" name="artist" value="<?php echo $artist; ?>" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
     </div>
     <div class="container">
       <header class="d-flex justify-content-center py-3">
