@@ -60,7 +60,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                 // Output the JavaScript code for the chart
                 echo "<script>";
                 echo "var ctx = document.getElementById('user-chart').getContext('2d');";
-                echo "var myChart = new Chart(ctx, {type: 'doughnut', data: " . json_encode($data) . "});";
+                echo "var myChart = new Chart(ctx, {type: 'pie', data: " . json_encode($data) . "});";
                 echo "</script>";
                 echo "<p class='fw-bold text-secondary mt-3'>Total Users: " . $user_count . "</p>";
                 echo "<a class='btn btn-sm btn-primary fw-bold me-1' href='../admin/edit_users.php'>manage user</a>";
@@ -120,7 +120,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
               <script>
                 var ctx = document.getElementById('myChart').getContext('2d');
                 var myChart = new Chart(ctx, {
-                  type: 'doughnut',
+                  type: 'pie',
                   data: {
                     labels: ['(' + <?php echo $image_count_data; ?> + ' images)', '(' + <?php echo $tag_count; ?> + ' tags)', '(' + <?php echo $total_size_data; ?> + ' MB)'],
                     datasets: [{
