@@ -123,13 +123,14 @@
               <input type="hidden" name="filename" value="<?php echo $image['filename']; ?>">
               <input style="margin-top: -73px; margin-left: 8px; font-size: 10px;" class="btn btn-danger fw-bold" type="submit" onclick="return confirm('Are you sure?')" value="Delete">
             </form>
+            <button style="margin-top: -450px;" class="btn btn-sm btn-primary fw-bold" onclick="location.href='edit_image.php?id=<?php echo $image['id']; ?>'" ><i class="bi bi-pencil-fill"></i></button> 
           </div>
         </div>
       <?php endwhile; ?>
     </div>
     <style>
       .image-container {
-        margin-bottom: -24px;  
+        margin-bottom: -48px;  
       }
       
       .images {
