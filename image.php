@@ -175,7 +175,7 @@ if (isset($_POST['favorite'])) {
       </div>
     </div>
     <a href="images/<?php echo $filename; ?>">
-      <img class="img-fluid" src="thumbnails/<?php echo $filename; ?>" width="100%" height="auto">
+      <img class="img-fluid border-top border-bottom border-3" src="thumbnails/<?php echo $filename; ?>" width="100%" height="auto">
     </a>
     <div class="favorite-btn">
     <?php
@@ -261,4 +261,3 @@ if (isset($_POST['favorite'])) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
