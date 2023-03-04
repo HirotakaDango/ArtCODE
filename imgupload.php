@@ -48,7 +48,7 @@
             <form action="upload.php" method="post" enctype="multipart/form-data">
               <input class="form-control" type="file" name="image" type="file" id="file-ip-1" accept="image/*" onchange="showPreview(event);">
               <input class="form-control mt-3" type="text" name="title" placeholder="Enter title for your image" maxlength="40"> 
-              <input class="form-control mt-3" type="text" name="imgdesc" placeholder="Enter description for your image" maxlength="200">
+              <textarea class="form-control mt-3" type="text" name="imgdesc" placeholder="Enter description for your image" maxlength="200"></textarea>
               <input class="form-control mt-3" type="text" name="tags" placeholder="Enter tags separated by comma">
               <input class="form-control mt-3" type="text" name="link" placeholder="Enter link for your image" maxlength="120"> 
               <input class="btn btn-primary fw-bold w-100 mt-3" type="submit" name="submit" value="upload">
