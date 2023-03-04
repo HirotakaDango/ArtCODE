@@ -196,7 +196,7 @@ if (isset($_POST['favorite'])) {
     </div>
     <button class="btn btn-sm btn-secondary rounded-pill opacity-50 float-end me-3 mt-2 fw-bold" onclick="sharePage()"><i class="bi bi-share-fill"></i> share</button>
     <div class="me-2 ms-2 rounded img-thumbnail fw-bold">
-      <h3 class=" text-secondary"><?php echo $image['title']; ?></h3>
+      <h3 class="text-secondary"><?php echo $image['title']; ?></h3>
       <p class="text-secondary"><?php echo $image['imgdesc']; ?></p>
       <p class="text-secondary" style="word-wrap: break-word;">link: <a class="text-primary" href="<?php echo $image['link']; ?>"><?php echo (strlen($image['link']) > 40) ? substr($image['link'], 0, 40) . '...' : $image['link']; ?></a></p>
       <div>
