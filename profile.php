@@ -115,9 +115,9 @@
     <div class="images">
       <?php while ($image = $result->fetchArray()): ?>
         <div class="image-container">
-          <a href="images/<?php echo $image['filename']; ?>">
+          <a href="image.php?filename=<?php echo $image['filename']; ?>">
             <img class="lazy-load" data-src="thumbnails/<?php echo $image['filename']; ?>">
-          </a>
+          </a> 
           <div>
             <form action="delete.php" method="post">
               <input type="hidden" name="filename" value="<?php echo $image['filename']; ?>">
