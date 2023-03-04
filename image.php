@@ -152,10 +152,10 @@ if (isset($_POST['favorite'])) {
   <div>
     <div class="container mb-2" style="display: flex; align-items: center;">
       <?php
-        $stmt = $db->prepare("SELECT id, artist, pic FROM users WHERE username = :username");
-        $stmt->bindParam(':username', $username);
+        $stmt = $db->prepare("SELECT u.id, u.username, u.password, u.artist, u.pic, u.desc, u.bgpic, i.id AS image_id, i.filename, i.tags FROM users u INNER JOIN images i ON u.id = i.id WHERE u.id = :id");
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
       ?>
       <div style="display: flex; align-items: center;">
         <i class="bi bi-person-circle me-2"></i>
