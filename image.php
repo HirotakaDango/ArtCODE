@@ -1,6 +1,9 @@
 <?php
-// Start a session to check if the user is logged in
 session_start();
+if (!isset($_SESSION['username'])) {
+  header("Location: session.php");
+  exit;
+}
 
 // Get the filename from the query string
 $filename = $_GET['filename'];
@@ -192,18 +195,40 @@ if (isset($_POST['favorite'])) {
     <?php } ?>
     </div>
     <button class="btn btn-sm btn-secondary rounded-pill opacity-50 float-end me-3 mt-2 fw-bold" onclick="sharePage()"><i class="bi bi-share-fill"></i> share</button>
-      <div class="me-2 ms-2 rounded img-thumbnail fw-bold">
-        <h3 class=" text-secondary"><?php echo $image['title']; ?></h3>
-        <p class="text-secondary"><?php echo $image['imgdesc']; ?></p>
-        <p class="text-secondary" style="word-wrap: break-word;">link: <a class="text-primary" href="<?php echo $image['link']; ?>"><?php echo $image['link']; ?></a></p>
-        <a class="btn btn-sm btn-primary fw-bold rounded-pill" href="images/<?php echo $image['filename']; ?>" download>Download Image</a>
-        <p class="text-secondary mt-2"><i class="bi bi-tags-fill"></i> tags</p>
-        <div class="tag-buttons container">
+    <div class="me-2 ms-2 rounded img-thumbnail fw-bold">
+      <h3 class=" text-secondary"><?php echo $image['title']; ?></h3>
+      <p class="text-secondary"><?php echo $image['imgdesc']; ?></p>
+      <p class="text-secondary" style="word-wrap: break-word;">link: <a class="text-primary" href="<?php echo $image['link']; ?>"><?php echo (strlen($image['link']) > 40) ? substr($image['link'], 0, 40) . '...' : $image['link']; ?></a></p>
+      <div>
+        <button class="btn btn-sm btn-primary dropdown-toggle rounded-pill fw-bold me-1" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-info-circle-fill"></i> info</button>
+        <a class="btn btn-sm btn-primary fw-bold rounded-pill" href="images/<?php echo $image['filename']; ?>" download>Download Image</a> 
+        <ul class="dropdown-menu">
           <?php
-            $tags = explode(',', $image['tags']);
-            foreach ($tags as $tag) {
-              $tag = trim($tag);
-              if (!empty($tag)) {
+            // Get the image information from the database
+            $stmt = $db->prepare("SELECT * FROM images WHERE filename = :filename");
+            $stmt->bindParam(':filename', $filename);
+            $stmt->execute();
+            $image = $stmt->fetch();
+
+            // Get image size in megabytes
+            $image_size = round(filesize('images/' . $image['filename']) / (1024 * 1024), 2);
+
+            // Get image dimensions
+            list($width, $height) = getimagesize('images/' . $image['filename']);
+
+            // Display image information
+            echo "<li class='me-1 ms-1'>Image data size: " . $image_size . " MB</li>";
+            echo "<li class='me-1 ms-1'>Image dimensions: " . $width . "x" . $height . "</li>";
+          ?>
+        </ul>
+      </div>
+      <p class="text-secondary mt-2"><i class="bi bi-tags-fill"></i> tags</p>
+      <div class="tag-buttons container">
+        <?php
+          $tags = explode(',', $image['tags']);
+          foreach ($tags as $tag) {
+            $tag = trim($tag);
+            if (!empty($tag)) {
           ?>
             <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>"
               class="tag-button">
