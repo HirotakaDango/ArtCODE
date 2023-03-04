@@ -115,7 +115,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                 echo "<p class='fw-bold text-secondary mt-3'>Total Images: " . $image_count_data . "</p>";
                 echo "<p class='fw-bold text-secondary'>Total Tags: " . $tag_count . "</p>";
                 echo "<p class='fw-bold text-secondary'>Total Size: " . $total_size_data . " MB</p>";
-                echo "<a class='btn btn-sm btn-primary fw-bold' href='../admin/remove_images.php'>manage user</a>";
+                echo "<a class='btn btn-sm btn-primary fw-bold' href='../admin/remove_images.php'>manage images</a>";
               ?>
               <script>
                 var ctx = document.getElementById('myChart').getContext('2d');
