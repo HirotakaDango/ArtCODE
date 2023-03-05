@@ -194,14 +194,14 @@ if (isset($_POST['favorite'])) {
       </form>
     <?php } ?>
     </div>
-    <button class="btn btn-sm btn-secondary rounded-pill opacity-50 float-end me-3 mt-2 fw-bold" onclick="sharePage()"><i class="bi bi-share-fill"></i> share</button>
     <div class="me-2 ms-2 rounded img-thumbnail fw-bold">
-      <h3 class="text-secondary"><?php echo $image['title']; ?></h3>
-      <p class="text-secondary"><?php echo $image['imgdesc']; ?></p>
+      <p class="text-secondary fw-bold text-center"><?php echo $image['title']; ?></p>
+      <p class="text-secondary fw-bold" style="word-break: break-all;"><?php echo $image['imgdesc']; ?></p>
       <p class="text-secondary" style="word-wrap: break-word;">link: <a class="text-primary" href="<?php echo $image['link']; ?>"><?php echo (strlen($image['link']) > 40) ? substr($image['link'], 0, 40) . '...' : $image['link']; ?></a></p>
       <div>
         <button class="btn btn-sm btn-primary dropdown-toggle rounded-pill fw-bold me-1" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-info-circle-fill"></i> info</button>
-        <a class="btn btn-sm btn-primary fw-bold rounded-pill" href="images/<?php echo $image['filename']; ?>" download>Download Image</a> 
+        <a class="btn btn-sm btn-primary fw-bold rounded-pill me-1" href="images/<?php echo $image['filename']; ?>" download>Download Image</a> 
+        <button class="btn btn-sm btn-secondary rounded-pill opacity-50 fw-bold" onclick="sharePage()"><i class="bi bi-share-fill"></i> share</button>
         <ul class="dropdown-menu">
           <?php
             // Get the image information from the database
@@ -257,6 +257,8 @@ if (isset($_POST['favorite'])) {
       }
     }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
 </body>
