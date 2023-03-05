@@ -18,7 +18,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-   <ul class="me-2 ms-2 mt-2 nav nav-pills nav-fill justify-content-center">
+    <ul class="me-2 ms-2 mt-2 nav nav-pills nav-fill justify-content-center">
       <li class="nav-item"><a class="nav-link active" href="../admin/index.php"><i class="bi bi-house-fill"></i></a></li>
       <li class="nav-item"><a class="nav-link" aria-current="page" href="../admin/edit_users.php"><i class="bi bi-person-fill-gear"></i></a></li>
       <li class="nav-item"><a class="nav-link" href="../admin/remove_images.php"><i class="bi bi-images"></i></a></li> 
