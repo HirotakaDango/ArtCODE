@@ -3,7 +3,7 @@
 
 <h4>ArtCODE is simple image sharing and upload like Pinterest, Pixiv, Tumblr or etc.</h4>
 
-<h5>You can go to admin panel in admin section to manage user and image. This adminpanel still in developemnt process. You can manage file and folder in password section.</h5>
+<h5>You can go to admin panel in admin section to manage user and image. This admin panel still in developemnt process. You can manage file and folder in password section.</h5>
 
 <h4>You can install ArtCODE as progressive webapp.</h4>
 
