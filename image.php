@@ -161,8 +161,7 @@ if (isset($_POST['favorite'])) {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
       ?>
       <div style="display: flex; align-items: center;">
-        <i class="bi bi-person-circle me-2"></i>
-        <a class="text-secondary fw-bold" href="artist.php?id=<?= $user['id'] ?>"><?php echo $user['artist']; ?></a>
+        <a class="text-white btn btn-sm btn-primary text-decoration-none fw-bold rounded-pill" href="artist.php?id=<?= $user['id'] ?>"><i class="bi bi-person-circle"></i> <?php echo $user['artist']; ?></a>
       </div>
       <div style="margin-left: auto;">
         <form method="post">
