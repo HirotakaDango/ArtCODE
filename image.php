@@ -5,11 +5,35 @@ if (!isset($_SESSION['username'])) {
   exit;
 }
 
+// Connect to the database using PDO
+$db = new PDO('sqlite:database.sqlite');
+
 // Get the filename from the query string
 $filename = $_GET['filename'];
 
-// Connect to the database using PDO
-$db = new PDO('sqlite:database.sqlite');
+// Get the current image information from the database
+$stmt = $db->prepare("SELECT * FROM images WHERE filename = :filename");
+$stmt->bindParam(':filename', $filename);
+$stmt->execute();
+$image = $stmt->fetch();
+
+// Get the ID of the current image and the username of the owner
+$image_id = $image['id'];
+$username = $image['username'];
+
+// Get the previous image information from the database
+$stmt = $db->prepare("SELECT * FROM images WHERE id < :id AND username = :username ORDER BY id DESC LIMIT 1");
+$stmt->bindParam(':id', $image_id);
+$stmt->bindParam(':username', $username);
+$stmt->execute();
+$prev_image = $stmt->fetch();
+
+// Get the next image information from the database
+$stmt = $db->prepare("SELECT * FROM images WHERE id > :id AND username = :username ORDER BY id ASC LIMIT 1");
+$stmt->bindParam(':id', $image_id);
+$stmt->bindParam(':username', $username);
+$stmt->execute();
+$next_image = $stmt->fetch();
 
 // Get the image information from the database
 $stmt = $db->prepare("SELECT * FROM images WHERE filename = :filename");
@@ -99,7 +123,7 @@ if (isset($_POST['favorite'])) {
 <head>
   <meta charset="UTF-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ArtCODE/image/<?php echo $image['filename'];?></title>
+  <title>Image</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <style>
@@ -221,7 +245,17 @@ if (isset($_POST['favorite'])) {
           ?>
         </ul>
       </div>
-      <p class="text-secondary mt-2"><i class="bi bi-tags-fill"></i> tags</p>
+      <?php if ($next_image): ?>
+        <button class="btn btn-sm btn-primary fw-bold float-start rounded-pill mt-1" onclick="location.href='image.php?filename=<?= $next_image['filename'] ?>'">
+          <i class="bi bi-arrow-left-circle-fill"></i> Next
+        </button>
+      <?php endif; ?> 
+      <?php if ($prev_image): ?>
+        <button class="btn btn-sm btn-primary fw-bold float-end rounded-pill mt-1" onclick="location.href='image.php?filename=<?= $prev_image['filename'] ?>'">
+          Previous <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      <?php endif; ?>
+      <p class="text-secondary mt-5"><i class="bi bi-tags-fill"></i> tags</p>
       <div class="tag-buttons container">
         <?php
           $tags = explode(',', $image['tags']);
