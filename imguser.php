@@ -26,79 +26,35 @@
       .imagesP:last-of-type {
         margin-right: 0;
       }
+
+      .imageP {
+        display: inline-block;
+      }
     </style> 
   </head>
   <body>
-    <h5 class="ms-2 mt-2 text-secondary fw-bold"><i class="bi bi-images"></i> Most Popular</h5>
+    <p class="ms-2 mt-2 text-secondary fw-bold"><i class="bi bi-images"></i> Latest images by <?php echo $user['artist']; ?></p>
     <div class="containerP mb-2">
       <?php
-        $dbP = new SQLite3('database.sqlite');
-        // Get all of the images from the database using parameterized query
-        $stmtP = $dbP->prepare("SELECT images.id, images.filename, images.tags, images.title, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY favorite_count DESC LIMIT 25");
-        $resultP = $stmtP->execute();
-        while ($imageP = $resultP->fetchArray()): ?>
-          <div class="imagesP">
-            <a href="image.php?filename=<?php echo $imageP['filename']; ?>">
-              <img class="lazy-load hori" data-src="thumbnails/<?php echo $imageP['filename']; ?>">
-            </a>
-          <div class="favorite-btn">
-            <?php
-              $favorite_countP = $dbP->querySingle("SELECT COUNT(*) FROM favorites WHERE username = '$username' AND image_id = {$imageP['id']}");
-              $favorite_countP = $imageP['favorite_count'];
-              if ($favorite_countP) {
-            ?>
-              <p style="margin-top: -40px; margin-left: 8px; text-shadow: 1px 1px 1px #020202;" class="text-white fw-bold"><?php echo $favorite_countP; ?> favorites</p>
-            <?php } ?> 
-          </div>  
-        </div>
-      <?php endwhile; ?>
+        // Get all images for the given user_username
+        $stmt = $db->prepare("SELECT * FROM images WHERE username = :username ORDER BY id DESC");
+        $stmt->bindParam(':username', $user_username);
+        $stmt->execute();
+        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      ?> 
+      <div class="imagesP">
+        <?php foreach ($images as $image): ?>
+        <?php
+          $image_id = $image['id'];
+          $user_username = $image['username'];
+          $image_url = $image['filename'];
+        ?>
+          <a class="imageP" href="image.php?filename=<?php echo $image_url; ?>">
+            <img class="lazy-load hori" data-src="thumbnails/<?php echo $image_url; ?>">
+          </a>
+        <?php endforeach; ?>
+      </div> 
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          let lazyloadImages;
-          if("IntersectionObserver" in window) {
-            lazyloadImages = document.querySelectorAll(".lazy-load");
-            let imageObserver = new IntersectionObserver(function(entries, observer) {
-              entries.forEach(function(entry) {
-                if(entry.isIntersecting) {
-                  let image = entry.target;
-                  image.src = image.dataset.src;
-                  image.classList.remove("lazy-load");
-                  imageObserver.unobserve(image);
-                }
-              });
-            });
-            lazyloadImages.forEach(function(image) {
-              imageObserver.observe(image);
-            });
-          } else {
-            let lazyloadThrottleTimeout;
-            lazyloadImages = document.querySelectorAll(".lazy-load");
-
-            function lazyload() {
-              if(lazyloadThrottleTimeout) {
-                clearTimeout(lazyloadThrottleTimeout);
-              }
-              lazyloadThrottleTimeout = setTimeout(function() {
-                let scrollTop = window.pageYOffset;
-                lazyloadImages.forEach(function(img) {
-                  if(img.offsetTop < (window.innerHeight + scrollTop)) {
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy-load');
-                  }
-                });
-                if(lazyloadImages.length == 0) {
-                  document.removeEventListener("scroll", lazyload);
-                  window.removeEventListener("resize", lazyload);
-                  window.removeEventListener("orientationChange", lazyload);
-                }
-              }, 20);
-            }
-            document.addEventListener("scroll", lazyload);
-            window.addEventListener("resize", lazyload);
-            window.addEventListener("orientationChange", lazyload);
-          }
-        })
-    </script>
+    
   </body>
 </html>
