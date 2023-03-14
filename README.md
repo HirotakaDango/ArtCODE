@@ -5,9 +5,9 @@
 
 <h5>You can go to admin panel in admin section to manage user and image. This admin panel still in developemnt process. You can manage file and folder in password section.</h5>
 
-<h4>You can install ArtCODE as progressive webapp.</h4>
+<h5>You can install ArtCODE as progressive webapp.</h5>
 
-<h4>Note, you need to install sqlite database extension to run the sqlite database! Or if you use xampp, you can go to xampp control panel then click config, click php.ini, search sqlite extension and remove the semicolon.</h4>
+<h5>Note, you need to install sqlite database extension to run the sqlite database! Or if you use xampp, you can go to xampp control panel then click config, click php.ini, search sqlite extension and remove the semicolon.</h5>
 
 <h4>Features:</h4>
 <br>
