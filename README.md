@@ -7,7 +7,7 @@
 
 <h4>You can install ArtCODE as progressive webapp.</h4>
 
-<h4>Note, you need to install sqlite database extension to run the sqlite database!</h4>
+<h4>Note, you need to install sqlite database extension to run the sqlite database! Or if you use xampp, you can go to xampp control panel then click config, click php.ini, search sqlite extension and remove the semicolon.</h4>
 
 <h4>Features:</h4>
 <br>
