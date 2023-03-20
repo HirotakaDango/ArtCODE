@@ -1,5 +1,5 @@
 
-# ArtCODE
+# ArtCODE - simple image sharing platform
 
 ## About ArtCODE 
 **ArtCODE is an image sharing and upload website built with vanilla PHP by a solo developer.
