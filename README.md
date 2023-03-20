@@ -1,15 +1,15 @@
 
 # ArtCODE - simple image sharing platform
 
-![home](https://test-artcode.artworldjp.repl.co/images/example/02.png)
+![home](https://raw.githubusercontent.com/BurgerIsReal01/image/main/02.png)
 ## About ArtCODE 
 **ArtCODE is an image sharing and upload website built with vanilla PHP by a solo developer.
 Inspired by the likes of Pixiv and Pinterest, this platform has some features and functionalities like those platforms, all meticulously optimized using SQLite database only. This website was created with absolutely zero cost. Because it use vanilla php, making it very user-friendly to modify for those who are unfamiliar with PHP frameworks.**
 
 **Here's the [demo](https://test-artcode.artworldjp.repl.co/)**
-![upload](https://test-artcode.artworldjp.repl.co/images/example/01.png)
-![profile](https://test-artcode.artworldjp.repl.co/images/example/03.png)
-![image](https://test-artcode.artworldjp.repl.co/images/example/04.png)
+![upload](https://raw.githubusercontent.com/BurgerIsReal01/image/main/01.png)
+![profile](https://raw.githubusercontent.com/BurgerIsReal01/image/main/03.png)
+![image](https://raw.githubusercontent.com/BurgerIsReal01/image/main/04.png)
 ## Manage
 
 **To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.**
