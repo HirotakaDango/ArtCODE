@@ -1,17 +1,16 @@
 
 <h1>ArtCODE</h1>
 
-<h4>ArtCODE is simple image sharing and upload like Pinterest, Pixiv, Tumblr or etc. Here's the <a href="https://test-artcode.artworldjp.repl.co/" target="_blank">demo</a>.</h4>
-ArtCODE is an image sharing and upload website built with vanilla PHP by a solo developer. Inspired by the likes of Pixiv and Pinterest, this platform has some features and functionalities like those platforms, all meticulously optimized using SQLite database only. This website was created with absolutely zero cost. Because it use vanilla php, making it very user-friendly to modify for those who are unfamiliar with PHP frameworks.
+<h4>Summary</h4>
+**ArtCODE is an image sharing and upload website built with vanilla PHP by a solo developer. Inspired by the likes of Pixiv and Pinterest, this platform has some features and functionalities like those platforms, all meticulously optimized using SQLite database only. This website was created with absolutely zero cost. Because it use vanilla php, making it very user-friendly to modify for those who are unfamiliar with PHP frameworks. Here's the <a href="https://test-artcode.artworldjp.repl.co/" target="_blank">demo</a>**
 
 <h4>Manage</h4>
-To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.
+**To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.**
 
-You can install ArtCODE as progressive webapp.
+**You can install ArtCODE as progressive webapp.**
 
+**Please note that in order to run the sqlite database, you will need to install the sqlite database extension. If you are using xampp, you can do this by accessing the xampp control panel, clicking on "config," selecting "php.ini," and searching for the sqlite extension. Don't forget to remove the semicolon to enable the extension.**
 
-Please note that in order to run the sqlite database, you will need to install the sqlite database extension. If you are using xampp, you can do this by accessing the xampp control panel, clicking on "config," selecting "php.ini," and searching for the sqlite extension. Don't forget to remove the semicolon to enable the extension.
-<br>
 <h4>Features:</h4>
 
 <ul>
