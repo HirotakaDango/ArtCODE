@@ -7,6 +7,7 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 
 **Here's the [demo](https://test-artcode.artworldjp.repl.co/)**
 
+## Manage
 
 **To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.**
 
@@ -32,5 +33,5 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 13. comments
 
 
-Development progress still far from complete. I will update as possible for this zero cost website.
-Note: This is just my school assignment and I want to develop it really be better.
+**Development progress still far from complete. I will update as possible for this zero cost website.**
+**Note: This is just my school assignment and I want to develop it really be better.**
