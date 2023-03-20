@@ -18,8 +18,8 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 
 
 -user register and login to upload image, can't upload if not register or login
--user can delete their post
--user can download image from download button
+*user can delete their post
++user can download image from download button
 -generate thumbnail to save bandwidth
 -add image to your favorite
 -forum chat to discuss something
