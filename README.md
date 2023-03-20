@@ -8,7 +8,7 @@ You can go to admin panel in admin section to manage user and image. This admin 
 You can install ArtCODE as progressive webapp.
 
 Note, you need to install sqlite database extension to run the sqlite database! Or if you use xampp, you can go to xampp control panel then click config, click php.ini, search sqlite extension and remove the semicolon.
-
+<br>
 <h4>Features:</h4>
 <br>
 <ul>
@@ -23,6 +23,8 @@ Note, you need to install sqlite database extension to run the sqlite database! 
 <li>change password for additional security</li>
 <li>you can change your username</li>
 <li>follow/unfollow button with following/follower count</li>
+<li>multi image upload</li>
+<li>comments</li>
 </ul>
 
 Development progress still far from complete. I will update as possible for this zero cost website.
