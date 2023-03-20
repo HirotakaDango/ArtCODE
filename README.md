@@ -17,11 +17,11 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 ## Features:
 
 
--user register and login to upload image, can't upload if not register or login
+*user register and login to upload image, can't upload if not register or login
 *user can delete their post
-+user can download image from download button
--generate thumbnail to save bandwidth
--add image to your favorite
+*user can download image from download button
+*generate thumbnail to save bandwidth
+*add image to your favorite
 -forum chat to discuss something
 -image tags so you're not had difficult time to find specific image
 -settings page to manage your account
