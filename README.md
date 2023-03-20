@@ -3,11 +3,11 @@
 
 <h4>ArtCODE is simple image sharing and upload like Pinterest, Pixiv, Tumblr or etc. Here's the <a href="https://test-artcode.artworldjp.repl.co/" target="_blank">demo</a>.</h4>
 
-<h5>You can go to admin panel in admin section to manage user and image. This admin panel still in developemnt process. You can manage file and folder in admin section.</h5>
+You can go to admin panel in admin section to manage user and image. This admin panel still in developemnt process. You can manage file and folder in admin section.
 
-<h5>You can install ArtCODE as progressive webapp.</h5>
+You can install ArtCODE as progressive webapp.
 
-<h5>Note, you need to install sqlite database extension to run the sqlite database! Or if you use xampp, you can go to xampp control panel then click config, click php.ini, search sqlite extension and remove the semicolon.</h5>
+Note, you need to install sqlite database extension to run the sqlite database! Or if you use xampp, you can go to xampp control panel then click config, click php.ini, search sqlite extension and remove the semicolon.
 
 <h4>Features:</h4>
 <br>
@@ -25,5 +25,5 @@
 <li>follow/unfollow button with following/follower count</li>
 </ul>
 
-<h5>Development progress still far from complete. I will update as possible for this zero cost website.</h5>
-<h5>Note: This is just my school assignment and I want to develop it to be better.</h5>
+Development progress still far from complete. I will update as possible for this zero cost website.
+Note: This is just my school assignment and I want to develop it really be better.
