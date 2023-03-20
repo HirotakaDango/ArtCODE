@@ -2,6 +2,7 @@
 <h1>ArtCODE</h1>
 
 <h4>ArtCODE is simple image sharing and upload like Pinterest, Pixiv, Tumblr or etc. Here's the <a href="https://test-artcode.artworldjp.repl.co/" target="_blank">demo</a>.</h4>
+ArtCODE is an exceptional image sharing and upload website built with vanilla PHP by a solo developer. Inspired by the likes of Pixiv and Pinterest, this platform boasts an impressive array of features and functionalities, all meticulously optimized using only SQLite database. What's even more impressive is that this website was created with absolutely zero cost, making it extremely user-friendly and effortless to modify for those who are unfamiliar with PHP frameworks. 
 
 To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.
 
