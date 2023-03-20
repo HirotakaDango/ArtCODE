@@ -3,11 +3,12 @@
 
 <h4>ArtCODE is simple image sharing and upload like Pinterest, Pixiv, Tumblr or etc. Here's the <a href="https://test-artcode.artworldjp.repl.co/" target="_blank">demo</a>.</h4>
 
-You can go to admin panel in admin section to manage user and image. This admin panel still in developemnt process. You can manage file and folder in admin section.
+To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.
 
 You can install ArtCODE as progressive webapp.
 
-Note, you need to install sqlite database extension to run the sqlite database! Or if you use xampp, you can go to xampp control panel then click config, click php.ini, search sqlite extension and remove the semicolon.
+
+Please note that in order to run the sqlite database, you will need to install the sqlite database extension. If you are using xampp, you can do this by accessing the xampp control panel, clicking on "config," selecting "php.ini," and searching for the sqlite extension. Don't forget to remove the semicolon to enable the extension.
 <br>
 <h4>Features:</h4>
 
