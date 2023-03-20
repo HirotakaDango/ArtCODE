@@ -14,23 +14,23 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 
 **Please note that in order to run the sqlite database, you will need to install the sqlite database extension. If you are using xampp, you can do this by accessing the xampp control panel, clicking on "config," selecting "php.ini," and searching for the sqlite extension. Don't forget to remove the semicolon to enable the extension.**
 
-<h4>Features:</h4>
+## Features:
 
-<ul>
-<li>user register and login to upload image, can't upload if not register or login</li>
-<li>user can delete their post</li>
-<li>user can download image from download button</li>
-<li>generate thumbnail to save bandwidth</li>
-<li>add image to your favorite</li>
-<li>forum chat to discuss something</li>
-<li>image tags so you're not had difficult time to find specific image</li>
-<li>settings page to manage your account</li>
-<li>change password for additional security</li>
-<li>you can change your username</li>
-<li>follow/unfollow button with following/follower count</li>
-<li>multi image upload</li>
-<li>comments</li>
-</ul>
+
+-user register and login to upload image, can't upload if not register or login
+-user can delete their post
+-user can download image from download button
+-generate thumbnail to save bandwidth
+-add image to your favorite
+-forum chat to discuss something
+-image tags so you're not had difficult time to find specific image
+-settings page to manage your account
+-change password for additional security
+-you can change your username
+-follow/unfollow button with following/follower count
+-multi image upload
+-comments
+
 
 Development progress still far from complete. I will update as possible for this zero cost website.
 Note: This is just my school assignment and I want to develop it really be better.
