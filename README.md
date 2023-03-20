@@ -10,7 +10,7 @@ You can install ArtCODE as progressive webapp.
 Note, you need to install sqlite database extension to run the sqlite database! Or if you use xampp, you can go to xampp control panel then click config, click php.ini, search sqlite extension and remove the semicolon.
 <br>
 <h4>Features:</h4>
-<br>
+
 <ul>
 <li>user register and login to upload image, can't upload if not register or login</li>
 <li>user can delete their post</li>
