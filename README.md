@@ -8,7 +8,7 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 Here's the <a href="https://test-artcode.artworldjp.repl.co/" target="_blank">demo</a>
 
 <h4>Manage</h4>
-To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.
+**To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.**
 
 **You can install ArtCODE as progressive webapp.**
 
