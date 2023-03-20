@@ -17,19 +17,19 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 ## Features:
 
 
-*user register and login to upload image, can't upload if not register or login
-*user can delete their post
-*user can download image from download button
-*generate thumbnail to save bandwidth
-*add image to your favorite
--forum chat to discuss something
--image tags so you're not had difficult time to find specific image
--settings page to manage your account
--change password for additional security
--you can change your username
--follow/unfollow button with following/follower count
--multi image upload
--comments
+1. user register and login to upload image, can't upload if not register or login
+2. user can delete their post
+3. user can download image from download button
+4. generate thumbnail to save bandwidth
+5. add image to your favorite
+6. forum chat to discuss something
+7. image tags so you're not had difficult time to find specific image
+8. settings page to manage your account
+9. change password for additional security
+10. you can change your username
+11. follow/unfollow button with following/follower count
+12. multi image upload
+13. comments
 
 
 Development progress still far from complete. I will update as possible for this zero cost website.
