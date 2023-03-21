@@ -18,7 +18,7 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 
 ## Manage
 
-**To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.**
+**To manage users and images, simply navigate to the admin section and access the admin panel. I continuously working on improving this panel. In the meantime, you can easily manage files and folders within the admin section.**
 
 **You can install ArtCODE as progressive webapp.**
 
