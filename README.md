@@ -43,4 +43,5 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 
 
 **Development progress still far from complete. I will update as possible for this zero cost website.**
-**Note: This is just my school assignment and I want to develop it really be better.**
+
+**Note: This is just my school assignment and I want to develop even further to make it really better.**
