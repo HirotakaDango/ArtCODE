@@ -11,6 +11,11 @@ Inspired by the likes of Pixiv and Pinterest, this platform has some features an
 ![upload](https://raw.githubusercontent.com/BurgerIsReal01/image/main/01.png)
 ![profile](https://raw.githubusercontent.com/BurgerIsReal01/image/main/03.png)
 ![image](https://raw.githubusercontent.com/BurgerIsReal01/image/main/04.png)
+
+## Profile
+![profile](https://raw.githubusercontent.com/BurgerIsReal01/image/main/05.png)
+![image](https://raw.githubusercontent.com/BurgerIsReal01/image/main/06.png)
+
 ## Manage
 
 **To manage users and images, simply navigate to the admin section and access the admin panel. We are continuously working on improving this panel, so please bear with us during the development process. In the meantime, you can easily manage files and folders within the admin section.**
