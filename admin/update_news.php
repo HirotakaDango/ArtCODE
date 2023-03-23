@@ -82,13 +82,7 @@ $edit_data = $userController->getEditData();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   </head>
   <body>
-    <ul class="me-2 ms-2 mt-2 nav nav-pills nav-fill justify-content-center">
-      <li class="nav-item"><a class="nav-link" href="../admin/index.php"><i class="bi bi-house-fill"></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="../admin/edit_users.php"><i class="bi bi-person-fill-gear"></i></a></li>
-      <li class="nav-item"><a class="nav-link active" aria-current="page" href="../admin/update_news.php"><i class="bi bi-newspaper"></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="../admin/remove_images.php"><i class="bi bi-images"></i></a></li> 
-      <li class="nav-item"><a class="nav-link" href="../admin/remove_all.php"><i class="bi bi-person-fill-exclamation"></i></a></li>
-    </ul>
+    <?php include('admin_header.php'); ?>
     <center><button type="button" class="btn btn-primary fw-bold mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#add">Add New News</button></center>
     <center>
       <div class="container-fluid mb-2">
