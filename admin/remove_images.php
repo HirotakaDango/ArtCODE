@@ -29,20 +29,14 @@ $stmt = $db->query('SELECT * FROM images ORDER BY id DESC');
 
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-</head>
-<body>
-    <ul class="me-2 ms-2 mt-2 nav nav-pills nav-fill justify-content-center">
-      <li class="nav-item"><a class="nav-link" href="../admin/index.php"><i class="bi bi-house-fill"></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="../admin/edit_users.php"><i class="bi bi-person-fill-gear"></i></a></li>
-      <li class="nav-item"><a class="nav-link" aria-current="page" href="../admin/update_news.php"><i class="bi bi-newspaper"></i></a></li>
-      <li class="nav-item"><a class="nav-link active" href="../admin/remove_images.php"><i class="bi bi-images"></i></a></li> 
-      <li class="nav-item"><a class="nav-link" href="../admin/remove_all.php"><i class="bi bi-person-fill-exclamation"></i></a></li>
-    </ul>
+  </head>
+  <body>
+    <?php include('admin_header.php'); ?>
     <div class="container mt-5">
       <?php while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?> 
         <div class="card mb-2">
@@ -115,5 +109,5 @@ $stmt = $db->query('SELECT * FROM images ORDER BY id DESC');
           }
         })
     </script>
-</body>
+  </body>
 </html>
