@@ -1,47 +1,52 @@
+# ArtCODE - 🎨🌐 Simple Image Sharing Platform
 
-# ArtCODE - simple image sharing platform
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/02.png" alt="Home Screenshot">
+</p>
 
-![home](https://raw.githubusercontent.com/BurgerIsReal01/image/main/02.png)
-## About ArtCODE 
-**ArtCODE is an image sharing and upload website built with vanilla PHP by a solo developer.
-Inspired by the likes of Pixiv and Pinterest, this platform has some features and functionalities like those platforms, all meticulously optimized using SQLite database only. This website was created with absolutely zero cost. Because it use vanilla php, making it very ease to modify for those who are unfamiliar with PHP frameworks.**
+## :clipboard: About ArtCODE 
 
-**Here's the [demo](https://previewonly.rei-hirotakachr.repl.co/)**
+**ArtCODE** is an image sharing and upload website built with vanilla PHP by a solo developer. Inspired by the likes of Pixiv and Pinterest, this platform has some features and functionalities like those platforms, all meticulously optimized using SQLite database only. This website was created with absolutely zero cost. Because it use vanilla php, making it very ease to modify for those who are unfamiliar with PHP frameworks.
 
-![upload](https://raw.githubusercontent.com/BurgerIsReal01/image/main/01.png)
-![upload](https://raw.githubusercontent.com/BurgerIsReal01/image/main/03.png)
-![image](https://raw.githubusercontent.com/BurgerIsReal01/image/main/04.png)
+Here's the [demo](https://previewonly.rei-hirotakachr.repl.co/).
 
-## Profile
-![profile](https://raw.githubusercontent.com/BurgerIsReal01/image/main/05.png)
-![image](https://raw.githubusercontent.com/BurgerIsReal01/image/main/06.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/01.png" alt="Upload Screenshot">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/03.png" alt="Upload Preview Screenshot">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/04.png" alt="Image Screenshot">
+</p>
 
-## Manage
+## :bust_in_silhouette: Profile
 
-**To manage users and images, simply navigate to the admin section and access the admin panel. I continuously working on improving this panel. In the meantime, you can easily manage files and folders within the admin section.**
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/05.png" alt="Profile Screenshot">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/06.png" alt="Favorite Screenshot">
+</p>
 
-**You can install ArtCODE as progressive webapp.**
+## :wrench: Manage
 
-**Please note that in order to run the sqlite database, you will need to install the sqlite database extension. If you are using xampp, you can do this by accessing the xampp control panel, clicking on "config," selecting "php.ini," and searching for the sqlite extension. Don't forget to remove the semicolon to enable the extension.**
+To manage users and images, simply navigate to the admin section and access the admin panel. I continuously working on improving this panel. In the meantime, you can easily manage files and folders within the admin section.
 
-## Features:
+You can install ArtCODE as progressive webapp.
 
+Please note that in order to run the sqlite database, you will need to install the sqlite database extension. If you are using xampp, you can do this by accessing the xampp control panel, clicking on "config," selecting "php.ini," and searching for the sqlite extension. Don't forget to remove the semicolon to enable the extension.
 
-1. user register and login to upload image, can't upload if not register or login
-2. user can delete their post
-3. user can download image from download button
-4. generate thumbnail to save bandwidth
-5. add image to your favorite
-6. forum chat to discuss something
-7. image tags so you're not had difficult time to find specific image
-8. settings page to manage your account
-9. change password for additional security
-10. you can change your username
-11. follow/unfollow button with following/follower count
-12. multi image upload
-13. comments
+## :sparkles: Features:
 
+- 📝 User register and login to upload image, can't upload if not registered or logged in
+- 🗑️ User can delete their post
+- 📥 User can download image from download button
+- 🌅 Generate thumbnail to save bandwidth
+- ❤️ Add image to your favorites
+- 💬 Forum chat to discuss something
+- 🔖 Image tags so you're not had a difficult time finding specific images
+- ⚙️ Settings page to manage your account
+- 🔒 Change password for additional security
+- 👥 You can change your username
+- 🔍 Follow/unfollow button with following/follower count
+- 📸 Multi-image upload
+- 💬 Comments
 
-**Development progress still far from complete. I will update as possible for this zero cost website.**
+Development progress still far from complete. I will update as possible for this zero cost website.
 
-**Note: This is just my school assignment and I want to develop even further to make it really better.**
+Note: This is just my school assignment, and I want to develop even further to make it really better.
