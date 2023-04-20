@@ -147,7 +147,7 @@ $comments = $stmt->execute();
           <div class="card mb-2">
             <div class="me-1 ms-1 mt-1 text-secondary fw-bold">
               <p><?php echo $comment['artist']; ?> :</p>
-              <p><?php echo preg_replace('/\b(https?:\/\/\S+)/i', '<a target="_blank" href="$1">$1</a>', $comment['comment']); ?></p>
+              <p><?php echo preg_replace('/\b(https?:\/\/\S+)/i', '<a class="text-decoration-none" target="_blank" href="$1">$1</a>', $comment['comment']); ?></p>
               <small><?php echo $comment['created_at']; ?></small>
               <?php if ($comment['email'] == $_SESSION['email']) : ?>
                 <form action="" method="POST">
