@@ -19,7 +19,6 @@ if (!isset($_SESSION['email'])) {
   <body>
     <?php include('header.php'); ?>
     <section class="mt-2">
-      <h2 class="mt-3 mb-3 text-center text-secondary fw-bold"><i class="bi bi-cloud-arrow-up-fill"></i> UPLOAD IMAGE</h2>
       <div class="roow">
         <div class="cool-6">
           <div class="caard">
@@ -29,7 +28,18 @@ if (!isset($_SESSION['email'])) {
         <div class="cool-6">
           <div class="caard container">
             <form action="upload.php" method="post" enctype="multipart/form-data">
-              <input class="form-control mb-2 border rounded-3 text-secondary fw-bold border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" onchange="showPreview(event);" multiple required>
+              <div id="drop-zone" class="drop-zone fw-bold text-secondary mb-2 rounded-3 border-4">
+                <label for="file-ip-1">
+                  <div class="mb-4 mt-2">
+                    <i class="bi bi-filetype-png me-4 display-4"></i>
+                    <i class="bi bi-filetype-jpg me-4 display-4"></i>
+                    <i class="bi bi-filetype-gif display-4"></i>
+                  </div>
+                  <input class="form-control mb-2 border rounded-3 text-secondary fw-bold border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" onchange="showPreview(event);" multiple required>
+                  <p class="badge bg-secondary opacity-50 text-wrap" style="font-size: 15px;">Drag and drop files here</p>
+                  <p><small><i class="bi bi-info-circle-fill"></i> type of extension you can upload: jpg, jpeg, png, gif</small></p>
+                </label>
+              </div>
               <div class="form-floating mb-2">
                 <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" name="title" placeholder="Enter title for your image" maxlength="50" required>  
                 <label for="floatingInput" class="text-secondary fw-bold">Enter title for your image</label>
@@ -85,15 +95,30 @@ if (!isset($_SESSION['email'])) {
           width: 100%;
           padding: 0;
         }
-  
-        .art {
-          border-top: 2px solid lightgray;
-          border-bottom: 2x solid lightgray;
-          border-left: none;
-          border-right: none;
-          border-radius: 0;
-          object-fit: cover;
-        }
+      }
+      
+      .drop-zone {
+        position: relative;
+        display: inline-block;
+        border: 2px dashed #ccc;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      .drop-zone input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      .drag-over {
+        border-color: #000;
       }
     </style>
     <!-- Metadata Modal -->
@@ -111,6 +136,45 @@ if (!isset($_SESSION['email'])) {
       </div>
     </div>
     <script>
+      var dropZone = document.getElementById('drop-zone');
+      var fileInput = document.getElementById('file-ip-1');
+
+      // Handle file drop event
+      dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+      });
+
+      dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+      });
+
+      dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        var files = e.dataTransfer.files;
+        handleFiles(files);
+      });
+
+      // Handle file selection event
+      fileInput.addEventListener('change', function(e) {
+        var files = e.target.files;
+        handleFiles(files);
+      });
+
+      // Handle the files
+      function handleFiles(files) {
+        var fileCount = files.length;
+        var message = fileCount > 1 ? fileCount + ' images selected' : files[0].name;
+        var messageElement = dropZone.querySelector('p');
+        messageElement.textContent = message;
+  
+        // Process the files here
+        console.log(files);
+        // You can call the showPreview() function or perform any other operations you need with the selected files
+      }
+
       function showPreview(event) {
         var container = document.getElementById("preview-container");
         container.innerHTML = "";
