@@ -1,0 +1,53 @@
+.images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 3px;
+  justify-content: center;
+  margin: 0 3px;
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px;
+}
+
+@media (min-width: 768px) {
+  .images {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+.imagesA {
+  display: block;
+  overflow: hidden;
+}
+
+.imagesImg {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.5s ease-in-out;
+}
+
+.overlay {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.overlay i {
+  font-size: 48px;
+}
+
+.overlay span {
+  font-size: 18px;
+  margin-top: 8px;
+}
