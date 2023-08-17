@@ -12,8 +12,8 @@ Here's the another screenshots:
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/01.png" alt="Upload Screenshot">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/03.png" alt="Upload Preview Screenshot">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/04.png" alt="Image Screenshot">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/03.png" alt="Image Preview Mobile">
+  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/04.png" alt="Image Preview Desktop">
 </p>
 
 ## :bust_in_silhouette: Profile
