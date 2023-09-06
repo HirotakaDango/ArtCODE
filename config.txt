@@ -1,0 +1,16 @@
+php_value display_errors On
+php_value mbstring.http_input auto
+php_value date.timezone America/New_York
+
+RewriteEngine On
+
+# To externally redirect /file.php to /file, except for specific files
+RewriteCond %{REQUEST_URI} !^/(management|upload/upload|delete|edit/delete)\.php$
+RewriteCond %{THE_REQUEST} ^[A-Z]+\s([^.]+)\.php [NC]
+RewriteRule ^ %1 [R=302,L]
+
+# To internally forward /file to /file.php, except for specific files
+RewriteCond %{REQUEST_URI} !^/(management|upload/upload|delete|edit/delete)\.php$
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*?)/?$ $1.php [L]
