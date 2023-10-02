@@ -1,4 +1,4 @@
 <?php
-header("Location: session.php");
+header("Location: features.php");
 exit();
 ?>

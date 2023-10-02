@@ -14,7 +14,7 @@
       <div class="modal modal-sheet position-static d-block container-fluid" tabindex="-1" role="dialog" id="modalSignin">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content bg-dark bg-opacity-25 shadow">
-             <a class="btn bg-dark bg-opacity-25 position-absolute top-0 start-0 z-3" style="border-radius: 0.5rem 0 0.5rem 0;" href="session.php"><i class="bi bi-chevron-left fs-4 text-stroke-2"></i></a>
+             <a class="btn bg-dark bg-opacity-25 position-absolute top-0 start-0 z-3" style="border-radius: 0.5rem 0 0.5rem 0;" href="features.php"><i class="bi bi-chevron-left fs-4 text-stroke-2"></i></a>
             <div class="modal-body">
               <div class="text-center text-white fw-bold mt-4">
                 <h2 class="fw-bold">HELLO, NEW USER?</h2>

@@ -25,8 +25,8 @@ $result = $stmt->execute();
         Sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item fw-bold" href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>">Newest</a></li>
-        <li><a class="dropdown-item fw-bold active" href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>">Oldest</a></li>
+        <li><a class="dropdown-item fw-bold active" href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>">Newest</a></li>
+        <li><a class="dropdown-item fw-bold" href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>">Oldest</a></li>
       </ul>
     </div>
     <div class="container-fluid">
