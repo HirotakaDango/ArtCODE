@@ -1,0 +1,62 @@
+/* Reset default margin and padding */
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+/* Create a full-page container with the background image */
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('contents/mountain-1.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Optionally, you can style your content */
+/* For example, centering text in the middle of the page */
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  font-size: 24px;
+}
+
+.scrollable-div {
+  overflow: auto;
+  scrollbar-width: thin;  /* For Firefox */
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+  scrollbar-color: transparent transparent;  /* For Chrome, Safari, and Opera */
+}
+
+.scrollable-div::-webkit-scrollbar {
+  width: 0;
+  background-color: transparent;
+}
+      
+.scrollable-div::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.text-stroke-1 {
+  -webkit-text-stroke: 1px;
+}
+
+.text-stroke-2 {
+  -webkit-text-stroke: 2px;
+}
+      
+.text-stroke-3 {
+  -webkit-text-stroke: 3px;
+}
+
+.back-btn {
+  border-radius: 2px 0 2px 0;
+}
