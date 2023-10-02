@@ -1,0 +1,19 @@
+php_value display_errors On
+php_value mbstring.http_input auto
+php_value date.timezone America/New_York
+
+RewriteEngine On
+
+# Remove .php extension for files in the session directory
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^session/(.+)$ session/$1.php [L]
+
+# Redirect /login.php, /register.php, and /features.php to /login, /register, and /features
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/(session/login|session/register|session/features|session/newspage|session/preview_guest)\.php [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# Internal rewrite from /login to /session/login.php, /register to /session/register.php, and /features to /session/features.php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^session/(.+)$ session/$1.php [L]
