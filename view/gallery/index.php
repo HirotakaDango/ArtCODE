@@ -143,8 +143,8 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title><?php echo $image['title']; ?></title>
     <link rel="icon" type="image/png" href="../../icon/favicon.png">
     <?php include('bootstrapcss.php'); ?>
-  <link rel="stylesheet" href="../../swup/transitions.css" />
-  <script type="module" src="../../swup/swup.js"></script>
+    <link rel="stylesheet" href="../../swup/transitions.css" />
+    <script type="module" src="../../swup/swup.js"></script>
   </head>
   <body>
     <div id="content">
