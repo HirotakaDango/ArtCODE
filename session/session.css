@@ -6,11 +6,14 @@ body, html {
 
 /* Create a full-page container with the background image */
 .background-image {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body {
   background-image: url('contents/mountain-1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
