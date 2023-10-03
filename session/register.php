@@ -65,7 +65,7 @@
                 </div>
                 <div class="container-fluid rounded-end-4 bg-dark bg-opacity-25">
                   <div class="text-center">
-                    <h3 class="mt-3 fw-bold">Sign In</h3>
+                    <h3 class="mt-3 fw-bold">Sign Up</h3>
                   </div>
                   <div class="justify-content-center d-flex align-items-center h-100">
                     <div class="modal-body p-4 pt-0">
