@@ -69,23 +69,23 @@
                       <h3 class="mt-3 fw-bold">Sign In</h3>
                     </div>
                   <div class="justify-content-center d-flex align-items-center h-100">
-                  <div class="modal-body p-4 pt-0">
-                    <form class="" action="session_code.php" method="post">
-                      <div class="form-floating mb-3">
-                        <input name="email" type="email" class="form-control rounded-3 bg-dark bg-opacity-25" id="floatingInput" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" placeholder="name@example.com" required>
-                        <label class="fw-bold text-white fw-medium" for="floatingInput">Email address</label>
-                      </div>
-                      <div class="form-floating mb-3">
-                        <input name="password" type="password" class="form-control rounded-3 bg-dark bg-opacity-25" id="floatingPassword" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" placeholder="Password" required>
-                        <label class="fw-bold text-white fw-medium" for="floatingPassword">Password</label>
-                      </div>
-                      <div class="form-check mb-3">
-                        <input class="form-check-input bg-light bg-opacity-25" type="checkbox" id="remember" name="remember">
-                        <label class="form-check-label fw-bold text-white fw-medium" for="remember">Remember Me</label>
-                      </div>
-                      <button name="login" class="w-100 fw-bold mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Login</button>
-                    </form>
-                  </div>
+                    <div class="modal-body p-4 pt-0">
+                      <form class="" action="session_code.php" method="post">
+                        <div class="form-floating mb-3">
+                          <input name="email" type="email" class="form-control rounded-3 bg-dark bg-opacity-25" id="floatingInput" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" placeholder="name@example.com" required>
+                          <label class="fw-bold text-white fw-medium" for="floatingInput">Email address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                          <input name="password" type="password" class="form-control rounded-3 bg-dark bg-opacity-25" id="floatingPassword" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" placeholder="Password" required>
+                          <label class="fw-bold text-white fw-medium" for="floatingPassword">Password</label>
+                        </div>
+                        <div class="form-check mb-3">
+                          <input class="form-check-input bg-light bg-opacity-25" type="checkbox" id="remember" name="remember">
+                          <label class="form-check-label fw-bold text-white fw-medium" for="remember">Remember Me</label>
+                        </div>
+                        <button name="login" class="w-100 fw-bold mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Login</button>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
