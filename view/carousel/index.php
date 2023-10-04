@@ -183,7 +183,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <?php endif; ?> 
                           </main>
                           <main id="swup" class="transition-main">
-                            <a class="btn rounded" href="../carousel/?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-distribute-horizontal"></i></a>
+                            <a class="btn rounded" href="../carousel/?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-distribute-vertical"></i></a>
                           </main>
                           <main id="swup" class="transition-main">
                             <?php
@@ -273,7 +273,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <?php endif; ?> 
                               </main>
                               <main id="swup" class="transition-main">
-                                <a class="btn rounded" href="../carousel/?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-distribute-horizontal"></i></a>
+                                <a class="btn rounded" href="../carousel/?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-distribute-vertical"></i></a>
                               </main>
                               <main id="swup" class="transition-main">
                                 <?php
@@ -431,7 +431,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <?php endif; ?> 
                 </main>
                 <main id="swup" class="transition-main">
-                  <a class="btn rounded" href="../carousel/?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-distribute-horizontal"></i></a>
+                  <a class="btn rounded" href="../carousel/?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-distribute-vertical"></i></a>
                 </main>
                 <main id="swup" class="transition-main">
                   <?php
