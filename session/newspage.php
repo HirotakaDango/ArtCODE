@@ -76,7 +76,7 @@ $nextPage = $page < $pages ? $page + 1 : $pages;
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>
-    <?php include('../footer.php'); ?>
+    <?php include('footer.php'); ?>
     <?php include('../bootstrapjs.php'); ?>
   </body>
 </html>

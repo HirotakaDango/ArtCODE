@@ -18,7 +18,7 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark bg-opacity-25 shadow">
               <div class="modal-body">
-                <a class="btn bg-dark bg-opacity-25 position-absolute top-0 start-0" style="border-radius: 0.5rem 0 0.5rem 0;" href="features.php"><i class="bi bi-chevron-left fs-4 text-stroke-2"></i></a>
+                <a class="btn bg-dark bg-opacity-25 position-absolute top-0 start-0" style="border-radius: 0.5rem 0 0.5rem 0;" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session"><i class="bi bi-chevron-left fs-4 text-stroke-2"></i></a>
                 <div class="text-center text-white fw-bold mt-4">
                   <h2 class="fw-bold">Welcome to login</h2>
                   <h2 class="mb-5 fw-bold">Sign in to continue</h2>
@@ -58,7 +58,7 @@
                       <h2 class="fw-bold">Welcome to login</h2>
                       <h5 class="text-nowrap fw-bold">Sign in to continue</h5>
                       <p class="fw-medium">Don't have an account?</p>
-                      <a class="btn btn-sm btn-outline-light rounded-pill fw-bold" href="features.php"><i class="bi bi-chevron-left text-stroke-2"></i> back</a>
+                      <a class="btn btn-sm btn-outline-light rounded-pill fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session"><i class="bi bi-chevron-left text-stroke-2"></i> back</a>
                       <a class="btn btn-sm btn-outline-light rounded-pill fw-bold" href="register.php">Sign up</a>
                       <p class="mt-5 fw-medium fw-medium">Having a trouble with your <a class="text-white" data-bs-target="#help" href="#" data-bs-toggle="modal">account</a>?</p>
                     </div>

@@ -1,49 +1,29 @@
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-  <style>
-    .animate__animated.animate__delay-0-5s {
-      -webkit-animation-delay: calc(1s * 0.5);
-      animation-delay: calc(1s * 0.5);
-      -webkit-animation-delay: calc(var(--animate-delay) * 0.5);
-      animation-delay: calc(var(--animate-delay) * 0.5);
-    }
-      
-    .animate__animated.animate__delay-1-5s {
-      -webkit-animation-delay: calc(1s * 1.5);
-      animation-delay: calc(1s * 1.5);
-      -webkit-animation-delay: calc(var(--animate-delay) * 1.5);
-      animation-delay: calc(var(--animate-delay) * 1.5);
-    }
-      
-    .animate__animated.animate__delay-2-5s {
-      -webkit-animation-delay: calc(1s * 2.5);
-      animation-delay: calc(1s * 2.5);
-      -webkit-animation-delay: calc(var(--animate-delay) * 2.5);
-      animation-delay: calc(var(--animate-delay) * 2.5);
-    } 
-      
-    .animate__animated.animate__delay-3-5s {
-      -webkit-animation-delay: calc(1s * 3.5);
-      animation-delay: calc(1s * 3.5);
-      -webkit-animation-delay: calc(var(--animate-delay) * 3.5);
-      animation-delay: calc(var(--animate-delay) * 3.5);
-    }
-  </style>
-  <header>
-    <div class="d-flex flex-column flex-md-row align-items-center text-secondary fw-bold pb-3 mb-4 container">
-      <h1 href="/" class="d-flex align-items-center text-dark text-decoration-none">
-        <div class="row">
-          <div class="col-md-12 text-center py-2">
-            <h1 class="animate__animated animate__fadeInDown"><a class="text-decoration-none text-dark fw-bold" href="/">ArtCODE</a></h1>
-            <h4 class="animate__animated animate__fadeInUp text-secondary fw-bold">Inspiring Art Collection</h4>
+        <section>
+          <link rel="stylesheet" type="text/css" href="style.css" />
+          <div class="container-fluid">
+            <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4">
+              <div class="col-md-3 mb-2 mb-md-0">
+                <div href="/" class="d-flex align-items-center text-dark text-decoration-none">
+                  <div class="row">
+                    <div class="col-md-12 text-center py-2">
+                      <h1>
+                        <a class="text-decoration-none text-white text-shadow fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
+                      </h1>
+                      <h6 class="text-white text-shadow small fw-bold">Inspiring Art Collection</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 fw-bold">
+                <li><a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session" class="nav-link text-white text-shadow px-2 clickable-card rounded-pill">Home</a></li>
+                <li><a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/#features" class="nav-link text-white text-shadow px-2 clickable-card rounded-pill">Features</a></li>
+                <li><a href="newspage.php" class="nav-link text-white text-shadow px-2 clickable-card rounded-pill">News</a></li>
+                <li><a href="preview_guest.php" class="nav-link text-white text-shadow px-2 clickable-card rounded-pill">Explore</a></li>
+              </ul>
+              <div class="col-md-3 text-end">
+                <a href="login.php" class="btn btn-sm btn-danger rounded-pill shadow fw-bold me-2">sign in</a>
+                <a href="register.php" class="btn btn-sm btn-outline-light shadow text-shadow rounded-pill fw-bold">sign up</a>
+              </div>
+            </header>
           </div>
-        </div>    
-      </h1>
-      <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-        <a class="me-3 py-2 text-secondary text-decoration-none animate__animated animate__fadeInDown animate__delay-1s <?php if(basename($_SERVER['PHP_SELF']) == 'features.php') echo 'border-bottom border-3' ?>" href="features.php">Features</a>
-        <a class="me-3 py-2 text-secondary text-decoration-none animate__animated animate__fadeInDown animate__delay-1-5s" href="login.php">Signin</a>
-        <a class="me-3 py-2 text-secondary text-decoration-none animate__animated animate__fadeInDown animate__delay-2s" href="register.php">Signup</a>
-        <a class="me-3 py-2 text-secondary text-decoration-none animate__animated animate__fadeInDown animate__delay-2-5s <?php if(basename($_SERVER['PHP_SELF']) == 'preview_guest.php') echo 'border-bottom border-3' ?>" href="preview_guest.php">Explore</a>
-        <a class="py-2 text-secondary text-decoration-none animate__animated animate__fadeInDown animate__delay-3s <?php if(basename($_SERVER['PHP_SELF']) == 'newspage.php') echo 'border-bottom border-3' ?>" href="newspage.php">News</a>
-      </nav>
-    </div>
-  </header>
+        </section>

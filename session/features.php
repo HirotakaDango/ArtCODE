@@ -1,28 +1,26 @@
-<?php
-// Connect to the SQLite database using parameterized query
-$db = new SQLite3('../database.sqlite'); 
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other, region TEXT, joined DATETIME, born DATETIME)");
-$stmt->execute();
-$stmt = $db->prepare('CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, title TEXT, description TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, ver TEXT, verlink TEXT)');
-$stmt->execute();
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, email TEXT, tags TEXT, title TEXT, imgdesc TEXT, link TEXT, date DATETIME, view_count INT DEFAULT 0, type TEXT)");
-$stmt->execute();
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS image_child (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT NOT NULL, image_id INTEGER NOT NULL, email TEXT NOT NULL, FOREIGN KEY (image_id) REFERENCES images (id))");
-$stmt->execute();
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ArtCODE</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../icon/favicon.png">
-    <?php include('../bootstrapcss.php'); ?>
-  </head>
-  <body>
-    <?php include('landing_page.php');?>
-    <?php include('../bootstrapjs.php'); ?>
-  </body>
-</html>
+      <section id="features">
+        <div class="container fw-bold mt-5">
+          <div class="row featurette">
+            <div class="col-md-7">
+              <h1 class="animate__animated animate__fadeInDown animate__delay-1s display-5 fw-bold">Discover amazing artworks</h1>
+              <p class="animate__animated animate__fadeInDown animate__delay-1s text-secondary fs-5">Explore our vast collection of beautiful artworks, created by talented artists from all over the world.</p>
+              <p class="animate__animated animate__fadeInDown animate__delay-1s text-secondary fs-5">From digital art to traditional paintings, ArtCODE has it all.</p>
+              <a href="preview_guest.php" class="btn fw-bold btn-primary rounded-pill animate__animated animate__fadeInDown animate__delay-1s">Start Exploring</a>
+            </div>
+            <div class="col-md-5 animate__animated animate__fadeInUp animate__delay-1s">
+              <img class="img-fluid" src="../icon/Global logistics delivery network.svg">
+            </div>
+          </div>
+          <div class="row featurette mt-4">
+            <div class="col-md-7 order-md-2">
+              <h1 class="animate__animated animate__fadeInUp animate__delay-2s display-5 fw-bold">Share your creativity</h1>
+              <p class="animate__animated animate__fadeInUp animate__delay-2s text-secondary fs-5">Join our community and showcase your artwork to the world.</p>
+              <p class="animate__animated animate__fadeInUp animate__delay-2s text-secondary fs-5">Connect with other artists, get feedback, and discover new opportunities.</p>
+              <a href="register.php" class="btn fw-bold btn-primary rounded-pill animate__animated animate__fadeInUp animate__delay-2s">Join Now</a>
+            </div>
+            <div class="col-md-5 order-md-1 animate__animated animate__fadeInUp animate__delay-2s">
+              <img class="img-fluid" src="../icon/Writing room.svg">
+            </div>
+          </div>
+        </div>
+      </section>
