@@ -411,9 +411,13 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </main>
           </div>
         </div>
-        <div class="container pb-2">
-          <input type="range" class="form-range" id="customRange1" value="0">
-        </div>
+        <main id="swup" class="transition-main">
+          <div class="container pb-2">
+            <?php if (!empty($child_image['filename'])) : ?>
+              <input type="range" class="form-range" id="customRange1" value="0">
+            <?php endif; ?>
+          </div>
+        </main>
       </div>
     </div>
     <div class="modal fade" id="swipeModal" tabindex="-1" aria-labelledby="swipeModalLabel" aria-hidden="true">
