@@ -1,5 +1,5 @@
         <section>
-          <div class="container-fluid">
+          <div class="container-fluid animate__animated animate__fadeInDown animate__delay-1s" style="width: 90%;">
             <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4">
               <div class="col-md-3 mb-2 mb-md-0">
                 <div href="/" class="d-flex align-items-center text-dark text-decoration-none">

@@ -2,15 +2,27 @@
           <div class="container py-md-2 py-lg-2">
             <div class="row align-items-center mt-5 mt-md-0 mt-lg-0 pt-md-4 pt-lg-4">
               <div class="col-md-7 order-md-1">
-                <h1 class="fw-bolder display-4 text-white" style="max-width: 35.5rem;">Explore and unleash <span class='text-danger' style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">your creativity <a class="btn btn-outline-danger border-0 rounded-pill" href="login.php"><i class="bi bi-arrow-right display-5 px-3" style="-webkit-text-stroke: 3px;"></i></a></span></h1>
-                <h6 class="pb-2 mb-md-4 mb-lg-5 text-white">Unleash Your Creativity with Us! Join a vibrant community of innovators, artists, and visionaries. Sign up now to embark on an inspiring journey where your ideas come to life. Your creative adventure begins here!</h6>
+                <h1 class="fw-bolder display-4 text-white animate__animated animate__fadeInLeft animate__delay-1s" style="max-width: 35.5rem;">Explore and unleash <span class='text-danger' style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">your creativity <a class="btn btn-outline-danger border-0 rounded-pill" href="login.php"><i class="bi bi-arrow-right display-5 px-3" style="-webkit-text-stroke: 3px;"></i></a></span></h1>
+                <h6 class="pb-2 mb-md-4 mb-lg-5 text-white animate__animated animate__fadeInLeft animate__delay-1s">Unleash Your Creativity with Us! Join a vibrant community of innovators, artists, and visionaries. Sign up now to embark on an inspiring journey where your ideas come to life. Your creative adventure begins here!</h6>
                 <div class="btn-group gap-2 mb-3 d-md-none d-lg-none">
-                  <a class="btn btn-danger rounded-pill fw-bold" href="login.php">sign in</a>
-                  <a class="btn btn-outline-light rounded-pill fw-bold" href="register.php">sign up</a>
+                  <a class="btn btn-danger rounded-pill fw-bold animate__animated animate__fadeInLeft animate__delay-1s" href="login.php">sign in</a>
+                  <a class="btn btn-outline-light rounded-pill fw-bold animate__animated animate__fadeInLeft animate__delay-1s" href="register.php">sign up</a>
+                </div>
+              </div>
+              <div class="col-md-5 order-md-2 mb-5 mb-md-0 animate__animated animate__fadeInRight animate__delay-1s d-none d-md-block d-lg-block">
+                <div class="parallax mx-auto" style="max-width: 526px;">
+                  <div class="parallax-layer position-relative" data-depth="0.1"><img src="contents/layer01.svg" alt="Layer"></div>
+                  <div class="parallax-layer" data-depth="0.16"><img src="contents/layer02.svg" alt="Layer"></div>
+                  <div class="parallax-layer" data-depth="0.38"><img src="contents/layer03.svg" alt="Layer"></div>
+                  <div class="parallax-layer" data-depth="0.16"><img src="contents/layer04.svg" alt="Layer"></div>
+                  <div class="parallax-layer" data-depth="0.16"><img src="contents/layer05.svg" alt="Layer"></div>
+                  <div class="parallax-layer" data-depth="0.45"><img src="contents/layer06.svg" alt="Layer"></div>
+                  <div class="parallax-layer" data-depth="0.3"><img src="contents/layer07.svg" alt="Layer"></div>
+                  <div class="parallax-layer" data-depth="0.2"><img src="contents/layer08.svg" alt="Layer"></div>
                 </div>
               </div>
             </div>
-            <div class="mt-4 mt-md-0 mt-lg-0 d-none d-md-block d-lg-block">
+            <div class="mt-4 mt-md-0 mt-lg-0 d-none d-md-block d-lg-block animate__animated animate__fadeInUp animate__delay-2s">
               <h3 class="fw-bold">Popular Tags</h3>
               <?php
                 // Open the SQLite database
@@ -37,7 +49,7 @@
                 }
               ?>
             </div>
-            <div class="container-fluid rounded-pill bg-dark bg-opacity-25 p-2 mt-1 d-none d-md-block d-lg-block">
+            <div class="container-fluid rounded-pill bg-dark bg-opacity-25 p-2 mt-1 d-none d-md-block d-lg-block animate__animated animate__fadeInUp animate__delay-3s">
               <form class="d-flex" role="search" action="../search.php" method="GET">
                 <input class="form-control fw-medium me-2 border-0 rounded-start-5 bg-dark bg-opacity-50 focus-ring focus-ring-dark" name="search" type="search" placeholder="Search tags or titles..." aria-label="Search">
                 <div class="border-end border-start border-2"></div>
