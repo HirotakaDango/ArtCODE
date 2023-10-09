@@ -1,6 +1,6 @@
         <section id="main">
           <div class="container py-md-2 py-lg-2">
-            <div class="row align-items-center mt-2 mt-md-0 pt-md-4 pt-lg-4">
+            <div class="row align-items-center mt-5 mt-md-0 mt-lg-0 pt-md-4 pt-lg-4">
               <div class="col-md-7 order-md-1">
                 <h1 class="fw-bolder display-4 text-white" style="max-width: 35.5rem;">Explore and unleash <span class='text-danger' style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">your creativity <a class="btn btn-outline-danger border-0 rounded-pill" href="login.php"><i class="bi bi-arrow-right display-5 px-3" style="-webkit-text-stroke: 3px;"></i></a></span></h1>
                 <h6 class="pb-2 mb-md-4 mb-lg-5 text-white">Unleash Your Creativity with Us! Join a vibrant community of innovators, artists, and visionaries. Sign up now to embark on an inspiring journey where your ideas come to life. Your creative adventure begins here!</h6>
@@ -10,7 +10,7 @@
                 </div>
               </div>
             </div>
-            <div class="mt-4 mt-md-0 mt-lg-0">
+            <div class="mt-4 mt-md-0 mt-lg-0 d-none d-md-block d-lg-block">
               <h3 class="fw-bold">Popular Tags</h3>
               <?php
                 // Open the SQLite database
@@ -37,7 +37,7 @@
                 }
               ?>
             </div>
-            <div class="container-fluid rounded-pill bg-dark bg-opacity-25 p-2 mt-1">
+            <div class="container-fluid rounded-pill bg-dark bg-opacity-25 p-2 mt-1 d-none d-md-block d-lg-block">
               <form class="d-flex" role="search" action="../search.php" method="GET">
                 <input class="form-control fw-medium me-2 border-0 rounded-start-5 bg-dark bg-opacity-50 focus-ring focus-ring-dark" name="search" type="search" placeholder="Search tags or titles..." aria-label="Search">
                 <div class="border-end border-start border-2"></div>
