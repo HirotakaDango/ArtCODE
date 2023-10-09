@@ -6,7 +6,7 @@
                 <h6 class="pb-2 mb-md-4 mb-lg-5 text-white">Unleash Your Creativity with Us! Join a vibrant community of innovators, artists, and visionaries. Sign up now to embark on an inspiring journey where your ideas come to life. Your creative adventure begins here!</h6>
                 <div class="btn-group gap-2 mb-3 d-md-none d-lg-none">
                   <a class="btn btn-danger rounded-pill fw-bold" href="login.php">sign in</a>
-                  <a class="btn btn-outline-light rounded-pill fw-bold" href="login.php">sign up</a>
+                  <a class="btn btn-outline-light rounded-pill fw-bold" href="register.php">sign up</a>
                 </div>
               </div>
             </div>
