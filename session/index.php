@@ -85,8 +85,8 @@
         border-radius: .75rem;
       }
 
-      .parallax{ position:relative }
-      .parallax-layer{ position:absolute; top:0; left:0; width:100%; height:100% }
+      .parallax { position:relative }
+      .parallax-layer { position:absolute; top:0; left:0; width:100%; height:100% }
       .parallax-layer> img { display:block; width:100% }
 
       .text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
