@@ -13,17 +13,19 @@
     <main class="page-wrapper w-100">
       <!-- Hero -->
       <div class="bg-dark pb-5" style="background-image: url('../session/contents/mountain-1.jpg'); background-size: cover; background-repeat: no-repeat; height: 100vh;">
-        <!-- Navbar -->
-        <?php include('lp_header.php');?>
-        <!-- End of Navbar -->
+        <div style="background-color: rgba(0, 0, 0, 0.5); height: 100%; height: 100vh;">
+          <!-- Navbar -->
+          <?php include('lp_header.php');?>
+          <!-- End of Navbar -->
         
-        <br>
+          <br>
         
-        <!-- Main -->
-        <?php include('main.php');?>
-        <!-- End of Main -->
+          <!-- Main -->
+          <?php include('main.php');?>
+          <!-- End of Main -->
         
-        <div style="padding-bottom: 200px;"></div>
+          <div style="padding-bottom: 200px;"></div>
+        </div>
       </div>
       
       <!-- Features -->
@@ -42,6 +44,16 @@
     
     <!-- additional style -->
     <style>
+      .clickable-card {
+        cursor: pointer;
+        transition: box-shadow 0.8s ease, transform 0.8s ease;
+      }
+
+      .clickable-card:hover {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+      }
+
       .feature-icon {
         width: 4rem;
         height: 4rem;

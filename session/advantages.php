@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="row align-items-md-stretch py-3">
-            <div class="col-md-6 mb-down">
+            <div class="col-md-6 mb-2 mb-md-0 mb-lg-0">
               <div class="h-100 p-5 border rounded-3 clickable-card">
                 <h2 class="fw-bold">Best Platform To Share Your Ideas</h2>
                 <p class="fw-bold">With our user-friendly interface, you can easily upload and organize your artwork into collections, share your creations with others, and discover new artists and artwork through our sophisticated recommendation system. You can also connect with other members of the community through comments and private messaging, participate in contests and events to showcase your work and win prizes, and gain exposure for your art through our social media channels.</p>
