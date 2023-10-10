@@ -51,9 +51,9 @@
             </div>
             <div class="container-fluid rounded-pill bg-dark bg-opacity-25 p-2 mt-1 d-none d-md-block d-lg-block animate__animated animate__fadeInUp animate__delay-3s">
               <form class="d-flex" role="search" action="../search.php" method="GET">
-                <input class="form-control fw-medium me-2 border-0 rounded-start-5 bg-dark bg-opacity-50 focus-ring focus-ring-dark" name="search" type="search" placeholder="Search tags or titles..." aria-label="Search">
-                <div class="border-end border-start border-2"></div>
-                <button class="btn ms-2 border-0 rounded-end-5 bg-dark bg-opacity-50" type="submit"><i class="bi bi-search" style="-webkit-text-stroke: 2px;"></i></button>
+                <input class="form-control fw-medium me-2 border-0 rounded-start-5 bg-dark bg-opacity-50 focus-ring focus-ring-dark animate__animated animate__fadeInLeft animate__delay-4s" name="search" type="search" placeholder="Search tags or titles..." aria-label="Search">
+                <div class="border-end border-start border-2 animate__animated animate__fadeInBottom animate__delay-4s"></div>
+                <button class="btn ms-2 border-0 rounded-end-5 bg-dark bg-opacity-50 animate__animated animate__fadeInRight animate__delay-4s" type="submit"><i class="bi bi-search" style="-webkit-text-stroke: 2px;"></i></button>
               </form>
             </div>
           </div>

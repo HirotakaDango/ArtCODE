@@ -25,7 +25,7 @@
     <!-- Page loading spinner-->
     <div class="page-loading active">
       <div class="page-loading-inner">
-        <div class="page-spinner"></div><span>Loading...</span>
+        <div class="page-spinner"></div><span class="fw-bold">Loading...</span>
       </div>
     </div>
     
@@ -114,7 +114,7 @@
         height: 100%;
         -webkit-transition: all .4s .2s ease-in-out;
         transition: all .4s .2s ease-in-out;
-        background-color: #fff;
+        background-color: #000;
         opacity: 0;
         visibility: hidden;
         z-index: 9999;
@@ -154,7 +154,7 @@
         height: 2.75rem;
         margin-bottom: .75rem;
         vertical-align: text-bottom;
-        border: .15em solid #bbb7c5;
+        border: 2.55em solid #bbb7c5;
         border-right-color: transparent;
         border-radius: 50%;
         -webkit-animation: spinner .75s linear infinite;
