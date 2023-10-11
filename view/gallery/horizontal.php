@@ -268,13 +268,9 @@
             </main>
           </div>
         </div>
-        <main id="swup" class="transition-main">
-          <div class="container pb-2">
-            <?php if (!empty($child_image['filename'])) : ?>
-              <input type="range" class="form-range" id="customRange1" value="0">
-            <?php endif; ?>
-          </div>
-        </main>
+        <div class="container pb-2">
+          <input type="range" class="form-range" id="customRange1" value="0">
+        </div>
       </div>
     </div>
     <div class="modal fade" id="swipeModal" tabindex="-1" aria-labelledby="swipeModalLabel" aria-hidden="true">
@@ -492,6 +488,21 @@
         document.getElementById("swup").scrollLeft = targetScroll;
       }
 
+      // Function to update the slider in real-time while scrolling
+      function updateSliderOnScroll() {
+        const maxScroll = document.getElementById("swup").scrollWidth - window.innerWidth;
+        const currentScroll = document.getElementById("swup").scrollLeft;
+
+        // Calculate the percentage and update the slider value
+        const percentage = (currentScroll / maxScroll) * 100;
+        slider.value = percentage;
+      }
+
+      // Add a scroll event listener to continuously update the slider during scrolling
+      document.getElementById("swup").addEventListener("scroll", function () {
+        updateSliderOnScroll();
+      });
+
       // Add an event listener to respond to slider changes
       slider.addEventListener("input", handleSliderChange);
 
@@ -507,6 +518,14 @@
 
       // Optional: Add a resize event listener to handle changes in window size
       window.addEventListener("resize", function () {
+        updateSliderValue();
+      });
+
+      // Use swup.js's event to handle page transitions
+      const swup = new Swup();
+
+      swup.on('animationIn', function () {
+        // Update the slider when a new page is loaded
         updateSliderValue();
       });
     </script>
