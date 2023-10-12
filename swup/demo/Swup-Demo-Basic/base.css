@@ -1,0 +1,123 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+:root {
+  --swup-blue: hsl(239, 50%, 30%);
+  --swup-red: hsl(354, 99%, 68%);
+  --swup-green: hsl(172, 65%, 62%);
+  --link-underline-color: var(--swup-green);
+  --font-size-fluid-0: clamp(1rem, 2vw, 1.15rem);
+  --font-size-fluid-1: clamp(1.15rem, 3vw, 1.35rem);
+  --font-size-fluid-2: clamp(1.35rem, 4vw, 1.7rem);
+  --font-size-fluid-3: clamp(1.7rem, 5vw, 2.2rem);
+  --gap: clamp(1rem, 2vw, 2rem);
+  --gap-x2: calc(var(--gap) * 2);
+  --radius-round: 1000px;
+  --radius-0: 0.2em;
+  --radius-1: 0.4em;
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "helvetica neue", helvetica, roboto, noto, "segoe ui", arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-size: var(--font-size-fluid-0);
+  line-height: 1.4;
+  background-color: var(--swup-blue);
+  color: white;
+  scrollbar-width: none;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1 {
+  margin-bottom: 1em;
+  font-size: var(--font-size-fluid-3);
+  line-height: 1.2;
+}
+
+
+h2 {
+  margin-bottom: 1em;
+  font-size: var(--font-size-fluid-2);
+  line-height: 1.25;
+}
+
+h1 span,
+h2 span {
+  display: block;
+}
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 35em;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+header {
+  padding: calc(0.5 + 1.5vw) 0;
+}
+
+.logo {
+  display: inline-block;
+  width: calc(6em + 3vw);
+  height: calc((6em + 3vw) * 0.43);
+  background: url(https://swup.js.org/assets/images/swup-logo-white.svg) no-repeat 0% 0%;
+  color: transparent;
+  user-select: none;
+}
+
+main {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+main a {
+  background-image: linear-gradient(var(--link-underline-color) 0%,
+      var(--link-underline-color) 100%);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 2px;
+  font-weight: bold;
+}
+
+.buttons {
+  margin-top: 2.25em;
+}
+
+.buttons .button {
+  margin-right: 1em;
+}
+
+.button {
+  display: inline-block;
+  border-radius: 999vw;
+  background: transparent;
+  border: 2px solid;
+  padding: .6em 1.1em;
+  transition-property: background, color;
+  transition-duration: 150ms;
+  white-space: nowrap;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.button:hover {
+  background: rgba(255, 255, 255, 0.05);
+}

@@ -1,0 +1,42 @@
+#modal.is-changing {
+  transition: opacity 250ms;
+}
+
+#modal.is-animating {
+  opacity: 0;
+}
+
+/* Zoom-Effect for the detail when opening/closing the modal */
+#modal.is-changing #detail {
+  transition: transform 150ms;
+  transform: scale(1);
+}
+
+#modal.to-open-modal.is-animating #detail,
+#modal.to-close-modal.is-leaving #detail {
+  transform: scale(0.95);
+}
+
+/*
+* The animation between charcter details. Directional animation based on data-swup-animation
+*/
+#detail.is-changing {
+  transition: opacity 200ms, transform 200ms;
+}
+
+#detail.to-next {
+  --direction: 1;
+}
+
+#detail.to-previous {
+  --direction: -1;
+}
+
+#detail.is-animating {
+  opacity: 0;
+  transform: translateX(calc(40px * var(--direction)));
+}
+
+#detail.is-leaving {
+  transform: translateX(calc(40px * var(--direction) * -1));
+}

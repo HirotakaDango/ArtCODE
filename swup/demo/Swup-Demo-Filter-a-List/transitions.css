@@ -1,0 +1,46 @@
+/* The default transition for non-fragment visits */
+.is-changing .transition-main {
+  transition-property: opacity, transform;
+  transition-duration: 250ms;
+}
+
+html.is-animating .transition-main {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+html.is-leaving .transition-main {
+  transform: translateY(20px);
+}
+
+/*
+ * The transition when filtering the items.
+ * Here, we are animating the `.list_item` elements individually
+ */
+#items.is-changing {
+  --duration-leave: 150ms;
+  --duration-enter: 400ms;
+  transition-duration: var(--duration-enter);
+}
+
+#items.is-leaving {
+  transition-duration: var(--duration-leave);
+}
+
+#items.is-changing .list_item {
+  transition-property: opacity, transform;
+  transition-duration: var(--duration-enter);
+  transition-timing-function: cubic-bezier(0.230, 1.000, 0.320, 1.000);
+  /* easeOutQuint */
+}
+
+#items.is-animating .list_item {
+  opacity: 0;
+  transform: scale(0.75);
+}
+
+/* Change easing and duration for the leave-phase */
+#items.is-leaving .list_item {
+  transition-timing-function: ease-in;
+  transition-duration: var(--duration-leave);
+}

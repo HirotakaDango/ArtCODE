@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Swup Demo</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="transitions.css" />
+  <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <header class="header">
+      <a href="https://swup.js.org" target="_blank" class="logo">Swup Demo</a>
+    </header>
+    <main id="swup" class="overview transition-main">
+      <h1>
+        Infinite Scroll Cache<br>
+        With Swup
+      </h1>
+
+      <p>
+        This demo uses <a href="https://infinite-scroll.com/" target="_blank">Infinite Scroll</a> together with swup's
+        cache. Scroll down and click <strong>Load More</strong> a few times, then click on one of the items and navigate
+        back to this list. The items are still there!
+      </p>
+
+      <div class="list">
+        <article class="list_item">
+          <h2 class="list_item_title">
+            <a href="detail-1.html">1. Lorem Ipsum  →</a>
+          </h2>
+          <div class="list_item_content">
+            Consetetur sadipscing esed
+          </div>
+          <a href="detail-1.html">Lorem Ipsum</a>
+        </article>
+        <article class="list_item">
+          <h2 class="list_item_title">
+            <a href="detail-1.html">2. Dolor Sit Amet  →</a>
+          </h2>
+          <div class="list_item_content">
+            At vero eos et accusam
+          </div>
+          <a href="detail-1.html">Dolor Sit Amet</a>
+        </article>
+        <article class="list_item">
+          <h2 class="list_item_title">
+            <a href="detail-1.html">3. Quis Aute Iure  →</a>
+          </h2>
+          <div class="list_item_content">
+            Sunt in culpa officia
+          </div>
+          <a href="detail-1.html">Quis Aute Iure</a>
+        </article>
+      </div><!-- /.list -->
+
+      <nav class="pagination buttons">
+        <a class="button pagination__next" href="/page-2.html">Next Page</a>
+      </nav>
+
+      <p class="buttons">
+        <button class="button load-more">Load More</button>
+      </p>
+
+    </main>
+  </div>
+</body>
+
+</html>

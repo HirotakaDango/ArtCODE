@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Swup Demo</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="transitions.css" />
+  <script type="module" src="swup.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <header class="header">
+      <a href="https://swup.js.org" target="_blank" class="logo">Swup Demo</a>
+    </header>
+    <main id="swup" class="transition-main">
+      <h1>
+        <span>Thanks For</span>
+        <span>Signing Up</span>
+      </h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat.
+      </p>
+      <form id="form-signup" class="transition-form" action="/index.html" data-swup-form data-swup-inline-form>
+        <div class="input-row">
+          <div class="input-text">Signed up!</div>
+          <button type="submit" class="button">Back</button>
+        </div>
+      </form>
+    </main>
+  </div>
+  <div class="overlay transition-overlay"></div>
+</body>
+
+</html>

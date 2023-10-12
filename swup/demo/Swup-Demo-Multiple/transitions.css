@@ -1,0 +1,70 @@
+html.is-changing .transition-main {
+  transition: opacity 250ms ease-in-out;
+}
+
+html.is-leaving .transition-main {
+  transition: opacity 250ms ease-in-out;
+}
+
+html.is-animating .transition-main {
+  opacity: 0;
+}
+
+.logo {
+  transition: opacity 250ms, transform 250ms;
+}
+
+html.is-animating .logo {
+  opacity: 0.3;
+  transform: scale(0.8);
+}
+
+.grid .card {
+  transition: transform 250ms, background-color 150ms;
+  transition-delay: calc(var(--index, 0) * 50ms), 0ms;
+}
+
+html.is-rendering .grid .card {
+  transition-delay: calc((var(--count, 0) - var(--index, 0)) * 10ms), 0ms;
+}
+
+html.is-animating .grid .card {
+  transform: scale(0.8);
+}
+
+h1 {
+  transition: transform 300ms, opacity 300ms;
+}
+
+html.is-animating.is-leaving h1 {
+  transform: translateY(2rem);
+  opacity: 0;
+}
+
+html.is-animating.is-rendering h1 {
+  transform: translateY(-2rem);
+  opacity: 0;
+}
+
+.detail__content {
+  transition: transform 400ms;
+}
+
+html.is-animating.is-leaving .detail__content {
+  transform: translateY(3rem);
+}
+
+html.is-animating.is-rendering .detail__content {
+  transform: translateY(3rem);
+}
+
+.detail__content>* {
+  transition: opacity 300ms, transform 300ms;
+  transition-delay: calc(0ms + (2 - var(--index, 0)) * 75ms);
+}
+
+html.is-animating .detail__content>* {
+  opacity: 0;
+  transform: translateY(calc((var(--index, 0) + 1) * 2em));
+  transition-delay: 0ms;
+}

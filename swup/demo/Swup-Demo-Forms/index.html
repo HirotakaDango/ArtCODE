@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Swup Demo</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="transitions.css" />
+  <script type="module" src="swup.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <header class="header">
+      <a href="https://swup.js.org" target="_blank" class="logo">Swup Demo</a>
+    </header>
+    <main id="swup" class="transition-main">
+      <h1>
+        <span>Animated Forms</span>
+        <span>With Swup</span>
+      </h1>
+      <p>
+        The <strong>search form</strong> below will trigger an animated form
+        submission to a list of search results. Form submissions have their
+        own overlay animation. Links to <a href="/next.html">normal page visits</a> trigger
+        the default fade animation.
+      </p>
+      <form action="/search.html" data-swup-form data-swup-transition="search">
+        <input type="text" name="q" value="lorem ipsum" placeholder="Enter search terms">
+        <button type="submit" class="button button--filled">Search</button>
+      </form>
+    </main>
+  </div>
+  <div class="overlay transition-overlay"></div>
+</body>
+
+</html>

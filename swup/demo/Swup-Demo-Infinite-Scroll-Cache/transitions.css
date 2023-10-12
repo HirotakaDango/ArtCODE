@@ -1,0 +1,12 @@
+html.is-changing .transition-main {
+  transition: opacity 250ms, transform 250ms;
+}
+
+html.is-animating .transition-main {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+html.is-leaving .transition-main {
+  transform: translateY(20px);
+}

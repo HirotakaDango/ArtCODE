@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Swup Demo</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="transitions.css" />
+  <script type="module" src="swup.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <header class="header">
+      <a href="https://swup.js.org" target="_blank" class="logo">Swup Demo</a>
+    </header>
+    <main id="swup" class="transition-main">
+      <h1>
+        <span>Inline Forms</span>
+        <span>With Swup</span>
+      </h1>
+      <p>
+        The forms below will submit inline without a full-page visit, keeping the scroll position and keyboard focus.
+        This allows implementing smaller interactions like cart buttons and newsletter signups as progressive
+        enhancements without additional JavaScript.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <h2 class="card__title">
+            Newsletter
+          </h2>
+          <div class="card__content">
+            <form id="form-signup" class="transition-form" action="/signup.html" data-swup-form data-swup-inline-form>
+              <p><small>Receive the day's news and highlights in a simple digest.</small></p>
+              <div class="input-row">
+                <input type="text" name="email" value="Email" placeholder="Email">
+                <button type="submit" class="button button--filled">Subscribe</button>
+              </div>
+            </form>
+          </div>
+        </article>
+        <article class="card">
+          <h2 class="card__title">
+            Cart
+          </h2>
+          <div class="card__content">
+            <form id="form-cart" class="transition-form" action="/cart.html" data-swup-form data-swup-inline-form>
+              <p>
+                <small>€ 9.99 incl. taxes</small><br>
+                <small>Shipping calculated at checkout</small>
+              </p>
+              <div class="input-row input-row--grow-button">
+                <input type="text" name="quantity" value="1" placeholder="1" size="2" class="input-centered">
+                <button type="submit" class="button button--filled">Add to cart</button>
+              </div>
+            </form>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

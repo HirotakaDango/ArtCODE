@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Swup Demo</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="transitions.css" />
+  <script type="module" src="swup.js"></script>
+</head>
+
+<body>
+  <div id="swup" class="layout">
+    <header class="header">
+      <a href="https://swup.js.org" target="_blank" class="logo">Swup Demo</a>
+    </header>
+    <div>
+
+      <main id="modal" class="modal">
+        <div class="modal_inner">
+          <a class="modal_close" href="/"></a>
+          <div id="detail" class="modal_content">
+            <h1>Lorem Ipsum</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque ipsum sunt quasi blanditiis
+              laudantium. Magnam cupiditate, nostrum libero debitis veritatis quia autem distinctio alias, aut quod
+              doloribus maiores iste ex!</p>
+            <div class="buttons">
+              <a href="detail-3.html" class="button" data-swup-animation="previous">←&nbsp; Previous</a>
+              <a href="detail-2.html" class="button" data-swup-animation="next">Next  &nbsp;→</a>
+            </div>
+          </div>
+        </div>
+      </main><!-- /#modal -->
+
+      <div class="list">
+        <article class="list_item">
+          <h2 class="list_item_title">
+            <a href="detail-1.html">Lorem Ipsum  →</a>
+          </h2>
+          <div class="list_item_content">
+            Consetetur sadipscing esed
+          </div>
+          <a href="detail-1.html">Lorem Ipsum</a>
+        </article>
+        <article class="list_item">
+          <h2 class="list_item_title">
+            <a href="detail-1.html">Dolor Sit Amet  →</a>
+          </h2>
+          <div class="list_item_content">
+            At vero eos et accusam
+          </div>
+          <a href="detail-1.html">Dolor Sit Amet</a>
+        </article>
+        <article class="list_item">
+          <h2 class="list_item_title">
+            <a href="detail-1.html">Quis Aute Iure  →</a>
+          </h2>
+          <div class="list_item_content">
+            Sunt in culpa officia
+          </div>
+          <a href="detail-1.html">Quis Aute Iure</a>
+        </article>
+      </div><!-- /.list -->
+
+    </div><!-- /#swup -->
+  </div>
+</body>
+
+</html>
