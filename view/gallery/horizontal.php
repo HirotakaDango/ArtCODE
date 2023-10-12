@@ -511,21 +511,58 @@
         updateSliderValue();
       });
 
-      // Add a scroll event listener to continuously update the slider value
-      document.getElementById("swup").addEventListener("scroll", function () {
-        updateSliderValue();
-      });
-
       // Optional: Add a resize event listener to handle changes in window size
       window.addEventListener("resize", function () {
         updateSliderValue();
       });
 
       // Use swup.js's event to handle page transitions
-      const swup = new Swup();
-
-      swup.on('animationIn', function () {
-        // Update the slider when a new page is loaded
-        updateSliderValue();
+      const swup = new Swup({
+        plugins: [new SwupCustomPlugin()],
       });
+
+      // Define a custom Swup plugin to reset the slider when a new page is loaded
+      class SwupCustomPlugin {
+        constructor() {
+          swup.on('animationIn', async () => {
+            // Update the slider when a new page is loaded
+            await updateSliderValueAsync();
+          });
+          swup.hooks.beforePageReplace = async (content, next) => {
+            // Delay the start of the page transition by 1 second
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            
+            // Wait for a custom async function before starting the transition
+            await myCustomFunctionAsync();
+      
+            // Reset the slider before replacing the page content
+            slider.value = 0;
+            next();
+          };
+        }
+      }
+
+      // An asynchronous version of the updateSliderValue function
+      async function updateSliderValueAsync() {
+        return new Promise((resolve) => {
+          // Simulate an asynchronous operation if needed
+          setTimeout(() => {
+            // Calculate the current horizontal scroll position as a percentage of the maximum scrollable width
+            const maxScroll = document.getElementById("swup").scrollWidth - window.innerWidth;
+            const currentScroll = (document.getElementById("swup").scrollLeft / maxScroll) * 100;
+      
+            // Set the slider's value to match the current scroll position
+            slider.value = currentScroll;
+      
+            resolve();
+          }, 1000); // Simulated async operation for demonstration
+        });
+      }
+
+      // An asynchronous version of your custom function (replace with your actual async logic)
+      async function myCustomFunctionAsync() {
+        // Simulate an async operation (replace with your actual logic)
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        // Your custom async logic here
+      }
     </script>
