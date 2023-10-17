@@ -1,47 +1,5 @@
-<?php
-$email = $_SESSION['email'];
-
-// Connect to the SQLite database using parameterized query
-$dbP = new SQLite3('database.sqlite');
-
-// Get all of the images from the database using parameterized query
-$stmtP = $dbP->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY favorite_count DESC LIMIT 70");
-$resultP = $stmtP->execute();
-?>
-
-    <div class="imagesC mb-2 mt-2">
-      <?php while ($imageP = $resultP->fetchArray()): ?>
-        <div class="image-container">
-          <div class="position-relative">
-            <a class="shadow rounded imageA" href="image.php?artworkid=<?php echo $imageP['id']; ?>">
-              <img class="imageI lazy-load <?php echo ($imageP['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="thumbnails/<?php echo $imageP['filename']; ?>" alt="<?php echo $imageP['title']; ?>">
-            </a> 
-            <div class="position-absolute top-0 start-0">
-              <div class="dropdown">
-                <button class="btn btn-sm btn-dark ms-1 mt-1 rounded-1 opacity-50" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <?php
-                    $is_favorited = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$imageP['id']}");
-                    if ($is_favorited) {
-                  ?>
-                    <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $imageP['id']; ?>">
-                      <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
-                    </form>
-                  <?php } else { ?>
-                    <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $imageP['id']; ?>">
-                      <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
-                    </form>
-                  <?php } ?>
-                  <li><button class="dropdown-item fw-bold" onclick="shareImageP(<?php echo $imageP['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
-                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageP['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
-                </ul>
-
                 <!-- Modal -->
-                <div class="modal fade" id="infoImage_<?php echo $imageP['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="infoImage_<?php echo $image['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-fullscreen modal-dialog-centered" role="document">
                     <div class="modal-content bg-transparent border-0">
                       <div class="modal-body d-flex justify-content-center align-items-center">
@@ -57,21 +15,21 @@ $resultP = $stmtP->execute();
                           <div class="row d-flex justify-content-center">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                               <div class="card border-0 rounded-4 overflow-auto scrollable-div" style="max-height: 250px;">
-                                <a class="w-100 h-100" href="image.php?artworkid=<?php echo $imageP['id']; ?>">
-                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="thumbnails/<?php echo $imageP['filename']; ?>" alt="<?php echo $imageP['title']; ?>">
+                                <a class="w-100 h-100" href="image.php?artworkid=<?php echo $image['id']; ?>">
+                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
                                 </a>
                               </div>
                               <div class="btn-group mt-2 w-100">
                                 <a class="btn btn-sm border-0" data-bs-toggle="collapse" href="#shareSection" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-share-fill icon-stroke-1"></i></a>
-                                <button class="btn btn-sm fw-bold border-0"><i class="bi bi-bar-chart-line-fill"></i> <?php echo $imageP['view_count']?></button>
+                                <button class="btn btn-sm fw-bold border-0"><i class="bi bi-bar-chart-line-fill"></i> <?php echo $image['view_count']?></button>
                                 <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfoDesktop" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-info-circle-fill"></i></button>
                                 <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-download icon-stroke-1"></i></button>
-                                <a href="image.php?artworkid=<?php echo $imageP['id']; ?>" class="btn btn-sm border-0"><i class="bi bi-eye-fill"></i></a>
+                                <a href="image.php?artworkid=<?php echo $image['id']; ?>" class="btn btn-sm border-0"><i class="bi bi-eye-fill"></i></a>
                               </div>
                               <div class="container mt-2">
                                 <?php
-                                  if (!empty($imageP['tags'])) {
-                                    $tags = explode(',', $imageP['tags']);
+                                  if (!empty($image['tags'])) {
+                                    $tags = explode(',', $image['tags']);
                                     foreach ($tags as $tag) {
                                       $tag = trim($tag);
                                         if (!empty($tag)) {
@@ -92,11 +50,11 @@ $resultP = $stmtP->execute();
                             <div class="col-sm-6">
                               <div class="h-100">
                                 <div class="card-body">
-                                  <h5 class="text-center fw-bold"><?php echo $imageP['title']?></h5>
+                                  <h5 class="text-center fw-bold"><?php echo $image['title']?></h5>
                                   <p class="card-text fw-medium">
                                     <?php
-                                      if (!empty($imageP['imgdesc'])) {
-                                        $messageText = $imageP['imgdesc'];
+                                      if (!empty($image['imgdesc'])) {
+                                        $messageText = $image['imgdesc'];
                                         $messageTextWithoutTags = strip_tags($messageText);
                                         $pattern = '/\bhttps?:\/\/\S+/i';
 
@@ -122,63 +80,63 @@ $resultP = $stmtP->execute();
                               <div class="card rounded-4 p-4">
                                 <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
                                   <!-- Twitter -->
-                                  <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-twitter"></i>
                                   </a>
                                 
                                   <!-- Line -->
-                                  <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-line"></i>
                                   </a>
                                 
                                   <!-- Email -->
-                                  <a class="btn" href="mailto:?body=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>">
+                                  <a class="btn" href="mailto:?body=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>">
                                     <i class="bi bi-envelope-fill"></i>
                                   </a>
                                 
                                   <!-- Reddit -->
-                                  <a class="btn" href="https://www.reddit.com/submit?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn" href="https://www.reddit.com/submit?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-reddit"></i>
                                   </a>
                                 
                                   <!-- Instagram -->
-                                  <a class="btn" href="https://www.instagram.com/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn" href="https://www.instagram.com/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-instagram"></i>
                                   </a>
                                 
                                   <!-- Facebook -->
-                                  <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-facebook"></i>
                                   </a>
                                 </div>
                                 <div class="btn-group w-100" role="group" aria-label="Share Buttons">
                                   <!-- WhatsApp -->
-                                  <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-whatsapp"></i>
                                   </a>
     
                                   <!-- Pinterest -->
-                                  <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-pinterest"></i>
                                   </a>
     
                                   <!-- LinkedIn -->
-                                  <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-linkedin"></i>
                                   </a>
     
                                   <!-- Messenger -->
-                                  <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-messenger"></i>
                                   </a>
     
                                   <!-- Telegram -->
-                                  <a class="btn" href="https://telegram.me/share/url?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn" href="https://telegram.me/share/url?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-telegram"></i>
                                   </a>
     
                                   <!-- Snapchat -->
-                                  <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $imageP['id']; ?>" target="_blank" rel="noopener noreferrer">
+                                  <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="bi bi-snapchat"></i>
                                   </a>
                                 </div>
@@ -187,21 +145,21 @@ $resultP = $stmtP->execute();
                             <div class="collapse mt-2" id="collapseInfoDesktop">
                               <div class="card rounded-4 container">
                                 <p class="text-center fw-semibold mt-2">Image Information</p>
-                                <p class="text-start fw-semibold">Image ID: "<?php echo $imageP['id']?>"</p>
+                                <p class="text-start fw-semibold">Image ID: "<?php echo $image['id']?>"</p>
                                 <?php
                                   $total_image_size = 0; // Initialize a variable to keep track of total image size
-                                  
+                                
                                   // Calculate and display image size and dimensions for the main image
-                                  $imageP_size = round(filesize('images/' . $imageP['filename']) / (1024 * 1024), 2);
-                                  $total_image_size += $imageP_size; // Add the main image size to the total
-                                  list($width, $height) = getimagesize('images/' . $imageP['filename']);
-                                  echo "<p class='text-start fw-semibold'>Image data size: " . $imageP_size . " MB</p>";
+                                  $image_size = round(filesize('images/' . $image['filename']) / (1024 * 1024), 2);
+                                  $total_image_size += $image_size; // Add the main image size to the total
+                                  list($width, $height) = getimagesize('images/' . $image['filename']);
+                                  echo "<p class='text-start fw-semibold'>Image data size: " . $image_size . " MB</p>";
                                   echo "<p class='text-start fw-semibold'>Image dimensions: " . $width . "x" . $height . "</p>";
-                                  echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='images/" . $imageP['filename'] . "'>View original image</a></p>";
-                                  
+                                  echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='images/" . $image['filename'] . "'>View original image</a></p>";
+                                
                                   // Assuming you have a separate query to fetch child images
-                                  $child_images_result = $db->query("SELECT filename FROM image_child WHERE image_id = " . $imageP['id']);
-                                  
+                                  $child_images_result = $db1->query("SELECT filename FROM image_child WHERE image_id = " . $image['id']);
+                                
                                   while ($child_image = $child_images_result->fetchArray()) {
                                     $child_image_size = round(filesize('images/' . $child_image['filename']) / (1024 * 1024), 2);
                                     $total_image_size += $child_image_size; // Add child image size to the total
@@ -217,11 +175,11 @@ $resultP = $stmtP->execute();
                               </div>
                             </div>
                             <div class="collapse mt-2" id="collapseDownload">
-                              <a class="btn btn-primary fw-bold rounded-4 w-100" href="#" onclick="downloadWithProgressBar(<?php echo $imageP['id']; ?>, '<?php echo $imageP['title']; ?>')">
+                              <a class="btn btn-primary fw-bold rounded-4 w-100" href="#" onclick="downloadWithProgressBar(<?php echo $image['id']; ?>, '<?php echo $image['title']; ?>')">
                                 <i class="bi bi-download text-stroke"></i> download all images (<?php echo $total_image_size; ?> MB)
                               </a>
-                              <div class="progress fw-bold mt-2 rounded-4" id="progressBarContainer_<?php echo $imageP['id']; ?>" style="height: 30px; display: none;">
-                                <div id="progressBar_<?php echo $imageP['id']; ?>" class="progress-bar progress-bar progress-bar-animated fw-bold" style="width: 0; height: 30px;">0%</div>
+                              <div class="progress fw-bold mt-2 rounded-4" id="progressBarContainer_<?php echo $image['id']; ?>" style="height: 30px; display: none;">
+                                <div id="progressBar_<?php echo $image['id']; ?>" class="progress-bar progress-bar progress-bar-animated fw-bold" style="width: 0; height: 30px;">0%</div>
                               </div>
                               <script>
                                 function downloadWithProgressBar(artworkId, title) {
@@ -280,7 +238,7 @@ $resultP = $stmtP->execute();
                                 <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
                               </p>
                               <p class="fw-bold text-center container">
-                                <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_images.php?artworkid=<?php echo $imageP['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
+                                <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_images.php?artworkid=<?php echo $image['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
                               </p>
                               <p class="fw-bold text-center container">
                                 <small>3. If you found problem where the zip contain empty file or 0b, download the images manually.</small>
@@ -296,61 +254,3 @@ $resultP = $stmtP->execute();
                   </div>
                 </div>
                 <!-- End of Modal -->
-
-              </div>
-            </div>
-          </div>
-        </div>
-      <?php endwhile; ?>
-    </div>    
-    <style>
-      .imagesC {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Two columns in mobile view */
-        grid-gap: 3px;
-        justify-content: center;
-        margin-right: 3px;
-        margin-left: 3px;
-      }
-
-      .imageA  {
-        display: block;
-        border-radius: 4px;
-        overflow: hidden;
-      }
-
-      .imageI {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        height: 200px;
-        transition: transform 0.5s ease-in-out;
-      }
-
-      @media (min-width: 768px) {
-        /* For desktop view, change the grid layout */
-        .imagesC {
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        }
-      }
-    </style>
-    <script>
-      function shareImageP(userId) {
-        // Compose the share URL
-        var shareUrl = 'image.php?artworkid=' + userId;
-
-        // Check if the Share API is supported by the browser
-        if (navigator.share) {
-          navigator.share({
-          url: shareUrl
-        })
-          .then(() => console.log('Shared successfully.'))
-          .catch((error) => console.error('Error sharing:', error));
-        } else {
-          console.log('Share API is not supported in this browser.');
-          // Provide an alternative action for browsers that do not support the Share API
-          // For example, you can open a new window with the share URL
-          window.open(shareUrl, '_blank');
-        }
-      }
-    </script>
