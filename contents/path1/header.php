@@ -47,7 +47,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         <button class="navbar-toggler1 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
           <img src="../../icon/toggle1.svg" width="22" height="22">
         </button> 
-        <a class="navbar-brand text-secondary fw-bold" href="../../?by=newest">
+        <a class="navbar-brand text-secondary fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/?by=newest">
           ArtCODE
         </a>
         <div class="dropdown nav-right">
