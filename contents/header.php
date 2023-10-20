@@ -47,7 +47,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         <button class="navbar-toggler1 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
           <img src="../icon/toggle1.svg" width="22" height="22">
         </button> 
-        <a class="navbar-brand text-secondary fw-bold" href="../?by=newest">
+        <a class="navbar-brand text-secondary fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/?by=newest">
           ArtCODE
         </a>
         <div class="dropdown nav-right">
@@ -139,7 +139,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') echo 'active' ?>" href="../upload">
+                <a class="nav-link nav-center <?php if($_SERVER['PHP_SELF'] == '/upload/index.php') echo 'active' ?>" href="../upload">
                   <i class="bi bi-cloud-arrow-up-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none ms-2">Uploads</span>
                 </a>
@@ -198,7 +198,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             <!-- Desktop -->
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-bold d-none-md-lg">
               <li class="nav-item">
-                <a class="fw-semibold nav-center btn btn-smaller btn-outline-secondary rounded-pill text-nowrap <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') echo 'active text-white' ?>" href="../upload">
+                <a class="fw-semibold nav-center btn btn-smaller btn-outline-secondary rounded-pill text-nowrap <?php if($_SERVER['PHP_SELF'] == '/upload/index.php') echo 'active text-white' ?>" href="../upload">
                   <i class="bi bi-cloud-arrow-up-fill fs-5"></i> uploads
                 </a>
               </li>
