@@ -70,7 +70,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             </div>
             <div class="ms-1 me-1">
               <li>
-                <a class="dropdown-item hover-effect fw-bold mb-1 <?php echo (basename($_SERVER['PHP_SELF']) == 'profile.php') ? 'text-white bg-sec rounded' : 'text-s'; ?>" href="../profile.php">
+                <a class="dropdown-item hover-effect fw-bold mb-1 <?php echo ($_SERVER['PHP_SELF'] == '/profile/index.php') ? 'text-white bg-sec rounded' : 'text-s'; ?>" href="../profile.php">
                   Profile
                 </a>
               </li>
