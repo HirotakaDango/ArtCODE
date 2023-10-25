@@ -1,10 +1,5 @@
 <?php
-// Check if the user is logged in
-session_start();
-if (!isset($_SESSION['email'])) {
-  header('Location: ../session.php');
-  exit();
-}
+require_once('../auth.php');
 
 // Get the user's current profile picture from the database
 $db = new SQLite3('../database.sqlite');

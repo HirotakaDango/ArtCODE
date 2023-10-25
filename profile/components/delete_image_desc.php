@@ -1,5 +1,5 @@
             <div>
-              <form action="http://<?php echo $_SERVER['HTTP_HOST']; ?>/profile/delete.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $page; ?>" method="post">
+              <form action="../../profile/delete.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $page; ?>" method="post">
                 <!-- Modal -->
                 <div class="modal fade" id="deleteImage_<?php echo $imageD['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-fullscreen modal-dialog-centered" role="document">

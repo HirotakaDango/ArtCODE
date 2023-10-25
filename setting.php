@@ -1,1 +1,4 @@
-<?php header("Location: settings/index.php"); ?>
+<?php
+header("Location: /settings/");
+exit();
+?>

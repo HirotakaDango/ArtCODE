@@ -11,18 +11,29 @@ $offset = ($page - 1) * $limit;
 // Get the total number of images for the current user
 $query = $db->prepare("SELECT COUNT(*) FROM images WHERE email = :email");
 $query->bindValue(':email', $email);
-$total = $query->execute()->fetchArray()[0];
+if ($query->execute()) {
+  $total = $query->fetchColumn();
+} else {
+  // Handle the query execution error
+  echo "Error executing the query.";
+}
 
-// Get all of the images uploaded by the current user with favorites count
-$stmt = $db->prepare("SELECT images.id, images.filename, images.tags, images.imgdesc, images.title, images.type, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id WHERE images.email = :email GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
+// Get all of the images uploaded by the current user
+$stmt = $db->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id WHERE images.email = :email GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':email', $email);
-$stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
-$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
-$result = $stmt->execute();
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT); // Use PDO constant for integer
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT); // Use PDO constant for integer
+if ($stmt->execute()) {
+  // Fetch the results as an associative array
+  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+  // Handle the query execution error
+  echo "Error executing the query.";
+}
 ?>
 
     <div class="images">
-      <?php while ($imageP = $result->fetchArray()): ?>
+      <?php foreach ($results as $imageP): ?>
         <div class="image-container">
           <div class="position-relative">
             <a class="shadow rounded imagesA" href="../image.php?artworkid=<?php echo $imageP['id']; ?>">
@@ -37,19 +48,34 @@ $result = $stmt->execute();
                   <li><button class="dropdown-item fw-bold" onclick="location.href='../edit_image.php?id=<?php echo $imageP['id']; ?>'" ><i class="bi bi-pencil-fill"></i> edit image</button></li>
                   <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $imageP['id']; ?>"><i class="bi bi-trash-fill"></i> delete</button></li>
                   <?php
-                    $is_favorited = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$imageP['id']}");
-                    if ($is_favorited) {
+                  $is_favorited = false; // Initialize to false
+
+                  // Check if the image is favorited
+                  $stmt = $db->prepare("SELECT COUNT(*) AS num_favorites FROM favorites WHERE email = :email AND image_id = :image_id");
+                  $stmt->bindValue(':email', $email);
+                  $stmt->bindValue(':image_id', $imageP['id']);
+                  $stmt->execute();
+                  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                  if ($row['num_favorites'] > 0) {
+                    $is_favorited = true;
+                  }
+
+                  // Define the form action
+                  $form_action = $is_favorited ? 'unfavorite' : 'favorite';
+
+                  // Button label
+                  $button_label = $is_favorited ? 'unfavorite' : 'favorite';
                   ?>
-                    <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $imageP['id']; ?>">
-                      <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
-                    </form>
-                  <?php } else { ?>
-                    <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $imageP['id']; ?>">
-                      <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
-                    </form>
-                  <?php } ?>
+                  <form method="POST">
+                    <input type="hidden" name="image_id" value="<?php echo $imageP['id']; ?>">
+                    <li>
+                      <button type="submit" class="dropdown-item fw-bold" name="<?php echo $form_action ?>">
+                        <i class="bi <?php echo $is_favorited ? 'bi-heart-fill' : 'bi-heart' ?>"></i>
+                        <small><?php echo $button_label ?></small>
+                      </button>
+                    </li>
+                  </form>
                   <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $imageP['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
                   <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageP['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                 </ul>
@@ -61,7 +87,7 @@ $result = $stmt->execute();
           <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/card_image_pop.php'); ?>
 
         </div>
-      <?php endwhile; ?>
+      <?php endforeach; ?>
     </div>
     <?php
       $totalPages = ceil($total / $limit);
@@ -70,11 +96,11 @@ $result = $stmt->execute();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=popular&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=popular&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -87,17 +113,17 @@ $result = $stmt->execute();
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=popular&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=popular&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=popular&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>

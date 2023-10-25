@@ -1,11 +1,5 @@
 <?php
-session_start();
-
-// Check if the user is logged in
-if (!isset($_SESSION['email'])) {
-  header("Location: ../session.php");
-  exit;
-}
+require_once('../auth.php');
 
 // Replace 'your-database-name.sqlite' with the actual path to your SQLite database file
 $database = new SQLite3('../database.sqlite');

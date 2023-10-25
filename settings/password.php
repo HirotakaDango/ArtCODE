@@ -1,15 +1,5 @@
 <?php
-// start session
-session_start();
-
-// connect to sqlite database
-$db = new SQLite3('../database.sqlite');
-
-// check if user is logged in
-if (!isset($_SESSION['email'])) {
-  header("Location: ../session.php");
-  exit();
-}
+require_once('../auth.php');
 
 // check if form is submitted
 if (isset($_POST['submit'])) {

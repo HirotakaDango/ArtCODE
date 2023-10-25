@@ -1,10 +1,6 @@
 <?php
 // Check if the user is logged in
-session_start();
-if (!isset($_SESSION['email'])) {
-  header('Location: ../session.php');
-  exit();
-}
+require_once('../auth.php');
 
 // Get the user's current background picture from the database
 $db = new SQLite3('../database.sqlite');
@@ -34,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $temp_file = $_FILES['bgpic']['tmp_name'];
     list($width, $height) = getimagesize($temp_file);
     $aspect_ratio = $width / $height;
-    $new_width = 400;
+    $new_width = 1600;
     $new_height = round($new_width / $aspect_ratio);
 
-    if ($new_height > 200) {
-      $new_height = 200;
+    if ($new_height > 800) {
+      $new_height = 800;
       $new_width = round($new_height * $aspect_ratio);
     }
 

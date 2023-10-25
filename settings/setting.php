@@ -1,9 +1,5 @@
 <?php
-  session_start();
-  if (!isset($_SESSION['email'])) {
-    header("Location: ../session.php");
-    exit;
-  }
+require_once('../auth.php');
 ?>
 
     <?php include('setheader.php'); ?>
