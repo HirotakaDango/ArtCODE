@@ -156,20 +156,23 @@ $fav_count = $fav_count->fetchColumn();
         <div class="col-md-10 d-flex align-items-center">
           <div>
             <h1 class="fw-bold d-none d-md-block d-lg-block"><?php echo $artist; ?></h1>
-            <div>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo count($images); ?> <small> Images</small></a></span>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="../list_favorite.php?id=<?php echo $user_id; ?>"> <?php echo $fav_count;?> <small> Favorites</small></a></span>
-              <form method="post">
-                <?php if ($is_following): ?>
-                  <span class="me-4"><button class="btn border-0 fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button><span>
-                <?php else: ?>
-                  <span class="me-4"><button class="btn border-0 fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button></span>
-                <?php endif; ?>
-              </form>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="../follower.php?id=<?php echo $user_id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $user_id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
-              <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
-            </div>
+<div>
+  <span class="me-4"><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo count($images); ?> <small> Images</small></a></span>
+  <span class="me-4"><a class="btn border-0 fw-medium" href="../list_favorite.php?id=<?php echo $id; ?>"> <?php echo $fav_count; ?> <small> Favorites</small></a></span>
+</div>
+<div class="button-group">
+  <form method="post">
+    <?php if ($is_following): ?>
+      <span class="me-4"><button class="btn border-0 fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button></span>
+    <?php else: ?>
+      <span class="me-4"><button class="btn border-0 fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button></span>
+    <?php endif; ?>
+  </form>
+  <span class="me-4"><a class="btn border-0 fw-medium" href="../follower.php?id=<?php echo $id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
+  <span class="me-4"><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
+  <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
+</div>
+
             <p class="mt-4 ms-3 fw-medium">
               <small>
                 <?php
@@ -318,6 +321,20 @@ $fav_count = $fav_count->fetchColumn();
         ?>
     <div class="mt-5"></div>
     <style>
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      
+      .button-group form {
+        flex: 1; /* Ensure the form takes the full width of the container */
+      }
+      
+      .button-group button {
+        white-space: nowrap; /* Prevent wrapping of button text */
+      }
+
+
       .img-sns {
         margin-top: -4px;
       }
