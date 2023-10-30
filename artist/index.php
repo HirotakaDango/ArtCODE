@@ -153,26 +153,25 @@ $fav_count = $fav_count->fetchColumn();
         <div class="col-md-2 d-flex align-item-center">
           <img class="img-thumbnail border-0 shadow text-center rounded-circle m-3" src="<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
         </div>
-        <div class="col-md-10 d-flex align-items-center">
+        <div class="col-md-7 d-flex align-items-center">
           <div>
             <h1 class="fw-bold d-none d-md-block d-lg-block"><?php echo $artist; ?></h1>
-<div>
-  <span class="me-4"><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo count($images); ?> <small> Images</small></a></span>
-  <span class="me-4"><a class="btn border-0 fw-medium" href="../list_favorite.php?id=<?php echo $id; ?>"> <?php echo $fav_count; ?> <small> Favorites</small></a></span>
-</div>
-<div class="button-group">
-  <form method="post">
-    <?php if ($is_following): ?>
-      <span class="me-4"><button class="btn border-0 fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button></span>
-    <?php else: ?>
-      <span class="me-4"><button class="btn border-0 fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button></span>
-    <?php endif; ?>
-  </form>
-  <span class="me-4"><a class="btn border-0 fw-medium" href="../follower.php?id=<?php echo $id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
-  <span class="me-4"><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
-  <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
-</div>
-
+            <div>
+              <span class="me-4"><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo count($images); ?> <small> Images</small></a></span>
+              <span class="me-4"><a class="btn border-0 fw-medium" href="../list_favorite.php?id=<?php echo $id; ?>"> <?php echo $fav_count; ?> <small> Favorites</small></a></span>
+            </div>
+            <div class="button-group">
+              <form method="post">
+                <?php if ($is_following): ?>
+                  <span class="me-3"><button class="btn btn-outline-dark rounded-pill fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button></span>
+                <?php else: ?>
+                  <span class="me-3"><button class="btn btn-outline-dark rounded-pill fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button></span>
+                <?php endif; ?>
+              </form>
+              <span class="me-4"><a class="btn border-0 fw-medium" href="../follower.php?id=<?php echo $id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
+              <span class="me-4"><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
+              <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
+            </div>
             <p class="mt-4 ms-3 fw-medium">
               <small>
                 <?php
@@ -196,6 +195,34 @@ $fav_count = $fav_count->fetchColumn();
             </p>
           </div>
         </div>
+        <div class="col-md-2 d-flex align-item-center">
+          <div class="btn-group gap-2 mt-2" role="group" aria-label="Social Media Links">
+            <span>
+              <?php if (!empty($twitter)): ?>
+                <?php $twitterUrl = (strpos($twitter, 'https') !== false) ? $twitter : 'https://' . $twitter; ?>
+                <a href="<?php echo $twitterUrl; ?>" class="btn fw-medium" role="button">
+                  <img class="" width="16" height="16" src="../icon/twitter.svg"> <small>Twitter</small>
+                </a>
+              <?php endif; ?>
+            </span>
+            <span>
+              <?php if (!empty($pixiv)): ?>
+                <?php $pixivUrl = (strpos($pixiv, 'https') !== false) ? $pixiv : 'https://' . $pixiv; ?>
+                <a href="<?php echo $pixivUrl; ?>" class="btn fw-medium" role="button">
+                  <img class="" width="16" height="16" src="../icon/pixiv.svg"> <small>Pixiv</small>
+                </a>
+              <?php endif; ?>
+            </span>
+            <span>
+              <?php if (!empty($other)): ?>
+                <?php $otherUrl = (strpos($other, 'https') !== false) ? $other : 'https://' . $other; ?>
+                <a href="<?php echo $otherUrl; ?>" class="btn fw-medium" role="button">
+                  <img class="" width="16" height="16" src="../icon/globe-asia-australia.svg"> <small>Other</small>
+                </a>
+              <?php endif; ?>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="container-fluid d-md-none d-lg-none">
@@ -205,28 +232,53 @@ $fav_count = $fav_count->fetchColumn();
           <a class="btn-sm btn btn-dark fw-bold rounded-pill opacity-75 position-absolute top-0 start-0 m-2" type="button" href="setting.php">change background <i class="bi bi-camera-fill"></i></a>
           <button class="btn btn-sm btn-dark opacity-75 rounded-3 position-absolute top-0 end-0 m-2" data-bs-toggle="modal" data-bs-target="#modalUserInfo"><i class="bi bi-info-circle-fill"></i></button>
         </div>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-center">
           <div>
-            <h1 class="fw-bold text-center d-md-none d-lg-none"><?php echo $artist; ?></h1>
-            <div class="d-flex justify-content-center align-items-center">
-              <div class="container">
-                <div class="btn-group w-100" role="group" aria-label="Basic example">
-                  <a class="btn border-0 fw-medium"><?php echo count($images); ?> <small>Images</small></a>
-                  <a class="btn border-0 fw-medium" href="../list_favorite.php?id=<?php echo $id; ?>"><?php echo $fav_count;?> <small>Favorites</small></a> 
-                  <form method="post">
-                    <?php if ($is_following): ?>
-                      <button class="btn border-0 fw-medium" type="submit" name="unfollow"><small>Unfollow</small></button>
-                    <?php else: ?>
-                      <button class="btn border-0 fw-medium" type="submit" name="follow"><small>Follow</small></button>
-                    <?php endif; ?>
-                  </form>
-                </div>
-                <div class="btn-group w-100" role="group" aria-label="Basic example">
-                  <a class="btn border-0 fw-medium" href="../follower.php?id=<?php echo $id; ?>"><?php echo $num_followers ?> <small>Followers</small></a>
-                  <a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"><?php echo $num_following ?> <small>Following</small></a>
-                  <button class="btn border-0 fw-medium" onclick="sharePage()"><small>Share</small></button>
-                </div>
+            <h1 class="fw-bold text-center d-md-none d-lg-none mt-2"><?php echo $artist; ?></h1>
+            <h6 class="text-center"><span class="badge bg-secondary fw-medium rounded-pill"><?php echo $region; ?></span></h6>
+            <div class="d-flex my-2 justify-content-center align-item-center">
+              <div class="btn-group gap-2 my-2" role="group" aria-label="Social Media Links">
+                <span>
+                  <?php if (!empty($twitter)): ?>
+                    <?php $twitterUrl = (strpos($twitter, 'https') !== false) ? $twitter : 'https://' . $twitter; ?>
+                    <a href="<?php echo $twitterUrl; ?>" class="btn fw-medium" role="button">
+                      <img class="" width="16" height="16" src="../icon/twitter.svg"> <small>Twitter</small>
+                    </a>
+                  <?php endif; ?>
+                </span>
+                <span>
+                  <?php if (!empty($pixiv)): ?>
+                    <?php $pixivUrl = (strpos($pixiv, 'https') !== false) ? $pixiv : 'https://' . $pixiv; ?>
+                    <a href="<?php echo $pixivUrl; ?>" class="btn fw-medium" role="button">
+                      <img class="" width="16" height="16" src="../icon/pixiv.svg"> <small>Pixiv</small>
+                    </a>
+                  <?php endif; ?>
+                </span>
+                <span>
+                  <?php if (!empty($other)): ?>
+                    <?php $otherUrl = (strpos($other, 'https') !== false) ? $other : 'https://' . $other; ?>
+                    <a href="<?php echo $otherUrl; ?>" class="btn fw-medium" role="button">
+                      <img class="" width="16" height="16" src="../icon/globe-asia-australia.svg"> <small>Other</small>
+                    </a>
+                  <?php endif; ?>
+                </span>
               </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-center mb-2">
+              <form class="w-100" method="post">
+                <?php if ($is_following): ?>
+                  <button class="btn btn-outline-dark rounded-pill w-100 fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button>
+                <?php else: ?>
+                  <button class="btn btn-outline-dark rounded-pill w-100 fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button>
+                <?php endif; ?>
+              </form>
+            </div>
+            <div class="text-center">
+              <span class=""><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo count($images); ?> <small> Images</small></a></span>
+              <span class=""><a class="btn border-0 fw-medium" href="../list_favorite.php?id=<?php echo $id; ?>"><?php echo $fav_count;?> <small>Favorites</small></a></span>
+              <span class=""><a class="btn border-0 fw-medium" href="../follower.php?id=<?php echo $id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
+              <span class=""><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
+              <span class=""><button class="btn border-0 fw-medium" onclick="shareArtist(<?php echo $id; ?>)"><small>Shares</small></button></span>
             </div>
             <p class="mt-4 fw-medium">
               <small>
@@ -320,91 +372,6 @@ $fav_count = $fav_count->fetchColumn();
         
         ?>
     <div class="mt-5"></div>
-    <style>
-      .button-group {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      
-      .button-group form {
-        flex: 1; /* Ensure the form takes the full width of the container */
-      }
-      
-      .button-group button {
-        white-space: nowrap; /* Prevent wrapping of button text */
-      }
-
-
-      .img-sns {
-        margin-top: -4px;
-      }
-    
-      @media (min-width: 768px) {
-        .b-section {
-          margin-top: 50px;
-        }
-      }
-      
-      @media (max-width: 767px) {
-        .d-none-sm-b {
-          display: none;
-        }
-      }
-      
-      .roow {
-        display: flex;
-        flex-wrap: wrap;
-        border-radius: 5px;
-        border: 2px solid lightgray;
-        margin-right: 10px;
-        margin-left: 10px;
-        margin-top: 10px;
-      }
-
-      .cool-6 {
-        width: 50%;
-        padding: 0 15px;
-      }
-
-      .caard {
-        background-color: #fff;
-        margin-bottom: 15px;
-      }
-      
-      .b-radius {
-        border-radius: 10px;
-      }
-
-      .art {
-        border-radius: 10px;
-      }
-
-      @media (max-width: 768px) {
-        .roow {
-          border: none;
-          margin-right: 0;
-          margin-left: 0;
-          margin-top: -15px;
-        }
-        
-        .cool-6 {
-          width: 100%;
-          padding: 0;
-        }
-        
-        .b-radius {
-          border-right: none;
-          border-left: none;
-          border-top: 1px solid lightgray;
-          border-bottom: 1px solid lightgray; 
-          border-radius: 0;
-        }
-        
-        .border-down {
-          border-bottom: 2px solid lightgray;
-        }
-      }
-    </style>
     <script>
       function shareImage(userId) {
         // Compose the share URL
