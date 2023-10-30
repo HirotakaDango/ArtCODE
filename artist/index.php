@@ -151,7 +151,12 @@ $fav_count = $fav_count->fetchColumn();
     <div class="container-fluid d-none d-md-block d-lg-block">
       <div class="row">
         <div class="col-md-2 d-flex align-item-center">
-          <img class="img-thumbnail border-0 shadow text-center rounded-circle m-3" src="<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
+          <div class="card border-0">
+            <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3 mx-3" src="<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
+            <div class="card-body">
+              <h6 class="text-center"><span class="badge bg-secondary fw-medium rounded-pill"><?php echo $region; ?></span></h6>
+            </div>
+          </div>
         </div>
         <div class="col-md-7 d-flex align-items-center">
           <div>
