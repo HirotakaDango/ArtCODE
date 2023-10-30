@@ -377,6 +377,20 @@ $fav_count = $fav_count->fetchColumn();
         
         ?>
     <div class="mt-5"></div>
+    <style>
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      
+      .button-group form {
+        flex: 1; /* Ensure the form takes the full width of the container */
+      }
+      
+      .button-group button {
+        white-space: nowrap; /* Prevent wrapping of button text */
+      }
+    </style>
     <script>
       function shareImage(userId) {
         // Compose the share URL
