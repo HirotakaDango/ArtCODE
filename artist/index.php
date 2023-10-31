@@ -148,7 +148,7 @@ $fav_count = $fav_count->fetchColumn();
       <a class="btn-sm btn btn-dark fw-bold rounded-pill opacity-75 position-absolute bottom-0 start-0 m-2" type="button" href="setting.php">change background <i class="bi bi-camera-fill"></i></a>
       <button class="btn btn-sm btn-dark opacity-75 rounded-3 position-absolute bottom-0 end-0 m-1" data-bs-toggle="modal" data-bs-target="#modalUserInfo"><i class="bi bi-info-circle-fill"></i></button>
     </div>
-    <div class="container-fluid d-none d-md-block d-lg-block mt-2">
+    <div class="container-fluid d-none d-md-block d-lg-block mt-3">
       <div class="row">
         <div class="col-md-2 d-flex align-item-center">
           <div class="card border-0">
@@ -332,9 +332,9 @@ $fav_count = $fav_count->fetchColumn();
 
                     if (strlen($formattedText) > $charLimit) {
                       $limitedText = substr($formattedText, 0, $charLimit);
-                      echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
-                      echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
-                      echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
+                      echo '<span id="limitedText1">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                      echo '<span id="more1" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                      echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction1()" id="myBtn1"><small>read more</small></button>';
                     } else {
                       // If the text is within the character limit, just display it with line breaks.
                       echo nl2br($formattedText);
@@ -345,6 +345,24 @@ $fav_count = $fav_count->fetchColumn();
                 ?>
               </small>
             </p>
+            
+            <script>
+              function myFunction1() {
+                var dots1 = document.getElementById("limitedText1");
+                var moreText1 = document.getElementById("more1");
+                var btnText1 = document.getElementById("myBtn1");
+
+                if (moreText1.style.display === "none") {
+                  dots1.style.display = "none";
+                  moreText1.style.display = "inline";
+                  btnText1.innerHTML = "read less";
+                } else {
+                  dots1.style.display = "inline";
+                  moreText1.style.display = "none";
+                  btnText1.innerHTML = "read more";
+                }
+              }
+            </script>
             
           </div>
         </div>
