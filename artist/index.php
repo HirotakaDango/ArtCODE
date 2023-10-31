@@ -148,7 +148,7 @@ $fav_count = $fav_count->fetchColumn();
       <a class="btn-sm btn btn-dark fw-bold rounded-pill opacity-75 position-absolute bottom-0 start-0 m-2" type="button" href="setting.php">change background <i class="bi bi-camera-fill"></i></a>
       <button class="btn btn-sm btn-dark opacity-75 rounded-3 position-absolute bottom-0 end-0 m-1" data-bs-toggle="modal" data-bs-target="#modalUserInfo"><i class="bi bi-info-circle-fill"></i></button>
     </div>
-    <div class="container-fluid d-none d-md-block d-lg-block">
+    <div class="container-fluid d-none d-md-block d-lg-block mt-2">
       <div class="row">
         <div class="col-md-2 d-flex align-item-center">
           <div class="card border-0">
@@ -177,6 +177,7 @@ $fav_count = $fav_count->fetchColumn();
               <span class="me-4"><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
               <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
             </div>
+            
             <p class="mt-4 ms-3 fw-medium">
               <small>
                 <?php
@@ -190,14 +191,42 @@ $fav_count = $fav_count->fetchColumn();
                       return '<a href="' . $url . '">' . $url . '</a>';
                     }, $messageTextWithoutTags);
 
-                    $formattedTextWithLineBreaks = nl2br($formattedText);
-                    echo $formattedTextWithLineBreaks;
+                    $charLimit = 100; // Set your character limit
+
+                    if (strlen($formattedText) > $charLimit) {
+                      $limitedText = substr($formattedText, 0, $charLimit);
+                      echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                      echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                      echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
+                    } else {
+                      // If the text is within the character limit, just display it with line breaks.
+                      echo nl2br($formattedText);
+                    }
                   } else {
                     echo "User description is empty.";
                   }
                 ?>
               </small>
             </p>
+
+            <script>
+              function myFunction() {
+                var dots = document.getElementById("limitedText");
+                var moreText = document.getElementById("more");
+                var btnText = document.getElementById("myBtn");
+
+                if (moreText.style.display === "none") {
+                  dots.style.display = "none";
+                  moreText.style.display = "inline";
+                  btnText.innerHTML = "read less";
+                } else {
+                  dots.style.display = "inline";
+                  moreText.style.display = "none";
+                  btnText.innerHTML = "read more";
+                }
+              }
+            </script>
+
           </div>
         </div>
         <div class="col-md-2 d-flex align-item-center">
@@ -285,6 +314,7 @@ $fav_count = $fav_count->fetchColumn();
               <span class=""><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
               <span class=""><button class="btn border-0 fw-medium" onclick="shareArtist(<?php echo $id; ?>)"><small>Shares</small></button></span>
             </div>
+            
             <p class="mt-4 fw-medium">
               <small>
                 <?php
@@ -298,14 +328,24 @@ $fav_count = $fav_count->fetchColumn();
                       return '<a href="' . $url . '">' . $url . '</a>';
                     }, $messageTextWithoutTags);
 
-                    $formattedTextWithLineBreaks = nl2br($formattedText);
-                    echo $formattedTextWithLineBreaks;
+                    $charLimit = 100; // Set your character limit
+
+                    if (strlen($formattedText) > $charLimit) {
+                      $limitedText = substr($formattedText, 0, $charLimit);
+                      echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                      echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                      echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
+                    } else {
+                      // If the text is within the character limit, just display it with line breaks.
+                      echo nl2br($formattedText);
+                    }
                   } else {
                     echo "User description is empty.";
                   }
                 ?>
               </small>
             </p>
+            
           </div>
         </div>
       </div>
@@ -344,9 +384,9 @@ $fav_count = $fav_count->fetchColumn();
     </div>
     <!-- End of Porfile Header -->
     
-    <h5 class="container-fluid fw-bold text-secondary"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h5>
+    <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
     <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
