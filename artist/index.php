@@ -402,6 +402,8 @@ $fav_count = $fav_count->fetchColumn();
     </div>
     <!-- End of Porfile Header -->
     
+    <?php include('most_popular_artist.php'); ?>
+    
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
     <div class="dropdown">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -376,6 +376,8 @@ $fav_count = $fav_row['num_favorites'];
       </div>
     </div>
     <!-- End of Porfile Header -->
+    
+    <?php include('most_popular_profile.php'); ?>
 
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
     <div class="dropdown">
