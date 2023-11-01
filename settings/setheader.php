@@ -48,13 +48,19 @@
               <li class="nav-item">
                 <a class="nav-link text-nav fw-bold fs-5 <?php if(basename($_SERVER['PHP_SELF']) == 'background.php') echo 'rounded-4 border border-4 bg-primary text-white' ?>" href="background.php">
                   <span class="align-text-bottom"></span>
-                  <i class="bi bi-images"></i> Background
+                  <i class="bi bi-image"></i> Background
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-nav fw-bold fs-5 <?php if(basename($_SERVER['PHP_SELF']) == 'bio.php') echo 'rounded-4 border border-4 bg-primary text-white' ?>" href="bio.php">
                   <span class="align-text-bottom"></span>
                   <i class="bi bi-person-vcard"></i> Bio
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-nav fw-bold fs-5 <?php if(basename($_SERVER['PHP_SELF']) == 'page.php') echo 'rounded-4 border border-4 bg-primary text-white' ?>" href="page.php">
+                  <span class="align-text-bottom"></span>
+                  <i class="bi bi-images"></i> Page
                 </a>
               </li>
               <li class="nav-item">

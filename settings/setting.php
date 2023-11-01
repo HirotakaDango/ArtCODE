@@ -23,7 +23,7 @@ require_once('../auth.php');
         </div>
       </a>
       <a href="background.php" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
-        <i class="bi bi-images" style="font-size: 35px; color: gray;"></i>
+        <i class="bi bi-image" style="font-size: 35px; color: gray;"></i>
         <div class="d-flex gap-2 w-100 justify-content-between">
           <div>
             <h6 class="mb-0 fw-bold">Change Your Background Picture</h6>
@@ -37,6 +37,15 @@ require_once('../auth.php');
           <div>
             <h6 class="mb-0 fw-bold">Change Your Bio</h6>
             <p class="mb-0 opacity-75">Change how people see information about you.</p>
+          </div>
+        </div>
+      </a>
+      <a href="page.php" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+        <i class="bi bi-images" style="font-size: 35px; color: gray;"></i>
+        <div class="d-flex gap-2 w-100 justify-content-between">
+          <div>
+            <h6 class="mb-0 fw-bold">Change Number Per Page</h6>
+            <p class="mb-0 opacity-75">Change how many images set up for each page.</p>
           </div>
         </div>
       </a>
