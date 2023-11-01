@@ -1,6 +1,13 @@
 <?php
+$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindParam(':email', $email, PDO::PARAM_STR);
+$queryNum->execute();
+$user = $queryNum->fetch(PDO::FETCH_ASSOC);
+
+$numpage = $user['numpage'];
+
 // Set the limit of images per page
-$limit = 100;
+$limit = empty($numpage) ? 50 : $numpage;
 
 // Get the current page number, default to 1
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
