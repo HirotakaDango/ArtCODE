@@ -16,8 +16,16 @@ if (isset($_GET['album'])) {
   $result = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
   $total = $result['total_images'];
   
+  // Prepare the query to get the user's numpage
+  $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
+  $queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
+  $resultNum = $queryNum->execute();
+  $user = $resultNum->fetchArray(SQLITE3_ASSOC);
+
+  $numpage = $user['numpage'];
+
   // Set the limit of images per page
-  $limit = 100;
+  $limit = empty($numpage) ? 50 : $numpage;
   
   // Get the current page number, default to 1
   $page = isset($_GET['page']) ? intval($_GET['page']) : 1;

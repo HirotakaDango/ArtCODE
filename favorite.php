@@ -4,13 +4,22 @@ require_once('auth.php');
 // Connect to the SQLite database
 $db = new SQLite3('database.sqlite');
 
-// Pagination setup
-$limit = 100;
+$email = $_SESSION['email'];
+
+// Prepare the query to get the user's numpage
+$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
+$resultNum = $queryNum->execute();
+$user = $resultNum->fetchArray(SQLITE3_ASSOC);
+
+$numpage = $user['numpage'];
+
+// Set the limit of images per page
+$limit = empty($numpage) ? 50 : $numpage;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
 // Get all of the favorite images for the current user with pagination
-$email = $_SESSION['email'];
 $query = "SELECT images.* FROM images INNER JOIN favorites ON images.id = favorites.image_id WHERE favorites.email = '$email' ORDER BY favorites.id DESC LIMIT $limit OFFSET $offset";
 $result = $db->query($query);
 

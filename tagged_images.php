@@ -21,7 +21,15 @@ $stmt->bindValue(':tag_exact', $tag, SQLITE3_TEXT);
 $count = $stmt->execute()->fetchArray()[0];
 
 // Define the limit and offset for the query
-$limit = 100; // Number of items per page
+$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
+$resultNum = $queryNum->execute();
+$user = $resultNum->fetchArray(SQLITE3_ASSOC);
+
+$numpage = $user['numpage'];
+
+// Set the limit of images per page
+$limit = empty($numpage) ? 50 : $numpage;
 $page = isset($_GET['page']) ? $_GET['page'] : 1; // Get the current page number from the URL parameter
 $offset = ($page - 1) * $limit; // Calculate the offset based on the page number and limit
 
@@ -149,13 +157,13 @@ if (isset($_POST['favorite'])) {
         // Calculate the range of page numbers to display
         $startPage = max($page - 2, 1);
         $endPage = min($page + 2, $totalPages);
-
+    
         // Display page numbers within the range
         for ($i = $startPage; $i <= $endPage; $i++) {
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?tag=<?php echo $tag; ?>&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?tag=' . $tag . '&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>

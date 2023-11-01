@@ -3,8 +3,18 @@ require_once('auth.php');
 
 $dbP = new SQLite3('database.sqlite'); 
 
-// Define the number of images to display per page
-$limit = 100;
+$email = $_SESSION['email'];
+
+// Prepare the query to get the user's numpage
+$queryNum = $dbP->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
+$resultNum = $queryNum->execute();
+$user = $resultNum->fetchArray(SQLITE3_ASSOC);
+
+$numpage = $user['numpage'];
+
+// Set the limit of images per page
+$limit = empty($numpage) ? 50 : $numpage;
 
 // Get the current page number from the query string
 if (isset($_GET['page'])) {
