@@ -118,7 +118,7 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $image['title']; ?></title>
-    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
   </head>
   <body>
