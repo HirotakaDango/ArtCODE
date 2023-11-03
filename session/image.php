@@ -742,6 +742,7 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                   <i class="bi bi-images"></i> view all <?php echo $user['artist']; ?>'s images
                 </small>
               </a>
+              <?php include 'imguser.php'; ?>
               <p class="text-secondary mt-3"><i class="bi bi-tags-fill"></i> tags</p>
               <div class="tag-buttons">
                 <?php
@@ -751,7 +752,7 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                       $tag = trim($tag);
                       if (!empty($tag)) {
                     ?>
-                      <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>"
+                      <a href="../tagged_images.php?tag=<?php echo urlencode($tag); ?>"
                         class="btn btn-sm btn-secondary mb-1 rounded-3 fw-bold opacity-50">
                         <i class="bi bi-tags-fill"></i> <?php echo $tag; ?>
                       </a>
