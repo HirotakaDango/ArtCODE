@@ -594,18 +594,17 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                             <?php foreach ($images as $index => $image) { ?>
                               <div class="mb-3 img-thumbnail border-dark">
                                 <ul class="list-unstyled m-0">
-                                  <li class="mb-2"><i class="bi bi-file-earmark"></i> Filename: <?php echo $image['filename']; ?></li>
                                   <li class="mb-2"><i class="bi bi-file-earmark-bar-graph"></i> Image data size: <?php echo getImageSizeInMB($image['filename']); ?> MB</li>
                                   <li class="mb-2"><i class="bi bi-arrows-angle-expand text-stroke"></i> Image dimensions: <?php list($width, $height) = getimagesize('../images/' . $image['filename']); echo $width . 'x' . $height; ?></li>
                                   <li class="mb-2"><i class="bi bi-file-earmark-text"></i> MIME type: <?php echo mime_content_type('../images/' . $image['filename']); ?></li>
                                   <li class="mb-2"><i class="bi bi-calendar"></i> Image date: <?php echo date('Y/m/d', strtotime($image['date'])); ?></li>
                                   <li class="mb-2">
-                                    <a class="text-decoration-none text-primary" href="../images/<?php echo $image['filename']; ?>">
+                                    <a class="text-decoration-none text-primary" href="#" data-bs-toggle="modal" data-bs-target="#originalImageModal2">
                                       <i class="bi bi-arrows-fullscreen text-stroke"></i> View original image
                                     </a>
                                   </li>
                                   <li>
-                                    <a class="text-decoration-none text-primary" href="../images/<?php echo $image['filename']; ?>" download>
+                                    <a class="text-decoration-none text-primary" href="#" data-bs-toggle="modal" data-bs-target="#originalImageModal2">
                                       <i class="bi bi-cloud-arrow-down-fill"></i> Download original image
                                     </a>
                                   </li>
@@ -615,18 +614,17 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                             <?php foreach ($image_childs as $index => $image_child) { ?>
                               <div class="mt-3 mb-3 img-thumbnail border-dark">
                                 <ul class="list-unstyled m-0">
-                                  <li class="mb-2"><i class="bi bi-file-earmark"></i> Filename: <?php echo $image_child['filename']; ?></li>
                                   <li class="mb-2"><i class="bi bi-file-earmark-bar-graph"></i> Image data size: <?php echo getImageSizeInMB($image_child['filename']); ?> MB</li>
                                   <li class="mb-2"><i class="bi bi-arrows-angle-expand text-stroke"></i> Image dimensions: <?php list($width, $height) = getimagesize('../images/' . $image_child['filename']); echo $width . 'x' . $height; ?></li>
                                   <li class="mb-2"><i class="bi bi-file-earmark-text"></i> MIME type: <?php echo mime_content_type('../images/' . $image_child['filename']); ?></li>
                                   <li class="mb-2"><i class="bi bi-calendar"></i> Image date: <?php echo date('Y/m/d', strtotime($image['date'])); ?></li>
                                   <li class="mb-2">
-                                    <a class="text-decoration-none text-primary" href="../images/<?php echo $image_child['filename']; ?>">
+                                    <a class="text-decoration-none text-primary" href="#" data-bs-toggle="modal" data-bs-target="#originalImageModal2">
                                       <i class="bi bi-arrows-fullscreen text-stroke"></i> View original image
                                     </a>
                                   </li>
                                   <li>
-                                    <a class="text-decoration-none text-primary" href="../images/<?php echo $image_child['filename']; ?>" download>
+                                    <a class="text-decoration-none text-primary" href="#" data-bs-toggle="modal" data-bs-target="#originalImageModal2">
                                       <i class="bi bi-cloud-arrow-down-fill"></i> Download original image
                                     </a>
                                   </li>
@@ -1016,6 +1014,15 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
         margin-top: 8px; /* Add spacing between icon and text */
       }
     </style> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
+    <p class="text-secondary fw-bold ms-2 mt-2">Latest Images</p>
+    <?php
+      include 'latest_session.php';
+    ?>
+    <p class="text-secondary fw-bold ms-2 mt-4">Popular Images</p>
+    <?php
+      include 'most_popular_session.php';
+    ?>
     <div class="mt-5"></div>
     <script>
       function copyToClipboard() {

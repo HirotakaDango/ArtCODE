@@ -7,6 +7,8 @@
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../swup/transitions.css" />
+    <script type="module" src="../swup/swup.js"></script>
   </head>
   <body>
     <nav class="navbar sticky-top navbar-light bg-white flex-md-nowrap p-0 shadow-sm" style="height: 45px;">
@@ -90,7 +92,7 @@
               <li class="nav-item">
                 <a class="nav-link text-nav fw-bold fs-5 <?php if(basename($_SERVER['PHP_SELF']) == 'analytic.php') echo 'rounded-4 border border-4 bg-primary text-white' ?>" href="analytic.php">
                   <span class="align-text-bottom"></span>
-                  <i class="bi bi-pie-chart-fill"></i> User's Analytic
+                  <i class="bi bi-pie-chart-fill"></i> Analytic
                 </a>
               </li>
               <li class="nav-item">

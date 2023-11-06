@@ -48,6 +48,7 @@ unset($_SESSION['success_message']);
 $db->close();
 ?>
 
+    <main id="swup" class="transition-main">
     <?php include('setheader.php'); ?>
     <div class="container-fluid">
       <h3 class="mt-4 text-center fw-bold text-dark"><i class="bi bi-person-vcard-fill"></i> Edit Bio</h3>
@@ -63,3 +64,4 @@ $db->close();
       </form>
     </div>
     <?php include('end.php'); ?>
+    </main>

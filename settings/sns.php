@@ -55,6 +55,7 @@ $current_other = htmlspecialchars($row['other'] ?? '');
 $db->close();
 ?>
 
+    <main id="swup" class="transition-main">
     <?php include('setheader.php'); ?>
     <div class="container">
       <h3 class="mt-4 text-center fw-bold text-dark"><i class="bi bi-phone-fill"></i> Edit Your Linked SNS</h3>
@@ -81,3 +82,4 @@ $db->close();
       </form>
     </div>
     <?php include('end.php'); ?>
+    </main>

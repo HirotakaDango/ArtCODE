@@ -1,7 +1,6 @@
 <?php
-
 // Connect to the SQLite database using a parameterized query
-$dbP = new SQLite3('database.sqlite');
+$dbP = new SQLite3('../database.sqlite');
 
 // Get all of the images from the database using a parameterized query
 $stmtP = $dbP->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY favorite_count DESC LIMIT 70");
@@ -19,7 +18,7 @@ while ($imageP = $resultP->fetchArray()) {
 }
 ?>
 
-    <div class="imagesCP mb-2 mt-2">
+    <div class="imagesC mb-2 mt-2">
       <?php $count = 0; ?>
       <?php while ($imageP = $resultP->fetchArray()): ?>
         <?php
@@ -28,40 +27,11 @@ while ($imageP = $resultP->fetchArray()) {
           $image_titleP = $imageP['title'];
           $current_image_idP = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
         ?>
-        <div class="image-containerP">
+        <div class="image-container">
           <div class="position-relative">
-            <a class="shadow rounded imageAP" href="image.php?artworkid=<?php echo $image_idP; ?>">
-              <img class="imageIP <?php echo ($imageP['type'] === 'nsfw') ? 'nsfw' : ''; ?> <?php echo ($image_idP == $current_image_idP) ? 'opacity-50' : ''; ?>" src="/thumbnails/<?php echo $image_urlP; ?>" alt="<?php echo $image_titleP; ?>">
+            <a class="shadow rounded imageA" href="image.php?artworkid=<?php echo $image_idP; ?>">
+              <img class="imageI <?php echo ($imageP['type'] === 'nsfw') ? 'nsfw' : ''; ?> <?php echo ($image_idP == $current_image_idP) ? 'opacity-50' : ''; ?>" src="../thumbnails/<?php echo $image_urlP; ?>" alt="<?php echo $image_titleP; ?>">
             </a>
-            <div class="position-absolute top-0 start-0 d-none"> <!-- Future Update Possible -->
-              <div class="dropdown">
-                <button class="btn btn-sm btn-dark ms-1 mt-1 rounded-1 opacity-50" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <?php
-                  $is_favorited = $dbP->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = $image_idD");
-
-                  if ($is_favorited) {
-                  ?>
-                    <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $image_idP; ?>">
-                      <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
-                    </form>
-                  <?php } else { ?>
-                    <form method="POST">
-                      <input type hidden="hidden" name="image_id" value="<?php echo $image_idP; ?>">
-                      <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
-                    </form>
-                  <?php } ?>
-                  <li><button class="dropdown-item fw-bold" onclick="shareImageL(<?php echo $image_idP; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
-                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image_idP; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
-                </ul>
-
-                <?php include('contents/images_contents/card_image_most_popular.php'); ?>
-
-              </div>
-            </div>
           </div>
         </div>
         <?php $count++; ?>
@@ -72,7 +42,7 @@ while ($imageP = $resultP->fetchArray()) {
     <script>
       var currentIndexP = <?php echo $count; ?>;
       var imagesP = <?php echo json_encode($images); ?>;
-      var containerP = $('.imagesCP');
+      var containerP = $('.imagesC');
       var loadMoreBtnP = $('#loadMoreBtnP');
 
       loadMoreBtnP.click(function () {
@@ -86,18 +56,18 @@ while ($imageP = $resultP->fetchArray()) {
           var current_image_idP = '<?php echo $current_image_idD; ?>';
 
           var mediaElementP = document.createElement('div');
-          mediaElementP.classList.add('image-containerP');
+          mediaElementP.classList.add('image-container');
 
           var linkP = document.createElement('a');
           linkP.href = 'image.php?artworkid=' + image_idP;
           linkP.classList.add('imageAD', 'rounded', 'shadow');
 
           var imageP = document.createElement('img');
-          imageP.classList.add('imageIP');
+          imageP.classList.add('imageI');
           if (image_idP == current_image_idP) {
             imageP.classList.add('opacity-50');
           }
-          imageP.src = '/thumbnails/' + image_urlP; // Corrected variable name
+          imageP.src = '../thumbnails/' + image_urlP; // Corrected variable name
           imageP.alt = image_titleP; // Corrected variable name
 
           linkP.appendChild(imageP);
@@ -114,7 +84,7 @@ while ($imageP = $resultP->fetchArray()) {
       });
     </script>
     <style>
-      .imagesCP {
+      .imagesC {
         display: grid;
         grid-template-columns: repeat(2, 1fr); /* Two columns in mobile view */
         grid-gap: 3px;
@@ -123,13 +93,13 @@ while ($imageP = $resultP->fetchArray()) {
         margin-left: 3px;
       }
 
-      .imageAP  {
+      .imageA  {
         display: block;
         border-radius: 4px;
         overflow: hidden;
       }
 
-      .imageIP {
+      .imageI {
         width: 100%;
         height: auto;
         object-fit: cover;
@@ -139,7 +109,7 @@ while ($imageP = $resultP->fetchArray()) {
 
       @media (min-width: 768px) {
         /* For desktop view, change the grid layout */
-        .imagesCP {
+        .imagesC {
           grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
       }

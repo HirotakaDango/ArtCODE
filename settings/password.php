@@ -45,6 +45,7 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
+    <main id="swup" class="transition-main">
     <?php include('setheader.php'); ?>
     <div class="container">
       <div class="text-center mt-4">
@@ -76,3 +77,4 @@ if (isset($_POST['submit'])) {
       <div>
     </div>
     <?php include('end.php'); ?>
+    </main>

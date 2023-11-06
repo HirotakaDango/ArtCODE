@@ -2,6 +2,7 @@
 require_once('../auth.php');
 ?>
 
+    <main id="swup" class="transition-main">
     <?php include('setheader.php'); ?>
     <div class="list-group w-auto ms-2 me-2 mt-4 fw-semibold">
       <a href="yourname.php" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
@@ -107,3 +108,4 @@ require_once('../auth.php');
     <a class="btn me-2 mt-3 mb-5 btn-danger fw-bold d-md-none d-lg-none float-end" href="profile.php"><i class="bi bi-arrow-left-circle-fill"></i> Back to Profile</a> 
     <div class="mt-5"></div>
     <?php include('end.php'); ?>
+    </main>

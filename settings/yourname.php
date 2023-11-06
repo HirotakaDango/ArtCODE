@@ -48,6 +48,7 @@ $artist = htmlspecialchars($user['artist']);
 
 ?>
 
+    <main id="swup" class="transition-main">
     <?php include('setheader.php'); ?>
     <div class="container">
       <h3 class="text-dark text-center mt-4 fw-bold"><i class="bi bi-person-circle"></i> Change Your Name</h3>
@@ -63,3 +64,4 @@ $artist = htmlspecialchars($user['artist']);
       </form>
     </div>
     <?php include('end.php'); ?>
+    </main>

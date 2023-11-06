@@ -93,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+    <main id="swup" class="transition-main">
     <?php include('setheader.php'); ?>
     <?php if (isset($error_msg)): ?>
       <div class="alert alert-danger" role="alert">
@@ -172,3 +173,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } 
     </style>
     <?php include('end.php'); ?>
+    </main>

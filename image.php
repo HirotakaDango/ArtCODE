@@ -1726,7 +1726,9 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
         font-size: 18px; /* Adjust text size */
         margin-top: 8px; /* Add spacing between icon and text */
       }
-    </style> 
+    </style>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
     <p class="text-secondary fw-bold ms-2 mt-2">Latest Images</p>
     <?php
       include 'latest.php';

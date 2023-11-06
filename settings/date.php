@@ -33,16 +33,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $database->close();
 ?>
 
-  <?php include ('setheader.php');?>
-  <div class="container mt-4">
-    <h3 class="text-center fw-bold"><i class="bi bi-calendar-fill"></i> Change Date</h3>
-    <p class="fw-semibold">Current date: <?php echo $currentborn; ?></p>
-    <form method="POST" action="">
-      <div class="input-group">
-        <input type="date" class="form-control fw-bold" name="born" placeholder="Select a date" value="<?php echo $currentborn; ?>" required>
-        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-      </div>
-      <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
-    </form>
-  </div>
-  <?php include('end.php'); ?> 
+    <main id="swup" class="transition-main">
+    <?php include ('setheader.php');?>
+    <div class="container mt-4">
+      <h3 class="text-center fw-bold"><i class="bi bi-calendar-fill"></i> Change Date</h3>
+      <p class="fw-semibold">Current date: <?php echo $currentborn; ?></p>
+      <form method="POST" action="">
+        <div class="input-group">
+          <input type="date" class="form-control fw-bold" name="born" placeholder="Select a date" value="<?php echo $currentborn; ?>" required>
+          <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
+      </form>
+    </div>
+    <?php include('end.php'); ?>
+    </main>
