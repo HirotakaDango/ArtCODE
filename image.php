@@ -584,26 +584,50 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                               </div>
                               <h5 class="text-white text-center shadowed-text fw-bold"><?php echo $image['title']; ?></h5>
                               <div style="word-break: break-word;">
-                                <p class="text-white shadowed-text" style="word-break: break-word;">
-                                  <small>
-                                    <?php
-                                      if (!empty($image['imgdesc'])) {
-                                        $messageText = $image['imgdesc'];
-                                        $messageTextWithoutTags = strip_tags($messageText);
-                                        $pattern = '/\bhttps?:\/\/\S+/i';
+                                <p class="text-white shadowed-text small fw-medium" style="word-break: break-word;">
+                                  <?php
+                                    if (!empty($image['imgdesc'])) {
+                                      $messageText = $image['imgdesc'];
+                                      $messageTextWithoutTags = strip_tags($messageText);
+                                      $pattern = '/\bhttps?:\/\/\S+/i';
 
-                                        $formattedText = preg_replace_callback($pattern, function ($matches) {
-                                          $url = htmlspecialchars($matches[0]);
-                                          return '<a href="' . $url . '">' . $url . '</a>';
-                                        }, $messageTextWithoutTags);
+                                      $formattedText = preg_replace_callback($pattern, function ($matches) {
+                                        $url = htmlspecialchars($matches[0]);
+                                        return '<a href="' . $url . '">' . $url . '</a>';
+                                      }, $messageTextWithoutTags);
 
-                                        $formattedTextWithLineBreaks = nl2br($formattedText);
-                                        echo $formattedTextWithLineBreaks;
+                                      $charLimit = 400; // Set your character limit
+
+                                      if (strlen($formattedText) > $charLimit) {
+                                        $limitedText = substr($formattedText, 0, $charLimit);
+                                        echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                                        echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                                        echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0 text-white" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
                                       } else {
-                                        echo "Image description is empty.";
+                                        // If the text is within the character limit, just display it with line breaks.
+                                        echo nl2br($formattedText);
                                       }
-                                    ?>
-                                  </small>
+                                    } else {
+                                      echo "User description is empty.";
+                                    }
+                                  ?>
+                                  <script>
+                                    function myFunction() {
+                                      var dots = document.getElementById("limitedText");
+                                      var moreText = document.getElementById("more");
+                                      var btnText = document.getElementById("myBtn");
+
+                                      if (moreText.style.display === "none") {
+                                        dots.style.display = "none";
+                                        moreText.style.display = "inline";
+                                        btnText.innerHTML = "read less";
+                                      } else {
+                                        dots.style.display = "inline";
+                                        moreText.style.display = "none";
+                                        btnText.innerHTML = "read more";
+                                      }
+                                    }
+                                  </script>
                                 </p>
                               </div>
                               <div class="mb-3">
@@ -1065,6 +1089,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
             </div>
           </div>
         </div>
+        <!-- Second Section -->
         <div class="cool-6">
           <div class="container d-md-none d-lg-none">
             <div class="collapse" id="collapseCompression1">
@@ -1155,26 +1180,50 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               </div>
               <h5 class="text-dark fw-bold text-center mt-3"><?php echo $image['title']; ?></h5>
               <div style="word-break: break-word;" data-lazyload>
-                <p class="text-secondary" style="word-break: break-word;">
-                  <small>
-                    <?php
-                      if (!empty($image['imgdesc'])) {
-                        $messageText = $image['imgdesc'];
-                        $messageTextWithoutTags = strip_tags($messageText);
-                        $pattern = '/\bhttps?:\/\/\S+/i';
+                <p class="text-dark small fw-medium" style="word-break: break-word;">
+                  <?php
+                    if (!empty($image['imgdesc'])) {
+                      $messageText = $image['imgdesc'];
+                      $messageTextWithoutTags = strip_tags($messageText);
+                      $pattern = '/\bhttps?:\/\/\S+/i';
 
-                        $formattedText = preg_replace_callback($pattern, function ($matches) {
-                          $url = htmlspecialchars($matches[0]);
-                          return '<a href="' . $url . '">' . $url . '</a>';
-                        }, $messageTextWithoutTags);
+                      $formattedText = preg_replace_callback($pattern, function ($matches) {
+                        $url = htmlspecialchars($matches[0]);
+                        return '<a href="' . $url . '">' . $url . '</a>';
+                      }, $messageTextWithoutTags);
 
-                        $formattedTextWithLineBreaks = nl2br($formattedText);
-                        echo $formattedTextWithLineBreaks;
+                      $charLimit = 400; // Set your character limit
+
+                      if (strlen($formattedText) > $charLimit) {
+                        $limitedText = substr($formattedText, 0, $charLimit);
+                        echo '<span id="limitedText1">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                        echo '<span id="more1" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                        echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction1()" id="myBtn1"><small>read more</small></button>';
                       } else {
-                        echo "Image description is empty.";
+                        // If the text is within the character limit, just display it with line breaks.
+                        echo nl2br($formattedText);
                       }
-                    ?>
-                  </small>
+                    } else {
+                      echo "User description is empty.";
+                    }
+                  ?>
+                  <script>
+                    function myFunction1() {
+                      var dots1 = document.getElementById("limitedText1");
+                      var moreText1 = document.getElementById("more1");
+                      var btnText1 = document.getElementById("myBtn1");
+
+                      if (moreText1.style.display === "none") {
+                        dots1.style.display = "none";
+                        moreText1.style.display = "inline";
+                        btnText1.innerHTML = "read less";
+                      } else {
+                        dots1.style.display = "inline";
+                        moreText1.style.display = "none";
+                        btnText1.innerHTML = "read more";
+                      }
+                    }
+                  </script>
                 </p>
               </div>
               <p class="text-secondary" style="word-wrap: break-word;">
@@ -1572,6 +1621,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
         </div>
       </div>
     </div>
+    <!-- End of Share Modal -->
     <style>
       .img-pointer {
         transition: opacity 0.3s ease-in-out;
