@@ -1,6 +1,6 @@
     <?php
       // Get all of the images uploaded by the current user
-      $stmt = $db->prepare("SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count, COUNT(favorites.id) AS favorite_count  FROM images  JOIN users ON images.email = users.email LEFT JOIN favorites ON images.id = favorites.image_id  WHERE users.id = :id GROUP BY images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count ORDER BY favorite_count LIMIT 6");
+      $stmt = $db->prepare("SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count, COUNT(favorites.id) AS favorite_count  FROM images  JOIN users ON images.email = users.email LEFT JOIN favorites ON images.id = favorites.image_id  WHERE users.id = :id GROUP BY images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count ORDER BY favorite_count DESC LIMIT 6");
       $stmt->bindValue(':id', $id); // Assuming you have defined $id somewhere
       if ($stmt->execute()) {
         // Fetch the results as an associative array
