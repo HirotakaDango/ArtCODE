@@ -63,6 +63,7 @@ if (isset($_POST['favorite'])) {
   <body>
     <?php include('header.php'); ?>
     <?php include 'popular-content.php'; ?>
+    <?php include 'contents/home/tags_group.php'; ?>
         <?php 
         if(isset($_GET['by'])){
           $sort = $_GET['by'];

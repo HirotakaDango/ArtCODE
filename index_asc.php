@@ -26,15 +26,6 @@ $stmt->bindValue(2, $limit, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
-    <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-images"></i> sort by
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item fw-bold" href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>">Newest</a></li>
-        <li><a class="dropdown-item fw-bold active" href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>">Oldest</a></li>
-      </ul> 
-    </div> 
     <div class="images mb-2 mt-2">
       <?php while ($image = $result->fetchArray()): ?>
         <div class="image-container">
