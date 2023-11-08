@@ -380,7 +380,7 @@ $fav_count = $fav_row['num_favorites'];
     <?php include('most_popular_profile.php'); ?>
 
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
-    <div class="dropdown">
+    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'tagged_oldest' || $_GET['by'] === 'tagged_newest' || $_GET['by'] === 'tagged_popular')) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_pop.php') !== false)) ? 'd-none' : ''; ?>">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
@@ -388,7 +388,7 @@ $fav_count = $fav_row['num_favorites'];
         <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
-      </ul> 
+      </ul>
     </div> 
         <?php 
         if(isset($_GET['by'])){
@@ -403,6 +403,15 @@ $fav_count = $fav_row['num_favorites'];
             break;
             case 'popular':
             include "profile_pop.php";
+            break;
+            case 'tagged_newest':
+            include "profile_tagged_desc.php";
+            break;
+            case 'tagged_oldest':
+            include "profile_tagged_asc.php";
+            break;
+            case 'tagged_popular':
+            include "profile_tagged_pop.php";
             break;
           }
         }

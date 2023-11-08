@@ -1,17 +1,5 @@
-<?php
-// Get the value of the 'by' parameter from the URL
-$by = isset($_GET['by']) ? $_GET['by'] : 'popular';
-
-// Check if $tag is set and we are in one of the tagged views
-if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popular'])) {
-  $url = "../../profile/delete.php?by=$by&tag=$tag&page=$page";
-} else {
-  $url = "../../profile/delete.php?by=$by&page=$page";
-}
-?>
-
             <div>
-              <form action="<?php echo $url; ?>" method="post">
+              <form action="../../profile/delete_tagged.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $page; ?>" method="post">
                 <!-- Modal -->
                 <div class="modal fade" id="deleteImage_<?php echo $imageP['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-fullscreen modal-dialog-centered" role="document">

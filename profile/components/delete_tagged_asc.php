@@ -1,19 +1,7 @@
-<?php
-// Get the value of the 'by' parameter from the URL
-$by = isset($_GET['by']) ? $_GET['by'] : 'popular';
-
-// Check if $tag is set and we are in one of the tagged views
-if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popular'])) {
-  $url = "../../profile/delete.php?by=$by&tag=$tag&page=$page";
-} else {
-  $url = "../../profile/delete.php?by=$by&page=$page";
-}
-?>
-
             <div>
-              <form action="<?php echo $url; ?>" method="post">
+              <form action="../../profile/delete_tagged.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&tag=<?php echo $tag; ?>&page=<?php echo $page; ?>" method="post">
                 <!-- Modal -->
-                <div class="modal fade" id="deleteImage_<?php echo $imageP['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="deleteImage_<?php echo $imageA['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-fullscreen modal-dialog-centered" role="document">
                     <div class="modal-content bg-transparent border-0">
                       <div class="modal-body d-flex justify-content-center align-items-center">
@@ -29,19 +17,19 @@ if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popu
                           <div class="row d-flex justify-content-center">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                               <div class="card border-0 rounded-4 overflow-auto scrollable-div" style="max-height: 250px;">
-                                <a class="w-100 h-100" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $imageP['id']; ?>">
-                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="http://<?php echo $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $imageP['filename']; ?>" alt="<?php echo $imageP['title']; ?>">
+                                <a class="w-100 h-100" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $imageA['id']; ?>">
+                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="http://<?php echo $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $imageA['filename']; ?>" alt="<?php echo $imageA['title']; ?>">
                                 </a>
                               </div>
                             </div>
                             <div class="col-sm-6">
                               <div class="h-100">
                                 <div class="card-body">
-                                  <h5 class="text-center fw-bold"><?php echo $imageP['title']?></h5>
+                                  <h5 class="text-center fw-bold"><?php echo $imageA['title']?></h5>
                                   <p class="card-text fw-medium">
                                     <?php
-                                      if (!empty($imageP['imgdesc'])) {
-                                        $messageText = $imageP['imgdesc'];
+                                      if (!empty($imageA['imgdesc'])) {
+                                        $messageText = $imageA['imgdesc'];
                                         $messageTextWithoutTags = strip_tags($messageText);
                                         $pattern = '/\bhttps?:\/\/\S+/i';
 
@@ -63,7 +51,7 @@ if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popu
                           </div>
                           <p class="my-2 fw-semibold">This action can't be undone! Make sure you download the image before you delete it.</p>
                           <div class="btn-group w-100">
-                            <input type="hidden" name="id" value="<?php echo $imageP['id']; ?>">
+                            <input type="hidden" name="id" value="<?php echo $imageA['id']; ?>">
                             <button class="btn btn-outline-danger rounded-start-4 fw-bold" type="submit" value="Delete">delete</button>
                             <button type="button" class="btn btn-outline-dark rounded-end-4 fw-bold" data-bs-dismiss="modal">cancel</button>
                           </div>
