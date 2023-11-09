@@ -1,4 +1,4 @@
-<?php include('header_profile_asc.php'); ?>
+ASC<?php include('header_profile_asc.php'); ?>
 <?php
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindParam(':email', $email, PDO::PARAM_STR);
@@ -31,7 +31,7 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT * FROM images WHERE email = :email AND tags LIKE :tagPattern ORDER BY id DESC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT * FROM images WHERE email = :email AND tags LIKE :tagPattern ORDER BY id ASC LIMIT :limit OFFSET :offset");
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':tagPattern', "%$tag%", PDO::PARAM_STR);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -48,7 +48,7 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT * FROM images WHERE email = :email ORDER BY id DESC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT * FROM images WHERE email = :email ORDER BY id ASC LIMIT :limit OFFSET :offset");
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
