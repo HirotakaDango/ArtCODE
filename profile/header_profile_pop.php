@@ -1,4 +1,4 @@
-    <div class="overflow-x-auto container-fluid p-1 scrollable-div mb-2" style="white-space: nowrap;">
+    <div class="overflow-x-auto container-fluid p-1 mb-2 hide-scrollbar" style="white-space: nowrap;">
       <a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="fw-medium btn btn-sm btn-dark rounded-pill">all images</a>
       <?php
         try {
@@ -33,3 +33,13 @@
         }
       ?>
     </div>
+    <style>
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .hide-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+    </style>
