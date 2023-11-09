@@ -390,6 +390,16 @@ $fav_count = $fav_row['num_favorites'];
         <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
       </ul>
     </div> 
+    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest' || $_GET['by'] === 'popular')) || (strpos($_SERVER['REQUEST_URI'], 'profile_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_pop.php') !== false)) ? 'd-none' : ''; ?>">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=tagged_newest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'tagged_newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=tagged_oldest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=tagged_popular&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_popular') echo 'active'; ?>">popular</a></li>
+      </ul>
+    </div> 
         <?php 
         if(isset($_GET['by'])){
           $sort = $_GET['by'];

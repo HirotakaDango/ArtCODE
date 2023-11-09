@@ -1,3 +1,4 @@
+<?php include('header_artist_desc.php'); ?>
 <?php
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindParam(':email', $email, PDO::PARAM_STR);

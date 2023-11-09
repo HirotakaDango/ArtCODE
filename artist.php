@@ -23,6 +23,6 @@ $region = $user['region'];
 $joined = $user['joined'];
 $born = $user['born'];
 
-header("Location: artist/?id=$id");
+header("Location: artist/?id=$id&by=newest");
 exit();
 ?>

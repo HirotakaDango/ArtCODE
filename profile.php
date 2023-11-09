@@ -1,4 +1,4 @@
 <?php
-header("Location: /profile/");
+header("Location: /profile/?by=newest");
 exit();
 ?>
