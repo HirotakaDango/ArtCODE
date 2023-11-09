@@ -55,5 +55,5 @@ $database->close();
         <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
       </form>
     </div>
+    <?php include('end.php'); ?> 
     </main>
-  <?php include('end.php'); ?> 
