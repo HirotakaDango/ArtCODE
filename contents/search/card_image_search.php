@@ -15,7 +15,7 @@
                           <div class="row d-flex justify-content-center">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                               <div class="card border-0 rounded-4 overflow-auto scrollable-div" style="max-height: 250px;">
-                                <a class="w-100 h-100" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/image.php?artworkid=<?php echo $row['id']; ?>">
+                                <a class="w-100 h-100" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $row['id']; ?>">
                                   <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="http://<?php echo $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $row['filename']; ?>" alt="<?php echo $row['title']; ?>">
                                 </a>
                               </div>
