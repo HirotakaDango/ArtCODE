@@ -147,23 +147,35 @@ $comments = $stmt->execute();
               </div>
             <?php endif; ?>
           </div>
-          <div class="mt-5 container-fluid">
-            <p class="fw-semibold" style="word-break: break-word;">
-              <small>
-                <?php
-                  $messageText = $comment['comment'];
-                  $messageTextWithoutTags = strip_tags($messageText);
-                  $pattern = '/\bhttps?:\/\/\S+/i';
+          <div class="mt-5 container-fluid fw-medium">
+            <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
+              <?php
+                $commentText = $comment['comment'];
 
-                  $formattedText = preg_replace_callback($pattern, function ($matches) {
-                    $url = htmlspecialchars($matches[0]);
-                    return '<a href="' . $url . '">' . $url . '</a>';
-                  }, $messageTextWithoutTags);
+                if (!empty($commentText)) {
+                  $paragraphs = explode("\n", $commentText);
 
-                  $formattedTextWithLineBreaks = nl2br($formattedText);
-                  echo $formattedTextWithLineBreaks;
-                ?>
-              </small>
+                  foreach ($paragraphs as $index => $paragraph) {
+                    $messageTextWithoutTags = strip_tags($paragraph);
+                    $pattern = '/\bhttps?:\/\/\S+/i';
+
+                    $formattedText = preg_replace_callback($pattern, function ($matches) {
+                      $url = htmlspecialchars($matches[0]);
+
+                      // Check if the URL ends with .png, .jpg, or .webp
+                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $url)) {
+                        return '<a href="' . $url . '" target="_blank"><img class="img-fluid rounded shadow lazy-load" data-src="' . $url . '" alt="Image"></a>';
+                      } else {
+                        return '<a href="' . $url . '">' . $url . '</a>';
+                      }
+                    }, $messageTextWithoutTags);
+
+                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
+                  }
+                } else {
+                  echo "Sorry, no text...";
+                }
+              ?>
             </p>
           </div>
           <div class="m-2 ms-auto">
@@ -251,22 +263,109 @@ $comments = $stmt->execute();
       }
     </script>
     <script>
-      var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            // Load the content dynamically here
-            entry.target.innerHTML = entry.target.querySelector('p').innerHTML;
-            // Unobserve the target to prevent further callbacks
-            observer.unobserve(entry.target);
-          }
+      let lazyloadImages = document.querySelectorAll(".lazy-load");
+      let imageContainer = document.getElementById("image-container");
+
+      // Set the default placeholder image
+      const defaultPlaceholder = "icon/bg.png";
+
+      if ("IntersectionObserver" in window) {
+        let imageObserver = new IntersectionObserver(function(entries, observer) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              let image = entry.target;
+              image.src = image.dataset.src;
+              imageObserver.unobserve(image);
+            }
+          });
         });
+
+        lazyloadImages.forEach(function(image) {
+          image.src = defaultPlaceholder; // Apply default placeholder
+          imageObserver.observe(image);
+          image.style.filter = "blur(5px)"; // Apply initial blur to all images
+
+          // Remove blur and apply custom blur to NSFW images after they load
+          image.addEventListener("load", function() {
+            image.style.filter = ""; // Remove initial blur
+            if (image.classList.contains("nsfw")) {
+              image.style.filter = "blur(4px)"; // Apply blur to NSFW images
+          
+              // Add overlay with icon and text
+              let overlay = document.createElement("div");
+              overlay.classList.add("overlay", "rounded");
+              let icon = document.createElement("i");
+              icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
+              overlay.appendChild(icon);
+              let text = document.createElement("span");
+              text.textContent = "R-18";
+              text.classList.add("shadowed-text", "fw-bold", "text-white");
+              overlay.appendChild(text);
+              image.parentNode.appendChild(overlay);
+            }
+          });
+        });
+      } else {
+        let lazyloadThrottleTimeout;
+
+        function lazyload() {
+          if (lazyloadThrottleTimeout) {
+            clearTimeout(lazyloadThrottleTimeout);
+          }
+          lazyloadThrottleTimeout = setTimeout(function() {
+            let scrollTop = window.pageYOffset;
+            lazyloadImages.forEach(function(img) {
+              if (img.offsetTop < window.innerHeight + scrollTop) {
+                img.src = img.dataset.src;
+                img.classList.remove("lazy-load");
+              }
+            });
+            lazyloadImages = Array.from(lazyloadImages).filter(function(image) {
+              return image.classList.contains("lazy-load");
+            });
+            if (lazyloadImages.length === 0) {
+              document.removeEventListener("scroll", lazyload);
+              window.removeEventListener("resize", lazyload);
+              window.removeEventListener("orientationChange", lazyload);
+            }
+          }, 20);
+        }
+
+        document.addEventListener("scroll", lazyload);
+        window.addEventListener("resize", lazyload);
+        window.addEventListener("orientationChange", lazyload);
+      }
+
+      // Infinite scrolling
+      let loading = false;
+
+      function loadMoreImages() {
+        if (loading) return;
+        loading = true;
+
+        // Simulate loading delay for demo purposes
+        setTimeout(function() {
+          for (let i = 0; i < 10; i++) {
+            if (lazyloadImages.length === 0) {
+              break;
+            }
+            let image = lazyloadImages[0];
+            imageContainer.appendChild(image);
+            lazyloadImages = Array.from(lazyloadImages).slice(1);
+          }
+          loading = false;
+        }, 1000);
+      }
+
+      window.addEventListener("scroll", function() {
+        if (window.innerHeight + window.scrollY >= imageContainer.clientHeight) {
+          loadMoreImages();
+        }
       });
 
-      document.querySelectorAll('[data-lazyload]').forEach(function(target) {
-        observer.observe(target);
-      });
+      // Initial loading
+      loadMoreImages();
     </script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver"></script>
     <?php include('bootstrapjs.php'); ?>
   </body>
 </html>

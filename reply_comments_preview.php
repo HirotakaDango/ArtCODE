@@ -99,21 +99,35 @@ if ($comment_id !== null) {
         <div class="modal-body p-3">
           <h5 class="mb-0 fw-bold text-center">Comment Replies</h5>
           <div class="fw-bold mt-2">
-            <small>
+            <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
               <?php
-                $messageText = $comment['comment'];
-                $messageTextWithoutTags = strip_tags($messageText);
-                $pattern = '/\bhttps?:\/\/\S+/i';
+                $commentTextComment = $comment['comment'];
 
-                $formattedText = preg_replace_callback($pattern, function ($matches) {
-                  $url = htmlspecialchars($matches[0]);
-                  return '<a href="' . $url . '">' . $url . '</a>';
-                }, $messageTextWithoutTags);
+                if (!empty($commentTextComment)) {
+                  $paragraphsComment = explode("\n", $commentTextComment);
 
-                $formattedTextWithLineBreaks = nl2br($formattedText);
-                echo $formattedTextWithLineBreaks;
+                  foreach ($paragraphsComment as $index => $paragraphComment) {
+                    $messageTextWithoutTagsComment = strip_tags($paragraphComment);
+                    $patternComment = '/\bhttps?:\/\/\S+/i';
+
+                    $formattedTextComment = preg_replace_callback($patternComment, function ($matchesComment) {
+                      $urlComment = htmlspecialchars($matchesComment[0]);
+
+                      // Check if the URL ends with .png, .jpg, or .webp
+                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
+                        return '<a href="' . $urlComment . '" target="_blank"><img class="img-fluid rounded shadow lazy-load" data-src="' . $urlComment . '" alt="Image"></a>';
+                      } else {
+                        return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
+                      }
+                    }, $messageTextWithoutTagsComment);
+
+                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedTextComment</p>";
+                  }
+                } else {
+                  echo "Sorry, no text...";
+                }
               ?>
-            </small>
+            </p>
           </div>
         </div>
       </div>
@@ -130,23 +144,37 @@ if ($comment_id !== null) {
                 <img class="rounded-circle" src="<?php echo !empty($reply['pic']) ? $reply['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
                 <a class="text-dark text-decoration-none" href="artist.php?id=<?php echo $reply['userid']; ?>">@<?php echo $reply['artist']; ?></a>
               </p>
-              <p class="text-dark container-fluid fw-semibold mb-2" style="word-break: break-word;" data-lazyload>
-                <small>
+              <div class="mt-5 container-fluid fw-medium">
+                <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
                   <?php
-                    $messageText = $reply['reply'];
-                    $messageTextWithoutTags = strip_tags($messageText);
-                    $pattern = '/\bhttps?:\/\/\S+/i';
+                    $commentText = $reply['reply'];
 
-                    $formattedText = preg_replace_callback($pattern, function ($matches) {
-                      $url = htmlspecialchars($matches[0]);
-                      return '<a href="' . $url . '">' . $url . '</a>';
-                    }, $messageTextWithoutTags);
+                    if (!empty($commentText)) {
+                      $paragraphs = explode("\n", $commentText);
 
-                    $formattedTextWithLineBreaks = nl2br($formattedText);
-                    echo $formattedTextWithLineBreaks;
+                      foreach ($paragraphs as $index => $paragraph) {
+                        $messageTextWithoutTags = strip_tags($paragraph);
+                        $pattern = '/\bhttps?:\/\/\S+/i';
+
+                        $formattedText = preg_replace_callback($pattern, function ($matches) {
+                          $url = htmlspecialchars($matches[0]);
+
+                          // Check if the URL ends with .png, .jpg, or .webp
+                          if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $url)) {
+                            return '<a href="' . $url . '" target="_blank"><img class="img-fluid rounded shadow lazy-load" data-src="' . $url . '" alt="Image"></a>';
+                          } else {
+                            return '<a href="' . $url . '">' . $url . '</a>';
+                          }
+                        }, $messageTextWithoutTags);
+
+                        echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
+                      }
+                    } else {
+                      echo "Sorry, no text...";
+                    }
                   ?>
-                </small>
-              </p>
+                </p>
+              </div>
               <?php if ($_SESSION['email'] === $reply['email']): ?>
                 <form action="" method="get">
                   <div class="btn-group position-absolute top-0 end-0 mt-1 me-1 opacity-50">
@@ -189,6 +217,110 @@ if ($comment_id !== null) {
         window.location.href = "comment_preview.php?imageid=<?php echo $imageid; ?>";
         // window.location.href = "index.php";
       }
+    </script>
+    <script>
+      let lazyloadImages = document.querySelectorAll(".lazy-load");
+      let imageContainer = document.getElementById("image-container");
+
+      // Set the default placeholder image
+      const defaultPlaceholder = "icon/bg.png";
+
+      if ("IntersectionObserver" in window) {
+        let imageObserver = new IntersectionObserver(function(entries, observer) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              let image = entry.target;
+              image.src = image.dataset.src;
+              imageObserver.unobserve(image);
+            }
+          });
+        });
+
+        lazyloadImages.forEach(function(image) {
+          image.src = defaultPlaceholder; // Apply default placeholder
+          imageObserver.observe(image);
+          image.style.filter = "blur(5px)"; // Apply initial blur to all images
+
+          // Remove blur and apply custom blur to NSFW images after they load
+          image.addEventListener("load", function() {
+            image.style.filter = ""; // Remove initial blur
+            if (image.classList.contains("nsfw")) {
+              image.style.filter = "blur(4px)"; // Apply blur to NSFW images
+          
+              // Add overlay with icon and text
+              let overlay = document.createElement("div");
+              overlay.classList.add("overlay", "rounded");
+              let icon = document.createElement("i");
+              icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
+              overlay.appendChild(icon);
+              let text = document.createElement("span");
+              text.textContent = "R-18";
+              text.classList.add("shadowed-text", "fw-bold", "text-white");
+              overlay.appendChild(text);
+              image.parentNode.appendChild(overlay);
+            }
+          });
+        });
+      } else {
+        let lazyloadThrottleTimeout;
+
+        function lazyload() {
+          if (lazyloadThrottleTimeout) {
+            clearTimeout(lazyloadThrottleTimeout);
+          }
+          lazyloadThrottleTimeout = setTimeout(function() {
+            let scrollTop = window.pageYOffset;
+            lazyloadImages.forEach(function(img) {
+              if (img.offsetTop < window.innerHeight + scrollTop) {
+                img.src = img.dataset.src;
+                img.classList.remove("lazy-load");
+              }
+            });
+            lazyloadImages = Array.from(lazyloadImages).filter(function(image) {
+              return image.classList.contains("lazy-load");
+            });
+            if (lazyloadImages.length === 0) {
+              document.removeEventListener("scroll", lazyload);
+              window.removeEventListener("resize", lazyload);
+              window.removeEventListener("orientationChange", lazyload);
+            }
+          }, 20);
+        }
+
+        document.addEventListener("scroll", lazyload);
+        window.addEventListener("resize", lazyload);
+        window.addEventListener("orientationChange", lazyload);
+      }
+
+      // Infinite scrolling
+      let loading = false;
+
+      function loadMoreImages() {
+        if (loading) return;
+        loading = true;
+
+        // Simulate loading delay for demo purposes
+        setTimeout(function() {
+          for (let i = 0; i < 10; i++) {
+            if (lazyloadImages.length === 0) {
+              break;
+            }
+            let image = lazyloadImages[0];
+            imageContainer.appendChild(image);
+            lazyloadImages = Array.from(lazyloadImages).slice(1);
+          }
+          loading = false;
+        }, 1000);
+      }
+
+      window.addEventListener("scroll", function() {
+        if (window.innerHeight + window.scrollY >= imageContainer.clientHeight) {
+          loadMoreImages();
+        }
+      });
+
+      // Initial loading
+      loadMoreImages();
     </script>
     <?php include('bootstrapjs.php'); ?>
   </body>
