@@ -132,7 +132,7 @@ $comments = $stmt->execute();
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                   <form action="" method="POST">
-                    <a href="edit_comment.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
+                    <a href="edit_comment_preview.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
                       <i class="bi bi-pencil-fill me-2"></i>Edit
                     </a>
                     <input type="hidden" name="filename" value="<?php echo $filename; ?>">
