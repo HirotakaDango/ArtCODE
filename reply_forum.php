@@ -91,27 +91,46 @@ if ($comment_id !== null) {
               <div class="fw-bold mt-2">
                 <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
                   <?php
-                    $commentTextComment = $comment['comment'];
+                    if (!function_exists('getYouTubeVideoId')) {
+                      function getYouTubeVideoId($urlCommentReply)
+                      {
+                        $videoIdReply = '';
+                        $patternReply = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+                        if (preg_match($patternReply, $urlCommentReply, $matchesReply)) {
+                          $videoIdReply = $matchesReply[1];
+                        }
+                        return $videoIdReply;
+                      }
+                    }
 
-                    if (!empty($commentTextComment)) {
-                      $paragraphsComment = explode("\n", $commentTextComment);
+                    $commentTextReply = isset($comment['comment']) ? $comment['comment'] : '';
 
-                      foreach ($paragraphsComment as $index => $paragraphComment) {
-                        $messageTextWithoutTagsComment = strip_tags($paragraphComment);
-                        $patternComment = '/\bhttps?:\/\/\S+/i';
+                    if (!empty($commentTextReply)) {
+                      $paragraphsReply = explode("\n", $commentTextReply);
 
-                        $formattedTextComment = preg_replace_callback($patternComment, function ($matchesComment) {
-                          $urlComment = htmlspecialchars($matchesComment[0]);
+                      foreach ($paragraphsReply as $indexReply => $paragraphReply) {
+                        $messageTextWithoutTagsReply = strip_tags($paragraphReply);
+                        $patternReply = '/\bhttps?:\/\/\S+/i';
 
-                          // Check if the URL ends with .png, .jpg, or .webp
-                          if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
-                            return '<a href="' . $urlComment . '" target="_blank"><img class="img-fluid rounded shadow lazy-load" data-src="' . $urlComment . '" alt="Image"></a>';
+                        $formattedTextReply = preg_replace_callback($patternReply, function ($matchesReply) {
+                          $urlCommentReply = htmlspecialchars($matchesReply[0]);
+
+                          if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlCommentReply)) {
+                            return '<a href="' . $urlCommentReply . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlCommentReply . '" alt="Image"></a>';
+                          } elseif (strpos($urlCommentReply, 'youtube.com') !== false) {
+                            $videoIdReply = getYouTubeVideoId($urlCommentReply);
+                            if ($videoIdReply) {
+                              $thumbnailUrlReply = 'https://img.youtube.com/vi/' . $videoIdReply . '/default.jpg';
+                              return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoIdReply . '" frameborder="0"></iframe></div>';
+                            } else {
+                              return '<a href="' . $urlCommentReply . '">' . $urlCommentReply . '</a>';
+                            }
                           } else {
-                            return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
+                            return '<a href="' . $urlCommentReply . '">' . $urlCommentReply . '</a>';
                           }
-                        }, $messageTextWithoutTagsComment);
-
-                        echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedTextComment</p>";
+                        }, $messageTextWithoutTagsReply);
+                    
+                        echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedTextReply</p>";
                       }
                     } else {
                       echo "Sorry, no text...";
@@ -135,7 +154,19 @@ if ($comment_id !== null) {
               <div class="mt-5 container-fluid fw-medium">
                 <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
                   <?php
-                    $commentText = $reply['reply'];
+                    if (!function_exists('getYouTubeVideoId')) {
+                      function getYouTubeVideoId($urlComment)
+                      {
+                        $videoId = '';
+                        $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+                        if (preg_match($pattern, $urlComment, $matches)) {
+                          $videoId = $matches[1];
+                        }
+                        return $videoId;
+                      }
+                    }
+
+                    $commentText = isset($reply['reply']) ? $reply['reply'] : '';
 
                     if (!empty($commentText)) {
                       $paragraphs = explode("\n", $commentText);
@@ -145,16 +176,23 @@ if ($comment_id !== null) {
                         $pattern = '/\bhttps?:\/\/\S+/i';
 
                         $formattedText = preg_replace_callback($pattern, function ($matches) {
-                          $url = htmlspecialchars($matches[0]);
+                          $urlComment = htmlspecialchars($matches[0]);
 
-                          // Check if the URL ends with .png, .jpg, or .webp
-                          if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $url)) {
-                            return '<a href="' . $url . '" target="_blank"><img class="img-fluid rounded shadow lazy-load" data-src="' . $url . '" alt="Image"></a>';
+                          if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
+                            return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
+                          } elseif (strpos($urlComment, 'youtube.com') !== false) {
+                            $videoId = getYouTubeVideoId($urlComment);
+                            if ($videoId) {
+                              $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
+                              return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0"></iframe></div>';
+                            } else {
+                              return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
+                            }
                           } else {
-                            return '<a href="' . $url . '">' . $url . '</a>';
+                            return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
                           }
                         }, $messageTextWithoutTags);
-
+                    
                         echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
                       }
                     } else {

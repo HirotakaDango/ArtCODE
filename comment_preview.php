@@ -148,7 +148,19 @@ $comments = $stmt->execute();
           <div class="mt-5 container-fluid fw-medium">
             <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
               <?php
-                $commentText = $comment['comment'];
+                if (!function_exists('getYouTubeVideoId')) {
+                  function getYouTubeVideoId($urlComment)
+                  {
+                    $videoId = '';
+                    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+                    if (preg_match($pattern, $urlComment, $matches)) {
+                      $videoId = $matches[1];
+                    }
+                    return $videoId;
+                  }
+                }
+
+                $commentText = isset($comment['comment']) ? $comment['comment'] : '';
 
                 if (!empty($commentText)) {
                   $paragraphs = explode("\n", $commentText);
@@ -158,16 +170,23 @@ $comments = $stmt->execute();
                     $pattern = '/\bhttps?:\/\/\S+/i';
 
                     $formattedText = preg_replace_callback($pattern, function ($matches) {
-                      $url = htmlspecialchars($matches[0]);
+                      $urlComment = htmlspecialchars($matches[0]);
 
-                      // Check if the URL ends with .png, .jpg, or .webp
-                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $url)) {
-                        return '<a href="' . $url . '" target="_blank"><img class="img-fluid rounded shadow lazy-load" data-src="' . $url . '" alt="Image"></a>';
+                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
+                        return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
+                      } elseif (strpos($urlComment, 'youtube.com') !== false) {
+                        $videoId = getYouTubeVideoId($urlComment);
+                        if ($videoId) {
+                          $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
+                          return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0"></iframe></div>';
+                        } else {
+                          return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
+                        }
                       } else {
-                        return '<a href="' . $url . '">' . $url . '</a>';
+                        return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
                       }
                     }, $messageTextWithoutTags);
-
+                
                     echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
                   }
                 } else {
