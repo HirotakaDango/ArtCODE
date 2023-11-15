@@ -45,3 +45,24 @@
         </button>
       </div>
     </div>
+    <div class="d-none d-md-block d-lg-block">
+      <div class="d-flex mb-2 justify-content-center">
+        <div class="media-scroller scrollable-div w-99 snaps-inline overflow-auto">
+          <?php
+            $resultP->reset();
+            while ($imageP = $resultP->fetchArray()): 
+            $image_url = $imageP['filename'];
+            $image_id = $imageP['id'];
+            $image_type = $imageP['type'];
+          ?>
+            <div class="media-element d-inline-flex">
+              <a href="image.php?artworkid=<?php echo $image_id; ?>">
+                <div class="position-relative overflow-hidden d-inline-block rounded">
+                  <img class="hori <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="thumbnails/<?php echo $image_url; ?>" alt="<?php echo $image_title; ?>">
+                </div>
+              </a>
+            </div>
+          <?php endwhile; ?>
+        </div>
+      </div>
+    </div>
