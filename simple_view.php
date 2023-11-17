@@ -379,7 +379,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               <div class="btn-group">
                 <?php if ($user_email === $email): ?>
                   <!-- Display the edit button only if the current user is the owner of the image -->
-                  <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded-end-0" href="edit_?id=<?php echo $image['id']; ?>">
+                  <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded-end-0" href="edit_image.php?id=<?php echo $image['id']; ?>">
                     <i class="bi bi-pencil-fill"></i> Edit Image
                   </a>
                 <?php endif; ?>
