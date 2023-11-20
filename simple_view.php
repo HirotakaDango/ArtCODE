@@ -404,7 +404,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               </div>
             </div>
             <div class="position-absolute top-0 start-0 ms-2 mt-2">
-              <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded text-white" href="image.php?artworkid=<?php echo $image['id']; ?>">
+              <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded text-white" href="view.php?artworkid=<?php echo $image['id']; ?>">
                 original view
               </a>
             </div>
