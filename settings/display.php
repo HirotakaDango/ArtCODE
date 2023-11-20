@@ -36,8 +36,8 @@ $database->close();
     <main id="swup" class="transition-main">
     <?php include ('setheader.php');?>
     <div class="container mt-4">
-      <h3 class="text-center fw-bold"><i class="bi bi-display"></i> Change page</h3>
-      <p class="fw-semibold">Current page: <?php echo $currentpage; ?></p>
+      <h3 class="text-center fw-bold"><i class="bi bi-display"></i> Change display mode</h3>
+      <p class="fw-semibold">Current display mode: <?php echo ($currentpage == 'simple_view') ? 'simple view' : 'full view'; ?></p>
       <form method="POST" action="">
         <div class="form-group">
           <label class="fw-semibold mb-3" for="page">Select page:</label>
