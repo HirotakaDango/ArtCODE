@@ -21,7 +21,7 @@ if (!$image) {
 
 // Get the ID of the current image and the email of the owner
 $image_id = $image['id'];
-$email = $image['email'];
+$email = $_SESSION['email'];
 
 // Get the display name based on the email from the users table
 $stmt = $db->prepare("SELECT display FROM users WHERE email = :email ");
