@@ -66,6 +66,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link text-nav fw-bold fs-5 <?php if(basename($_SERVER['PHP_SELF']) == 'display.php') echo 'rounded-4 border border-4 bg-primary text-white' ?>" href="display.php">
+                  <span class="align-text-bottom"></span>
+                  <i class="bi bi-display"></i> Display
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link text-nav fw-bold fs-5 <?php if(basename($_SERVER['PHP_SELF']) == 'date.php') echo 'rounded-4 border border-4 bg-primary text-white' ?>" href="date.php">
                   <span class="align-text-bottom"></span>
                   <i class="bi bi-calendar-fill"></i> Date

@@ -1,6 +1,6 @@
 
     <div id="content">
-      <main id="swup" class="transition-main swup-container">
+      <main id="swup" class="transition-main">
         <?php if (empty($image['filename'])) : ?>
           <div class="position-absolute top-50 start-50 translate-middle text-nowrap">
             <h1 class="fw-bold">Image not found</h1>
@@ -16,9 +16,7 @@
               </div>
             </div>
           <?php else : ?>
-            <div class="image-container">
-              <img src="../../images/<?php echo $image['filename']; ?>" class="mb-1" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
-            </div>
+            <img src="../../images/<?php echo $image['filename']; ?>" class="mb-1" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
           <?php endif; ?>
         <?php endif; ?>
         <?php foreach ($child_images as $child_image) : ?>
@@ -30,9 +28,7 @@
               </div>
             </div>
           <?php else : ?>
-            <div class="image-container">
-              <img src="../../images/<?php echo $child_image['filename']; ?>" class="mb-1" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
-            </div>
+            <img src="../../images/<?php echo $child_image['filename']; ?>" class="mb-1" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
           <?php endif; ?>
         <?php endforeach; ?>
         <?php
@@ -173,7 +169,7 @@
       <div class="fixed-top pb-5" style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));">
         <main id="swup" class="transition-main">
           <div class="d-flex">
-            <a class="me-auto border-0 btn rounded" id="option3" href="../../view.php?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-x text-stroke-2"></i></a>
+            <a class="me-auto border-0 btn rounded" id="option3" href="../../simple_view.php?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-x text-stroke-2"></i></a>
             <button class="ms-auto me-1 border-0 btn rounded fw-bold" onclick="sharePage()"><i class="bi bi-share-fill text-stroke"></i> <small>share</small></button>
           </div>
         </main>
@@ -214,14 +210,14 @@
             </form>
           </div>
         </div>
-        <button class="btn btn-sm btn-outline-light rounded-pill ms-2 fw-bold" onclick="window.location.href='?by=vertical&artworkid=<?php echo $image['id']; ?>'">vertical</button>
+        <button class="btn btn-sm btn-outline-light rounded-pill ms-2 fw-bold" onclick="window.location.href='?by=horizontal&artworkid=<?php echo $image['id']; ?>'">horizontal</button>
       </div>
       <div class="w-100 fixed-bottom" style="background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));">
         <div class="container pt-3 d-flex justify-content-center">
           <div class="btn-group gap-3">
             <main id="swup" class="transition-main">
               <?php if ($next_image): ?>
-                <a class="text-start fw-bold btn rounded" id="option5" href="?by=horizontal&artworkid=<?= $next_image['id'] ?>">
+                <a class="text-start fw-bold btn rounded" id="option5" href="?by=vertical&artworkid=<?= $next_image['id'] ?>">
                   <i class="fs-4 bi bi-chevron-left text-stroke-3"></i>
                 </a>
               <?php endif; ?> 
@@ -261,7 +257,7 @@
             </main>
             <main id="swup" class="transition-main">
               <?php if ($prev_image): ?>
-                <a class="text-start fw-bold btn rounded" id="option6" href="?by=horizontal&artworkid=<?= $prev_image['id'] ?>">
+                <a class="text-start fw-bold btn rounded" id="option6" href="?by=vertical&artworkid=<?= $prev_image['id'] ?>">
                   <i class="fs-4 bi bi-chevron-right text-stroke-3"></i>
                 </a>
               <?php endif; ?>
@@ -326,52 +322,6 @@
       
       body::-webkit-scrollbar-thumb {
         background-color: transparent;
-      }
-
-      /* Ensure the content container spans the full width of the viewport */
-      #content {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      /* Make the main content container and its children scroll horizontally */
-      .swup-container {
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        scroll-snap-type: x proximity;
-      }
-
-      /* Make individual content sections (pages) scroll-snap points */
-      .swup-container > * {
-        flex-shrink: 0;
-        scroll-snap-align: start;
-      }
-
-      /* Ensure the images automatically fit to the screen while preserving aspect ratio */
-      .image-container {
-        width: 100%;
-        height: 100vh; /* Adjust this value based on your requirements */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-      }
-
-      .image-container img {
-        object-fit: contain;
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
-      }
-
-      /* Disable vertical scrolling (optional) */
-      body {
-        overflow-y: hidden;
       }
     </style>
     <script>
@@ -470,9 +420,9 @@
 
       // Function to update the slider value based on the current scroll position
       function updateSliderValue() {
-        // Calculate the current horizontal scroll position as a percentage of the maximum scrollable width
-        const maxScroll = document.getElementById("swup").scrollWidth - window.innerWidth;
-        const currentScroll = (document.getElementById("swup").scrollLeft / maxScroll) * 100;
+        // Calculate the current scroll position as a percentage of the maximum scrollable height
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const currentScroll = (window.scrollY / maxScroll) * 100;
 
         // Set the slider's value to match the current scroll position
         slider.value = currentScroll;
@@ -480,34 +430,27 @@
 
       // Function to handle slider input change
       function handleSliderChange() {
-        // Calculate the horizontal scroll position based on the slider's value
-        const maxScroll = document.getElementById("swup").scrollWidth - window.innerWidth;
+        // Calculate the scroll position based on the slider's value
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         const targetScroll = (maxScroll * slider.value) / 100;
 
-        // Set the horizontal scroll position
-        document.getElementById("swup").scrollLeft = targetScroll;
+        // Smoothly scroll to the target position
+        window.scrollTo({
+          top: targetScroll,
+          behavior: "smooth"
+        });
       }
-
-      // Function to update the slider in real-time while scrolling
-      function updateSliderOnScroll() {
-        const maxScroll = document.getElementById("swup").scrollWidth - window.innerWidth;
-        const currentScroll = document.getElementById("swup").scrollLeft;
-
-        // Calculate the percentage and update the slider value
-        const percentage = (currentScroll / maxScroll) * 100;
-        slider.value = percentage;
-      }
-
-      // Add a scroll event listener to continuously update the slider during scrolling
-      document.getElementById("swup").addEventListener("scroll", function () {
-        updateSliderOnScroll();
-      });
 
       // Add an event listener to respond to slider changes
-      slider.addEventListener("input", handleSliderChange);
+      slider.addEventListener("change", handleSliderChange);
 
       // Synchronize the slider value with the current scroll position on page load
       window.addEventListener("load", function () {
+        updateSliderValue();
+      });
+
+      // Add a scroll event listener to continuously update the slider value
+      window.addEventListener("scroll", function () {
         updateSliderValue();
       });
 
@@ -515,54 +458,4 @@
       window.addEventListener("resize", function () {
         updateSliderValue();
       });
-
-      // Use swup.js's event to handle page transitions
-      const swup = new Swup({
-        plugins: [new SwupCustomPlugin()],
-      });
-
-      // Define a custom Swup plugin to reset the slider when a new page is loaded
-      class SwupCustomPlugin {
-        constructor() {
-          swup.on('animationIn', async () => {
-            // Update the slider when a new page is loaded
-            await updateSliderValueAsync();
-          });
-          swup.hooks.beforePageReplace = async (content, next) => {
-            // Delay the start of the page transition by 1 second
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            
-            // Wait for a custom async function before starting the transition
-            await myCustomFunctionAsync();
-      
-            // Reset the slider before replacing the page content
-            slider.value = 0;
-            next();
-          };
-        }
-      }
-
-      // An asynchronous version of the updateSliderValue function
-      async function updateSliderValueAsync() {
-        return new Promise((resolve) => {
-          // Simulate an asynchronous operation if needed
-          setTimeout(() => {
-            // Calculate the current horizontal scroll position as a percentage of the maximum scrollable width
-            const maxScroll = document.getElementById("swup").scrollWidth - window.innerWidth;
-            const currentScroll = (document.getElementById("swup").scrollLeft / maxScroll) * 100;
-      
-            // Set the slider's value to match the current scroll position
-            slider.value = currentScroll;
-      
-            resolve();
-          }, 1000); // Simulated async operation for demonstration
-        });
-      }
-
-      // An asynchronous version of your custom function (replace with your actual async logic)
-      async function myCustomFunctionAsync() {
-        // Simulate an async operation (replace with your actual logic)
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        // Your custom async logic here
-      }
     </script>

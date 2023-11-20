@@ -169,7 +169,7 @@
       <div class="fixed-top pb-5" style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));">
         <main id="swup" class="transition-main">
           <div class="d-flex">
-            <a class="me-auto border-0 btn rounded" id="option3" href="../../image.php?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-x text-stroke-2"></i></a>
+            <a class="me-auto border-0 btn rounded" id="option3" href="../../view.php?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-x text-stroke-2"></i></a>
             <button class="ms-auto me-1 border-0 btn rounded fw-bold" onclick="sharePage()"><i class="bi bi-share-fill text-stroke"></i> <small>share</small></button>
           </div>
         </main>

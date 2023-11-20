@@ -50,6 +50,15 @@ require_once('../auth.php');
           </div>
         </div>
       </a>
+      <a href="display.php" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+        <i class="bi bi-display" style="font-size: 35px; color: gray;"></i>
+        <div class="d-flex gap-2 w-100 justify-content-between">
+          <div>
+            <h6 class="mb-0 fw-bold">Change Display Mode</h6>
+            <p class="mb-0 opacity-75">Choose which mode to display.</p>
+          </div>
+        </div>
+      </a>
       <a href="date.php" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
         <i class="bi bi-calendar-fill" style="font-size: 35px; color: gray;"></i>
         <div class="d-flex gap-2 w-100 justify-content-between">
