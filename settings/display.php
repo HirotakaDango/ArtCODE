@@ -40,7 +40,7 @@ $database->close();
       <p class="fw-semibold">Current display mode: <?php echo ($currentpage == 'simple_view') ? 'simple view' : 'full view'; ?></p>
       <form method="POST" action="">
         <div class="form-group">
-          <label class="fw-semibold mb-3" for="page">Select page:</label>
+          <label class="fw-semibold mb-3" for="page">Select mode:</label>
           <select class="form-select" id="page" name="page">
             <option value="simple_view" <?php if ($currentpage == 'simple_view') echo 'selected'; ?>>simple view</option>
             <option value="view" <?php if ($currentpage == 'view') echo 'selected'; ?>>full view</option>
