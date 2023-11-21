@@ -447,7 +447,7 @@ $fav_count = $fav_count->fetchColumn();
                           $videoId = getYouTubeVideoId($urlComment);
                           if ($videoId) {
                             $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
-                            return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0"></iframe></div>';
+                            return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0" allowfullscreen></iframe></div>';
                           } else {
                             return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
                           }
