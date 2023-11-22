@@ -16,9 +16,9 @@
       <div class="d-flex justify-content-center d-md-none d-lg-none background-image position-absolute top-50 start-50 translate-middle">
         <div class="modal modal-sheet position-static d-block container-fluid" tabindex="-1" role="dialog" id="modalSignin">
           <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark bg-opacity-25 shadow">
+            <div class="modal-content bg-dark bg-opacity-25 shadow border-0 rounded-5">
               <div class="modal-body">
-                <a class="btn bg-dark bg-opacity-25 position-absolute top-0 start-0" style="border-radius: 0.5rem 0 0.5rem 0;" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session"><i class="bi bi-chevron-left fs-4 text-stroke-2"></i></a>
+                <a class="btn bg-dark bg-opacity-25 position-absolute top-0 start-0 z-3" style="border-radius: 1.5rem 0 1.5rem 0;" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session"><i class="bi bi-chevron-left fs-4 text-stroke-2"></i></a>
                 <div class="text-center text-white fw-bold mt-4">
                   <h2 class="fw-bold">Welcome to login</h2>
                   <h2 class="mb-5 fw-bold">Sign in to continue</h2>
@@ -35,7 +35,7 @@
                     </div>
                     <div class="form-check mb-3">
                       <input class="form-check-input bg-light bg-opacity-25" type="checkbox" id="remember" name="remember">
-                      <label class="form-check-label fw-bold text-white fw-medium" for="remember">Remember Me</label>
+                      <label class="form-check-label fw-bold text-white fw-medium" for="remember">Remember me</label>
                     </div>
                     <button name="login" class="w-100 fw-bold mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Login</button>
                     <p class="text-white fw-medium fw-bold">Don't have an account? <a href="register.php" class="text-decoration-none text-white btn btn-primary btn-sm text-white fw-bold rounded-pill white-75">Signup</a></p>
@@ -51,11 +51,11 @@
         <div class="position-absolute top-50 start-50 translate-middle">
           <div class="row justify-content-center p-0">
             <div class="col-md-12 w-100 p-0 col-lg-10">
-              <div class="wrap d-md-flex d-lg-flex">
+              <div class="wrap d-md-flex d-lg-flex" style="max-width: 675px;">
                 <div class="text-wrap p-4 p-lg-5 rounded-start-4 bg-dark bg-gradient bg-opacity-75 text-center">
                   <div class="justify-content-center d-flex align-items-center h-100">
                     <div class="container w-100">
-                      <h2 class="fw-bold">Welcome to login</h2>
+                      <h2 class="fw-bold">Welcome to signin</h2>
                       <h5 class="text-nowrap fw-bold">Sign in to continue</h5>
                       <p class="fw-medium">Don't have an account?</p>
                       <a class="btn btn-sm btn-outline-light rounded-pill fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session"><i class="bi bi-chevron-left text-stroke-2"></i> back</a>
@@ -81,7 +81,7 @@
                         </div>
                         <div class="form-check mb-3">
                           <input class="form-check-input bg-light bg-opacity-25" type="checkbox" id="remember" name="remember">
-                          <label class="form-check-label fw-bold text-white fw-medium" for="remember">Remember Me</label>
+                          <label class="form-check-label fw-bold text-white fw-medium" for="remember">Remember me</label>
                         </div>
                         <button name="login" class="w-100 fw-bold mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Login</button>
                       </form>

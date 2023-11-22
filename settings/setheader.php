@@ -90,6 +90,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link text-nav fw-bold fs-5 <?php if(basename($_SERVER['PHP_SELF']) == 'contact.php') echo 'rounded-4 border border-4 bg-primary text-white' ?>" href="contact.php">
+                  <span class="align-text-bottom"></span>
+                  <i class="bi bi-chat-fill"></i> Contact
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link text-nav fw-bold fs-5 <?php if(basename($_SERVER['PHP_SELF']) == 'password.php') echo 'rounded-4 border border-4 bg-primary text-white' ?>" href="password.php">
                   <span class="align-text-bottom"></span>
                   <i class="bi bi-key-fill"></i> Password

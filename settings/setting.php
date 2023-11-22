@@ -86,6 +86,15 @@ require_once('../auth.php');
           </div>
         </div>
       </a>
+      <a href="contact.php" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+        <i class="bi bi-chat-fill" style="font-size: 35px; color: gray;"></i>
+        <div class="d-flex gap-2 w-100 justify-content-between">
+          <div>
+            <h6 class="mb-0 fw-bold">Change Your Contact</h6>
+            <p class="mb-0 opacity-75">Change how people see your another contact.</p>
+          </div>
+        </div>
+      </a>
       <a href="password.php" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
         <i class="bi bi-key-fill" style="font-size: 35px; color: gray;"></i>
         <div class="d-flex gap-2 w-100 justify-content-between">
