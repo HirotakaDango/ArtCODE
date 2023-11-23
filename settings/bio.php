@@ -57,7 +57,7 @@ $db->close();
       <?php } ?>
       <form method="POST" class="mt-3">
         <div class="form-floating mb-2">
-          <textarea class="form-control rounded-3 border text-dark fw-bold border-4" id="desc" name="desc" rows="5" style="height: 400px;" oninput="stripHtmlTags(this)" placeholder="Description:" maxlength="400"><?php echo strip_tags($current_desc); ?></textarea>
+          <textarea class="form-control rounded-3 border text-dark fw-bold border-4" id="desc" name="desc" rows="5" style="height: 400px;" oninput="stripHtmlTags(this)" placeholder="Description:" maxlength="4400"><?php echo strip_tags($current_desc); ?></textarea>
           <label for="floatingInput" class="text-dark fw-bold">Description:</label>
         </div>
         <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Save</button>
