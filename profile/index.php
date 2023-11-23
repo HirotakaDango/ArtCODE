@@ -7,7 +7,7 @@ $db = new PDO('sqlite:../database.sqlite');
 // Get the artist information from the database
 $email = $_SESSION['email'];
 try {
-  $stmt = $db->prepare("SELECT id, artist, pic, `desc`, bgpic, twitter, pixiv, other, region, joined, born, message_1, message_2, message_3 FROM users WHERE email = :email");
+  $stmt = $db->prepare("SELECT id, artist, pic, `desc`, bgpic, twitter, pixiv, other, region, joined, born, message_1, message_2, message_3, message_4 FROM users WHERE email = :email");
   $stmt->bindValue(':email', $email);
   $stmt->execute();
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -31,6 +31,7 @@ try {
   $message_1 = $row['message_1'];
   $message_2 = $row['message_2'];
   $message_3 = $row['message_3'];
+  $message_4 = $row['message_4'];
 } catch (PDOException $e) {
   die("Error: " . $e->getMessage());
 }

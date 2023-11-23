@@ -130,15 +130,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="caard container">
             <form method="POST">
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="50" required>  
+                <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="250" required>  
                 <label for="floatingInput" class="text-secondary fw-bold">Enter title for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <textarea class="form-control border rounded-3 text-secondary fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="400" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
+                <textarea class="form-control border rounded-3 text-secondary fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="1400" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
                 <label for="floatingInput" class="text-secondary fw-bold">Enter description for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="180" required>
+                <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="800" required>
                 <label for="floatingInput" class="text-secondary fw-bold">Enter tag for your image</label>
               </div>
               <div class="form-floating mb-2">

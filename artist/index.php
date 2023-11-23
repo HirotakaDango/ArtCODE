@@ -8,7 +8,7 @@ $db = new PDO('sqlite:../database.sqlite');
 
 // Get the ID of the selected user from the URL
 $id = $_GET['id'];
-$query = $db->prepare('SELECT artist, `desc`, `bgpic`, pic, twitter, pixiv, other, region, joined, born, email, message_1, message_2, message_3 FROM users WHERE id = :id');
+$query = $db->prepare('SELECT artist, `desc`, `bgpic`, pic, twitter, pixiv, other, region, joined, born, email, message_1, message_2, message_3, message_4 FROM users WHERE id = :id');
 $query->bindParam(':id', $id);
 $query->execute();
 $user = $query->fetch(PDO::FETCH_ASSOC);
@@ -25,6 +25,7 @@ $born = $user['born'];
 $message_1 = $user['message_1'];
 $message_2 = $user['message_2'];
 $message_3 = $user['message_3'];
+$message_4 = $user['message_4'];
 
 // Get all images for the selected user from the images table
 $query = $db->prepare('SELECT images.id, images.filename, images.title, images.imgdesc FROM images JOIN users ON images.email = users.email WHERE users.id = :id ORDER BY images.id DESC');
