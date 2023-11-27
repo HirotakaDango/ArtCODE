@@ -15,8 +15,8 @@
                           <div class="row d-flex justify-content-center">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                               <div class="card border-0 rounded-4 overflow-auto scrollable-div" style="max-height: 250px;">
-                                <a class="w-100 h-100" href="image.php?artworkid=<?php echo $image['id']; ?>">
-                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
+                                <a class="w-100 h-100" href="../image.php?artworkid=<?php echo $image['id']; ?>">
+                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="/thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
                                 </a>
                               </div>
                               <div class="btn-group mt-2 w-100">
@@ -24,7 +24,7 @@
                                 <button class="btn btn-sm fw-bold border-0"><i class="bi bi-bar-chart-line-fill"></i> <?php echo $image['view_count']?></button>
                                 <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfoDesktop" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-info-circle-fill"></i></button>
                                 <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-download icon-stroke-1"></i></button>
-                                <a href="image.php?artworkid=<?php echo $image['id']; ?>" class="btn btn-sm border-0"><i class="bi bi-eye-fill"></i></a>
+                                <a href="../image.php?artworkid=<?php echo $image['id']; ?>" class="btn btn-sm border-0"><i class="bi bi-eye-fill"></i></a>
                               </div>
                               <div class="container mt-2">
                                 <?php
@@ -147,28 +147,36 @@
                                 <p class="text-center fw-semibold mt-2">Image Information</p>
                                 <p class="text-start fw-semibold">Image ID: "<?php echo $image['id']?>"</p>
                                 <?php
-                                  $total_image_size = 0; // Initialize a variable to keep track of total image size
-                                  
+                                  $total_image_size = 0; // Initialize a variable to keep track of the total image size
+
+                                  // Define the base URL for your images
+                                  $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/images/';
+                                
+                                  // Define the local file system path to the image folder
+                                  $image_folder_path = $_SERVER['DOCUMENT_ROOT'] . '/images/';
+
                                   // Calculate and display image size and dimensions for the main image
-                                  $image_size = round(filesize('images/' . $image['filename']) / (1024 * 1024), 2);
-                                  $total_image_size += $image_size; // Add the main image size to the total
-                                  list($width, $height) = getimagesize('images/' . $image['filename']);
+                                  $image_path = $image_folder_path . $image['filename'];
+                                  $image_size = round(filesize($image_path) / (1024 * 1024), 2);
+                                  $total_image_size += $image_size;
+                                  list($width, $height) = getimagesize($image_path);
                                   echo "<p class='text-start fw-semibold'>Image data size: " . $image_size . " MB</p>";
                                   echo "<p class='text-start fw-semibold'>Image dimensions: " . $width . "x" . $height . "</p>";
-                                  echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='images/" . $image['filename'] . "'>View original image</a></p>";
-                                  
+                                  echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='" . $base_url . $image['filename'] . "'>View original image</a></p>";
+
                                   // Assuming you have a separate query to fetch child images
                                   $child_images_result = $db->query("SELECT filename FROM image_child WHERE image_id = " . $image['id']);
-                                  
+
                                   while ($child_image = $child_images_result->fetchArray()) {
-                                    $child_image_size = round(filesize('images/' . $child_image['filename']) / (1024 * 1024), 2);
-                                    $total_image_size += $child_image_size; // Add child image size to the total
-                                    list($child_width, $child_height) = getimagesize('images/' . $child_image['filename']);
+                                    $child_image_path = $image_folder_path . $child_image['filename'];
+                                    $child_image_size = round(filesize($child_image_path) / (1024 * 1024), 2);
+                                    $total_image_size += $child_image_size;
+                                    list($child_width, $child_height) = getimagesize($child_image_path);
                                     echo "<p class='text-start fw-semibold'>Child Image data size: " . $child_image_size . " MB</p>";
                                     echo "<p class='text-start fw-semibold'>Child Image dimensions: " . $child_width . "x" . $child_height . "</p>";
-                                    echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='images/" . $child_image['filename'] . "'>View original child image</a></p>";
+                                    echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='" . $base_url . $child_image['filename'] . "'>View original child image</a></p>";
                                   }
-                                
+
                                   // Display the total image size after processing all images
                                   echo "<p class='text-start fw-semibold'>Total Image data size: " . $total_image_size . " MB</p>";
                                 ?>
