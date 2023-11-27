@@ -5,7 +5,7 @@ $db = new SQLite3('../database.sqlite');
 
 // Pagination variables
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-$limit = 60;
+$limit = 15;
 $offset = ($page - 1) * $limit;
 
 // Get the total number of images from the database

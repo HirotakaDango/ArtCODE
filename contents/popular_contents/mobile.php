@@ -12,9 +12,9 @@
                 $image_type = $imageP['type'];
               ?>
                 <div class="carousel-item <?php echo $count === 0 ? 'active' : ''; ?>">
-                  <a href="image.php?artworkid=<?php echo $image_id; ?>">
+                  <a href="../image.php?artworkid=<?php echo $image_id; ?>">
                     <div class="position-relative overflow-hidden w-100 h-custom rounded">
-                      <img class="d-block rounded w-100 h-custom <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="thumbnails/<?php echo $filename; ?>" alt="<?php echo $title; ?>">
+                      <img class="d-block rounded w-100 h-custom <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $filename; ?>" alt="<?php echo $title; ?>">
                     </div>
                     <div class="carousel-caption">
                       <h5 class="fw-bold"><?php echo $title; ?></h5>
@@ -45,9 +45,9 @@
           $image_type = $imageP['type'];
         ?>
           <div class="media-element d-inline-flex">
-            <a href="image.php?artworkid=<?php echo $image_id; ?>">
+            <a href="../image.php?artworkid=<?php echo $image_id; ?>">
               <div class="position-relative overflow-hidden d-inline-block rounded">
-                <img class="hori <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="thumbnails/<?php echo $image_url; ?>" alt="<?php echo $image_title; ?>">
+                <img class="hori <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $image_url; ?>" alt="<?php echo $image_title; ?>">
               </div>
             </a>
           </div>

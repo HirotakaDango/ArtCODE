@@ -2,7 +2,8 @@
       <div id="carouselExampleFade" class="carousel slide carousel-fade mb-2" data-bs-ride="carousel">
         <div class="carousel-inner">
           <?php
-            $dbP = new SQLite3('database.sqlite');
+            $dbPath1 = $_SERVER['DOCUMENT_ROOT'] . '/database.sqlite';
+            $dbP = new SQLite3($dbPath1);
             $stmtP = $dbP->prepare("SELECT images.id, images.filename, images.tags, images.title, images.type, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY favorite_count DESC LIMIT 42");
             $resultP = $stmtP->execute();
             $count = 0;
@@ -16,9 +17,9 @@
                 echo '<div class="grid-container">';
               }
           ?>
-            <a href="image.php?artworkid=<?php echo $image_id; ?>" class="grid-item item"> <!-- Add the "item" class here -->
+            <a href="../image.php?artworkid=<?php echo $image_id; ?>" class="grid-item item"> <!-- Add the "item" class here -->
               <div class="position-relative overflow-hidden w-100 h-custom rounded">
-                <img class="d-block rounded w-100 h-custom <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="thumbnails/<?php echo $filename; ?>" alt="<?php echo $title; ?>">
+                <img class="d-block rounded w-100 h-custom <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $filename; ?>" alt="<?php echo $title; ?>">
               </div> 
               <div class="carousel-caption">
                 <h5 class="fw-bold"><?php echo $title; ?></h5>
@@ -56,9 +57,9 @@
             $image_type = $imageP['type'];
           ?>
             <div class="media-element d-inline-flex">
-              <a href="image.php?artworkid=<?php echo $image_id; ?>">
+              <a href="../image.php?artworkid=<?php echo $image_id; ?>">
                 <div class="position-relative overflow-hidden d-inline-block rounded">
-                  <img class="hori <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="thumbnails/<?php echo $image_url; ?>" alt="<?php echo $image_title; ?>">
+                  <img class="hori <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $image_url; ?>" alt="<?php echo $image_title; ?>">
                 </div>
               </a>
             </div>

@@ -1,74 +1,69 @@
 <?php
-$email = $_SESSION['email'];
+// Prepare the query to get the user's numpage
+$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
+$resultNum = $queryNum->execute();
+$user = $resultNum->fetchArray(SQLITE3_ASSOC);
 
-// Connect to the SQLite database using parameterized query
-$db = new SQLite3('../../database.sqlite');
+$numpage = $user['numpage'];
 
-// Pagination variables
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$limit = 15;
+// Set the limit of images per page
+$limit = empty($numpage) ? 50 : $numpage;
+
+// Get the current page number, default to 1
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+// Calculate the offset based on the current page number and limit
 $offset = ($page - 1) * $limit;
 
-// Get the total number of images from the database
-$countStmt = $db->prepare("SELECT COUNT(*) FROM images");
-$countResult = $countStmt->execute();
-$total = $countResult->fetchArray()[0];
+// Get the total number of images
+$total = $db->querySingle("SELECT COUNT(*) FROM images");
 
-// Get 25 images from the database using parameterized query
-$stmt = $db->prepare("SELECT images.*, users.email FROM images INNER JOIN users ON images.email = users.email ORDER BY images.id ASC LIMIT :limit OFFSET :offset");
-$stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
-$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+// Get the images for the current page
+$stmt = $db->prepare("SELECT * FROM images ORDER BY id ASC LIMIT ?, ?");
+$stmt->bindValue(1, $offset, SQLITE3_INTEGER);
+$stmt->bindValue(2, $limit, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
-    <div class="dropdown mt-2 mb-2">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-images"></i> sort by
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item fw-bold" href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>">Newest</a></li>
-        <li><a class="dropdown-item fw-bold active" href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>">Oldest</a></li>
-      </ul>
-    </div>
-    <div class="container-fluid">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-1">
-        <?php while ($image = $result->fetchArray()): ?>
-          <?php
-            $title = $image['title'];
-            $filename = $image['filename'];
-            $email = $image['email'];
-            $artist = '';
-            $stmt = $db->prepare("SELECT id, artist FROM users WHERE email = ?");
-            $stmt->bindValue(1, $email, SQLITE3_TEXT);
-            $result2 = $stmt->execute();
-            if ($user = $result2->fetchArray()) {
-              $artist = $user['artist'];
-              $id = $user['id'];
-            }
-          ?>
-          <div class="col">
-            <div class="card h-100 shadow-sm rounded-1">
-              <a class="d-block" href="#" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>">
-                <img class="lazy-load object-fit-cover <?php echo ($image['type'] === 'nsfw') ? 'nsfw' : ''; ?>" style="width: 100%; height: 300px; border-radius: 3px 3px 0 0;" data-src="../../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
-              </a>
-              <div class="card-body card-round bg-light z-2">
-                <a class="text-decoration-none" href="image.php?artworkid=<?php echo $image['id']; ?>">
-                  <h5 class="text-dark fw-bold"><?= $title ?></h5>
-                </a>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary disabled fw-bold">by</button>
-                    <a class="btn btn-sm btn-secondary fw-bold" href="../../artist.php?id=<?= $id ?>"><?php echo (strlen($artist) > 25) ? substr($artist, 0, 25) . '...' : $artist; ?></a>
-                  </div>
-                </div>
+    <div class="images mb-2 mt-2">
+      <?php while ($image = $result->fetchArray()): ?>
+        <div class="image-container">
+          <div class="position-relative">
+            <a class="shadow rounded imagesA" href="../image.php?artworkid=<?php echo $image['id']; ?>">
+              <img class="imagesImg lazy-load <?php echo ($image['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
+            </a> 
+            <div class="position-absolute top-0 start-0">
+              <div class="dropdown">
+                <button class="btn btn-sm btn-dark ms-1 mt-1 rounded-1 opacity-50" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <?php
+                    $is_favorited = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$image['id']}");
+                    if ($is_favorited) {
+                  ?>
+                    <form method="POST">
+                      <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
+                      <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
+                    </form>
+                  <?php } else { ?>
+                    <form method="POST">
+                      <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
+                      <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
+                    </form>
+                  <?php } ?>
+                  <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $image['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
+                </ul>
+
+                <?php include('../card_image.php'); ?>
+                
               </div>
             </div>
-
-            <?php include($_SERVER['DOCUMENT_ROOT'] . '/feeds/explores/card_image_feeds.php'); ?>
-            
           </div>
-        <?php endwhile; ?>
-      </div>
+        </div>
+      <?php endwhile; ?>
     </div>
     <?php
       $totalPages = ceil($total / $limit);
@@ -113,7 +108,7 @@ $result = $stmt->execute();
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "icon/bg.png";
+      const defaultPlaceholder = "../icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {
@@ -139,7 +134,7 @@ $result = $stmt->execute();
           
               // Add overlay with icon and text
               let overlay = document.createElement("div");
-              overlay.classList.add("overlay", "rounded-custom");
+              overlay.classList.add("overlay", "rounded");
               let icon = document.createElement("i");
               icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
               overlay.appendChild(icon);
@@ -215,7 +210,7 @@ $result = $stmt->execute();
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('sw.js').then(function(registration) {
+          navigator.serviceWorker.register('../sw.js').then(function(registration) {
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
           }, function(err) {
             console.log('ServiceWorker registration failed: ', err);
