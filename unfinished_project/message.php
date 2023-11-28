@@ -1,8 +1,8 @@
 <?php
-require_once('auth.php');
+require_once('../auth.php');
 
 try {
-    $db = new PDO('sqlite:database.sqlite');
+    $db = new PDO('sqlite:../database.sqlite');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
