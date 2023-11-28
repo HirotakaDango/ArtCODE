@@ -40,54 +40,73 @@ if (isset($_GET['id'])) {
   </head>
   <body>
     <main id="swup" class="transition-main">
-    <div class="container mt-5">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
-          <li class="breadcrumb-item">
-            <a class="link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
-              <i class="bi bi-house-fill"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item">
-            <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
-          </li>
-          <li class="breadcrumb-item">
-            <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $post_id; ?>"><?php echo $post['title']; ?></a>
-          </li>
-          <li class="breadcrumb-item">
-            <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none fw-medium" href="edit.php?id=<?php echo $post_id; ?>">Edit <?php echo $post['title']; ?></a>
-          </li>
-        </ol>
-      </nav>
-    </div>
-    <form method="post" class="container my-4">
-      <div class="d-none d-md-block d-lg-block">
-        <div class="d-flex">
-          <div class="btn-group me-auto">
-            <button class="btn btn-primary fw-bold mb-5" type="submit" name="submit">save changes</button>
-            <a class="btn btn-danger fw-bold mb-5" href="delete.php?id=<?php echo $post_id; ?>">delete</a>
+    <form method="post">
+      <div class="container-fluid mt-3 mb-5">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+                <i class="bi bi-house-fill"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $post_id; ?>"><?php echo $post['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none fw-medium" href="edit.php?id=<?php echo $post_id; ?>">Edit <?php echo $post['title']; ?></a>
+            </li>
+            <li class="ms-auto">
+              <div>
+                <div class="d-flex">
+                  <div class="btn-group me-auto gap-2">
+                    <button class="btn btn-outline-light fw-bold text-nowrap btn-sm rounded" type="submit" name="submit">save changes</button>
+                    <button type="button" class="btn btn-outline-danger fw-bold text-nowrap btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modalDelete">
+                      delete this work
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="container-fluid my-4">
+        <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+              <div class="modal-header border-bottom-0">
+                <h1 class="modal-title fs-5">Delete <?php echo $post['title'] ?></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body py-0 text-center fw-medium">
+                <p>Are you sure want to delete <strong><?php echo $post['title'] ?></strong> from your works?</p>
+                <p class="small">(Warning: You can't restore back after you delete this!)</p>
+                <div class="btn-group w-100 mb-3 gap-3">
+                  <a class="btn btn-danger px-0 rounded-3 fw-medium" href="delete.php?id=<?php echo $post_id; ?>">delete this!</a>
+                  <button type="button" class="btn btn-secondary px-4 rounded-3 fw-medium" data-bs-dismiss="modal">cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <a class="ms-auto btn btn-primary fw-bold mb-5" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">back to home</a>
         </div>
-      </div>
-      <input type="hidden" name="post_id" value="<?php echo $post_id ?>">
-      <div class="input-group gap-3 mb-2">
-        <div class="form-floating">
-          <input class="form-control border-top-0 border-start-0 border-end-0 rounded-bottom-0 border-3 focus-ring focus-ring-dark" type="text" name="title" placeholder="Enter title" maxlength="100" required value="<?php echo $post['title'] ?>">  
-          <label for="floatingInput" class="fw-bold"><small>Enter title</small></label>
+        <input type="hidden" name="post_id" value="<?php echo $post_id ?>">
+        <div class="input-group gap-3 mb-2">
+          <div class="form-floating">
+            <input class="form-control border-top-0 border-start-0 border-end-0 rounded-bottom-0 border-3 focus-ring focus-ring-dark" type="text" name="title" placeholder="Enter title" maxlength="100" required value="<?php echo $post['title'] ?>">  
+            <label for="floatingInput" class="fw-bold"><small>Enter title</small></label>
+          </div>
+          <div class="form-floating">
+            <input class="form-control border-top-0 border-start-0 border-end-0 rounded-bottom-0 border-3 focus-ring focus-ring-dark" type="text" name="tags" placeholder="Enter genre" maxlength="50" required value="<?php echo $post['tags'] ?>">  
+            <label for="floatingInput" class="fw-bold"><small>Enter genre</small></label>
+          </div>
         </div>
-        <div class="form-floating">
-          <input class="form-control border-top-0 border-start-0 border-end-0 rounded-bottom-0 border-3 focus-ring focus-ring-dark" type="text" name="tags" placeholder="Enter genre" maxlength="50" required value="<?php echo $post['tags'] ?>">  
-          <label for="floatingInput" class="fw-bold"><small>Enter genre</small></label>
+        <div class="form-floating mb-2">
+          <textarea class="form-control rounded border-3 focus-ring focus-ring-dark vh-100" name="content" oninput="stripHtmlTags(this)" placeholder="Enter content" required><?php echo strip_tags($post['content']) ?></textarea>
+          <label for="floatingInput" class="fw-bold"><small>Enter content</small></label>
         </div>
-      </div>
-      <div class="form-floating mb-2">
-        <textarea class="form-control rounded border-3 focus-ring focus-ring-dark vh-100" name="content" oninput="stripHtmlTags(this)" placeholder="Enter content" required><?php echo strip_tags($post['content']) ?></textarea>
-        <label for="floatingInput" class="fw-bold"><small>Enter content</small></label>
-      </div>
-      <div class="d-flex d-md-none d-lg-none">
-        <button class="me-auto btn btn-primary fw-bold mb-5" type="submit" name="submit">save changes</button>
-        <a class="ms-auto btn btn-primary fw-bold mb-5" href="profile.php">back to profile</a>
       </div>
     </form>
     </main>

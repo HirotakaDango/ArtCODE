@@ -29,9 +29,9 @@ $post = $stmt->fetch();
   </head>
   <body>
     <main id="swup" class="transition-main">
-    <div class="container mt-5">
+    <div class="container-fluid mt-3 mb-5">
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
+        <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
           <li class="breadcrumb-item">
             <a class="link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
               <i class="bi bi-house-fill"></i>

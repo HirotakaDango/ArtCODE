@@ -128,8 +128,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-bold d-none-sm">
               <form action="/search.php" method="GET" class="mb-3">
                 <div class="input-group">
-                  <input type="text" name="search" class="form-control text-lowercase fw-bold" placeholder="Search tags or title (e.g: white, sky)" required onkeyup="debouncedShowSuggestions(this, 'suggestions1')" />
-                  <button type="submit" class="btn btn-primary"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
+                  <input type="text" name="search" class="form-control text-lowercase fw-bold rounded-end-0 rounded-3" placeholder="Search tags or title (e.g: white, sky)" required onkeyup="debouncedShowSuggestions(this, 'suggestions1')" />
+                  <button type="submit" class="btn btn-primary rounded-start-0 rounded-3"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
                 </div>
                 <div id="suggestions1"></div>
               </form> 
@@ -303,7 +303,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     <div class="modal fade" id="logOut" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-3 shadow">
-          <div class="modal-body p-4 text-center">
+          <div class="modal-body p-4 text-center fw-medium">
             <h5 class="mb-0">Do you want to end the session?</h5>
             <p class="mb-0 mt-2">You can always comeback whenever you want later.</p>
           </div>
@@ -316,24 +316,24 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     </div>
     <!-- Modal -->
     <div class="modal fade" id="searchTerm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Search</h1>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow border-0">
+          <div class="modal-header border-0">
+            <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Search</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form action="/search.php" method="GET" class="mb-3">
               <div class="input-group">
-                <input type="text" name="search" class="form-control text-lowercase fw-bold" placeholder="Search tags or title" required onkeyup="debouncedShowSuggestions(this, 'suggestions2')" />
-                <button type="submit" class="btn btn-primary"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
+                <input type="text" name="search" class="form-control text-lowercase fw-bold rounded-end-0 rounded-3" placeholder="Search tags or title" required onkeyup="debouncedShowSuggestions(this, 'suggestions2')" />
+                <button type="submit" class="btn btn-primary rounded-start-0 rounded-3"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
               </div>
               <div id="suggestions2"></div>
             </form>
             <h5 class="fw-bold text-center">Search Tips</h5>
             <p class="fw-semibold text-center">"You can search multi tags or title using comma to get multiple result!"</p>
             <p class="fw-semibold">example:</p>
-            <input class="form-control text-dark fw-bold" placeholder="tags, title (e.g: white, sky)" readonly>
+            <input class="form-control text-dark fw-bold rounded-3" placeholder="tags, title (e.g: white, sky)" readonly>
           </div>
         </div>
       </div>
@@ -344,7 +344,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     <!-- Nav Modal -->
     <div class="modal fade" id="navModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content rounded-4 shadow border-0">
           <div class="modal-header border-0">
             <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel">Start with your creativity</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

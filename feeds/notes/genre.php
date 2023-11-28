@@ -47,7 +47,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </head>
   <body>
     <main id="swup" class="transition-main">
-    <div class="container-fluid my-4">
+    <div class="container-fluid mt-3 mb-5">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
           <li class="breadcrumb-item">
@@ -56,7 +56,10 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
           </li>
           <li class="breadcrumb-item">
-            <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">home</a>
+            <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="#">Tag</a>
           </li>
           <li class="breadcrumb-item">
             <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="genre.php?tag=<?php echo $tag; ?>"><?php echo $tag; ?></a>
