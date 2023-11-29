@@ -107,7 +107,7 @@ try {
           <button type="submit" class="btn w-100 btn-primary">Submit</button>
         </form>
       <?php else: ?>
-        <h5 class="text-center">You must <a href="session.php">login</a> or <a href="session.php">register</a> to send a comment!</h5>
+        <h5 class="text-center">You must <a href="../../session/login.php">login</a> or <a href="../../session/register.php">register</a> to send a comment!</h5>
       <?php endif; ?>
 
       <!-- Display comments -->
