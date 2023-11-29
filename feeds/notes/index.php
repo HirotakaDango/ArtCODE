@@ -61,10 +61,6 @@ try {
                 </div>
                 <h5 class="text-center w-100 p-3"><?php echo $post['title']; ?></h5>
                 <div class="mt-5">
-                  <div class="btn-group position-absolute bottom-0 start-0 m-2">
-                    <button onclick="location.href='view.php?id=<?php echo $post['id'] ?>'" class="btn btn-sm btn-outline-secondary fw-medium">View</button>
-                    <button onclick="location.href='edit.php?id=<?php echo $post['id'] ?>'" class="btn btn-sm btn-outline-secondary fw-medium">Edit</button>
-                  </div>
                   <small class="text-body-secondary position-absolute bottom-0 end-0 m-2 fw-medium"><?php echo $post['date']; ?></small>
                 </div>
               </div>

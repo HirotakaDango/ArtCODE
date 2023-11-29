@@ -42,36 +42,49 @@ if (isset($_GET['id'])) {
     <main id="swup" class="transition-main">
     <form method="post">
       <div class="container-fluid mt-3 mb-5">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
-                <i class="bi bi-house-fill"></i>
-              </a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $post_id; ?>"><?php echo $post['title']; ?></a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none fw-medium" href="edit.php?id=<?php echo $post_id; ?>">Edit <?php echo $post['title']; ?></a>
-            </li>
-            <li class="ms-auto">
-              <div>
-                <div class="d-flex">
-                  <div class="btn-group me-auto gap-2">
-                    <button class="btn btn-outline-light fw-bold text-nowrap btn-sm rounded" type="submit" name="submit">save changes</button>
-                    <button type="button" class="btn btn-outline-danger fw-bold text-nowrap btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modalDelete">
-                      delete this work
-                    </button>
+        <div class="d-none d-md-block d-lg-block">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+                  <i class="bi bi-house-fill"></i>
+                </a>
+              </li>
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $post_id; ?>"><?php echo $post['title']; ?></a>
+              </li>
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none fw-medium" href="edit.php?id=<?php echo $post_id; ?>">Edit <?php echo $post['title']; ?></a>
+              </li>
+              <li class="ms-auto">
+                <div>
+                  <div class="d-flex">
+                    <div class="btn-group me-auto gap-2">
+                      <button class="btn btn-outline-light fw-bold text-nowrap btn-sm rounded" type="submit" name="submit">save changes</button>
+                      <button type="button" class="btn btn-outline-danger fw-bold text-nowrap btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modalDelete">
+                        delete this work
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          </ol>
-        </nav>
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div class="p-3 bg-body-tertiary rounded-3 d-md-none d-lg-none" style="height: 65px;">
+          <div class="d-flex">
+            <a class="btn btn-outline-light me-auto btn-sm" href="view.php?id=<?php echo $post_id; ?>"><i class="bi bi-arrow-left" style="-webkit-text-stroke: 1px;"></i></a>
+            <div class="btn-group ms-auto gap-2">
+              <button class="btn btn-outline-light fw-bold text-nowrap btn-sm rounded" type="submit" name="submit">save changes</button>
+              <button type="button" class="btn btn-outline-danger fw-bold text-nowrap btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modalDelete">
+                delete this work
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="container-fluid my-4">
         <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
