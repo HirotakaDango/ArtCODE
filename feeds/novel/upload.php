@@ -108,37 +108,71 @@ if (isset($_FILES['image'])) {
   </head>
   <body>
     <?php include ('header.php'); ?>
-    <div class="container">
-      <h2 class="text-center fw-bold mb-4">UPLOAD YOUR WORKS</h2>
+    <div class="container-fluid">
       <form method="post" enctype="multipart/form-data">
         <?php if (isset($_GET['error'])): ?>
           <p><?php echo $_GET['error']; ?></p>
         <?php endif ?>
         <div class="row featurette">
-          <div class="col-md-7 order-md-2">
-            <img class="d-block border border-2 object-fit-cover rounded mb-2" id="file-ip-1-preview" style="height: 340px; width: 100%;">
-          </div>
-          <div class="col-md-5 order-md-1">
-            <input class="form-control mb-2" type="file" name="image" type="file" id="file-ip-1" accept="image/*" onchange="showPreview(event);" required>
-            <div class="input-group mb-2 gap-2">
-              <input class="form-control rounded" type="text" placeholder="Title" id="title" name="title" required>
-              <input class="form-control rounded" type="text" placeholder="Tags" id="tags" name="tags" required>
+          <div class="col-md-3 order-md-1 mb-2 pe-md-0" style="height: 500px;">
+            <div id="file-preview-container" class="d-flex align-items-center justify-content-center h-100 border border-3 rounded-4">
+              <div class="text-center">
+                <h6><i class="bi bi-image fs-1"></i></h6>
+                <h6>Your image cover here!</h6>
+              </div>
             </div>
-            <textarea class="form-control mb-2" type="text" placeholder="description" id="description" style="height: 247px;" name="description" required></textarea>
+          </div>
+          <div class="col-md-9 order-md-2 ps-md-2">
+            <input class="form-control border border-3 rounded-4 mb-2" type="file" name="image" type="file" id="file-ip-1" accept="image/*" onchange="showPreview(event);" required>
+            <div class="input-group mb-2 gap-2">
+              <div class="form-floating">
+                <input class="form-control border border-3 rounded-4" type="text" id="floatingInput" placeholder="title" id="title" name="title" required>
+                <label class="fw-medium" for="floatingInput">title</label>
+              </div>
+              <div class="form-floating">
+                <input class="form-control border border-3 rounded-4" type="text" id="floatingInput" placeholder="tags" id="tags" name="tags" required>
+                <label class="fw-medium" for="floatingInput">tags</label>
+              </div>
+            </div>
+            <div class="form-floating mb-2">
+              <textarea class="form-control border border-3 rounded-4" type="text" id="floatingTextarea" placeholder="description" id="description" style="height: 384px; max-height: 384px;" name="description" required></textarea>
+              <label class="fw-medium" for="floatingTextarea">description</label>
+            </div>
           </div>
         </div>
-        <textarea class="form-control mb-2" type="text" placeholder="content" id="content" style="height: 200px;" name="content" required></textarea>
-        <button class="btn btn-primary fw-bold w-100" type="submit">upload</button>
+        <div class="form-floating mb-2">
+          <textarea class="form-control vh-100 border border-3 rounded-4" type="text" id="floatingTextarea" placeholder="content" id="content" name="content" required></textarea>
+          <label class="fw-medium" for="floatingTextarea">content</label>
+        </div>
+        <button class="btn btn-dark fw-bold w-100 border border-3 rounded-4" type="submit">upload</button>
       </form>
     </div>
-    <br>
+    <div class="mt-5"></div>
     <script>
-      function showPreview(event){
-        if(event.target.files.length > 0){
-          var src = URL.createObjectURL(event.target.files[0]);
-          var preview = document.getElementById("file-ip-1-preview");
-          preview.src = src;
-          preview.style.display = "block";
+      function showPreview(event) {
+        var fileInput = event.target;
+        var previewContainer = document.getElementById("file-preview-container");
+
+        if (fileInput.files.length > 0) {
+          // Create an image element
+          var img = document.createElement("img");
+          img.classList.add("d-block", "object-fit-cover");
+          img.style.borderRadius = "0.85em";
+          img.style.width = "100%";
+          img.style.height = "100%";
+
+          // Set the image source
+          var src = URL.createObjectURL(fileInput.files[0]);
+          img.src = src;
+
+          // Remove any existing content in the preview container
+          previewContainer.innerHTML = "";
+
+          // Append the image to the preview container
+          previewContainer.appendChild(img);
+        } else {
+          // If no file is selected, show the Bootstrap icon
+          previewContainer.innerHTML = '<div class="text-center"><h6><i class="bi bi-image fs-1"></i></h6><h6>Your image cover here!</h6></div>';
         }
       }
     </script>

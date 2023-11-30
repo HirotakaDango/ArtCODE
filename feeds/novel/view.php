@@ -38,52 +38,54 @@ $user_posts = $user_posts_statement->fetchAll();
     <div class="container mt-3 mb-5">
       <nav aria-label="breadcrumb">
         <div class="d-none d-md-block d-lg-block">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
-                <i class="bi bi-house-fill"></i>
+              <a class="link-body-emphasis text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+                ArtCODE
               </a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+              <a class="link-body-emphasis text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
+              <a class="link-body-emphasis border-bottom border-3 py-2 text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
             </li>
             <?php if ($user_email === $email): ?>
               <li class="breadcrumb-item">
                 <!-- Display the edit button only if the current user is the owner of the image -->
-                <a class="link-body-emphasis py-2 fw-semibold text-decoration-none text-white fw-medium" href="edit.php?id=<?php echo $post['id']; ?>">
+                <a class="link-body-emphasis py-2 text-decoration-none text-white fw-medium" href="edit.php?id=<?php echo $post['id']; ?>">
                   <i class="bi bi-pencil-fill"></i>
                 </a>
               </li>
             <?php endif; ?>
+            <a class="btn border-0 btn-outline-light ms-auto" href="#" data-bs-toggle="modal" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
           </ol>
         </div>
         <div class="d-md-none d-lg-none">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+              <a class="link-body-emphasis text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
+              <a class="link-body-emphasis border-bottom border-3 py-2 text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
             </li>
             <?php if ($user_email === $email): ?>
               <li class="breadcrumb-item">
                 <!-- Display the edit button only if the current user is the owner of the image -->
-                <a class="link-body-emphasis py-2 fw-semibold text-decoration-none text-white fw-medium" href="edit.php?id=<?php echo $post['id']; ?>">
+                <a class="link-body-emphasis py-2 text-decoration-none text-white fw-medium" href="edit.php?id=<?php echo $post['id']; ?>">
                   <i class="bi bi-pencil-fill"></i>
                 </a>
               </li>
             <?php endif; ?>
+            <a class="btn border-0 btn-outline-light ms-auto" href="#" data-bs-toggle="modal" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
           </ol>
         </div>
       </nav>
       <div class="row featurette">
-        <div class="col-md-3 order-md-1">
-          <a href="images/<?php echo $post['filename']; ?>"><img class="d-block border border-2 object-fit-cover rounded mb-2" src="thumbnails/<?php echo $post['filename']; ?>" style="height: 500px; width: 100%;"></a>
+        <div class="col-md-4 order-md-1 cover-size" style="height: 500px;">
+          <a data-bs-toggle="modal" data-bs-target="#originalImage"><img style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover" src="thumbnails/<?php echo $post['filename']; ?>"></a>
         </div>
-        <div class="col-md-7 order-md-2">
+        <div class="col-md-8 order-md-2">
           <div class="fw-bold">
             <h1 class="text-center fw-bold"><?php echo isset($post['title']) ? $post['title'] : '' ?></h1>
             <p class="mt-5">Author: <?php echo isset($post['artist']) ? $post['artist'] : '' ?></p>
@@ -115,9 +117,31 @@ $user_posts = $user_posts_statement->fetchAll();
           </div>
         </div>
       </div>
-
       <div class="text-white">
         <p style="white-space: break-spaces; overflow: hidden;">
+          <?php
+            $novelTextSynopsis = isset($post['description']) ? $post['description'] : ''; // Replace with the desired variable or value
+
+            if (!empty($novelTextSynopsis)) {
+              $messageTextSynopsis = $novelTextSynopsis;
+              $messageTextWithoutTagsSynopsis = strip_tags($messageTextSynopsis);
+              $patternSynopsis = '/\bhttps?:\/\/\S+/i';
+
+              $formattedTextSynopsis = preg_replace_callback($patternSynopsis, function ($matchesSynopsis) {
+                $urlSynopsis = htmlspecialchars($matchesSynopsis[0]);
+                return '<a href="' . $urlSynopsis . '">' . $urlSynopsis . '</a>';
+              }, $messageTextWithoutTagsSynopsis);
+
+              $paragraphs = explode("\n", $formattedTextSynopsis);
+    
+              foreach ($paragraphs as $paragraph) {
+                echo '<p style="white-space: break-spaces; overflow: hidden;">' . $paragraph . '</p>';
+              }
+            } else {
+              echo "No text.";
+            }
+          ?>
+        </p>
         <hr class="border-4 rounded-pill">
         <p style="white-space: break-spaces; overflow: hidden;">
           <?php
@@ -173,6 +197,110 @@ $user_posts = $user_posts_statement->fetchAll();
       </div>
       <br>
     </div>
+    <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="card rounded-4 p-4">
+            <p class="text-start fw-bold">share to:</p>
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+              <!-- Twitter -->
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-twitter"></i>
+              </a>
+                                
+              <!-- Line -->
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-line"></i>
+              </a>
+                                
+              <!-- Email -->
+              <a class="btn" href="mailto:?body=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>">
+                <i class="bi bi-envelope-fill"></i>
+              </a>
+                                
+              <!-- Reddit -->
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-reddit"></i>
+              </a>
+                                
+              <!-- Instagram -->
+              <a class="btn" href="https://www.instagram.com/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-instagram"></i>
+              </a>
+                                
+              <!-- Facebook -->
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-facebook"></i>
+              </a>
+            </div>
+            <div class="btn-group w-100" role="group" aria-label="Share Buttons">
+              <!-- WhatsApp -->
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+    
+              <!-- Pinterest -->
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-pinterest"></i>
+              </a>
+    
+              <!-- LinkedIn -->
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-linkedin"></i>
+              </a>
+    
+              <!-- Messenger -->
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-messenger"></i>
+              </a>
+    
+              <!-- Telegram -->
+              <a class="btn" href="https://telegram.me/share/url?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-telegram"></i>
+              </a>
+    
+              <!-- Snapchat -->
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/novel/view.php?id=' . $id; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-snapchat"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img class="object-fit-contain h-100 w-100 rounded" src="images/<?php echo $post['filename']; ?>">
+            <button type="button" class="btn position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4 text-stroke"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <style>
+      @media (min-width: 768px) {
+        .cover-size {
+          max-width: 375px;
+        }
+      }
+    </style>
+    <script>
+      function sharePage() {
+        if (navigator.share) {
+          navigator.share({
+            title: document.title,
+            url: window.location.href
+          }).then(() => {
+            console.log('Page shared successfully.');
+          }).catch((error) => {
+            console.error('Error sharing page:', error);
+          });
+        } else {
+          console.log('Web Share API not supported.');
+        }
+      }
+    </script>
     </main>
     <?php include('../../bootstrapjs.php'); ?>
   </body>

@@ -65,7 +65,7 @@ try {
   <body>
     <?php include ('header.php'); ?>
     <div class="container-fluid">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-6 row-cols-md-8 g-3">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-2">
         <?php while ($image = $result->fetch(PDO::FETCH_ASSOC)): ?>
           <div class="col">
             <div class="card shadow-sm h-100">
