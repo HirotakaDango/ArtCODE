@@ -118,8 +118,8 @@ $user_posts = $user_posts_statement->fetchAll();
         </div>
       </nav>
       <div class="row featurette">
-        <div class="col-md-4 order-md-1 cover-size" style="height: 500px;">
-          <div class="position-relative">
+        <div class="col-md-4 order-md-1 cover-size">
+          <div class="position-relative" style="height: 500px;">
             <a data-bs-toggle="modal" data-bs-target="#originalImage">
               <img style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover" src="thumbnails/<?php echo $post['filename']; ?>">
             </a>
