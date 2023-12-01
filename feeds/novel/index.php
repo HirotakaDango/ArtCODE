@@ -23,8 +23,8 @@ if (!is_dir('thumbnails')) {
 // Create the "novel" table if it doesn't exist
 try {
 $db->exec("CREATE TABLE IF NOT EXISTS novel (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, email TEXT, title TEXT, description TEXT, content TEXT, tags TEXT, date DATETIME)");
-
 $db->exec("CREATE TABLE IF NOT EXISTS comments_novel (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, comment TEXT, date DATETIME, page_id TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS favorites_novel (id INTEGER PRIMARY KEY AUTOINCREMENT, novel_id INTEGER, email TEXT)");
 
 } catch (PDOException $e) {
   die("Error creating novel table: " . $e->getMessage());
@@ -45,7 +45,7 @@ try {
 
 // Get all of the images from the database, joined with users table
 try {
-  $result = $db->prepare("SELECT novel.*, users.id AS user_id, users.email, users.artist FROM novel JOIN users ON novel.email = users.email ORDER BY novel.date DESC LIMIT :limit OFFSET :offset");
+  $result = $db->prepare("SELECT novel.*, users.id AS user_id, users.email, users.artist FROM novel JOIN users ON novel.email = users.email ORDER BY novel.id DESC LIMIT :limit OFFSET :offset");
   $result->bindValue(':limit', $limit, PDO::PARAM_INT);
   $result->bindValue(':offset', $offset, PDO::PARAM_INT);
   $result->execute();
@@ -66,12 +66,12 @@ try {
   <body>
     <?php include 'header.php'; ?>
     <div class="container-fluid">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-2">
+      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
         <?php while ($image = $result->fetch(PDO::FETCH_ASSOC)): ?>
           <div class="col">
             <div class="card shadow-sm h-100">
               <a class="shadow rounded" href="view.php?id=<?php echo $image['id']; ?>">
-                <img class="w-100 object-fit-cover" style="border-radius: 2.9px 2.9px 0 0;" height="300" src="thumbnails/<?php echo $image['filename']; ?>">
+                <img class="w-100 object-fit-cover" style="border-radius: 2.9px 2.9px 0 0;" height="200" src="thumbnails/<?php echo $image['filename']; ?>">
               </a>
               <div class="card-body">
                 <h5 class="card-text text-center fw-bold"><?php echo $image['title']; ?></h5>

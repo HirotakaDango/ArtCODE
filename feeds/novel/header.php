@@ -14,6 +14,9 @@
                 <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'upload.php') echo 'active' ?>" href="upload.php">Upload</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="favorite.php">Favorites</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'active' ?>" href="profile.php">My Works</a>
               </li>
               <li class="nav-item">
@@ -28,6 +31,9 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'upload.php') echo 'active' ?>" href="upload.php">Upload</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="favorite.php">Favorites</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'active' ?>" href="profile.php">My Works</a>

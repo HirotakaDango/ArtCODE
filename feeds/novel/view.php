@@ -13,8 +13,44 @@ $statement->bindParam(':id', $id);
 $statement->execute();
 $post = $statement->fetch();
 
+$novel_id = $post['id'];
+
 // Get the email of the selected user
 $user_email = $post['email'];
+
+// Process any favorite/unfavorite requests
+if (isset($_POST['favorite'])) {
+  $novel_id = $_POST['novel_id'];
+
+  // Check if the novel has already been favorited by the current user
+  $stmt = $db->prepare("SELECT COUNT(*) FROM favorites_novel WHERE email = :email AND novel_id = :novel_id");
+  $stmt->bindParam(':email', $_SESSION['email']);
+  $stmt->bindParam(':novel_id', $novel_id);
+  $stmt->execute();
+  $existing_fav = $stmt->fetchColumn();
+
+  if ($existing_fav == 0) {
+    $stmt = $db->prepare("INSERT INTO favorites_novel (email, novel_id) VALUES (:email, :novel_id)");
+    $stmt->bindParam(':email', $_SESSION['email']);
+    $stmt->bindParam(':novel_id', $novel_id);
+    $stmt->execute();
+  }
+
+  // Redirect to the same page with the appropriate sorting parameter
+  header('Location: view.php?id=' . $post['id']);
+  exit();
+
+} elseif (isset($_POST['unfavorite'])) {
+  $novel_id = $_POST['novel_id'];
+  $stmt = $db->prepare("DELETE FROM favorites_novel WHERE email = :email AND novel_id = :novel_id");
+  $stmt->bindParam(':email', $_SESSION['email']);
+  $stmt->bindParam(':novel_id', $novel_id);
+  $stmt->execute();
+
+  // Redirect to the same page with the appropriate sorting parameter
+  header('Location: view.php?id=' . $post['id']);
+  exit();
+}
 
 // Query to check if there are more than 1 post by the same user
 $user_posts_query = "SELECT id FROM novel WHERE email = :email";
@@ -83,12 +119,39 @@ $user_posts = $user_posts_statement->fetchAll();
       </nav>
       <div class="row featurette">
         <div class="col-md-4 order-md-1 cover-size" style="height: 500px;">
-          <a data-bs-toggle="modal" data-bs-target="#originalImage"><img style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover" src="thumbnails/<?php echo $post['filename']; ?>"></a>
+          <div class="position-relative">
+            <a data-bs-toggle="modal" data-bs-target="#originalImage">
+              <img style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover" src="thumbnails/<?php echo $post['filename']; ?>">
+            </a>
+            <?php
+              $stmt = $db->prepare("SELECT COUNT(*) FROM favorites_novel WHERE email = :email AND novel_id = :novel_id");
+              $stmt->bindParam(':email', $_SESSION['email']);
+              $stmt->bindParam(':novel_id', $post['id']);
+              $stmt->execute();
+              $is_favorited = $stmt->fetchColumn();
+
+              if ($is_favorited) {
+            ?>
+              <form method="POST">
+                <input type="hidden" name="novel_id" value="<?php echo $post['id']; ?>">
+                <button type="submit" class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-bold" name="unfavorite">
+                  <i class="bi bi-heart-fill"></i> <small>unfavorite</small>
+                </button>
+              </form>
+            <?php } else { ?>
+              <form method="POST">
+                <input type="hidden" name="novel_id" value="<?php echo $post['id']; ?>">
+                <button type="submit" class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-bold" name="favorite">
+                  <i class="bi bi-heart"></i> <small>favorite</small>
+                </button>
+              </form>
+            <?php } ?>
+          </div>
         </div>
         <div class="col-md-8 order-md-2">
           <div class="fw-bold">
             <h1 class="text-center fw-bold"><?php echo isset($post['title']) ? $post['title'] : '' ?></h1>
-            <p class="mt-5">Author: <?php echo isset($post['artist']) ? $post['artist'] : '' ?></p>
+            <p class="mt-5">Author: <a class="text-decoration-none text-light" href="user.php?id=<?php echo $post['user_id']; ?>"><?php echo isset($post['artist']) ? $post['artist'] : '' ?><a/></p>
             <p class="mt-2">Published: <?php echo isset($post['date']) ? $post['date'] : '' ?></p>
             <p class="mt-2">Genre:
               <?php
