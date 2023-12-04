@@ -3,7 +3,7 @@ require_once('auth.php');
 
 // Connect to the database
 $db = new SQLite3('database.sqlite');
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at TEXT)");
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at DATETIME)");
 $stmt->execute();
 
 // Get the filename from the query string
@@ -30,11 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
 
   // Check if the comment is not empty
   if (!empty(trim($comment))) {
+    // Get the current date in the format "years/month/day"
+    $currentDate = date("Y/m/d");
+
     // Insert the comment into the database
     $stmt = $db->prepare("INSERT INTO comments (filename, email, comment, created_at) VALUES (:filename, :email, :comment, :created_at)");
     $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
+    $stmt->bindValue(':created_at', $currentDate, SQLITE3_TEXT); // Bind the current date
     $stmt->execute();
   }
 
@@ -125,7 +129,7 @@ $comments = $stmt->execute();
           <div class="d-flex align-items-center mb-2 position-relative">
             <div class="position-absolute top-0 start-0 m-1">
               <img class="rounded-circle" src="<?php echo !empty($comment['pic']) ? $comment['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-              <a class="text-dark text-decoration-none fw-semibold" href="artist.php?id=<?php echo $comment['iduser'];?>" target="_blank">@<?php echo $comment['artist']; ?></a>
+              <a class="text-dark text-decoration-none fw-semibold" href="artist.php?id=<?php echo $comment['iduser'];?>" target="_blank">@<?php echo $comment['artist']; ?></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
             </div>
             <?php if ($comment['email'] == $_SESSION['email']) : ?>
               <div class="dropdown ms-auto position-relative">
@@ -266,9 +270,9 @@ $comments = $stmt->execute();
       </div>
     </div>
     <br><br><br>
-    <div class="ms-2 d-none-sm position-fixed top-50 start-0 translate-middle-y">
-      <button class="btn btn-primary rounded-pill fw-bold btn-md" onclick="goBack()">
-        <i class="bi bi-arrow-left-circle-fill"></i> Back
+    <div class="d-none-sm position-fixed top-50 start-0 translate-middle-y">
+      <button class="btn btn-primary rounded-pill rounded-start-0 fw-bold btn-md ps-1" onclick="goBack()">
+        <i class="bi bi-arrow-left-circle-fill"></i>
       </button>
     </div>
     <style>

@@ -3,7 +3,7 @@ require_once('auth.php');
 
 // Connect to the database
 $db = new SQLite3('database.sqlite');
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at TEXT)");
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at DATETIME)");
 $stmt->execute();
 
 // Get the filename from the query string
@@ -30,11 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
 
   // Check if the comment is not empty
   if (!empty(trim($comment))) {
+    // Get the current date in the format "years/month/day"
+    $currentDate = date("Y/m/d");
+
     // Insert the comment into the database
     $stmt = $db->prepare("INSERT INTO comments (filename, email, comment, created_at) VALUES (:filename, :email, :comment, :created_at)");
     $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
+    $stmt->bindValue(':created_at', $currentDate, SQLITE3_TEXT); // Bind the current date
     $stmt->execute();
   }
 
