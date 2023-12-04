@@ -4,7 +4,7 @@ require_once('auth.php');
 // Open the SQLite database
 $db = new SQLite3('database.sqlite');
 
-$imageid = $_GET['imageid'];
+$reply_id = $_GET['reply_id'];
 
 // Check if the reply ID is provided
 if (isset($_GET['reply_id'])) {
@@ -33,7 +33,7 @@ if (isset($_GET['reply_id'])) {
         $stmt->execute();
 
         // Redirect back to the reply preview page
-        $redirectUrl = 'reply_forum.php?imageid=' . urlencode($imageid) . '&comment_id=' . urlencode($reply['comment_id']);
+        $redirectUrl = 'reply_forum.php?reply_id=' . urlencode($reply_id) . '&comment_id=' . urlencode($reply['comment_id']);
         header('Location: ' . $redirectUrl);
         exit();
       } else {
@@ -64,9 +64,9 @@ if (isset($_GET['reply_id'])) {
         <button type="submit" class="btn btn-primary w-100 fw-bold">Save</button>
       </form>
     </div>
-    <div class="ms-2 d-none-sm position-fixed top-50 start-0 translate-middle-y">
-      <button class="btn btn-primary rounded-pill fw-bold btn-md" onclick="goBack()">
-        <i class="bi bi-arrow-left-circle-fill"></i> Back
+    <div class="d-none-sm position-fixed top-50 start-0 translate-middle-y">
+      <button class="btn btn-primary rounded-pill rounded-start-0 fw-bold btn-md ps-1" onclick="goBack()">
+        <i class="bi bi-arrow-left-circle-fill"></i>
       </button>
     </div>
     <script>

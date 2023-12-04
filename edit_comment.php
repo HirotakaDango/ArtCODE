@@ -58,9 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
         <button type="submit" class="btn btn-primary w-100 fw-bold">Save</button>
       </form>
     </div>
-    <div class="ms-2 d-none-sm position-fixed top-50 start-0 translate-middle-y">
-      <button class="btn btn-primary rounded-pill fw-bold btn-md" onclick="goBack()">
-        <i class="bi bi-arrow-left-circle-fill"></i> Back
+    <div class="d-none-sm position-fixed top-50 start-0 translate-middle-y">
+      <button class="btn btn-primary rounded-pill rounded-start-0 fw-bold btn-md ps-1" onclick="goBack()">
+        <i class="bi bi-arrow-left-circle-fill"></i>
       </button>
     </div>
     <script>

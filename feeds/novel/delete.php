@@ -19,10 +19,15 @@ if (isset($_GET['id'])) {
   $post = $stmt->fetch();
 
   if ($post) {
+    // Delete records from the reply_comments table based on the comment ID (comment_id)
+    $stmt = $db->prepare("DELETE FROM reply_comments_novel WHERE comment_id IN (SELECT id FROM comments_novel WHERE filename = :filename)");
+    $stmt->bindValue(':filename', $post_id);
+    $stmt->execute();
+
     // Delete associated comments from comments_novel table
-    $deleteCommentsQuery = "DELETE FROM comments_novel WHERE page_id = :page_id";
+    $deleteCommentsQuery = "DELETE FROM comments_novel WHERE filename = :filename";
     $stmt = $db->prepare($deleteCommentsQuery);
-    $stmt->bindParam(':page_id', $post_id, PDO::PARAM_INT);
+    $stmt->bindParam(':filename', $post_id, PDO::PARAM_INT);
     $stmt->execute();
 
     // Delete associations from favorites_novel table

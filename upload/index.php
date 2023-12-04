@@ -17,7 +17,7 @@ require_once('../auth.php');
     <div class="mt-2">
       <div id="preview-container" class="mb-2"></div>
       <div class="caard container">
-        <div id="drop-zone" class="drop-zone fw-bold text-secondary mb-2 rounded-3 border-4 text-center">
+        <div id="drop-zone" class="drop-zone fw-bold mb-2 rounded-3 border-4 text-center">
           <div class="d-flex flex-column align-items-center">
             <div class="mb-4 mt-2">
               <i class="bi bi-filetype-png me-4 display-4"></i>
@@ -25,42 +25,58 @@ require_once('../auth.php');
               <i class="bi bi-filetype-gif display-4"></i>
             </div>
             <label for="file-ip-1">
-              <input class="form-control mb-2 border rounded-3 text-secondary fw-bold border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
-              <p style="word-break: break-word;" class="badge bg-secondary opacity-50 text-wrap" style="font-size: 15px;">Drag and drop files here</p>
+              <input class="form-control mb-2 border rounded-3 fw-bold border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
+              <p style="word-break: break-word;" class="badge bg-dark text-wrap" style="font-size: 15px;">Drag and drop files here</p>
               <p><small><i class="bi bi-info-circle-fill"></i> type of extension you can upload: jpg, jpeg, png, gif</small></p>
               <div class="total-size"></div>
             </label>
           </div>
         </div>
         <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-              <div class="modal-header">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content rounded-4 shadow border-0">
+              <div class="modal-header border-0">
                 <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel">Upload</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body scrollable-div">
                 <form id="upload-form" enctype="multipart/form-data">
-                  <div class="form-floating mb-2">
-                    <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="50" required>  
-                    <label for="title" class="text-secondary fw-bold">Enter title for your image</label>
+                  <div>
+                    <div class="row">
+                      <div class="col-md-6 pe-md-1">
+                        <div class="form-floating mb-2">
+                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="50" required>  
+                          <label for="title" class="fw-bold">Enter title for your image</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 ps-md-1">
+                        <div class="form-floating mb-2">
+                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="180" required>  
+                          <label for="tags" class="fw-bold">Enter tags for your image</label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="form-floating mb-2">
-                    <textarea class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="400" style="height: 200px;" required></textarea>
-                    <label for="imgdesc" class="text-secondary fw-bold">Enter description for your image</label>
+                    <textarea class="form-control border rounded-3 fw-bold border-4" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="400" style="height: 200px;" required></textarea>
+                    <label for="imgdesc" class="fw-bold">Enter description for your image</label>
                   </div>
-                  <div class="form-floating mb-2">
-                    <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" name="tags" id="tags" placeholder="Enter tag for your image" maxlength="180" required>  
-                    <label for="tags" class="text-secondary fw-bold">Enter tag for your image</label>
+                  <div>
+                    <div class="row">
+                      <div class="col-md-6 pe-md-1">
+                        <div class="form-floating mb-2">
+                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="140">  
+                          <label for="link" class="fw-bold">Enter link for your image</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 ps-md-1">
+                        <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="type" aria-label="Large select example" required>
+                          <option value="safe" selected>Safe For Works</option>
+                          <option value="nsfw">NSFW/R-18</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                  <div class="form-floating mb-2">
-                    <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="140">  
-                    <label for="link" class="text-secondary fw-bold">Enter link for your image</label>
-                  </div>
-                  <select class="form-select rounded-3 text-secondary fw-bold mb-2 border-4" name="type" aria-label="Large select example" required>
-                    <option value="safe" selected>Safe For Works</option>
-                    <option value="nsfw">NSFW/R-18</option>
-                  </select> 
                   <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit"><i class="bi bi-cloud-arrow-up-fill"></i></button>
                 </form>
                 <div id="progress-bar-container" class="progress fw-bold mt-2" style="height: 45px; display: none;">
@@ -78,9 +94,9 @@ require_once('../auth.php');
     <div class="mt-5"></div>
     <!-- Metadata Modal -->
     <div class="modal fade" id="metadataModal" tabindex="-1" aria-labelledby="metadataModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content rounded-4 shadow border-0">
+          <div class="modal-header border-0">
             <h5 class="modal-title fw-bold" id="metadataModalLabel">Image Metadata</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -325,7 +341,7 @@ require_once('../auth.php');
 
       function showErrorMessage() {
         var toastContainer = document.createElement('div');
-        toastContainer.classList.add('container', 'mb-3', 'd-flex', 'justify-content-center');
+        toastContainer.classList.add('container-fluid', 'w-100', 'position-absolute', 'top-0',  'mt-5', 'd-flex', 'justify-content-center');
 
         var toast = document.createElement('div');
         toast.classList.add('toast', 'mt-3', 'bg-danger');
@@ -453,92 +469,109 @@ require_once('../auth.php');
         img.src = URL.createObjectURL(file);
         img.classList.add('rounded', 'mb-3');
         img.style.width = '100%'; // Set width to 100%
-        img.style.height = 'auto'; // Maintain aspect ratio
+        img.style.height = '100%'; // Maintain aspect ratio
         metadataContainer.appendChild(img);
 
         // Image Name
-        var fileNameElement = document.createElement("p");
-        fileNameElement.style.wordBreak = "break-word";
-        fileNameElement.classList.add("fw-bold");
-        fileNameElement.innerHTML = 'Image Name: ' + fileName;
+        var fileNameElement = createMetadataElement('Image Name :', fileName);
         metadataContainer.appendChild(fileNameElement);
-  
+
         // Image Size
-        var fileSizeElement = document.createElement("p");
-        fileSizeElement.classList.add("fw-bold");
-        fileSizeElement.innerHTML = 'Image Size: ' + fileSizeText;
+        var fileSizeElement = createMetadataElement('Image Size :', fileSizeText);
         metadataContainer.appendChild(fileSizeElement);
-  
+
         // Image Type
-        var fileTypeElement = document.createElement("p");
-        fileTypeElement.classList.add("fw-bold");
-        fileTypeElement.innerHTML = 'Image Type: ' + fileType;
+        var fileTypeElement = createMetadataElement('Image Type :', fileType);
         metadataContainer.appendChild(fileTypeElement);
-  
+
         // Image Date
-        var imageDateElement = document.createElement("p");
-        imageDateElement.classList.add("fw-bold");
-        imageDateElement.innerHTML = 'Image Date: ' + formatDate(file.lastModifiedDate);
+        var imageDateElement = createMetadataElement('Image Date :', formatDate(file.lastModifiedDate));
         metadataContainer.appendChild(imageDateElement);
-  
+
         // Image Resolution
         var img = new Image();
         img.src = URL.createObjectURL(file);
         img.onload = function () {
-          var imageResolutionElement = document.createElement("p");
-          imageResolutionElement.classList.add("fw-bold");
-          imageResolutionElement.innerHTML =
-            'Image Resolution: ' + this.naturalWidth + 'x' + this.naturalHeight;
+          var imageResolutionElement = createMetadataElement('Image Resolution :', this.naturalWidth + 'x' + this.naturalHeight);
           metadataContainer.appendChild(imageResolutionElement);
-
-          // PPI (Pixels Per Inch)
-          var ppiElement = document.createElement("p");
-          ppiElement.classList.add("fw-bold");
-          var ppi = calculatePPI(this.naturalWidth, this.naturalHeight, fileSizeRounded);
-          ppiElement.innerHTML = 'Pixels Per Inch (PPI): ' + ppi;
-          metadataContainer.appendChild(ppiElement);
-
-          // Bit Color
-          var bitColorElement = document.createElement("p");
-          bitColorElement.classList.add("fw-bold");
-          var bitColor = calculateBitColor(fileType);
-          bitColorElement.innerHTML = 'Bit Color: ' + bitColor;
-          metadataContainer.appendChild(bitColorElement);
-
-          // Color Profiles
-          var colorProfileElement = document.createElement("p");
-          colorProfileElement.classList.add("fw-bold");
-          var colorProfiles = getColorProfiles(fileType);
-          colorProfileElement.innerHTML = 'Color Profiles: ' + colorProfiles.join(", ");
-          metadataContainer.appendChild(colorProfileElement);
         };
 
+        function createMetadataElement(label, value) {
+          var div = document.createElement('div');
+          div.classList.add('mb-3', 'row');
+
+          var labelElement = document.createElement('label');
+          labelElement.classList.add('col-sm-4', 'col-form-label', 'text-nowrap', 'fw-medium');
+          labelElement.innerText = label;
+          div.appendChild(labelElement);
+
+          var valueElement = document.createElement('div');
+          valueElement.classList.add('col-sm-8');
+          var inputElement = document.createElement('input');
+          inputElement.classList.add('form-control-plaintext', 'fw-medium');
+          inputElement.type = 'text';
+          inputElement.value = value;
+          inputElement.readOnly = true;
+          valueElement.appendChild(inputElement);
+          div.appendChild(valueElement);
+
+          return div;
+        }
+
         // JFIF Version
-        var jfifVersionElement = document.createElement("p");
-        jfifVersionElement.classList.add("fw-bold");
-        getJfifVersion(file, function(jfifVersion) {
-          jfifVersionElement.innerHTML = 'JFIF Version: ' + jfifVersion;
+        var jfifVersionElement = createMetadataElementAsync('JFIF Version :', function(callback) {
+          getJfifVersion(file, function(jfifVersion) {
+            callback('JFIF Version : ' + jfifVersion);
+          });
         });
         metadataContainer.appendChild(jfifVersionElement);
-  
-        var modal = new bootstrap.Modal(document.getElementById("metadataModal"));
-        modal.show();
 
         // PNG Version
-        var pngVersionElement = document.createElement("p");
-        pngVersionElement.classList.add("fw-bold");
-        getPngVersion(file, function(pngVersion) {
-          pngVersionElement.innerHTML = 'PNG Version: ' + pngVersion;
+        var pngVersionElement = createMetadataElementAsync('PNG Version :', function(callback) {
+          getPngVersion(file, function(pngVersion) {
+            callback('PNG Version : ' + pngVersion);
+          });
         });
         metadataContainer.appendChild(pngVersionElement);
 
         // GIF Version
-        var gifVersionElement = document.createElement("p");
-        gifVersionElement.classList.add("fw-bold");
-        getGifVersion(file, function(gifVersion) {
-          gifVersionElement.innerHTML = 'GIF Version: ' + gifVersion;
+        var gifVersionElement = createMetadataElementAsync('GIF Version :', function(callback) {
+          getGifVersion(file, function(gifVersion) {
+            callback('GIF Version : ' + gifVersion);
+          });
         });
         metadataContainer.appendChild(gifVersionElement);
+
+        // Show Modal
+        var modal = new bootstrap.Modal(document.getElementById("metadataModal"));
+        modal.show();
+
+        function createMetadataElementAsync(label, valueCallback) {
+          var div = document.createElement('div');
+          div.classList.add('mb-3', 'row');
+
+          var labelElement = document.createElement('label');
+          labelElement.classList.add('col-sm-4', 'col-form-label', 'text-nowrap', 'fw-medium');
+          labelElement.innerText = label;
+          div.appendChild(labelElement);
+
+          var valueElement = document.createElement('div');
+          valueElement.classList.add('col-sm-8');
+          var inputElement = document.createElement('input');
+          inputElement.classList.add('form-control-plaintext', 'fw-medium');
+          inputElement.type = 'text';
+
+          // Call the valueCallback to get the asynchronous value
+          valueCallback(function(value) {
+            inputElement.value = value;
+          });
+
+          inputElement.readOnly = true;
+          valueElement.appendChild(inputElement);
+          div.appendChild(valueElement);
+
+          return div;
+        }
       }
   
       function formatDate(date) {
@@ -606,37 +639,6 @@ require_once('../auth.php');
         };
         reader.readAsArrayBuffer(file);
       }
-
-      function calculatePPI(width, height, fileSize) {
-        // Calculate PPI using width, height, and file size information
-        // Example calculation:
-        var ppi = Math.round(Math.sqrt((width * width + height * height) / fileSize));
-        return ppi;
-      }
-
-      function calculateBitColor(fileType) {
-        // Determine bit color based on the file type
-        // Example implementation:
-        if (fileType === 'image/jpeg') {
-          return '8-bit'; // JPEG images are typically 8-bit
-        } else if (fileType === 'image/png') {
-          return '8-bit or 16-bit'; // PNG images can be either 8-bit or 16-bit
-        } else {
-          return 'Unknown';
-        }
-      }
-
-      function getColorProfiles(fileType) {
-        // Determine color profiles based on the file type
-        // Example implementation:
-        if (fileType === 'image/jpeg' || fileType === 'image/png') {
-          return ['sRGB', 'AdobeRGB']; // Assuming sRGB and AdobeRGB color profiles for JPEG and PNG
-        } else if (fileType === 'image/tiff') {
-          return ['sRGB', 'AdobeRGB', 'DCI-P3']; // Assuming sRGB, AdobeRGB, and DCI-P3 color profiles for TIFF
-        } else {
-          return ['Unknown'];
-        }
-      } 
     </script>
     <?php include('../bootstrapjs.php'); ?>
   </body>

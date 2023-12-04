@@ -255,7 +255,7 @@ $user_posts = $user_posts_statement->fetchAll();
           ?>
         </p>
         </br>
-        <a class="btn btn-primary w-100 mt-3" href="comments.php?id=<?php echo $id; ?>">view all comments</a>
+        <a class="btn btn-primary w-100 mt-3" href="comments.php?novelid=<?php echo $id; ?>">view all comments</a>
         <div class="mb-5"></div>
       </div>
       <br>

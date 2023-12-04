@@ -5,7 +5,7 @@ require_once('auth.php');
 $db = new SQLite3('database.sqlite');
  
 // Create the reply_comments table if it doesn't exist
-$db->exec('CREATE TABLE IF NOT EXISTS reply_comments (id INTEGER PRIMARY KEY AUTOINCREMENT, comment_id INTEGER, email TEXT, reply TEXT, FOREIGN KEY (comment_id) REFERENCES comments(id))');
+$db->exec('CREATE TABLE IF NOT EXISTS reply_comments (id INTEGER PRIMARY KEY AUTOINCREMENT, comment_id INTEGER, email TEXT, reply TEXT, date DATETIME, FOREIGN KEY (comment_id) REFERENCES comments(id))');
 
 // Get the image id from comment.php
 $imageid = $_GET['imageid'];
@@ -25,11 +25,15 @@ if (isset($_POST['reply_comment_id'], $_POST['reply'])) {
     // Prepare the reply text by removing special characters and converting newlines to <br> tags
     $reply = nl2br(filter_var($reply, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
 
+    // Get the current date in the format (years/month/day)
+    $currentDate = date('Y/m/d');
+
     // Insert a new reply into the reply_comments table
-    $stmt = $db->prepare('INSERT INTO reply_comments (comment_id, email, reply) VALUES (?, ?, ?)');
+    $stmt = $db->prepare('INSERT INTO reply_comments (comment_id, email, reply, date) VALUES (?, ?, ?, ?)');
     $stmt->bindValue(1, $_POST['reply_comment_id'], SQLITE3_INTEGER);
     $stmt->bindValue(2, $_SESSION['email'], SQLITE3_TEXT);
     $stmt->bindValue(3, $reply, SQLITE3_TEXT);
+    $stmt->bindValue(4, $currentDate, SQLITE3_TEXT);
     $stmt->execute();
 
     // Redirect back to the current page with the comment_id parameter
@@ -162,7 +166,7 @@ if ($comment_id !== null) {
             <div class="ms-1">
               <p class="text-dark fw-semibold mt-1">
                 <img class="rounded-circle" src="<?php echo !empty($reply['pic']) ? $reply['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-                <a class="text-dark text-decoration-none" href="artist.php?id=<?php echo $reply['userid']; ?>">@<?php echo $reply['artist']; ?></a>
+                <a class="text-dark text-decoration-none" href="artist.php?id=<?php echo $reply['userid']; ?>">@<?php echo $reply['artist']; ?></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
               </p>
               <div class="mt-5 container-fluid fw-medium">
                 <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
@@ -259,9 +263,9 @@ if ($comment_id !== null) {
       </div>
     </div>
     <br><br><br>
-    <div class="ms-2 d-none-sm position-fixed top-50 start-0 translate-middle-y">
-      <button class="btn btn-primary rounded-pill fw-bold btn-md" onclick="goBack()">
-        <i class="bi bi-arrow-left-circle-fill"></i> Back
+    <div class="d-none-sm position-fixed top-50 start-0 translate-middle-y">
+      <button class="btn btn-primary rounded-pill rounded-start-0 fw-bold btn-md ps-1" onclick="goBack()">
+        <i class="bi bi-arrow-left-circle-fill"></i>
       </button>
     </div>
     <script>

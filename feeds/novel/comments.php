@@ -1,85 +1,119 @@
 <?php
 require_once('../../auth.php');
 
-try {
-  // Database connection using PDO
-  $db = new PDO('sqlite:../../database.sqlite');
-  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Connect to the database
+$db = new SQLite3('../../database.sqlite');
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments_novel (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at TEXT)");
+$stmt->execute();
 
-  if (isset($_SESSION['email'])) {
-    $email = $_SESSION['email'];
+// Get the filename from the query string
+$filename = $_GET['novelid'];
 
-    // Fetch user information
-    $query = "SELECT * FROM users WHERE email='$email'";
-    $user = $db->query($query)->fetch();
+// Get the image information from the database
+$stmt = $db->prepare("SELECT * FROM novel WHERE id=:filename");
+$stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+$image = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
-    if (isset($_GET['id'])) {
-      $id = $_GET['id'];
-    }
 
-    // Handle comment creation
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment'])) {
-      $comment = nl2br(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
+// Check if the form was submitted for adding a new comment
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
+  // Get the comment from the form data
+  $comment = filter_var($_POST['comment'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $comment = nl2br($comment);
+  $email = $_SESSION['email'];
 
-      if (!empty(trim($comment))) {
-        $stmt = $db->prepare('INSERT INTO comments_novel (email, comment, date, page_id) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$email, $comment, date("Y-m-d H:i:s"), $id]);
+  // Check if the comment is not empty
+  if (!empty(trim($comment))) {
+    // Get the current date in the format "years/month/day"
+    $currentDate = date("Y/m/d");
 
-        header("Location: comments.php?id=$id");
-        exit();
-      } else {
-        echo "<script>alert('Comment cannot be empty.');</script>";
-      }
-    }
+    // Insert the comment into the database
+    $stmt = $db->prepare("INSERT INTO comments_novel (filename, email, comment, created_at) VALUES (:filename, :email, :comment, :created_at)");
+    $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+    $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+    $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
+    $stmt->bindValue(':created_at', $currentDate, SQLITE3_TEXT); // Bind the current date
+    $stmt->execute();
+  }
 
-    // Handle comment deletion
-    if (
-      $_SERVER['REQUEST_METHOD'] === 'GET' &&
-      isset($_GET['action']) &&
-      $_GET['action'] === 'delete' &&
-      isset($_GET['commentId']) &&
-      isset($id) &&
-      isset($user)
-    ) {
-      $stmt = $db->prepare('DELETE FROM comments_novel WHERE id = ? AND email = ?');
-      $stmt->execute([$_GET['commentId'], $user['email']]);
+  // Redirect back to the image page
+  $currentURL = $_SERVER['REQUEST_URI'];
+  $redirectURL = $currentURL;
+  header("Location: $redirectURL");
+  exit();
+}
 
-      header("Location: comments.php?id=$id");
-      exit();
+// Check if the form was submitted for updating or deleting a comment
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
+  $action = $_POST['action'];
+  $comment_id = $_POST['comment_id'];
+
+  // Get the email of the current user
+  $email = $_SESSION['email'];
+
+  // Check if the comment belongs to the current user
+  $stmt = $db->prepare("SELECT * FROM comments_novel WHERE id=:comment_id AND email=:email");
+  $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
+  $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+  $comment = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+
+  if ($comment) {
+    if ($action == 'delete') {
+      // Delete the comment from the comments table
+      $stmt = $db->prepare("DELETE FROM comments_novel WHERE id=:comment_id");
+      $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
+      $stmt->execute();
+
+      // Delete the corresponding replies from the reply_comments table
+      $stmt = $db->prepare("DELETE FROM reply_comments WHERE comment_id=:comment_id");
+      $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
+      $stmt->execute();
     }
   }
 
-  // Fetch post information with a JOIN on the "users" table
-  $query = "SELECT novel.id, novel.title, novel.description, novel.content, novel.email, novel.tags, novel.date, users.email AS user_email, users.artist
-            FROM novel
-            JOIN users ON novel.email = users.email
-            WHERE novel.id = '$id'";
-  $post = $db->query($query)->fetch();
-
-  // Get comments for the current page, ordered by id in descending order
-  $query = "SELECT comments_novel.*, users.artist AS comment_artist
-            FROM comments_novel
-            JOIN users ON comments_novel.email = users.email
-            WHERE comments_novel.page_id='$id'
-            ORDER BY comments_novel.id DESC";
-  $comments = $db->query($query)->fetchAll();
-} catch (PDOException $e) {
-  die("Error: " . $e->getMessage());
+  // Redirect back to the image page
+  $currentURL = $_SERVER['REQUEST_URI'];
+  $redirectURL = $currentURL;
+  header("Location: $redirectURL");
+  exit();
 }
+
+// Set the number of comments to display per page
+$comments_per_page = 100;
+
+// Get the current page from the URL, or default to 1
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+// Calculate the starting offset for the current page
+$offset = ($page - 1) * $comments_per_page;
+
+// Get the total number of comments for the current image
+$total_comments_stmt = $db->prepare("SELECT COUNT(*) FROM comments_novel WHERE filename=:filename");
+$total_comments_stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+$total_comments = $total_comments_stmt->execute()->fetchArray()[0];
+
+// Calculate the total number of pages
+$total_pages = ceil($total_comments / $comments_per_page);
+
+// Get all comments for the current image for the current page
+$stmt = $db->prepare("SELECT comments_novel.*, users.artist, users.pic, users.id as iduser FROM comments_novel JOIN users ON comments_novel.email = users.email WHERE comments_novel.filename=:filename ORDER BY comments_novel.id DESC LIMIT :comments_per_page OFFSET :offset");
+$stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+$stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
+$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+$comments = $stmt->execute();
 ?>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
+    <title>Comment Section</title>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="../../icon/favicon.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comments at <?php echo $post['title']; ?></title>
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <main id="swup" class="transition-main">
-    <div class="container mt-3 mb-5">
+    <div class="container-fluid mt-3">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
           <li class="breadcrumb-item">
@@ -89,60 +123,270 @@ try {
             </a>
           </li>
           <li class="breadcrumb-item">
-            <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
+            <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
           </li>
           <li class="breadcrumb-item active disabled" aria-current="page">
             Comments
           </li>
         </ol>
       </nav>
-
-      <!-- Comment form, show only if the user is logged in -->
-      <?php if ($user): ?>
-        <form method="post" action="comments.php?id=<?php echo $id; ?>">
-          <div class="mb-3">
-            <h5 for="comment" class="form-label fw-bold">Add a comment:</h5>
-            <textarea id="comment" name="comment" class="form-control border-top-0 border-start-0 border-end-0 border-4 rounded-0 focus-ring focus-ring-dark" rows="4" onkeydown="if(event.keyCode == 13) { document.execCommand('insertHTML', false, '<br><br>'); return false; }"></textarea>
-          </div>
-          <button type="submit" class="btn w-100 btn-primary">Submit</button>
-        </form>
-      <?php else: ?>
-        <h5 class="text-center">You must <a href="../../session/login.php">login</a> or <a href="../../session/register.php">register</a> to send a comment!</h5>
-      <?php endif; ?>
-
-      <!-- Display comments -->
-      <h5 class="mt-5 mb-2 fw-bold">Comments:</h5>
-      <?php foreach ($comments as $comment): ?>
-        <div class="card mt-2">
-          <div class="card-body">
-            <?php
-            $displayartist = isset($post['artist']) ? htmlspecialchars($post['artist']) : 'Unknown';
-            $messageText = isset($comment['comment']) ? $comment['comment'] : 'No comment available';
-            $messageTextWithoutTags = strip_tags($messageText);
-            $pattern = '/\bhttps?:\/\/\S+/i';
-
-            $formattedText = preg_replace_callback($pattern, function ($matches) {
-              $url = htmlspecialchars($matches[0]);
-              return '<a href="' . $url . '">' . $url . '</a>';
-            }, $messageTextWithoutTags);
-
-            $formattedTextWithLineBreaks = nl2br($formattedText);
-
-            $displayComment = $formattedTextWithLineBreaks;
-            $displayDate = isset($comment['date']) ? htmlspecialchars($comment['date']) : 'No date available';
-            ?>
-            <div class="d-flex">
-              <p class="fw-bold me-auto">User: <?php echo $displayartist; ?> | (<small><?php echo (new DateTime($displayDate))->format("Y/m/d | H:i:s"); ?></small>)</p>
-              <?php if ($user && $comment['email'] == $user['email']): ?>
-                <a href="comments.php?action=delete&commentId=<?php echo $comment['id']; ?>&id=<?php echo $id; ?>" style="max-height: 30px;" class="btn btn-danger btn-sm ms-auto">Delete</a>
-              <?php endif; ?>
+      <?php
+        while ($comment = $comments->fetchArray()) :
+      ?>
+        <div class="card border-0 shadow mb-1 position-relative">
+          <div class="d-flex align-items-center mb-2 position-relative">
+            <div class="position-absolute top-0 start-0 m-1">
+              <img class="rounded-circle" src="../../<?php echo !empty($comment['pic']) ? $comment['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
+              <a class="text-white text-decoration-none fw-semibold" href="../../artist.php?id=<?php echo $comment['iduser'];?>" target="_blank">@<?php echo $comment['artist']; ?></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
             </div>
-            <p><?php echo $displayComment; ?></p>
+            <?php if ($comment['email'] == $_SESSION['email']) : ?>
+              <div class="dropdown ms-auto position-relative">
+                <button class="btn btn-sm btn-secondary opacity-50 position-absolute top-0 end-0 m-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <form action="" method="POST">
+                    <a href="edit_comment.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
+                      <i class="bi bi-pencil-fill me-2"></i>Edit
+                    </a>
+                    <input type="hidden" name="filename" value="<?php echo $filename; ?>">
+                    <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
+                    <button type="submit" name="action" onclick="return confirm('Are you sure?')" value="delete" class="dropdown-item fw-semibold">
+                      <i class="bi bi-trash-fill me-2"></i>Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <?php endif; ?>
+          </div>
+          <div class="mt-5 container-fluid fw-medium">
+            <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
+              <?php
+                if (!function_exists('getYouTubeVideoId')) {
+                  function getYouTubeVideoId($urlComment)
+                  {
+                    $videoId = '';
+                    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+                    if (preg_match($pattern, $urlComment, $matches)) {
+                      $videoId = $matches[1];
+                    }
+                    return $videoId;
+                  }
+                }
+
+                $commentText = isset($comment['comment']) ? $comment['comment'] : '';
+
+                if (!empty($commentText)) {
+                  $paragraphs = explode("\n", $commentText);
+
+                  foreach ($paragraphs as $index => $paragraph) {
+                    $messageTextWithoutTags = strip_tags($paragraph);
+                    $pattern = '/\bhttps?:\/\/\S+/i';
+
+                    $formattedText = preg_replace_callback($pattern, function ($matches) {
+                      $urlComment = htmlspecialchars($matches[0]);
+
+                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
+                        return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
+                      } elseif (strpos($urlComment, 'youtube.com') !== false) {
+                        $videoId = getYouTubeVideoId($urlComment);
+                        if ($videoId) {
+                          $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
+                          return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0" allowfullscreen></iframe></div>';
+                        } else {
+                          return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
+                        }
+                      } else {
+                        return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
+                      }
+                    }, $messageTextWithoutTags);
+                
+                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
+                  }
+                } else {
+                  echo "Sorry, no text...";
+                }
+              ?>
+            </p>
+          </div>
+          <div class="m-2 ms-auto">
+            <a class="btn btn-sm fw-semibold" href="reply_comments_novel.php?novelid=<?php echo $filename; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
           </div>
         </div>
-      <?php endforeach; ?>
+      <?php
+        endwhile;
+      ?>
     </div>
-    </main>
+    <?php
+      $totalPages = ceil($total_comments / $comments_per_page);
+      $prevPage = $page - 1;
+      $nextPage = $page + 1;
+    ?>
+    <div class="pagination d-flex gap-1 justify-content-center mt-3">
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+      <?php endif; ?>
+
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+      <?php endif; ?>
+
+      <?php
+        // Calculate the range of page numbers to display
+        $startPage = max($page - 2, 1);
+        $endPage = min($page + 2, $totalPages);
+
+        // Display page numbers within the range
+        for ($i = $startPage; $i <= $endPage; $i++) {
+          if ($i === $page) {
+            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+          } else {
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?novelid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
+          }
+        }
+      ?>
+
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+      <?php endif; ?>
+
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+      <?php endif; ?>
+    </div>
+    <nav class="navbar fixed-bottom navbar-expand justify-content-center">
+      <div class="container-fluid">
+        <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">send your comment</button>
+      </div>
+    </nav>
+    <div class="modal fade" id="comments" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Type something else...</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div>
+            <form class="form-control border-0" action="" method="POST">
+              <textarea type="text" class="form-control fw-semibold rounded-3 mb-2" style="height: 200px; max-height: 800px;" name="comment" placeholder="Type something..." aria-label="Type a message..." aria-describedby="basic-addon2" 
+                onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
+                onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 800) { this.style.height = '800px'; } else { this.style.height = newHeight; }" required></textarea>
+              <button class="w-100 btn btn-primary rounded-3" type="submit"><i class="bi bi-send-fill"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5"></div>
+    <style>
+      .text-stroke {
+        -webkit-text-stroke: 1px;
+      }
+    </style>
+    <script>
+      let lazyloadImages = document.querySelectorAll(".lazy-load");
+      let imageContainer = document.getElementById("image-container");
+
+      // Set the default placeholder image
+      const defaultPlaceholder = "icon/bg.png";
+
+      if ("IntersectionObserver" in window) {
+        let imageObserver = new IntersectionObserver(function(entries, observer) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              let image = entry.target;
+              image.src = image.dataset.src;
+              imageObserver.unobserve(image);
+            }
+          });
+        });
+
+        lazyloadImages.forEach(function(image) {
+          image.src = defaultPlaceholder; // Apply default placeholder
+          imageObserver.observe(image);
+          image.style.filter = "blur(5px)"; // Apply initial blur to all images
+
+          // Remove blur and apply custom blur to NSFW images after they load
+          image.addEventListener("load", function() {
+            image.style.filter = ""; // Remove initial blur
+            if (image.classList.contains("nsfw")) {
+              image.style.filter = "blur(4px)"; // Apply blur to NSFW images
+          
+              // Add overlay with icon and text
+              let overlay = document.createElement("div");
+              overlay.classList.add("overlay", "rounded");
+              let icon = document.createElement("i");
+              icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
+              overlay.appendChild(icon);
+              let text = document.createElement("span");
+              text.textContent = "R-18";
+              text.classList.add("shadowed-text", "fw-bold", "text-white");
+              overlay.appendChild(text);
+              image.parentNode.appendChild(overlay);
+            }
+          });
+        });
+      } else {
+        let lazyloadThrottleTimeout;
+
+        function lazyload() {
+          if (lazyloadThrottleTimeout) {
+            clearTimeout(lazyloadThrottleTimeout);
+          }
+          lazyloadThrottleTimeout = setTimeout(function() {
+            let scrollTop = window.pageYOffset;
+            lazyloadImages.forEach(function(img) {
+              if (img.offsetTop < window.innerHeight + scrollTop) {
+                img.src = img.dataset.src;
+                img.classList.remove("lazy-load");
+              }
+            });
+            lazyloadImages = Array.from(lazyloadImages).filter(function(image) {
+              return image.classList.contains("lazy-load");
+            });
+            if (lazyloadImages.length === 0) {
+              document.removeEventListener("scroll", lazyload);
+              window.removeEventListener("resize", lazyload);
+              window.removeEventListener("orientationChange", lazyload);
+            }
+          }, 20);
+        }
+
+        document.addEventListener("scroll", lazyload);
+        window.addEventListener("resize", lazyload);
+        window.addEventListener("orientationChange", lazyload);
+      }
+
+      // Infinite scrolling
+      let loading = false;
+
+      function loadMoreImages() {
+        if (loading) return;
+        loading = true;
+
+        // Simulate loading delay for demo purposes
+        setTimeout(function() {
+          for (let i = 0; i < 10; i++) {
+            if (lazyloadImages.length === 0) {
+              break;
+            }
+            let image = lazyloadImages[0];
+            imageContainer.appendChild(image);
+            lazyloadImages = Array.from(lazyloadImages).slice(1);
+          }
+          loading = false;
+        }, 1000);
+      }
+
+      window.addEventListener("scroll", function() {
+        if (window.innerHeight + window.scrollY >= imageContainer.clientHeight) {
+          loadMoreImages();
+        }
+      });
+
+      // Initial loading
+      loadMoreImages();
+    </script>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>
