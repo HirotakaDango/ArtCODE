@@ -35,6 +35,12 @@ if (isset($_GET['id'])) {
     $stmt = $db->prepare($deleteFavoritesQuery);
     $stmt->bindParam(':novel_id', $post_id, PDO::PARAM_INT);
     $stmt->execute();
+    
+    // Delete associations from favorites_novel table
+    $deleteChapterQuery = "DELETE FROM chapter WHERE novel_id = :novel_id";
+    $stmt = $db->prepare($deleteChapterQuery);
+    $stmt->bindParam(':novel_id', $post_id, PDO::PARAM_INT);
+    $stmt->execute();
 
     // Use prepared statement for DELETE query as well
     $deletePostQuery = "DELETE FROM novel WHERE id = :id";

@@ -22,8 +22,8 @@ if (!is_dir('thumbnails')) {
 
 // Create the "novel" table if it doesn't exist
 try {
-$db->exec("CREATE TABLE IF NOT EXISTS novel (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, email TEXT, title TEXT, description TEXT, content TEXT, tags TEXT, date DATETIME)");
-$db->exec("CREATE TABLE IF NOT EXISTS comments_novel (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, comment TEXT, date DATETIME, page_id TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS novel (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, email TEXT, title TEXT, description TEXT, content TEXT, tags TEXT, date DATETIME, view_count INT DEFAULT 0)");
+$db->exec("CREATE TABLE IF NOT EXISTS comments_novel (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at TEXT)");
 $db->exec("CREATE TABLE IF NOT EXISTS favorites_novel (id INTEGER PRIMARY KEY AUTOINCREMENT, novel_id INTEGER, email TEXT)");
 
 } catch (PDOException $e) {

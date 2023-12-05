@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
       $stmt->execute();
 
       // Delete the corresponding replies from the reply_comments table
-      $stmt = $db->prepare("DELETE FROM reply_comments WHERE comment_id=:comment_id");
+      $stmt = $db->prepare("DELETE FROM reply_comments_novel WHERE comment_id=:comment_id");
       $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
       $stmt->execute();
     }
