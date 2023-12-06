@@ -1,12 +1,15 @@
 <?php
-session_start();
-if (!isset($_SESSION['email'])) {
-  header("Location: ../session.php");
-  exit;
-}
+require_once('../auth.php');
 
 // Connect to SQLite database
 $db = new SQLite3('../database.sqlite');
+
+// Check if the user is logged in
+if (!isset($_SESSION['email'])) {
+  // Redirect to index.php if not logged in
+  header("Location: ../index.php");
+  exit;
+}
 
 // Retrieve image details
 if (isset($_GET['id'])) {
@@ -71,18 +74,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </head>
   <body>
     <?php include('backheader.php'); ?>
-    <h3 class="text-secondary fw-bold mt-2 ms-2 text-center"><i class="bi bi-image"></i> Edit Image</h3>
-    <div class="mt-3">
-      <div class="roow">
-        <div class="cool-6">
-          <div class="caard">
-            <div class="d-flex justify-content-center container-fluid">
+    <div class="container-fluid mt-2">
+      <h3 class="text-dark fw-bold mt-2 ms-2 text-center"><i class="bi bi-image"></i> Edit Image</h3>
+      <div class="mt-3">
+        <div class="roow">
+          <div class="cool-6">
+            <div class="caard">
               <img src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
-            </div>
-            <center>
               <div class="text-c">
-                <div class="border border-4 bg-light text-secondary fw-bold rounded-3 mt-2">
-                  <a class="btn fw-bold text-secondary w-100" data-bs-toggle="collapse" href="#collapseExpand" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="border border-4 bg-light text-dark fw-bold rounded-3 mt-2">
+                  <a class="btn fw-bold text-dark w-100 border-0" data-bs-toggle="collapse" href="#collapseExpand" role="button" aria-expanded="false" aria-controls="collapseExample">
                     more information
                   </a>
                   <div class="collapse container" id="collapseExpand">
@@ -113,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         list($child_width, $child_height) = getimagesize('../images/' . $childImage['filename']);
 
                         // Display child image information
-                        echo "<hr class='border-secondary border-5 rounded-pill'></hr>";
-                        echo "<p class='mt-3 text-start ms-1'>Image Filename: <a href='../images/". $childImage['filename'] ."'>" . $image['filename'] . "</a></p>";
+                        echo "<hr class='border-dark border-5 rounded-pill'></hr>";
+                        echo "<p class='mt-3 text-start ms-1'>Image Filename: <a href='../images/". $childImage['filename'] ."'>" . $childImage['filename'] . "</a></p>";
                         echo "<p class='text-start ms-1'>Child Image Data Size: " . $child_image_size . " MB</p>";
                         echo "<p class='text-start ms-1'>Child Image Dimensions: " . $child_width . "x" . $child_height . "</p>";
                         echo "<p class='mt-3 text-start ms-1'><a href='../images/". $childImage['filename'] ."' download>Download Image</a></p>";
@@ -127,37 +128,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
         </div>
         <div class="cool-6">
-          <div class="caard container">
+          <div class="caard">
             <form method="POST">
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="250" required>  
-                <label for="floatingInput" class="text-secondary fw-bold">Enter title for your image</label>
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="250" required>  
+                <label for="floatingInput" class="text-dark fw-bold">Enter title for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <textarea class="form-control border rounded-3 text-secondary fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="1400" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
-                <label for="floatingInput" class="text-secondary fw-bold">Enter description for your image</label>
+                <textarea class="form-control border rounded-3 text-dark fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="1400" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
+                <label for="floatingInput" class="text-dark fw-bold">Enter description for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="800" required>
-                <label for="floatingInput" class="text-secondary fw-bold">Enter tag for your image</label>
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="800" required>
+                <label for="floatingInput" class="text-dark fw-bold">Enter tag for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-secondary fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="140"> 
-                <label for="floatingInput" class="text-secondary fw-bold">Enter link for your image</label>
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="140"> 
+                <label for="floatingInput" class="text-dark fw-bold">Enter link for your image</label>
               </div>
-              <select class="form-select rounded-3 text-secondary fw-bold mb-2 border-4" name="type" aria-label="Large select example" required>
+              <select class="form-select rounded-3 text-dark fw-bold mb-2 border-4" name="type" aria-label="Large select example" required>
                 <option value="safe" <?php echo ($image['type'] === 'safe') ? 'selected' : ''; ?>>Safe For Works</option>
                 <option value="nsfw" <?php echo ($image['type'] === 'nsfw') ? 'selected' : ''; ?>>NSFW/R-18</option>
               </select>
-              <button type="button" class="btn btn-secondary fw-bold w-100 mb-2" data-bs-toggle="modal" data-bs-target="#deleteImage">
-                <i class="bi bi-trash-fill"></i> delete this image
-              </button>
-              <button type="submit" class="btn btn-secondary fw-bold w-100 mb-2">
-                <i class="bi bi-floppy-fill"></i> save this image
-              </button>
+              <div class="btn-group gap-2 w-100">
+                <button type="button" class="btn btn-dark fw-bold w-100 mb-2 rounded" data-bs-toggle="modal" data-bs-target="#deleteImage">
+                  <i class="bi bi-trash-fill"></i> delete this image
+                </button>
+                <button type="submit" class="btn btn-dark fw-bold w-100 mb-2 rounded">
+                  <i class="bi bi-floppy-fill"></i> save this image
+                </button>
+              </div>
+              <div class="btn-group gap-2 w-100">
+                <a class="btn btn-dark fw-bold w-100 mb-2 rounded" href="upload.php?id=<?php echo $image['id']; ?>">
+                  <i class="bi bi-cloud-arrow-up-fill"></i> upload new images child
+                </a>
+                <a class="btn btn-dark fw-bold w-100 mb-2 rounded" href="all.php?id=<?php echo $image['id']; ?>">
+                  <i class="bi bi-images"></i> all images child
+                </a>
+              </div>
               <div class="btn-group w-100">
-                <a class="btn btn-secondary fw-bold" href="../profile.php">Back to Profile</a>
-                <a class="btn btn-secondary fw-bold" href="../image.php?artworkid=<?php echo $image['id']; ?>">Back to Image</a>
+                <a class="btn btn-dark fw-bold" href="../profile.php">Back to Profile</a>
+                <a class="btn btn-dark fw-bold" href="../image.php?artworkid=<?php echo $image['id']; ?>">Back to Image</a>
               </div>
               <div class="mt-5"></div>
             </form> 
@@ -165,6 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </div>
     </div>
+    <div class="mt-5"></div>
     <div class="modal fade" id="deleteImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-3 shadow">

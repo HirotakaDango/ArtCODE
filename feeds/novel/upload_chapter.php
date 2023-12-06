@@ -29,13 +29,15 @@ $db->exec($createTableQuery);
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the form data
+    $title = $_POST['title'];
     $content = $_POST['content'];
 
     // Insert the new chapter into the database
-    $insertQuery = "INSERT INTO chapter (novel_id, email, content) VALUES (:novel_id, :email, :content)";
+    $insertQuery = "INSERT INTO chapter (novel_id, email, title, content) VALUES (:novel_id, :email, :title, :content)";
     $insertStatement = $db->prepare($insertQuery);
     $insertStatement->bindParam(':novel_id', $id);
     $insertStatement->bindParam(':email', $_SESSION['email']);
+    $insertStatement->bindParam(':title', $title);
     $insertStatement->bindParam(':content', $content);
 
     if ($insertStatement->execute()) {

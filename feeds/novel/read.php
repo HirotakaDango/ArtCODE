@@ -9,13 +9,13 @@ $novel_id = $_GET['novel_id'];
 // Check if the chapter ID is provided in the URL
 if (!isset($_GET['chapter_id'])) {
   // Redirect to an error page or handle it as appropriate for your application
-  header("Location: error.php");
+  header("Location: index.php");
   exit();
 }
 
 $chapter_id = $_GET['chapter_id'];
 
-// Query to fetch the chapter content
+// Query to fetch the current chapter content
 $chapterQuery = "SELECT * FROM chapter WHERE id = :chapter_id";
 $chapterStatement = $db->prepare($chapterQuery);
 $chapterStatement->bindParam(':chapter_id', $chapter_id);
@@ -24,6 +24,24 @@ $chapter = $chapterStatement->fetch(PDO::FETCH_ASSOC);
 
 // Get the email of the selected user
 $user_email = $chapter['email'];
+
+// Query to fetch the next chapter ID
+$nextChapterQuery = "SELECT id FROM chapter WHERE novel_id = :novel_id AND id > :chapter_id ORDER BY id ASC LIMIT 1";
+$nextChapterStatement = $db->prepare($nextChapterQuery);
+$nextChapterStatement->bindParam(':novel_id', $novel_id);
+$nextChapterStatement->bindParam(':chapter_id', $chapter_id);
+$nextChapterStatement->execute();
+$nextChapter = $nextChapterStatement->fetch(PDO::FETCH_ASSOC);
+$nextChapterId = ($nextChapter) ? $nextChapter['id'] : null;
+
+// Query to fetch the previous chapter ID
+$prevChapterQuery = "SELECT id FROM chapter WHERE novel_id = :novel_id AND id < :chapter_id ORDER BY id DESC LIMIT 1";
+$prevChapterStatement = $db->prepare($prevChapterQuery);
+$prevChapterStatement->bindParam(':novel_id', $novel_id);
+$prevChapterStatement->bindParam(':chapter_id', $chapter_id);
+$prevChapterStatement->execute();
+$prevChapter = $prevChapterStatement->fetch(PDO::FETCH_ASSOC);
+$prevChapterId = ($prevChapter) ? $prevChapter['id'] : null;
 ?>
 
 <!DOCTYPE html>
@@ -94,6 +112,12 @@ $user_email = $chapter['email'];
           ?>
         </p>
       </div>
+      <?php if (!is_null($prevChapterId)): ?>
+        <a class="btn fw-medium btn-outline-light position-fixed top-50 end-0 pe-1 rounded-end-0 border-end-0 rounded-pill" href="read.php?novel_id=<?php echo $novel_id; ?>&chapter_id=<?php echo $prevChapterId; ?>"><i class="bi bi-chevron-right" style="-webkit-text-stroke: 2px;"></i></a>
+      <?php endif; ?>
+      <?php if (!is_null($nextChapterId)): ?>
+        <a class="btn fw-medium btn-outline-light position-fixed top-50 start-0 ps-1 rounded-start-0 border-start-0 rounded-pill" href="read.php?novel_id=<?php echo $novel_id; ?>&chapter_id=<?php echo $nextChapterId; ?>"><i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i></a>
+      <?php endif; ?>
     </main>
     <?php include('../../bootstrapjs.php'); ?>
   </body>

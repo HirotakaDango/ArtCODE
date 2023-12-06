@@ -207,12 +207,12 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
                 <input type="text" class="form-control-plaintext fw-bold" id="Views" value="<?php echo isset($numChapters) ? $numChapters : '' ?>" readonly>
               </div>
             </div>
-            <div class="mb-3 row">
+            <div class="mb-5 row">
               <label for="Genre" class="col-sm-4 col-form-label text-nowrap mb-2">Genre:</label>
               <div class="col-sm-8">
                 <?php
                   if (isset($tag)) {
-                    echo '<a class="btn btn-sm btn-outline-light fw-bold" href="genre.php">All</a> ';
+                    echo '<a class="btn btn-sm btn-outline-light fw-bold border border-3 rounded-4" href="genre.php">All</a> ';
                 }
 
                   if (isset($post['tags'])) {
@@ -223,7 +223,7 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
                       $tag = trim($tag);
                       $url = 'genre.php?tag=' . urlencode($tag);
 
-                      echo '<a class="btn btn-sm btn-outline-light fw-bold" href="' . $url . '">' . $tag . '</a>';
+                      echo '<a class="btn btn-sm btn-outline-light fw-bold border border-3 rounded-4" href="' . $url . '">' . $tag . '</a>';
 
                       // Add a comma if it's not the last tag
                       if ($index < $totalTags - 1) {
@@ -235,12 +235,12 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
             <?php if ($user_email === $email): ?>
-              <a class="btn btn-sm border-0 rounded-pill btn-outline-light fw-bold" href="upload_chapter.php?id=<?php echo $post['id']; ?>">upload new chapter</a>
+              <a class="btn btn-sm border border-3 rounded-4 btn-outline-light fw-bold" href="upload_chapter.php?id=<?php echo $post['id']; ?>">upload new chapter</a>
             <?php endif; ?>
           </div>
         </div>
       </div>
-      <div class="text-white mt-5">
+      <div class="text-white mt-5 bg-body-tertiary rounded-4 p-3 p-md-5">
         <h5 class="fw-bold">Synopsis:</h5>
         <p style="white-space: break-spaces; overflow: hidden;">
           <?php
@@ -317,7 +317,8 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
             }
           ?>
         </p>
-        <hr class="border-4 mt-5 rounded-pill">
+      </div>
+      <div class="mt-5">
         <h5 class="text-center fw-bold my-4">chapters</h5>
         <div class="btn-group-vertical w-100 gap-2">
           <?php foreach ($chapters as $chapter): ?>
@@ -395,7 +396,7 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         <?php endforeach; ?>
-        <a class="btn btn-primary w-100 mt-3 fw-bold" href="comments.php?novelid=<?php echo $id; ?>">view all comments</a>
+        <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?novelid=<?php echo $id; ?>">view all comments</a>
         <div class="mb-5"></div>
       </div>
       <br>
