@@ -74,13 +74,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </head>
   <body>
     <?php include('backheader.php'); ?>
-    <div class="container-fluid mt-2">
-      <h3 class="text-dark fw-bold mt-2 ms-2 text-center"><i class="bi bi-image"></i> Edit Image</h3>
+    <div class="container-fluid mt-5">
+      <nav aria-label="breadcrumb">
+        <div class="d-none d-md-block d-lg-block">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-secondary bg-opacity-25 rounded-3">
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>">Edit <?php echo $image['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item mb-2 mb-md-0">
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image['id']; ?>">Upload to <?php echo $image['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
+            </li>
+          </ol>
+        </div>
+        <div class="d-md-none d-lg-none">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-secondary bg-opacity-25 rounded-3">
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>">Edit <?php echo $image['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item mb-2 mb-md-0">
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image['id']; ?>">Upload to <?php echo $image['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
+            </li>
+          </ol>
+        </div>
+      </nav>
       <div class="mt-3">
-        <div class="roow">
-          <div class="cool-6">
-            <div class="caard">
-              <img src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
+        <div class="row">
+          <div class="col-6 pe-1">
+            <div class="">
+              <a data-bs-toggle="modal" data-bs-target="#originalImage">
+                <img src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
+              </a>
               <div class="text-c">
                 <div class="border border-4 bg-light text-dark fw-bold rounded-3 mt-2">
                   <a class="btn fw-bold text-dark w-100 border-0" data-bs-toggle="collapse" href="#collapseExpand" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -127,8 +162,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </center>
           </div>
         </div>
-        <div class="cool-6">
-          <div class="caard">
+        <div class="col-6 ps-1">
+          <div class="">
             <form method="POST">
               <div class="form-floating mb-2">
                 <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="250" required>  
@@ -177,6 +212,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
     <div class="mt-5"></div>
+    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img class="object-fit-contain h-100 w-100 rounded" src="../images/<?php echo $image['filename']; ?>">
+            <button type="button" class="btn position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4 text-stroke"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="modal fade" id="deleteImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-3 shadow">
@@ -194,34 +239,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </div>
     </div>
-    <style>
-      .roow {
-        display: flex;
-        flex-wrap: wrap;
-      }
-       
-      .cool-6 {
-        width: 50%;
-        padding: 0 15px;
-        box-sizing: border-box;
-      }
-
-      .caard {
-        background-color: #fff;
-        margin-bottom: 15px;
-      }
-
-      @media (max-width: 767px) {
-        .cool-6 {
-          width: 100%;
-          padding: 0;
-        }
-        
-        .text-c {
-          width: 94%;
-        }
-      } 
-    </style> 
     <script>
       function goBack() {
         window.location.href = "../profile.php";

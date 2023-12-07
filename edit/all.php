@@ -44,54 +44,38 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="container-fluid mt-3 mb-5">
       <nav aria-label="breadcrumb">
         <div class="d-none d-md-block d-lg-block">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary bg-opacity-25 rounded-3">
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis py-2 text-decoration-none text-white fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image_id; ?>">Edit <?php echo $image['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item mb-2 mb-md-0">
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image_id; ?>">Upload to <?php echo $image['title']; ?></a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 text-decoration-none text-white fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
+              <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
             </li>
           </ol>
         </div>
         <div class="d-md-none d-lg-none">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary bg-opacity-25 rounded-3">
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis py-2 text-decoration-none text-white fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image_id; ?>">Edit <?php echo $image['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item mb-2 mb-md-0">
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image_id; ?>">Upload to <?php echo $image['title']; ?></a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 text-decoration-none text-white fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
+              <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
             </li>
           </ol>
         </div>
       </nav>
-      <?php foreach ($child_images as $child_image) : ?>
-        <?php if (empty($child_image['filename'])) : ?>
-          <div class="position-absolute top-50 start-50 translate-middle text-nowrap">
-            <h1 class="fw-bold">Image not found</h1>
-            <div class="d-flex justify-content-center">
-              <a class="btn btn-primary fw-bold" href="/">back to home</a>
-            </div>
-          </div>
-        <?php else : ?>
-          <div class="position-relative">
-            <img src="../images/<?php echo $child_image['filename']; ?>" class="mb-1 rounded" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
-            <div class="position-absolute bottom-0 start-0 text-white p-3 fw-bold w-100 bg-dark bg-opacity-75">
-              <p>Image Title: <?php echo $image['title']; ?></p>
-              <p>Image Size: <?php echo getImageSizeInMB($child_image['filename']); ?> MB</p>
-            </div>
-            <form action="delete_image_child.php" method="post">
-              <input type="hidden" name="image_id" value="<?php echo $child_image['id']; ?>">
-              <button type="submit" class="btn btn-danger fw-bold position-absolute top-0 end-0 m-2">delete</button>
-            </form>
-          </div>
-        <?php endif; ?>
-      <?php endforeach; ?>
       <?php
       // Function to calculate the size of an image in MB
       function getImageSizeInMB($filename) {
@@ -122,6 +106,46 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
       $total_size = $images_total_size + $image_child_total_size;
       ?>
+      <?php foreach ($child_images as $child_image) : ?>
+        <?php if (empty($child_image['filename'])) : ?>
+          <div class="position-absolute top-50 start-50 translate-middle text-nowrap">
+            <h1 class="fw-bold">Image not found</h1>
+            <div class="d-flex justify-content-center">
+              <a class="btn btn-primary fw-bold" href="/">back to home</a>
+            </div>
+          </div>
+        <?php else : ?>
+          <div class="position-relative">
+            <img src="../images/<?php echo $child_image['filename']; ?>" class="mb-1 rounded" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
+            <div class="d-flex position-absolute bottom-0 start-0 p-3 fw-bold w-100 bg-dark bg-opacity-75">
+              <div>
+                <p>Image Title: <?php echo $image['title']; ?></p>
+                <p>Image Size: <?php echo getImageSizeInMB($child_image['filename']); ?> MB</p>
+              </div>
+              <button type="button" class="btn btn-outline-light border-0 fw-bold ms-auto my-auto" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $child_image['id']; ?>">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </div>
+          </div>
+          <div class="modal fade" id="deleteImage_<?php echo $child_image['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content rounded-3 shadow">
+                <div class="modal-body p-4 text-center">
+                  <h5 class="mb-0">Delete this image "<?php echo $child_image['filename']; ?>"?</h5>
+                  <p class="mb-0">This action can't be undone</p>
+                </div>
+                <form method="POST" action="delete_image_child.php">
+                  <div class="modal-footer flex-nowrap p-0">
+                    <input type="hidden" name="image_id" value="<?php echo $child_image['id']; ?>">
+                    <button type="submit" class="btn btn-lg btn-link fs-6 text-danger text-decoration-none col-6 py-3 m-0 rounded-0 border-end"><strong>Yes, delete</strong></button>
+                    <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        <?php endif; ?>
+      <?php endforeach; ?>
     </div>
     <?php include('bootstrapjs.php'); ?>
   </body>

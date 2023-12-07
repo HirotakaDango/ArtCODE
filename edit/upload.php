@@ -20,7 +20,7 @@ if (!$db) {
 }
 
 // Check if the 'upload' button is clicked
-if (isset($_POST['upload'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Check if any images were uploaded
   if (isset($_FILES['image'])) {
     ob_start(); // Start output buffering to prevent header errors
@@ -80,6 +80,22 @@ if (isset($_POST['upload'])) {
     exit;
   }
 }
+
+// Get the current image information from the database
+$stmt = $db->prepare("SELECT * FROM images WHERE id = :image_id");
+$stmt->bindParam(':image_id', $image_id);
+$result = $stmt->execute();  // Execute the prepared statement and get the result set
+
+// Check for database query errors
+if (!$result) {
+  echo "Error: " . $db->lastErrorMsg();
+  exit;
+}
+
+$image = $result->fetchArray(SQLITE3_ASSOC);  // Fetch the result as an associative array
+
+// Close the database connection
+$db->close();
 ?>
 
 <!DOCTYPE html>
@@ -93,31 +109,81 @@ if (isset($_POST['upload'])) {
     <?php include('../bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="mt-2">
-      <a class="btn fw-medium btn-outline-dark ms-2 position-absolute start-0 fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image_id; ?>">back to edit</a>
-      <a class="btn fw-medium btn-outline-dark me-2 position-absolute end-0 fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image_id; ?>">all images</a>
-      <br><br>
+    <div class="mt-3">
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <div class="d-none d-md-block d-lg-block">
+            <ol class="breadcrumb breadcrumb-chevron p-3 bg-secondary bg-opacity-25 rounded-3">
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image_id; ?>">Edit <?php echo $image['title']; ?></a>
+              </li>
+              <li class="breadcrumb-item mb-2 mb-md-0">
+                <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image_id; ?>">Upload to <?php echo $image['title']; ?></a>
+              </li>
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
+              </li>
+            </ol>
+          </div>
+          <div class="d-md-none d-lg-none">
+            <ol class="breadcrumb breadcrumb-chevron p-3 bg-secondary bg-opacity-25 rounded-3">
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image_id; ?>">Edit <?php echo $image['title']; ?></a>
+              </li>
+              <li class="breadcrumb-item mb-2 mb-md-0">
+                <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image_id; ?>">Upload to <?php echo $image['title']; ?></a>
+              </li>
+              <li class="breadcrumb-item">
+                <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
+              </li>
+            </ol>
+          </div>
+        </nav>
+      </div>
       <div id="preview-container" class="mb-2"></div>
-        <form method="post" action="" enctype="multipart/form-data">
-          <div class="caard container">
-            <div id="drop-zone" class="drop-zone fw-bold mb-2 rounded-3 border-4 text-center">
-              <div class="d-flex flex-column align-items-center">
-                <div class="mb-4 mt-2">
-                  <i class="bi bi-filetype-png me-4 display-4"></i>
-                  <i class="bi bi-filetype-jpg me-4 display-4"></i>
-                  <i class="bi bi-filetype-gif display-4"></i>
+      <div class="caard container">
+        <div id="drop-zone" class="drop-zone fw-bold mb-2 rounded-3 border-4 text-center">
+          <div class="d-flex flex-column align-items-center">
+            <div class="mb-4 mt-2">
+              <i class="bi bi-filetype-png me-4 display-4"></i>
+              <i class="bi bi-filetype-jpg me-4 display-4"></i>
+              <i class="bi bi-filetype-gif display-4"></i>
+            </div>
+            <label for="file-ip-1">
+              <input class="form-control mb-2 border rounded-3 fw-bold border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
+              <p style="word-break: break-word;" class="badge bg-dark text-wrap" style="font-size: 15px;">Drag and drop files here</p>
+              <p><small><i class="bi bi-info-circle-fill"></i> type of extension you can upload: jpg, jpeg, png, gif</small></p>
+              <div class="total-size"></div>
+            </label>
+          </div>
+        </div>
+        <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content rounded-4 shadow border-0">
+              <div class="modal-header border-0">
+                <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel">Upload</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body scrollable-div">
+                <form id="upload-form" enctype="multipart/form-data">
+                  <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit"><i class="bi bi-cloud-arrow-up-fill"></i></button>
+                </form>
+                <div id="progress-bar-container" class="progress fw-bold mt-2" style="height: 45px; display: none;">
+                  <div id="progress-bar" class="progress-bar progress-bar progress-bar-animated" style="height: 45px;" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-                <label for="file-ip-1">
-                  <input class="form-control mb-2 border rounded-3 fw-bold border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
-                  <p style="word-break: break-word;" class="badge bg-dark text-wrap" style="font-size: 15px;">Drag and drop files here</p>
-                  <p><small><i class="bi bi-info-circle-fill"></i> type of extension you can upload: jpg, jpeg, png, gif</small></p>
-                  <div class="total-size"></div>
-                </label>
               </div>
             </div>
-            <button class="btn btn-lg btn-primary fw-bold w-100" name="upload" id="upload-button" type="submit"><i class="bi bi-cloud-arrow-up-fill"></i></button>
           </div>
-        </form>
+        </div>
+        <button type="button" class="btn btn-primary w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#uploadModal">
+          UPLOAD
+        </button>
       </div>
     </div>
     <div class="mt-5"></div>
@@ -245,6 +311,46 @@ if (isset($_POST['upload'])) {
         showPreview(files);
       }
   
+      uploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var files = fileInput.files;
+        uploadFiles(files);
+      });
+  
+      function uploadFiles(files) {
+        var formData = new FormData(uploadForm);
+  
+        for (var i = 0; i < files.length; i++) {
+          formData.append('image[]', files[i]);
+        }
+  
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '');
+        xhr.upload.addEventListener('progress', function(e) {
+          var percent = Math.round((e.loaded / e.total) * 100);
+          progressBar.style.width = percent + '%';
+          progressBar.textContent = percent + '%';
+        });
+  
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            progressBarContainer.style.display = 'none';
+            uploadButton.style.display = 'block';
+            uploadButton.disabled = false;
+  
+            if (xhr.status === 200) {
+              showSuccessMessage();
+            } else {
+              showErrorMessage();
+            }
+          }
+        };
+  
+        xhr.send(formData);
+        progressBarContainer.style.display = 'block';
+        uploadButton.style.display = 'none';
+      }
+
       function showSuccessMessage() {
         // Hide the modal
         var uploadModal = document.getElementById('uploadModal');
