@@ -77,15 +77,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container-fluid mt-5">
       <nav aria-label="breadcrumb">
         <div class="d-none d-md-block d-lg-block">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-secondary bg-opacity-25 rounded-3">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-secondary bg-opacity-25 rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
             <li class="breadcrumb-item">
               <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
             </li>
             <li class="breadcrumb-item">
               <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>">Edit <?php echo $image['title']; ?></a>
             </li>
             <li class="breadcrumb-item mb-2 mb-md-0">
-              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image['id']; ?>">Upload to <?php echo $image['title']; ?></a>
+              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image['id']; ?>">Upload new images to <?php echo $image['title']; ?></a>
             </li>
             <li class="breadcrumb-item">
               <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
@@ -93,31 +96,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </ol>
         </div>
         <div class="d-md-none d-lg-none">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-secondary bg-opacity-25 rounded-3">
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>">Edit <?php echo $image['title']; ?></a>
-            </li>
-            <li class="breadcrumb-item mb-2 mb-md-0">
-              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image['id']; ?>">Upload to <?php echo $image['title']; ?></a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
-            </li>
-          </ol>
+          <a class="btn bg-secondary p-3 bg-opacity-25 fw-bold w-100 text-start" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
+          </a>
+          <div class="collapse bg-secondary bg-opacity-25 mt-2 rounded" id="collapseModal">
+            <div class="btn-group-vertical w-100">
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Edit <?php echo $image['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/upload.php?id=<?php echo $image['id']; ?>">Upload new images to <?php echo $image['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/all.php?id=<?php echo $image['id']; ?>">All images from <?php echo $image['title']; ?></a>
+            </div>
+          </div>
         </div>
       </nav>
       <div class="mt-3">
         <div class="row">
-          <div class="col-6 pe-1">
+          <div class="col-md-6 pe-md-1">
             <div class="">
               <a data-bs-toggle="modal" data-bs-target="#originalImage">
                 <img src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
               </a>
               <div class="text-c">
-                <div class="border border-4 bg-light text-dark fw-bold rounded-3 mt-2">
+                <div class="border border-4 bg-light text-dark fw-bold rounded-3 my-2">
                   <a class="btn fw-bold text-dark w-100 border-0" data-bs-toggle="collapse" href="#collapseExpand" role="button" aria-expanded="false" aria-controls="collapseExample">
                     more information
                   </a>
@@ -162,23 +163,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </center>
           </div>
         </div>
-        <div class="col-6 ps-1">
+        <div class="col-md-6 ps-md-1">
           <div class="">
             <form method="POST">
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="250" required>  
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="500" required>  
                 <label for="floatingInput" class="text-dark fw-bold">Enter title for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <textarea class="form-control border rounded-3 text-dark fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="1400" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
+                <textarea class="form-control border rounded-3 text-dark fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="2000" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
                 <label for="floatingInput" class="text-dark fw-bold">Enter description for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="800" required>
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="500" required>
                 <label for="floatingInput" class="text-dark fw-bold">Enter tag for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="140"> 
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="300"> 
                 <label for="floatingInput" class="text-dark fw-bold">Enter link for your image</label>
               </div>
               <select class="form-select rounded-3 text-dark fw-bold mb-2 border-4" name="type" aria-label="Large select example" required>
@@ -217,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="modal-content bg-transparent border-0 rounded-0">
           <div class="modal-body position-relative">
             <img class="object-fit-contain h-100 w-100 rounded" src="../images/<?php echo $image['filename']; ?>">
-            <button type="button" class="btn position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4 text-stroke"></i></button>
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
           </div>
         </div>
       </div>
@@ -241,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <script>
       function goBack() {
-        window.location.href = "../profile.php";
+        window.location.href = "../image.php?artworkid=<?php echo $image['id']; ?>";
       }
     </script>
     <?php include('bootstrapjs.php'); ?>

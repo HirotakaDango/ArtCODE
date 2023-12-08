@@ -115,20 +115,37 @@ $comments = $stmt->execute();
   <body>
     <div class="container-fluid mt-3">
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
-          <li class="breadcrumb-item">
-            <a class="link-body-emphasis" href="index.php">
-              <i class="bi bi-house-fill"></i>
-              <span class="visually-hidden">News</span>
-            </a>
-          </li>
-          <li class="breadcrumb-item">
-            <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
-          </li>
-          <li class="breadcrumb-item active disabled" aria-current="page">
-            Comments
-          </li>
-        </ol>
+        <div class="d-none d-md-block d-lg-block">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+                ArtCODE
+              </a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis text-decoration-none text-white" href="view.php?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item active disabled fw-bold" aria-current="page">
+              Comments
+            </li>
+          </ol>
+        </div>
+        <div class="d-md-none d-lg-none">
+          <a class="btn bg-body-tertiary p-3 fw-bold w-100 text-start mb-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
+          </a>
+          <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
+            <div class="btn-group-vertical w-100">
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+              <a class="btn py-2 rounded text-start fw-medium"href="view.php?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-bold disabled border-0"href="#"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Comments</a>
+            </div>
+          </div>
+        </div>
       </nav>
       <?php
         while ($comment = $comments->fetchArray()) :

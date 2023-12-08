@@ -106,47 +106,47 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
     <div class="container-fluid mt-3">
       <nav aria-label="breadcrumb">
         <div class="d-none d-md-block d-lg-block">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
                 ArtCODE
               </a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
+              <a class="link-body-emphasis py-2 text-decoration-none text-white fw-bold" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
             </li>
             <?php if ($user_email === $email): ?>
               <li class="breadcrumb-item">
-                <!-- Display the edit button only if the current user is the owner of the image -->
-                <a class="link-body-emphasis py-2 text-decoration-none text-white fw-medium" href="edit.php?id=<?php echo $post['id']; ?>">
-                  <i class="bi bi-pencil-fill"></i>
+                <a class="link-body-emphasis py-2 text-decoration-none text-white" href="edit.php?id=<?php echo $post['id']; ?>">
+                  Edit <?php echo $post['title']; ?>
                 </a>
               </li>
             <?php endif; ?>
-            <a class="btn border-0 btn-outline-light ms-auto" href="#" data-bs-toggle="modal" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
+            <a class="btn btn-sm border-0 btn-outline-light ms-auto" href="#" data-bs-toggle="modal" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
           </ol>
         </div>
         <div class="d-md-none d-lg-none">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
-            </li>
-            <?php if ($user_email === $email): ?>
-              <li class="breadcrumb-item">
-                <!-- Display the edit button only if the current user is the owner of the image -->
-                <a class="link-body-emphasis py-2 text-decoration-none text-white fw-medium" href="edit.php?id=<?php echo $post['id']; ?>">
-                  <i class="bi bi-pencil-fill"></i>
+          <div class="btn-group mb-2 w-100 p-3 bg-body-tertiary gap-2">
+            <a class="btn fw-bold w-100 text-start rounded" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
+            </a>
+            <a class="btn btn-sm fw-bold w-100 rounded" href="#" data-bs-toggle="modal" style="max-width: 50px;" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
+          </div>
+          <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
+            <div class="btn-group-vertical w-100">
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+              <a class="btn py-2 rounded text-start fw-bold" href="view.php?id=<?php echo $id; ?>"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> <?php echo $post['title']; ?></a>
+              <?php if ($user_email === $email): ?>
+                <a class="btn py-2 rounded text-start fw-medium" href="edit.php?id=<?php echo $post['id']; ?>">
+                  Edit <?php echo $post['title']; ?>
                 </a>
-              </li>
-            <?php endif; ?>
-            <a class="btn border-0 btn-outline-light ms-auto" href="#" data-bs-toggle="modal" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
-          </ol>
+              <?php endif; ?>
+            </div>
+          </div>
         </div>
       </nav>
       <div class="row featurette">

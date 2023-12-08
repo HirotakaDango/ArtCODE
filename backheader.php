@@ -222,7 +222,6 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         border: none;
         font-size: 8px;
         margin-top: -2px;
-        margin-left: 8px;
         border-radius: 5px;
         padding: 6px;
         transition: background-color 0.3s ease; 

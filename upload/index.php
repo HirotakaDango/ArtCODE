@@ -45,27 +45,27 @@ require_once('../auth.php');
                     <div class="row">
                       <div class="col-md-6 pe-md-1">
                         <div class="form-floating mb-2">
-                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="50" required>  
+                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
                           <label for="title" class="fw-bold">Enter title for your image</label>
                         </div>
                       </div>
                       <div class="col-md-6 ps-md-1">
                         <div class="form-floating mb-2">
-                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="180" required>  
+                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="500" required>  
                           <label for="tags" class="fw-bold">Enter tags for your image</label>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="form-floating mb-2">
-                    <textarea class="form-control border rounded-3 fw-bold border-4" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="400" style="height: 200px;" required></textarea>
+                    <textarea class="form-control border rounded-3 fw-bold border-4" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="2000" style="height: 200px;" required></textarea>
                     <label for="imgdesc" class="fw-bold">Enter description for your image</label>
                   </div>
                   <div>
                     <div class="row">
                       <div class="col-md-6 pe-md-1">
                         <div class="form-floating mb-2">
-                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="140">  
+                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
                           <label for="link" class="fw-bold">Enter link for your image</label>
                         </div>
                       </div>

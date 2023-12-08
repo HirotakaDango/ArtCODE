@@ -32,35 +32,35 @@ $post = $stmt->fetch();
     <div class="container-fluid mt-3 mb-5">
       <nav aria-label="breadcrumb">
         <div class="d-none d-md-block d-lg-block">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
-                <i class="bi bi-house-fill"></i>
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+                ArtCODE
               </a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
+              <a class="link-body-emphasis text-decoration-none fw-bold" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="edit.php?id=<?php echo $id; ?>">Edit <?php echo $post['title']; ?></a>
+              <a class="link-body-emphasis text-decoration-none" href="edit.php?id=<?php echo $id; ?>">Edit <?php echo $post['title']; ?></a>
             </li>
           </ol>
         </div>
         <div class="d-md-none d-lg-none">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $post['title']; ?></a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="edit.php?id=<?php echo $id; ?>"><i  class="bi bi-pencil-fill"></i></a>
-            </li>
-          </ol>
+          <a class="btn bg-body-tertiary p-3 fw-bold w-100 text-start mb-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
+          </a>
+          <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
+            <div class="btn-group-vertical w-100">
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
+              <a class="btn py-2 rounded text-start fw-bold" href="view.php?id=<?php echo $id; ?>"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> <?php echo $post['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-medium" href="edit.php?id=<?php echo $id; ?>">Edit <?php echo $post['title']; ?></a>
+            </div>
+          </div>
         </div>
       </nav>
       <div class="fw-bold">
