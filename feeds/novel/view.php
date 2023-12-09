@@ -133,7 +133,7 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
             <a class="btn fw-bold w-100 text-start rounded" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
               <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
             </a>
-            <a class="btn btn-sm fw-bold w-100 rounded" href="#" data-bs-toggle="modal" style="max-width: 50px;" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
+            <a class="btn fw-bold w-100 rounded" href="#" data-bs-toggle="modal" style="max-width: 50px;" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
           </div>
           <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
             <div class="btn-group-vertical w-100">
