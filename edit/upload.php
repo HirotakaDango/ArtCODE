@@ -132,10 +132,10 @@ $db->close();
             </ol>
           </div>
           <div class="d-md-none d-lg-none">
-            <a class="btn bg-secondary p-3 bg-opacity-25 fw-bold w-100 text-start" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <a class="btn bg-secondary p-3 bg-opacity-25 mb-2 fw-bold w-100 text-start" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
               <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
             </a>
-            <div class="collapse bg-secondary bg-opacity-25 mt-2 rounded" id="collapseModal">
+            <div class="collapse bg-secondary bg-opacity-25 mb-2 rounded" id="collapseModal">
               <div class="btn-group-vertical w-100">
                 <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
                 <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
