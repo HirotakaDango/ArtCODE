@@ -188,15 +188,15 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'users.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/users.php">
-                  <i class="bi bi-people-fill fs-5"></i>
-                  <span class="d-md-none d-lg-inline d-lg-none ms-2">Users</span>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/explores/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/explores/">
                   <i class="bi bi-compass-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none ms-2">Explore</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'users.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/users.php">
+                  <i class="bi bi-people-fill fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none ms-2">Users</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -210,6 +210,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <i class="bi bi-headset fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none ms-2">Support</span>
                 </a>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link nav-center" onclick="document.documentElement.requestFullscreen()">
+                  <i class="bi bi-arrows-fullscreen fs-5" style="-webkit-text-stroke: 1px;"></i>
+                  <span class="d-lg-inline ms-2">Fullscreen</span>
+                </button>
               </li>
             </ul>
             <!-- end -->
@@ -246,61 +252,73 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <a class="btn btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-grid-3x3-gap-fill fs-5 text-secondary"></i>
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 200px;">
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
-                        <i class="bi bi-bell-fill fs-5"></i>
-                        <span class="d-lg-inline ms-2">Notification</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notes/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">
-                        <i class="bi bi-journal-text fs-5"></i>
-                        <span class="d-lg-inline ms-2">Notes</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/novel/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">
-                        <i class="bi bi-book-half fs-5"></i>
-                        <span class="d-lg-inline ms-2">Novel</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'status.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/status.php">
-                        <i class="bi bi-card-text fs-5"></i>
-                        <span class="d-lg-inline ms-2">Status</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/tags.php">
-                        <i class="bi bi-tags-fill fs-5"></i>
-                        <span class="d-lg-inline ms-2">Tags</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'users.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/users.php">
-                        <i class="bi bi-people-fill fs-5"></i>
-                        <span class="d-lg-inline ms-2">Users</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/explores/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/explores/">
-                        <i class="bi bi-compass-fill fs-5"></i>
-                        <span class="d-lg-inline ms-2">Explore</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'news.php') echo 'active' ?>" href="news.php">
-                        <i class="bi bi-newspaper fs-5"></i>
-                        <span class="d-lg-inline ms-2">Update & News</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'support.php') echo 'active' ?>" href="support.php">
-                        <i class="bi bi-headset fs-5"></i>
-                        <span class="d-lg-inline ms-2">Support</span>
-                      </a>
-                    </li>
+                  <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 500px;">
+                    <div class="row p-3">
+                      <div class="col-6">
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
+                            <i class="bi bi-bell-fill fs-5"></i>
+                            <span class="d-lg-inline ms-2">Notification</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notes/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">
+                            <i class="bi bi-journal-text fs-5"></i>
+                            <span class="d-lg-inline ms-2">Notes</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/tags.php">
+                            <i class="bi bi-tags-fill fs-5"></i>
+                            <span class="d-lg-inline ms-2">Tags</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'status.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/status.php">
+                            <i class="bi bi-card-text fs-5"></i>
+                            <span class="d-lg-inline ms-2">Status</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'news.php') echo 'active' ?>" href="news.php">
+                            <i class="bi bi-newspaper fs-5"></i>
+                            <span class="d-lg-inline ms-2">Update & News</span>
+                          </a>
+                        </li>
+                      </div>
+                      <div class="col-6">
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'users.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/users.php">
+                            <i class="bi bi-people-fill fs-5"></i>
+                            <span class="d-lg-inline ms-2">Users</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/novel/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">
+                            <i class="bi bi-book-half fs-5"></i>
+                            <span class="d-lg-inline ms-2">Novel</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/explores/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/explores/">
+                            <i class="bi bi-compass-fill fs-5"></i>
+                            <span class="d-lg-inline ms-2">Explore</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <button class="nav-link nav-center" onclick="document.documentElement.requestFullscreen()">
+                            <i class="bi bi-arrows-fullscreen fs-5" style="-webkit-text-stroke: 1px;"></i>
+                            <span class="d-lg-inline ms-2">Fullscreen</span>
+                          </button>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'support.php') echo 'active' ?>" href="support.php">
+                            <i class="bi bi-headset fs-5"></i>
+                            <span class="d-lg-inline ms-2">Support</span>
+                          </a>
+                        </li>
+                      </div>
+                    </div>
                   </ul>
                 </div>
               </li>
