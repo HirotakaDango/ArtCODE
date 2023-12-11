@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <head>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Image</title>
+    <title>Edit <?php echo $image['title']; ?></title>
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('bootstrapcss.php'); ?>
   </head>
@@ -113,10 +113,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="mt-3">
         <div class="row">
           <div class="col-md-6 pe-md-1">
-            <div class="">
+            <div class="position-relative">
               <a data-bs-toggle="modal" data-bs-target="#originalImage">
                 <img src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
               </a>
+              <a class="position-absolute top-0 end-0 m-2 btn btn-sm btn-dark opacity-75 fw-bold" href="replace.php?id=<?php echo $image['id']; ?>">replace image</a>
               <div class="text-c">
                 <div class="border border-4 bg-light text-dark fw-bold rounded-3 my-2">
                   <a class="btn fw-bold text-dark w-100 border-0" data-bs-toggle="collapse" href="#collapseExpand" role="button" aria-expanded="false" aria-controls="collapseExample">

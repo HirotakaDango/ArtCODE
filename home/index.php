@@ -34,7 +34,7 @@ if (isset($_POST['favorite'])) {
   // Redirect to the same page with the appropriate sorting parameter
   $page = isset($_GET['page']) ? $_GET['page'] : 1; // check if page is set, default to 1
   $by = isset($_GET['by']) ? $_GET['by'] : 'newest'; // check if by is set, default to newest
-  header('Location: ' . $_SERVER['PHP_SELF'] . '?by=' . $by . '&page=' . $page);
+  header('Location: ?by=' . $by . '&page=' . $page);
   exit(); 
   
 } elseif (isset($_POST['unfavorite'])) {
@@ -44,7 +44,7 @@ if (isset($_POST['favorite'])) {
   // Redirect to the same page with the appropriate sorting parameter
   $page = isset($_GET['page']) ? $_GET['page'] : 1; // check if page is set, default to 1
   $by = isset($_GET['by']) ? $_GET['by'] : 'newest'; // check if by is set, default to newest
-  header('Location: ' . $_SERVER['PHP_SELF'] . '?by=' . $by . '&page=' . $page);
+  header('Location: ?by=' . $by . '&page=' . $page);
   exit();
 }
 ?>

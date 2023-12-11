@@ -50,7 +50,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'image/gif':
           $source = imagecreatefromgif('../images/' . $filename);
           break;
-        // Add more cases for other image types if needed
+        case 'image/webp':
+          $source = imagecreatefromwebp('../images/' . $filename);
+          break;
+        case 'image/avif':
+          $source = imagecreatefromavif('../images/' . $filename);
+          break;
+        case 'image/bmp':
+          $source = imagecreatefrombmp('../images/' . $filename);
+          break;
+        case 'image/wbmp':
+          $source = imagecreatefromwbmp('../images/' . $filename);
+          break;
         default:
           echo "Error: Unsupported image format.";
           exit;

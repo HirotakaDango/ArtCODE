@@ -61,8 +61,19 @@ if (isset($_GET['id'])) {
         case 'image/gif':
           $source = imagecreatefromgif($originalUploadPath . $newImageName);
           break;
+        case 'image/webp':
+          $source = imagecreatefromwebp($originalUploadPath . $newImageName);
+          break;
+        case 'image/avif':
+          $source = imagecreatefromavif($originalUploadPath . $newImageName);
+          break;
+        case 'image/bmp':
+          $source = imagecreatefrombmp($originalUploadPath . $newImageName);
+          break;
+        case 'image/wbmp':
+          $source = imagecreatefromwbmp($originalUploadPath . $newImageName);
+          break;
         default:
-          // Handle unsupported image format
           header('Location: edit.php?id=' . $id . '&error=Unsupported image format.');
           exit;
       }
@@ -132,22 +143,61 @@ if (isset($_GET['id'])) {
   <body>
     <?php include ('header.php'); ?>
     <div class="container-fluid">
+      <nav aria-label="breadcrumb mt-2">
+        <div class="d-none d-md-block d-lg-block">
+          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+                ArtCODE
+              </a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis py-2 text-decoration-none text-white" href="view.php?id=<?php echo $id; ?>"><?php echo $novel['title']; ?></a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="link-body-emphasis py-2 text-decoration-none text-white fw-bold" href="edit.php?id=<?php echo $novel['id']; ?>">
+                Edit <?php echo $novel['title']; ?>
+              </a>
+            </li>
+          </ol>
+        </div>
+        <div class="d-md-none d-lg-none">
+          <a class="btn bg-body-tertiary p-3 fw-bold w-100 text-start mb-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
+          </a>
+          <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
+            <div class="btn-group-vertical w-100">
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+              <a class="btn py-2 rounded text-start fw-medium" href="view.php?id=<?php echo $id; ?>"><?php echo $novel['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-bold" href="edit.php?id=<?php echo $novel['id']; ?>">
+                <i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Edit <?php echo $novel['title']; ?>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
       <form method="post" enctype="multipart/form-data">
         <?php if (isset($_GET['error'])): ?>
           <p><?php echo $_GET['error']; ?></p>
         <?php endif ?>
         <div class="row featurette">
           <div class="col-md-3 order-md-1 mb-2 pe-md-0" style="height: 500px;">
-            <div id="file-preview-container" class="d-flex align-items-center justify-content-center h-100 border border-3 rounded-4">
-              <?php if (!empty($novel['filename'])): ?>
-                <img src="thumbnails/<?php echo $novel['filename']; ?>" style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover" id="coverImage">
-              <?php else: ?>
-                <div class="text-center">
-                  <h6><i class="bi bi-image fs-1"></i></h6>
-                  <h6>Your image cover here!</h6>
-                </div>
-              <?php endif; ?>
-            </div>
+            <a data-bs-toggle="modal" data-bs-target="#originalImage">
+              <div id="file-preview-container" class="d-flex align-items-center justify-content-center h-100 border border-3 rounded-4">
+                <?php if (!empty($novel['filename'])): ?>
+                  <img src="thumbnails/<?php echo $novel['filename']; ?>" style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover" id="coverImage">
+                <?php else: ?>
+                  <div class="text-center">
+                    <h6><i class="bi bi-image fs-1"></i></h6>
+                    <h6>Your image cover here!</h6>
+                  </div>
+                <?php endif; ?>
+              </div>
+            </a>
           </div>
           <div class="col-md-9 order-md-2 ps-md-2">
             <input class="form-control border border-3 rounded-4 mb-2" type="file" name="image" type="file" id="file-ip-1" accept="image/*" onchange="showPreview(event);">
@@ -179,7 +229,7 @@ if (isset($_GET['id'])) {
         </div>
       </form>
     </div>
-    <br>
+    <div class="mt-5"></div>
     <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4">
@@ -194,6 +244,16 @@ if (isset($_GET['id'])) {
               <a class="btn btn-danger px-0 border border-danger-subtle border-3 rounded-4 fw-medium" href="delete.php?id=<?php echo $id; ?>">delete this!</a>
               <button type="button" class="btn btn-secondary px-4 border border-3 rounded-4 fw-medium" data-bs-dismiss="modal">cancel</button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img class="object-fit-contain h-100 w-100 rounded" src="images/<?php echo $novel['filename']; ?>">
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
           </div>
         </div>
       </div>

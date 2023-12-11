@@ -477,7 +477,7 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-content bg-transparent border-0 rounded-0">
           <div class="modal-body position-relative">
             <img class="object-fit-contain h-100 w-100 rounded" src="images/<?php echo $post['filename']; ?>">
-            <button type="button" class="btn position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4 text-stroke"></i></button>
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
           </div>
         </div>
       </div>

@@ -30,6 +30,18 @@ if (isset($_FILES['image'])) {
       case 'gif':
         $source = imagecreatefromgif('images/' . $filename);
         break;
+      case 'webp':
+        $source = imagecreatefromwebp('images/' . $filename);
+        break;
+      case 'avif':
+        $source = imagecreatefromavif('images/' . $filename);
+        break;
+      case 'bmp':
+        $source = imagecreatefrombmp('images/' . $filename);
+        break;
+      case 'wbmp':
+        $source = imagecreatefromwbmp('images/' . $filename);
+        break; 
       default:
         echo "Error: Unsupported image format.";
         exit;
@@ -62,6 +74,18 @@ if (isset($_FILES['image'])) {
         break;
       case 'gif':
         imagegif($thumbnail, 'thumbnails/' . $filename);
+        break;
+      case 'webp':
+        imagewebp($thumbnail, 'thumbnails/' . $filename);
+        break;
+      case 'avif':
+        imageavif($thumbnail, 'thumbnails/' . $filename);
+        break;
+      case 'bmp':
+        imagebmp($thumbnail, 'thumbnails/' . $filename);
+        break;
+      case 'wbmp':
+        imagewbmp($thumbnail, 'thumbnails/' . $filename);
         break;
       default:
         echo "Error: Unsupported image format.";
