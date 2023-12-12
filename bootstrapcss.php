@@ -1,5 +1,5 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <style>
       /* For Webkit-based browsers */
       ::-webkit-scrollbar {
@@ -21,5 +21,21 @@
 
       ::-webkit-scrollbar-thumb:hover {
         background: #555;
+      }
+      
+      .scrollable-div {
+        overflow: auto;
+        scrollbar-width: thin;  /* For Firefox */
+        -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+        scrollbar-color: transparent transparent;  /* For Chrome, Safari, and Opera */
+      }
+
+      .scrollable-div::-webkit-scrollbar {
+        width: 0;
+        background-color: transparent;
+      }
+      
+      .scrollable-div::-webkit-scrollbar-thumb {
+        background-color: transparent;
       }
     </style>

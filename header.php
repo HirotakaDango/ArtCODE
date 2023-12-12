@@ -43,6 +43,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
 ?>
 
     <!-- Navbar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <nav class="navbar fixed-top navbar-expand-md navbar-expand-lg navbar-light bg-body-tertiary">
       <div class="container-fluid">
         <button class="navbar-toggler1 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,6 +177,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/music/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/">
+                  <i class="bi bi-vinyl-fill fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none ms-2">Music</span>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'status.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/status.php">
                   <i class="bi bi-card-text fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none ms-2">Status</span>
@@ -210,12 +217,6 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <i class="bi bi-headset fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none ms-2">Support</span>
                 </a>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link nav-center" onclick="document.documentElement.requestFullscreen()">
-                  <i class="bi bi-arrows-fullscreen fs-5" style="-webkit-text-stroke: 1px;"></i>
-                  <span class="d-lg-inline ms-2">Fullscreen</span>
-                </button>
               </li>
             </ul>
             <!-- end -->
@@ -306,10 +307,10 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                           </a>
                         </li>
                         <li class="nav-item">
-                          <button class="nav-link nav-center" onclick="document.documentElement.requestFullscreen()">
-                            <i class="bi bi-arrows-fullscreen fs-5" style="-webkit-text-stroke: 1px;"></i>
-                            <span class="d-lg-inline ms-2">Fullscreen</span>
-                          </button>
+                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/music/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/">
+                            <i class="bi bi-vinyl-fill fs-5"></i>
+                            <span class="d-lg-inline ms-2">Music</span>
+                          </a>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'support.php') echo 'active' ?>" href="support.php">
@@ -369,7 +370,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       </div>
     </div>
     <button id="scrollButton" class="btn fw-bold btn-dark rounded-pill <?= (basename($_SERVER['PHP_SELF']) === 'album.php' || basename($_SERVER['PHP_SELF']) === 'list_favorite.php' || basename($_SERVER['PHP_SELF']) === 'forum.php') ? 'd-none' : ''; ?> d-md-none d-lg-none position-fixed bottom-0 end-0 m-3 z-3" data-bs-toggle="modal" data-bs-target="#navModal">
-      menu
+      <i class="fa-solid fa-bars small"></i> menu
     </button>
     <!-- Nav Modal -->
     <div class="modal fade" id="navModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
