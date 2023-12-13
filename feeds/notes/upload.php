@@ -6,13 +6,18 @@ $email = $_SESSION['email'];
 $db = new PDO('sqlite:../../database.sqlite');
 
 if (isset($_POST['submit'])) {
-  $title = htmlspecialchars($_POST['title']);
-  $content = htmlspecialchars($_POST['content']);
-  $tags = htmlspecialchars($_POST['tags']);
+  // Sanitize and filter user inputs
+  $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $tags = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $content = nl2br($content);
   $date = date('Y-m-d'); // format the current date as "YYYY-MM-DD"
+
+  // Prepare and execute the SQL query
   $stmt = $db->prepare("INSERT INTO posts (title, content, tags, email, date) VALUES (:title, :content, :tags, :email, :date)");
   $stmt->execute(array(':title' => $title, ':content' => $content, ':tags' => $tags, ':email' => $_SESSION['email'], ':date' => $date));
+
+  // Redirect to the desired location
   header('Location: ' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/feeds/notes/');
   exit(); // Add this line to stop script execution after redirect
 }

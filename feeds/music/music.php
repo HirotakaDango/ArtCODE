@@ -1,12 +1,13 @@
 <?php
 require_once('../../auth.php');
+require_once 'getID3/getid3/getid3.php';
 
 try {
-    $db = new PDO('sqlite:../../database.sqlite');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $db = new PDO('sqlite:../../database.sqlite');
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-    exit();
+  echo "Connection failed: " . $e->getMessage();
+  exit();
 }
 
 $email = $_SESSION['email'];
@@ -38,6 +39,33 @@ $user_email = $row['email'];
 // Music file and cover image paths
 $musicFile = $row['file'];
 $coverImage = $row['cover'];
+
+if (!file_exists($musicFile)) {
+    echo "File not found: $musicFile";
+    exit;
+}
+
+// Use getID3 to analyze the music file
+$getID3 = new getID3();
+$fileInfo = $getID3->analyze($musicFile);
+getid3_lib::CopyTagsToComments($fileInfo);
+
+
+// Function to format bytes
+function formatBytes($bytes, $precision = 2) {
+  $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  $bytes = max($bytes, 0);
+  $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+  $pow = min($pow, count($units) - 1);
+  $bytes /= (1 << (10 * $pow));
+  return round($bytes, $precision) . ' ' . $units[$pow];
+}
+
+// Extract information
+$duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
+$bitrate = !empty($fileInfo['audio']['bitrate']) ? round($fileInfo['audio']['bitrate'] / 1000) . 'kbps' : 'Unknown';
+$size = !empty($fileInfo['filesize']) ? formatBytes($fileInfo['filesize']) : 'Unknown';
+$audioType = !empty($fileInfo['fileformat']) ? $fileInfo['fileformat'] : 'Unknown';
 
 // Fetch all music records for the specified album
 $queryAll = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
@@ -185,12 +213,16 @@ if (isset($_POST['favorite'])) {
                 <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/edit.php?id=<?php echo $row['id']; ?>">Edit <?php echo $row['title']; ?></a>
               </li>
             <?php endif; ?>
+            <a class="btn btn-sm border-0 btn-outline-light ms-auto" href="#" data-bs-toggle="modal" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
           </ol>
         </div>
         <div class="d-md-none d-lg-none">
-          <a class="btn bg-body-tertiary p-3 fw-bold w-100 text-start mb-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
-            <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
-          </a>
+          <div class="btn-group mb-2 w-100 p-3 bg-body-tertiary gap-2">
+            <a class="btn fw-bold w-100 text-start rounded" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
+            </a>
+            <a class="btn fw-bold w-100 rounded" href="#" data-bs-toggle="modal" style="max-width: 50px;" data-bs-target="#shareLink"><i class="bi bi-share-fill"></i></a>
+          </div>
           <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
             <div class="btn-group-vertical w-100">
               <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
@@ -227,6 +259,27 @@ if (isset($_POST['favorite'])) {
             <button type="button" class="btn btn-dark opacity-50 position-absolute top-0 start-0 mt-1 ms-1 rounded-1" data-bs-toggle="modal" data-bs-target="#songInfo">
               <i class="bi bi-info-circle-fill"></i>
             </button>
+          </div>
+          <div class="modal fade" id="songInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel"><?php echo $row['title']; ?></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="metadata">
+                    <p class="fw-bold text-start">Artist: <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></p>
+                    <p class="fw-bold text-start">Album: <a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a></p>
+                    <p class="fw-bold text-start">Duration: <?= $duration ?></p>
+                    <p class="fw-bold text-start">Bitrate: <?= $bitrate ?></p>
+                    <p class="fw-bold text-start">Size: <?= $size ?></p>
+                    <p class="fw-bold text-start">Audio Type: <?= $audioType ?></p>
+                    <a class="btn btn-primary fw-bold w-100" href="<?php echo $row['file']; ?>" download>Download Song</a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="w-100 bg-dark fixed-bottom">
             <div class="d-md-none d-lg-none mb-5">
@@ -293,7 +346,7 @@ if (isset($_POST['favorite'])) {
                       <div class="dropdown dropdown-menu-end">
                         <button class="text-decoration-none text-white btn fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                         <ul class="dropdown-menu">
-                          <li><button class="dropdown-item" onclick="sharePageS('<?= $index ?>', '<?= $song['title'] ?>')"><i class="bi bi-share-fill"></i> share</button></li>
+                          <li><button class="dropdown-item" onclick="sharePageS('<?php echo $song['id']; ?>', '<?php echo $song['title']; ?>')"><i class="bi bi-share-fill"></i> share</button></li>
                           <li><a class="dropdown-item" href="artist.php?name=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
                           <li><a class="dropdown-item" href="album.php?album=<?php echo $song['album']; ?>"><i class="bi bi-disc-fill"></i> show album</a></li>
                         </ul>
@@ -316,7 +369,7 @@ if (isset($_POST['favorite'])) {
                   <div class="dropdown dropdown-menu-end">
                     <button class="text-decoration-none text-white btn fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                     <ul class="dropdown-menu">
-                      <li><button class="dropdown-item" onclick="sharePageS('<?= $index ?>', '<?= $song['title'] ?>')"><i class="bi bi-share-fill"></i> share</button></li>
+                      <li><button class="dropdown-item" onclick="sharePageS('<?php echo $song['id']; ?>', '<?php echo $song['title']; ?>')"><i class="bi bi-share-fill"></i> share</button></li>
                       <li><a class="dropdown-item" href="artist.php?name=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
                       <li><a class="dropdown-item" href="album.php?album=<?php echo $song['album']; ?>"><i class="bi bi-disc-fill"></i> show album</a></li>
                     </ul>
@@ -329,6 +382,78 @@ if (isset($_POST['favorite'])) {
         </div>
       </div>
     </div>
+    <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="card rounded-4 p-4">
+            <p class="text-start fw-bold">share to:</p>
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+              <!-- Twitter -->
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-twitter"></i>
+              </a>
+                                
+              <!-- Line -->
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-line"></i>
+              </a>
+                                
+              <!-- Email -->
+              <a class="btn" href="mailto:?body=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>">
+                <i class="bi bi-envelope-fill"></i>
+              </a>
+                                
+              <!-- Reddit -->
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-reddit"></i>
+              </a>
+                                
+              <!-- Instagram -->
+              <a class="btn" href="https://www.instagram.com/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-instagram"></i>
+              </a>
+                                
+              <!-- Facebook -->
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-facebook"></i>
+              </a>
+            </div>
+            <div class="btn-group w-100" role="group" aria-label="Share Buttons">
+              <!-- WhatsApp -->
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+    
+              <!-- Pinterest -->
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-pinterest"></i>
+              </a>
+    
+              <!-- LinkedIn -->
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-linkedin"></i>
+              </a>
+    
+              <!-- Messenger -->
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-messenger"></i>
+              </a>
+    
+              <!-- Telegram -->
+              <a class="btn" href="https://telegram.me/share/url?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-telegram"></i>
+              </a>
+    
+              <!-- Snapchat -->
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?id=' . $row['id']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-snapchat"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <script src="https://cdn.plyr.io/3.6.7/plyr.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {

@@ -39,8 +39,8 @@ if (!$chapterData || $chapterData['email'] !== $email) {
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Retrieve the form data
-  $title = $_POST['title'];
-  $content = $_POST['content'];
+  $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
 
   // Update the existing chapter in the database
   $updateQuery = "UPDATE chapter SET title = :title, content = :content WHERE novel_id = :novel_id AND id = :chapter_id";

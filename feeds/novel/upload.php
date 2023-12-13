@@ -93,10 +93,10 @@ if (isset($_FILES['image'])) {
     }
 
     // Retrieve the title and description values from the form submission
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $content = $_POST['content'];
-    $tags = $_POST['tags'];
+    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $tags = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
 
     // Add the image to the database
     $stmt = $db->prepare("INSERT INTO novel (email, filename, title, description, content, tags, date) VALUES (:email, :filename, :title, :description, :content, :tags, :date)");

@@ -42,13 +42,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Move uploaded file to destination
     move_uploaded_file($_FILES['musicFile']['tmp_name'], $musicFile);
 
+    // Sanitize input data before using in SQL query
+    $sanitizedAlbum = filter_var($_POST['album'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $sanitizedTitle = filter_var($_POST['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+
     // Insert record into the database
     $stmt = $db->prepare("INSERT INTO music (file, email, cover, album, title) VALUES (:file, :email, :cover, :album, :title)");
     $stmt->bindValue(':file', $musicFile, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':cover', $coverFile, SQLITE3_TEXT);
-    $stmt->bindValue(':album', $_POST['album'], SQLITE3_TEXT);
-    $stmt->bindValue(':title', $_POST['title'], SQLITE3_TEXT);
+    $stmt->bindValue(':album', $sanitizedAlbum, SQLITE3_TEXT);
+    $stmt->bindValue(':title', $sanitizedTitle, SQLITE3_TEXT);
     $stmt->execute();
 
     // Output a JSON response
@@ -101,34 +105,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </nav>
     </div>
     <div class="container mt-2">
-      <form id="uploadForm" enctype="multipart/form-data" action="" method="post">
+      <form id="uploadForm" enctype="multipart/form-data" action="upload.php" method="POST">
         <div class="mb-2">
           <input type="file" class="form-control border border-3 rounded-4" id="musicFile" name="musicFile" accept=".mp3" required>
         </div>
         <div class="form-floating mb-2">
-          <input class="form-control border border-3 rounded-4" type="text" id="floatingInput" placeholder="title" id="title" name="title" required>
-          <label class="fw-medium" for="floatingInput">title</label>
+          <input class="form-control border border-3 rounded-4" type="text" id="title" placeholder="title" name="title" required>
+          <label class="fw-medium" for="title">title</label>
         </div>
         <div class="form-floating mb-2">
-          <input class="form-control border border-3 rounded-4" type="text" id="floatingInput" placeholder="tags" id="tags" name="tags" required>
-          <label class="fw-medium" for="floatingInput">tags</label>
+          <input class="form-control border border-3 rounded-4" type="text" id="album" placeholder="album" name="album" required>
+          <label class="fw-medium" for="album">album</label>
         </div>
         <div class="mb-3">
-          <div class="progress fw-bold" style="display: none; height: 45px;">
+          <div class="progress fw-bold border-primary-subtle border border-3 rounded-4" style="display: none; height: 45px;">
             <div id="progressBar" class="progress-bar bg-primary text-white" role="progressbar" style="width: 0%; height: 45px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold border-primary-subtle border border-3 rounded-4">upload</button>
+        <button type="submit" class="btn btn-primary w-100 fw-bold border-primary-subtle border border-3 rounded-4" onclick="uploadFile()">upload</button>
       </form>
     </div>
 
     <script>
       function uploadFile() {
+        event.preventDefault(); // Prevent default form submission
+
         var form = document.getElementById('uploadForm');
         var formData = new FormData(form);
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '', true);
+        xhr.open('POST', 'upload.php', true); // Specify the correct path to the PHP file
 
         xhr.upload.onprogress = function (event) {
           if (event.lengthComputable) {
@@ -161,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Show progress bar before sending the request
         document.querySelector('.progress').style.display = 'block';
-
+    
         xhr.send(formData);
       }
     </script>

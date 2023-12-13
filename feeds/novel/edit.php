@@ -18,10 +18,10 @@ if (isset($_GET['id'])) {
 
   // Check if the form is submitted
   if (isset($_POST['submit'])) {
-    $title = htmlspecialchars($_POST['title']);
-    $tags = htmlspecialchars($_POST['tags']);
-    $description = htmlspecialchars($_POST['description']);
-    $content = htmlspecialchars($_POST['content']);
+    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $tags = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
     $newImageName = null;
 
     // Check if a new image file is provided

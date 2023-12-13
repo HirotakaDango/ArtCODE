@@ -7,10 +7,11 @@ $email = $_SESSION['email'];
 
 if (isset($_POST['submit'])) {
   $post_id = $_POST['post_id'];
-  $title = htmlspecialchars($_POST['title']);
-  $tags = htmlspecialchars($_POST['tags']);
-  $content = htmlspecialchars($_POST['content']);
+  $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $tags = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $content = nl2br($content);
+
   $query = "UPDATE posts SET title='$title', tags='$tags', content='$content' WHERE id='$post_id'";
   $db->exec($query);
   header('Location: view.php?id=' . $post_id);
@@ -21,9 +22,9 @@ if (isset($_GET['id'])) {
   $query = "SELECT * FROM posts WHERE id='$post_id' AND email='$email'";
   $post = $db->query($query)->fetch();
   if (!$post) {
-  header('Location: view.php?id=' . $post_id);
+    header('Location: view.php?id=' . $post_id);
   }
-  $tags = htmlspecialchars($post['tags']); // encode tags
+  $tags = filter_var($post['tags'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // encode tags
 } else {
   header('Location: view.php?id=' . $post_id);
 }

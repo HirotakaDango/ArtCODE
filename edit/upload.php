@@ -114,7 +114,7 @@ $db->close();
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ArtCODE</title>
+    <title>Edit <?php echo $image['title']; ?></title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
