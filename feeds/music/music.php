@@ -3,11 +3,11 @@ require_once('../../auth.php');
 require_once 'getID3/getid3/getid3.php';
 
 try {
-  $db = new PDO('sqlite:../../database.sqlite');
-  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = new PDO('sqlite:../../database.sqlite');
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-  echo "Connection failed: " . $e->getMessage();
-  exit();
+    echo "Connection failed: " . $e->getMessage();
+    exit();
 }
 
 $email = $_SESSION['email'];
@@ -29,12 +29,13 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Redirect to the home page if the record is not found
 if (!$row) {
-  header('Location: index.php');
-  exit;
+    header('Location: index.php');
+    exit;
 }
 
-// Get the email of the selected user
+// Get the email and artist ID of the selected user
 $user_email = $row['email'];
+$artist_id = $row['userid'];
 
 // Music file and cover image paths
 $musicFile = $row['file'];
@@ -50,15 +51,15 @@ $getID3 = new getID3();
 $fileInfo = $getID3->analyze($musicFile);
 getid3_lib::CopyTagsToComments($fileInfo);
 
-
 // Function to format bytes
-function formatBytes($bytes, $precision = 2) {
-  $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-  $bytes = max($bytes, 0);
-  $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-  $pow = min($pow, count($units) - 1);
-  $bytes /= (1 << (10 * $pow));
-  return round($bytes, $precision) . ' ' . $units[$pow];
+function formatBytes($bytes, $precision = 2)
+{
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $bytes = max($bytes, 0);
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+    $pow = min($pow, count($units) - 1);
+    $bytes /= (1 << (10 * $pow));
+    return round($bytes, $precision) . ' ' . $units[$pow];
 }
 
 // Extract information
@@ -67,22 +68,25 @@ $bitrate = !empty($fileInfo['audio']['bitrate']) ? round($fileInfo['audio']['bit
 $size = !empty($fileInfo['filesize']) ? formatBytes($fileInfo['filesize']) : 'Unknown';
 $audioType = !empty($fileInfo['fileformat']) ? $fileInfo['fileformat'] : 'Unknown';
 
-// Fetch all music records for the specified album
+// Fetch all music records for the specified artist
 $queryAll = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
              FROM music
              JOIN users ON music.email = users.email
-             WHERE music.email = :email
+             WHERE users.id = :artist_id
              ORDER BY music.album ASC, music.id ASC";
 $stmtAll = $db->prepare($queryAll);
-$stmtAll->bindParam(':email', $email, PDO::PARAM_STR);
+$stmtAll->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
 $stmtAll->execute();
 $allRows = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch next music record
+// Check if there is only one song for the artist and set a flag for looping
+$loopPlaylist = count($allRows) === 1;
+
+// Fetch next music record for the specified artist
 $queryNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE music.album = :album AND music.id > :id
+              WHERE (music.album = :album AND music.id > :id) OR (music.album > :album)
               ORDER BY music.album ASC, music.id ASC
               LIMIT 1";
 $stmtNext = $db->prepare($queryNext);
@@ -92,24 +96,24 @@ $stmtNext->execute();
 $nextRow = $stmtNext->fetch(PDO::FETCH_ASSOC);
 
 if (!$nextRow) {
-  // If no next row, fetch the first music record in the next album
-  $queryFirstNextAlbum = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                          FROM music
-                          JOIN users ON music.email = users.email
-                          WHERE music.album > :album
-                          ORDER BY music.album ASC, music.id ASC
-                          LIMIT 1";
-  $stmtFirstNextAlbum = $db->prepare($queryFirstNextAlbum);
-  $stmtFirstNextAlbum->bindParam(':album', $album, PDO::PARAM_STR);
-  $stmtFirstNextAlbum->execute();
-  $nextRow = $stmtFirstNextAlbum->fetch(PDO::FETCH_ASSOC);
+    // If no next row, fetch the first music record for the artist
+    $queryFirstNextArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                            FROM music
+                            JOIN users ON music.email = users.email
+                            WHERE users.id = :artist_id
+                            ORDER BY music.album ASC, music.id ASC
+                            LIMIT 1";
+    $stmtFirstNextArtist = $db->prepare($queryFirstNextArtist);
+    $stmtFirstNextArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
+    $stmtFirstNextArtist->execute();
+    $nextRow = $stmtFirstNextArtist->fetch(PDO::FETCH_ASSOC);
 }
 
-// Fetch previous music record
+// Fetch previous music record for the specified artist
 $queryPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE music.album = :album AND music.id < :id
+              WHERE (music.album = :album AND music.id < :id) OR (music.album < :album)
               ORDER BY music.album DESC, music.id DESC
               LIMIT 1";
 $stmtPrev = $db->prepare($queryPrev);
@@ -119,17 +123,23 @@ $stmtPrev->execute();
 $prevRow = $stmtPrev->fetch(PDO::FETCH_ASSOC);
 
 if (!$prevRow) {
-  // If no previous row, fetch the last music record in the previous album
-  $queryLastPrevAlbum = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                         FROM music
-                         JOIN users ON music.email = users.email
-                         WHERE music.album < :album
-                         ORDER BY music.album DESC, music.id DESC
-                         LIMIT 1";
-  $stmtLastPrevAlbum = $db->prepare($queryLastPrevAlbum);
-  $stmtLastPrevAlbum->bindParam(':album', $album, PDO::PARAM_STR);
-  $stmtLastPrevAlbum->execute();
-  $prevRow = $stmtLastPrevAlbum->fetch(PDO::FETCH_ASSOC);
+    // If no previous row, fetch the last music record for the artist
+    $queryLastPrevArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                           FROM music
+                           JOIN users ON music.email = users.email
+                           WHERE users.id = :artist_id
+                           ORDER BY music.album DESC, music.id DESC
+                           LIMIT 1";
+    $stmtLastPrevArtist = $db->prepare($queryLastPrevArtist);
+    $stmtLastPrevArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
+    $stmtLastPrevArtist->execute();
+    $prevRow = $stmtLastPrevArtist->fetch(PDO::FETCH_ASSOC);
+}
+
+// If looping is enabled, set the next and previous to the current song
+if ($loopPlaylist) {
+    $nextRow = $row;
+    $prevRow = $row;
 }
 
 // Process any favorite/unfavorite requests
@@ -284,9 +294,17 @@ if (isset($_POST['favorite'])) {
           </div>
             <div class="d-md-none d-lg-none mt-3 mb-5">
               <div class="d-flex justify-content-center btn-group">
-                <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
-                <button class="text-decoration-none btn text-white d-md-none d-lg-none" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-music-note-list display-1"></i></button>
-                <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
+                <?php if ($prevRow): ?>
+                  <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
+                <?php endif; ?>
+                <button class="text-decoration-none btn text-white d-md-none d-lg-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <i class="bi bi-music-note-list display-1"></i>
+                </button>
+                <?php if ($nextRow): ?>
+                  <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
+                    <i class="bi bi-skip-end-fill fs-3"></i>
+                  </a>
+                <?php endif; ?>
               </div>
             </div> 
           <div class="w-100 bg-dark fixed-bottom">
@@ -322,8 +340,12 @@ if (isset($_POST['favorite'])) {
               <?php } ?>
               <div class="d-none d-md-block d-lg-block">
                 <div class="btn-group">
-                  <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end fw-bold mt-1" style="color: #4A5464;"><i class="bi bi-skip-start-fill fs-3"></i></a>
-                  <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end fw-bold mt-1" style="color: #4A5464;"><i class="bi bi-skip-end-fill fs-3"></i></a>
+                  <?php if ($prevRow): ?>
+                    <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end fw-bold mt-1" style="color: #4A5464;"><i class="bi bi-skip-start-fill fs-3"></i></a>
+                  <?php endif; ?>
+                  <?php if ($nextRow): ?>
+                    <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end fw-bold mt-1" style="color: #4A5464;"><i class="bi bi-skip-end-fill fs-3"></i></a>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>
