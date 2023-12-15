@@ -3,11 +3,6 @@ require_once('../../auth.php');
 $db = new SQLite3('../../database.sqlite');
 $email = $_SESSION['email'];
 
-// Pagination
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$recordsPerPage = 20;
-$offset = ($page - 1) * $recordsPerPage;
-
 // Get the album parameter from the URL
 $album = isset($_GET['album']) ? $_GET['album'] : null;
 
@@ -21,11 +16,9 @@ if (!empty($album)) {
   $query .= " WHERE music.album = :album";
 }
 
-$query .= " ORDER BY music.id DESC LIMIT :limit OFFSET :offset";
+$query .= " ORDER BY music.id DESC";
 
 $stmt = $db->prepare($query);
-$stmt->bindValue(':limit', $recordsPerPage, SQLITE3_INTEGER);
-$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 
 // Bind album parameter if provided
 if (!empty($album)) {
@@ -40,11 +33,21 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
   $rows[] = $row;
 }
 
-// Calculate total pages for the logged-in user
-$total = $db->querySingle("SELECT COUNT(*) FROM music WHERE email = '$email'");
-$totalPages = ceil($total / $recordsPerPage);
-$prevPage = $page - 1;
-$nextPage = $page + 1;
+// Check if there are any rows
+if (!empty($rows)) {
+  // Get the first row
+  $firstRow = $rows[0];
+
+  // Extract the image file path from the first row
+  $imagePath = $firstRow['cover'];
+}
+
+// Calculate the total number of tracks in the same album
+$countQuery = "SELECT COUNT(*) as count FROM music WHERE album = :album";
+$countStmt = $db->prepare($countQuery);
+$countStmt->bindValue(':album', $album, SQLITE3_TEXT);
+$countResult = $countStmt->execute();
+$albumTrackCount = $countResult->fetchArray(SQLITE3_ASSOC)['count'];
 ?>
 
 <!DOCTYPE html>
@@ -59,54 +62,62 @@ $nextPage = $page + 1;
   <body>
     <div class="container-fluid mt-3">
       <?php include('header.php'); ?>
-      <h5 class="fw-bold mb-3">Album: <?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></h5>
+      <div class="row container-fluid p-4 p-md-5 gap-2 mb-3">
+        <div class="col-md-3 order-md-1 mb-3 p-4 p-md-0">
+          <div class="position-relative">
+            <div class="ratio ratio-1x1">
+              <img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover img-fluid rounded shadow" alt="...">
+            </div>
+            <button class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-medium" onclick="sharePage()"><small><i class="bi bi-share-fill"></i> share</small></button>
+          </div>
+        </div>
+        <div class="col-md-7 order-md-2">
+          <h2 class="featurette-heading fw-normal fw-bold">Album: <?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?> by <?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></span></h2>
+          <p class="fw-medium mt-3">Total Tracks in Album: <?php echo $albumTrackCount; ?> songs</p>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="container-fluid mt-3">
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
         <?php foreach ($rows as $row): ?>
           <div class="col">
-            <div class="card shadow-sm h-100">
-              <a class="shadow rounded" href="music.php?album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
-                <img class="w-100 object-fit-cover" style="border-radius: 2.9px 2.9px 0 0;" height="200" src="covers/<?php echo $row['cover']; ?>">
+            <div class="card shadow-sm h-100 position-relative rounded-3">
+              <a class="shadow position-relative btn p-0" href="music.php?album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
+                <img class="w-100 object-fit-cover rounded" height="200" src="covers/<?php echo $row['cover']; ?>">
+                <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
               </a>
-              <div class="card-body">
-                <h5 class="card-text text-center fw-bold"><?php echo $row['title']; ?></h5>
-                <p class="card-text text-center small fw-bold"><small>by <?php echo $row['artist']; ?></small></p>
+              <div class="p-2 position-absolute bottom-0 start-0">
+                <h5 class="card-text fw-bold text-shadow"><?php echo $row['title']; ?></h5>
+                <p class="card-text small fw-bold text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></small></p>
               </div>
             </div>
           </div>
         <?php endforeach; ?>
       </div>
     </div>
-
-    <!-- Pagination -->
-    <div class="container mt-3">
-      <div class="pagination d-flex gap-1 justify-content-center mt-3">
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-        <?php endif; ?>
-
-        <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?page=' . $i . '">' . $i . '</a>';
-          }
+    <style>
+      .text-shadow {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+    <div class="mt-5"></div>
+    <script>
+      function sharePage() {
+        if (navigator.share) {
+          navigator.share({
+            title: document.title,
+            url: window.location.href
+          }).then(() => {
+            console.log('Page shared successfully.');
+          }).catch((error) => {
+            console.error('Error sharing page:', error);
+          });
+        } else {
+          console.log('Web Share API not supported.');
         }
-        ?>
-
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-        <?php endif; ?>
-      </div>
-    </div>
-
+      }
+    </script>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>

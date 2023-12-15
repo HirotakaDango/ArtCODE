@@ -300,7 +300,7 @@ $fav_count = $fav_row['num_favorites'];
               <span class=""><button class="btn border-0 fw-medium" onclick="shareArtist(<?php echo $user_id; ?>)"><small>Shares</small></button></span>
             </div>
             
-            <p class="mt-4 fw-medium">
+            <p class="mt-4 fw-medium text-break">
               <small>
                 <?php
                   if (!empty($desc)) {

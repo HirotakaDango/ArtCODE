@@ -79,8 +79,8 @@ require_once('../auth.php');
                   </div>
                   <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit"><i class="bi bi-cloud-arrow-up-fill"></i></button>
                 </form>
-                <div id="progress-bar-container" class="progress fw-bold mt-2" style="height: 45px; display: none;">
-                  <div id="progress-bar" class="progress-bar progress-bar progress-bar-animated" style="height: 45px;" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                <div id="progress-bar-container" class="progress fw-bold" style="height: 45px; display: none;">
+                  <div id="progress-bar" class="progress-bar progress-bar-animated" style="height: 45px;" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>

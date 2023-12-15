@@ -118,8 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <label class="fw-medium" for="album">album</label>
         </div>
         <div class="mb-3">
-          <div class="progress fw-bold border-primary-subtle border border-3 rounded-4" style="display: none; height: 45px;">
-            <div id="progressBar" class="progress-bar bg-primary text-white" role="progressbar" style="width: 0%; height: 45px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress fw-bold rounded-4" style="display: none; height: 45px;">
+            <div id="progressBar" class="progress-bar progress-bar-animated bg-primary text-white" role="progressbar" style="height: 45px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
         </div>
         <button type="submit" class="btn btn-primary w-100 fw-bold border-primary-subtle border border-3 rounded-4" onclick="uploadFile()">upload</button>

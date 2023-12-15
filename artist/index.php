@@ -149,7 +149,6 @@ $fav_count = $fav_count->fetchColumn();
     
     <!-- Porfile Header -->
     <div class="mt-2 vh-100 d-none d-md-block d-lg-block position-relative" style="background-image: url('<?php echo !empty($bgpic) ? $bgpic : "../icon/bg.png"; ?>'); background-size: cover; height: 100%; width: 100%;">
-      <a class="btn-sm btn btn-dark fw-bold rounded-pill opacity-75 position-absolute bottom-0 start-0 m-2" type="button" href="setting.php">change background <i class="bi bi-camera-fill"></i></a>
       <button class="btn btn-sm btn-dark opacity-75 rounded-3 position-absolute bottom-0 end-0 m-1" data-bs-toggle="modal" data-bs-target="#modalUserInfo"><i class="bi bi-info-circle-fill"></i></button>
     </div>
     <div class="container-fluid d-none d-md-block d-lg-block mt-3">
@@ -325,7 +324,7 @@ $fav_count = $fav_count->fetchColumn();
               <span class=""><button class="btn border-0 fw-medium" onclick="shareArtist(<?php echo $id; ?>)"><small>Shares</small></button></span>
             </div>
             
-            <p class="mt-4 fw-medium">
+            <p class="mt-4 fw-medium text-break">
               <small>
                 <?php
                   if (!empty($desc)) {

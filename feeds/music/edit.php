@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Redirect to the home page after the update
-  header('Location: profile.php');
+  header('Location: music.php?album=' . $row['album'] . '&id=' . $id);
   exit;
 }
 ?>

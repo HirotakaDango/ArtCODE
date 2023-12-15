@@ -48,23 +48,28 @@ $nextPage = $page + 1;
   <body>
     <div class="container-fluid mt-3">
       <?php include('header.php'); ?>
-
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
         <?php foreach ($rows as $row): ?>
           <div class="col">
-            <div class="card shadow-sm h-100">
-              <a class="shadow rounded" href="music.php?album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
-                <img class="w-100 object-fit-cover" style="border-radius: 2.9px 2.9px 0 0;" height="200" src="covers/<?php echo $row['cover']; ?>">
+            <div class="card shadow-sm h-100 position-relative rounded-3">
+              <a class="shadow position-relative btn p-0" href="music.php?album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
+                <img class="w-100 object-fit-cover rounded" height="200" src="covers/<?php echo $row['cover']; ?>">
+                <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
               </a>
-              <div class="card-body">
-                <h5 class="card-text text-center fw-bold"><?php echo $row['title']; ?></h5>
-                <p class="card-text text-center small fw-bold"><small>by <?php echo $row['artist']; ?></small></p>
+              <div class="p-2 position-absolute bottom-0 start-0">
+                <h5 class="card-text fw-bold text-shadow"><?php echo $row['title']; ?></h5>
+                <p class="card-text small fw-bold text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></small></p>
               </div>
             </div>
           </div>
         <?php endforeach; ?>
       </div>
     </div>
+    <style>
+      .text-shadow {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+      }
+    </style>
 
     <!-- Pagination -->
     <div class="container mt-3">
@@ -95,7 +100,7 @@ $nextPage = $page + 1;
         <?php endif; ?>
       </div>
     </div>
-
+    <div class="mt-5"></div>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>
