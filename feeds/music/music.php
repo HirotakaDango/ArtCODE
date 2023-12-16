@@ -256,7 +256,7 @@ if (isset($_POST['favorite'])) {
           <div class="container w-75 d-none d-md-block d-lg-block">
             <div class="position-relative">
               <div class="text-center mb-2 ratio ratio-1x1">
-                <img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="img-fluid object-fit-cover rounded shadow">
+                <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="img-fluid object-fit-cover rounded shadow"></a>
               </div>
               <button type="button" class="btn btn-dark opacity-50 position-absolute top-0 start-0 mt-1 ms-1 rounded-1" data-bs-toggle="modal" data-bs-target="#songInfo">
                 <i class="bi bi-info-circle-fill"></i>
@@ -265,46 +265,82 @@ if (isset($_POST['favorite'])) {
           </div>
           <div class="position-relative d-md-none d-lg-none">
             <div class="text-center mb-2 ratio ratio-1x1">
-              <img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="img-fluid object-fit-cover rounded shadow">
+              <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="img-fluid object-fit-cover rounded shadow"></a>
             </div>
             <button type="button" class="btn btn-dark opacity-50 position-absolute top-0 start-0 mt-1 ms-1 rounded-1" data-bs-toggle="modal" data-bs-target="#songInfo">
               <i class="bi bi-info-circle-fill"></i>
             </button>
           </div>
           <div class="modal fade" id="songInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel"><?php echo $row['title']; ?></h1>
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content rounded-4 border-0">
+                <div class="modal-header border-0">
+                  <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Information</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <div class="metadata">
-                    <p class="fw-bold text-start">Artist: <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></p>
-                    <p class="fw-bold text-start">Album: <a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a></p>
-                    <p class="fw-bold text-start">Duration: <?= $duration ?></p>
-                    <p class="fw-bold text-start">Bitrate: <?= $bitrate ?></p>
-                    <p class="fw-bold text-start">Size: <?= $size ?></p>
-                    <p class="fw-bold text-start">Audio Type: <?= $audioType ?></p>
+                    <div class="mb-2 row">
+                      <label for="title" class="col-4 col-form-label text-nowrap fw-medium">Title :</label>
+                      <div class="col-8">
+                        <p class="form-control-plaintext fw-bold" id="title"><a class="text-decoration-none text-white" href="#"><?php echo $row['title']; ?></a></p>
+                      </div>
+                    </div>
+                    <div class="mb-2 row">
+                      <label for="artist" class="col-4 col-form-label text-nowrap fw-medium">Artist :</label>
+                      <div class="col-8">
+                        <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></p>
+                      </div>
+                    </div>
+                    <div class="mb-2 row">
+                      <label for="album" class="col-4 col-form-label text-nowrap fw-medium">Album :</label>
+                      <div class="col-8">
+                        <p class="form-control-plaintext fw-bold" id="album"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a></p>
+                      </div>
+                    </div>
+                    <div class="mb-2 row">
+                      <label for="duration" class="col-4 col-form-label text-nowrap fw-medium">Duration :</label>
+                      <div class="col-8">
+                        <p class="form-control-plaintext fw-bold" id="duration"><?= $duration ?></p>
+                      </div>
+                    </div>
+                    <div class="mb-2 row">
+                      <label for="bitrate" class="col-4 col-form-label text-nowrap fw-medium">Bitrate :</label>
+                      <div class="col-8">
+                        <p class="form-control-plaintext fw-bold" id="bitrate"><?= $bitrate ?></p>
+                      </div>
+                    </div>
+                    <div class="mb-2 row">
+                      <label for="size" class="col-4 col-form-label text-nowrap fw-medium">Size :</label>
+                      <div class="col-8">
+                        <p class="form-control-plaintext fw-bold" id="size"><?= $size ?></p>
+                      </div>
+                    </div>
+                    <div class="mb-2 row">
+                      <label for="audioType" class="col-4 col-form-label text-nowrap fw-medium">Audio Type :</label>
+                      <div class="col-8">
+                        <p class="form-control-plaintext fw-bold" id="audioType"><?= $audioType ?></p>
+                      </div>
+                    </div>
                     <a class="btn btn-primary fw-bold w-100" href="<?php echo $row['file']; ?>" download>Download Song</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-            <div class="d-md-none d-lg-none mt-3 mb-5">
-              <div class="d-flex justify-content-center btn-group">
-                <?php if ($prevRow): ?>
-                  <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
-                <?php endif; ?>
-                <button class="text-decoration-none btn text-white d-md-none d-lg-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  <i class="bi bi-music-note-list display-1"></i>
-                </button>
-                <?php if ($nextRow): ?>
-                  <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
-                <?php endif; ?>
-              </div>
-            </div> 
+          <div class="d-md-none d-lg-none mt-3 mb-5">
+            <div class="d-flex justify-content-center btn-group">
+              <?php if ($prevRow): ?>
+                <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
+              <?php endif; ?>
+              <button class="text-decoration-none btn text-white d-md-none d-lg-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="bi bi-music-note-list display-1"></i>
+              </button>
+              <?php if ($nextRow): ?>
+                <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
+              <?php endif; ?>
+            </div>
+          </div> 
           <div class="w-100 bg-dark fixed-bottom">
             <div class="d-flex justify-content-between align-items-center border-2 border-top">
               <div class="w-100">
@@ -324,14 +360,14 @@ if (isset($_POST['favorite'])) {
               ?>
                 <form method="POST">
                   <input type="hidden" name="music_id" value="<?php echo $row['id']; ?>">
-                  <button type="submit" class="btn mt-1" name="unfavorite" style="color: #4A5464;">
+                  <button type="submit" class="btn" name="unfavorite" style="color: #4A5464;">
                     <i class="bi bi-heart-fill fs-5"></i>
                   </button>
                 </form>
               <?php } else { ?>
                 <form method="POST">
                   <input type="hidden" name="music_id" value="<?php echo $row['id']; ?>">
-                  <button type="submit" class="btn mt-1" name="favorite" style="color: #4A5464;">
+                  <button type="submit" class="btn" name="favorite" style="color: #4A5464;">
                     <i class="bi bi-heart fs-5"></i>
                   </button>
                 </form>
@@ -339,10 +375,10 @@ if (isset($_POST['favorite'])) {
               <div class="d-none d-md-block d-lg-block">
                 <div class="btn-group">
                   <?php if ($prevRow): ?>
-                    <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end fw-bold mt-1" style="color: #4A5464;"><i class="bi bi-skip-start-fill fs-3"></i></a>
+                    <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-start-fill fs-3"></i></a>
                   <?php endif; ?>
                   <?php if ($nextRow): ?>
-                    <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end fw-bold mt-1" style="color: #4A5464;"><i class="bi bi-skip-end-fill fs-3"></i></a>
+                    <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-end-fill fs-3"></i></a>
                   <?php endif; ?>
                 </div>
               </div>
@@ -354,7 +390,7 @@ if (isset($_POST['favorite'])) {
             <div class="modal-dialog modal-dialog-centered modal-fullscreen modal-dialog-scrollable">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel"><i class="bi bi-music-note-list"></i> song list from <?php echo $row['album']; ?></h1>
+                  <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel"><i class="bi bi-music-note-list"></i> song list from <?php echo $row['artist']; ?></h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -380,7 +416,7 @@ if (isset($_POST['favorite'])) {
           </div> 
           <div class="d-none d-md-block d-lg-block">
             <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
-              <h3 class="text-start fw-bold"><i class="bi bi-music-note-list"></i> song list from <?php echo $row['album']; ?></h3>
+              <h3 class="text-start fw-bold"><i class="bi bi-music-note-list"></i> song list from <?php echo $row['artist']; ?></h3>
               <?php foreach ($allRows as $song): ?>
                 <div class="d-flex justify-content-between align-items-center border-bottom">
                   <a class="text-decoration-none music text-start w-100 text-white btn fw-bold" href="music.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>">
@@ -474,7 +510,17 @@ if (isset($_POST['favorite'])) {
         </div>
       </div>
     </div>
-    
+    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img class="object-fit-contain h-100 w-100 rounded" src="covers/<?php echo $coverImage; ?>">
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+            <a class="btn btn-primary fw-bold w-100 mt-2" href="covers/<?php echo $coverImage; ?>" download>Download Cover Image</a>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="https://cdn.plyr.io/3.6.7/plyr.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
