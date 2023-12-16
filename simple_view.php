@@ -435,8 +435,8 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               <!-- Download Option Modal -->
               <div class="modal fade" id="downloadOption" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                  <div class="modal-content">
-                    <div class="modal-header">
+                  <div class="modal-content rounded-4 border-0">
+                    <div class="modal-header border-0">
                       <h1 class="modal-title fw-bold fs-5" id="exampleModalToggleLabel">Download Option</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -907,7 +907,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <!-- Data Modal -->
                 <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-scrollable">
-                    <div class="modal-content rounded-4 shadow border-0">
+                    <div class="modal-content rounded-4 border-0">
                       <div class="modal-header border-0">
                         <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">All Data from <?php echo $image['title']; ?></h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1146,8 +1146,8 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
     <!-- Share Modal -->
     <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
+        <div class="modal-content rounded-4 border-0">
+          <div class="modal-header border-0">
             <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel">share to:</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
