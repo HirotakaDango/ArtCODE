@@ -333,7 +333,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     <!-- Modal -->
     <div class="modal fade" id="logOut" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-3 shadow">
+        <div class="modal-content rounded-4 border-0">
           <div class="modal-body p-4 text-center fw-medium">
             <h5 class="mb-0">Do you want to end the session?</h5>
             <p class="mb-0 mt-2">You can always comeback whenever you want later.</p>
