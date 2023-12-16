@@ -186,7 +186,7 @@ $db->close();
                 <form id="upload-form" enctype="multipart/form-data">
                   <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit"><i class="bi bi-cloud-arrow-up-fill"></i></button>
                 </form>
-                <div id="progress-bar-container" class="progress fw-bold mt-2" style="height: 45px; display: none;">
+                <div id="progress-bar-container" class="progress fw-bold" style="height: 45px; display: none;">
                   <div id="progress-bar" class="progress-bar progress-bar progress-bar-animated" style="height: 45px;" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
@@ -408,8 +408,8 @@ $db->close();
 
         var goToProfileButton = document.createElement('a');
         goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-bold', 'rounded');
-        goToProfileButton.textContent = 'Go to Profile';
-        goToProfileButton.href = '../profile.php';
+        goToProfileButton.textContent = 'Go to Image';
+        goToProfileButton.href = "../image.php?artworkid=<?php echo $image['id']; ?>";
 
         buttonGroup.appendChild(goToHomeButton);
         buttonGroup.appendChild(goToProfileButton);
