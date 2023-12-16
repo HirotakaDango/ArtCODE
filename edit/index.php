@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="300"> 
                 <label for="floatingInput" class="text-dark fw-bold">Enter link for your image</label>
               </div>
-              <select class="form-select rounded-3 text-dark fw-bold mb-2 border-4" name="type" aria-label="Large select example" required>
+              <select class="form-select rounded-3 text-dark fw-bold mb-2 border-4" style="height: 58px;" name="type" aria-label="Large select example" required>
                 <option value="safe" <?php echo ($image['type'] === 'safe') ? 'selected' : ''; ?>>Safe For Works</option>
                 <option value="nsfw" <?php echo ($image['type'] === 'nsfw') ? 'selected' : ''; ?>>NSFW/R-18</option>
               </select>
@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <i class="bi bi-trash-fill"></i> delete this image
                 </button>
                 <button type="submit" class="btn btn-dark fw-bold w-100 mb-2 rounded">
-                  <i class="bi bi-floppy-fill"></i> save this image
+                  <i class="bi bi-floppy-fill"></i> save this change
                 </button>
               </div>
               <div class="btn-group gap-2 w-100">
@@ -226,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="modal fade" id="deleteImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-3 shadow">
+        <div class="modal-content rounded-4 border-0">
           <div class="modal-body p-4 text-center">
             <h5 class="mb-0">Delete this image?</h5>
             <p class="mb-0">This action can't be undone</p>
