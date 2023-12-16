@@ -3,11 +3,11 @@ require_once('../../auth.php');
 require_once 'getID3/getid3/getid3.php';
 
 try {
-    $db = new PDO('sqlite:../../database.sqlite');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $db = new PDO('sqlite:../../database.sqlite');
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-    exit();
+  echo "Connection failed: " . $e->getMessage();
+  exit();
 }
 
 $email = $_SESSION['email'];
@@ -29,8 +29,8 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Redirect to the home page if the record is not found
 if (!$row) {
-    header('Location: index.php');
-    exit;
+  header('Location: index.php');
+  exit;
 }
 
 // Get the email and artist ID of the selected user
@@ -42,8 +42,8 @@ $musicFile = $row['file'];
 $coverImage = $row['cover'];
 
 if (!file_exists($musicFile)) {
-    echo "File not found: $musicFile";
-    exit;
+  echo "File not found: $musicFile";
+  exit;
 }
 
 // Use getID3 to analyze the music file
@@ -54,12 +54,12 @@ getid3_lib::CopyTagsToComments($fileInfo);
 // Function to format bytes
 function formatBytes($bytes, $precision = 2)
 {
-    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-    $bytes = max($bytes, 0);
-    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-    $pow = min($pow, count($units) - 1);
-    $bytes /= (1 << (10 * $pow));
-    return round($bytes, $precision) . ' ' . $units[$pow];
+  $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  $bytes = max($bytes, 0);
+  $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+  $pow = min($pow, count($units) - 1);
+  $bytes /= (1 << (10 * $pow));
+  return round($bytes, $precision) . ' ' . $units[$pow];
 }
 
 // Extract information
@@ -96,17 +96,17 @@ $stmtNext->execute();
 $nextRow = $stmtNext->fetch(PDO::FETCH_ASSOC);
 
 if (!$nextRow) {
-    // If no next row, fetch the first music record for the artist
-    $queryFirstNextArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                            FROM music
-                            JOIN users ON music.email = users.email
-                            WHERE users.id = :artist_id
-                            ORDER BY music.album ASC, music.id ASC
-                            LIMIT 1";
-    $stmtFirstNextArtist = $db->prepare($queryFirstNextArtist);
-    $stmtFirstNextArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
-    $stmtFirstNextArtist->execute();
-    $nextRow = $stmtFirstNextArtist->fetch(PDO::FETCH_ASSOC);
+  // If no next row, fetch the first music record for the artist
+  $queryFirstNextArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                          FROM music
+                          JOIN users ON music.email = users.email
+                          WHERE users.id = :artist_id
+                          ORDER BY music.album ASC, music.id ASC
+                          LIMIT 1";
+  $stmtFirstNextArtist = $db->prepare($queryFirstNextArtist);
+  $stmtFirstNextArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
+  $stmtFirstNextArtist->execute();
+  $nextRow = $stmtFirstNextArtist->fetch(PDO::FETCH_ASSOC);
 }
 
 // Fetch previous music record for the specified artist
@@ -123,23 +123,23 @@ $stmtPrev->execute();
 $prevRow = $stmtPrev->fetch(PDO::FETCH_ASSOC);
 
 if (!$prevRow) {
-    // If no previous row, fetch the last music record for the artist
-    $queryLastPrevArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                           FROM music
-                           JOIN users ON music.email = users.email
-                           WHERE users.id = :artist_id
-                           ORDER BY music.album DESC, music.id DESC
-                           LIMIT 1";
-    $stmtLastPrevArtist = $db->prepare($queryLastPrevArtist);
-    $stmtLastPrevArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
-    $stmtLastPrevArtist->execute();
-    $prevRow = $stmtLastPrevArtist->fetch(PDO::FETCH_ASSOC);
+  // If no previous row, fetch the last music record for the artist
+  $queryLastPrevArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                         FROM music
+                         JOIN users ON music.email = users.email
+                         WHERE users.id = :artist_id
+                         ORDER BY music.album DESC, music.id DESC
+                         LIMIT 1";
+  $stmtLastPrevArtist = $db->prepare($queryLastPrevArtist);
+  $stmtLastPrevArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
+  $stmtLastPrevArtist->execute();
+  $prevRow = $stmtLastPrevArtist->fetch(PDO::FETCH_ASSOC);
 }
 
 // If looping is enabled, set the next and previous to the current song
 if ($loopPlaylist) {
-    $nextRow = $row;
-    $prevRow = $row;
+  $nextRow = $row;
+  $prevRow = $row;
 }
 
 // Process any favorite/unfavorite requests
@@ -302,8 +302,6 @@ if (isset($_POST['favorite'])) {
                 </button>
                 <?php if ($nextRow): ?>
                   <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
-                    <i class="bi bi-skip-end-fill fs-3"></i>
-                  </a>
                 <?php endif; ?>
               </div>
             </div> 
