@@ -46,6 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $deleteStmt->bindValue(':id', $id, SQLITE3_INTEGER);
   $deleteStmt->execute();
 
+  // Remove all entries related to this music from favorites_music table
+  $removeFavoriteQuery = "DELETE FROM favorites_music WHERE music_id = :music_id";
+  $removeFavoriteStmt = $db->prepare($removeFavoriteQuery);
+  $removeFavoriteStmt->bindValue(':music_id', $id, SQLITE3_INTEGER);
+  $removeFavoriteStmt->execute();
+
   // Redirect to the home page after the deletion
   header('Location: profile.php');
   exit;
