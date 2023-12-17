@@ -86,12 +86,16 @@ $loopPlaylist = count($allRows) === 1;
 $queryNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE (music.album = :album AND music.id > :id) OR (music.album > :album)
+              WHERE (music.album = :album AND music.id > :id)
+                 OR (music.album = :album AND music.id = (SELECT MIN(id) FROM music WHERE album > :album AND email = :email))
+                 OR (music.album > :album AND music.email = :email)
               ORDER BY music.album ASC, music.id ASC
               LIMIT 1";
+
 $stmtNext = $db->prepare($queryNext);
 $stmtNext->bindParam(':album', $album, PDO::PARAM_STR);
 $stmtNext->bindParam(':id', $id, PDO::PARAM_INT);
+$stmtNext->bindParam(':email', $user_email, PDO::PARAM_STR);
 $stmtNext->execute();
 $nextRow = $stmtNext->fetch(PDO::FETCH_ASSOC);
 
@@ -328,7 +332,7 @@ if (isset($_POST['favorite'])) {
               </div>
             </div>
           </div>
-          <div class="d-md-none d-lg-none mt-3 mb-5">
+          <div class="d-md-none d-lg-none my-auto">
             <div class="d-flex justify-content-center btn-group">
               <?php if ($prevRow): ?>
                 <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>

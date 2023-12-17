@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Process the new image
-    $coverName = basename($coverFile['name']);
+    $coverName = 'cover_' . uniqid() . '.' . pathinfo($coverFile['name'], PATHINFO_EXTENSION);
     $coverPath = 'covers/' . $coverName; // Adjust the path to "covers" in the current directory
 
     move_uploaded_file($coverFile['tmp_name'], $coverPath);
@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="mt-5"></div>
     <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4">
+        <div class="modal-content rounded-4 border-0">
           <div class="modal-header border-bottom-0">
             <h1 class="modal-title fs-5">Delete <?php echo $row['title'] ?></h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -184,6 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="modal-body position-relative">
             <img class="object-fit-contain h-100 w-100 rounded" src="covers/<?php echo $row['cover']; ?>">
             <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+            <a class="btn btn-primary fw-bold w-100 mt-2" href="covers/<?php echo $row['cover']; ?>" download>Download Cover Image</a>
           </div>
         </div>
       </div>

@@ -62,11 +62,11 @@ $albumTrackCount = $countResult->fetchArray(SQLITE3_ASSOC)['count'];
   <body>
     <div class="container-fluid mt-3">
       <?php include('header.php'); ?>
-      <div class="row container-fluid p-4 p-md-5 gap-2 mb-3">
-        <div class="col-md-3 order-md-1 mb-3 p-4 p-md-0">
+      <div class="row p-4 p-md-5 mb-3">
+        <div class="col-md-3 order-md-1 mb-3 p-md-0 pe-md-4">
           <div class="position-relative">
             <div class="ratio ratio-1x1">
-              <img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover img-fluid rounded shadow" alt="...">
+              <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover img-fluid rounded shadow" alt="..."></a>
             </div>
             <button class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-medium" onclick="sharePage()"><small><i class="bi bi-share-fill"></i> share</small></button>
           </div>
@@ -94,6 +94,16 @@ $albumTrackCount = $countResult->fetchArray(SQLITE3_ASSOC)['count'];
             </div>
           </div>
         <?php endforeach; ?>
+      </div>
+    </div>
+    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img class="object-fit-contain h-100 w-100 rounded" src="covers/<?php echo $imagePath; ?>">
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+          </div>
+        </div>
       </div>
     </div>
     <style>
