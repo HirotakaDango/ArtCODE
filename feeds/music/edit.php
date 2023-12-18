@@ -39,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $coverFile = $_FILES['cover'];
 
   if ($coverFile['error'] === UPLOAD_ERR_OK) {
-    // Delete previous image if it exists
-    if (!empty($row['cover'])) {
+    // Delete previous image if it exists and it's not the default cover
+    if (!empty($row['cover']) && $row['cover'] !== 'default_cover.jpg') {
       unlink('covers/' . $row['cover']); // Adjust the path to "covers" in the current directory
     }
 
