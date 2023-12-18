@@ -72,7 +72,8 @@ $albumTrackCount = $countResult->fetchArray(SQLITE3_ASSOC)['count'];
           </div>
         </div>
         <div class="col-md-7 order-md-2">
-          <h2 class="featurette-heading fw-normal fw-bold">Album: <?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?> by <?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></span></h2>
+          <h2 class="featurette-heading fw-normal fw-bold">Album: <?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></span></h2>
+          <p class="fw-medium mt-3">Artist : <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
           <p class="fw-medium mt-3">Total Tracks in Album: <?php echo $albumTrackCount; ?> songs</p>
         </div>
       </div>

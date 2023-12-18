@@ -7,7 +7,7 @@ $email = $_SESSION['email'];
 $id = $_GET['id'] ?? '';
 
 // Fetch music record with user information using JOIN
-$query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+$query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, music.lyrics, music.description, users.id as userid, users.artist
           FROM music
           JOIN users ON music.email = users.email
           WHERE music.id = :id";
@@ -32,6 +32,8 @@ if ($row['email'] !== $email) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $newTitle = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $newAlbum = filter_input(INPUT_POST, 'album', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $newLyrics = nl2br(filter_input(INPUT_POST, 'lyrics', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+  $newDescription = nl2br(filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
   // Handle image upload
   $coverFile = $_FILES['cover'];
@@ -48,24 +50,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     move_uploaded_file($coverFile['tmp_name'], $coverPath);
 
-    // Update the music record with the new cover information
+    // Update the music record with the new cover and other information
     $updateCoverQuery = "UPDATE music
-                        SET title = :title, album = :album, cover = :cover
+                        SET title = :title, album = :album, cover = :cover, lyrics = :lyrics, description = :description
                         WHERE id = :id";
     $updateCoverStmt = $db->prepare($updateCoverQuery);
     $updateCoverStmt->bindValue(':title', $newTitle, SQLITE3_TEXT);
     $updateCoverStmt->bindValue(':album', $newAlbum, SQLITE3_TEXT);
     $updateCoverStmt->bindValue(':cover', $coverName, SQLITE3_TEXT);
+    $updateCoverStmt->bindValue(':lyrics', $newLyrics, SQLITE3_TEXT);
+    $updateCoverStmt->bindValue(':description', $newDescription, SQLITE3_TEXT);
     $updateCoverStmt->bindValue(':id', $id, SQLITE3_INTEGER);
     $updateCoverStmt->execute();
   } else {
     // Update the music record without changing the cover
     $updateQuery = "UPDATE music
-                    SET title = :title, album = :album
+                    SET title = :title, album = :album, lyrics = :lyrics, description = :description
                     WHERE id = :id";
     $updateStmt = $db->prepare($updateQuery);
     $updateStmt->bindValue(':title', $newTitle, SQLITE3_TEXT);
     $updateStmt->bindValue(':album', $newAlbum, SQLITE3_TEXT);
+    $updateStmt->bindValue(':lyrics', $newLyrics, SQLITE3_TEXT);
+    $updateStmt->bindValue(':description', $newDescription, SQLITE3_TEXT);
     $updateStmt->bindValue(':id', $id, SQLITE3_INTEGER);
     $updateStmt->execute();
   }
@@ -143,15 +149,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label for="cover" class="form-label">Select Cover Image</label>
               <input type="file" class="form-control border border-3 rounded-4" id="cover" name="cover" accept="image/*">
             </div>
-            <div class="form-floating mb-2">
-              <input class="form-control border border-3 rounded-4" type="text" id="floatingInput" value="<?php echo $row['title']; ?>" id="title" name="title" required>
-              <label class="fw-medium" for="floatingInput">title</label>
+            <div class="row">
+              <div class="col-md-6 pe-md-1">
+                <div class="form-floating mb-2">
+                  <input class="form-control border border-3 rounded-4" type="text" id="floatingInput" value="<?php echo $row['title']; ?>" id="title" name="title" required>
+                  <label class="fw-medium" for="floatingInput">title</label>
+                </div>
+              </div>
+              <div class="col-md-6 ps-md-1">
+                <div class="form-floating mb-2">
+                  <input class="form-control border border-3 rounded-4" type="text" id="floatingInput" value="<?php echo $row['album']; ?>" id="album" name="album" required>
+                  <label class="fw-medium" for="floatingInput">album</label>
+                </div>
+              </div>
             </div>
-            <div class="form-floating mb-2">
-              <input class="form-control border border-3 rounded-4" type="text" id="floatingInput" value="<?php echo $row['album']; ?>" id="album" name="album" required>
-              <label class="fw-medium" for="floatingInput">album</label>
+            <button class="btn btn-secondary border border-secondary-subtle border-3 rounded-4 w-100 fw-bold mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="false" aria-controls="collapseExample">
+              edit description
+            </button>
+            <div class="collapse" id="collapseDescription">
+              <div class="form-floating mb-2">
+                <textarea class="form-control border border-3 rounded-4 vh-100" oninput="stripHtmlTags(this)" id="description" placeholder="description" name="description"><?php echo strip_tags($row['description']); ?></textarea>
+                <label class="fw-medium" for="album">description</label>
+              </div>
             </div>
-            <button type="button" class="btn btn-danger w-100 fw-bold border-danger-subtle border border-3 rounded-4 mb-2" data-bs-toggle="modal" data-bs-target="#modalDelete">
+            <button class="btn btn-secondary border border-secondary-subtle border-3 rounded-4 w-100 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLyrics" aria-expanded="false" aria-controls="collapseExample">
+              edit lyrics
+            </button>
+            <div class="collapse mt-2" id="collapseLyrics">
+              <div class="form-floating">
+                <textarea class="form-control border border-3 rounded-4 vh-100" oninput="stripHtmlTags(this)" id="lyrics" placeholder="lyrics" name="lyrics"><?php echo strip_tags($row['lyrics']); ?></textarea>
+                <label class="fw-medium" for="album">lyrics</label>
+              </div>
+            </div>
+            <button type="button" class="btn btn-danger w-100 fw-bold border-danger-subtle border border-3 rounded-4 my-2" data-bs-toggle="modal" data-bs-target="#modalDelete">
               delete this work
             </button>
             <button type="submit" class="btn btn-primary w-100 fw-bold border-primary-subtle border border-3 rounded-4">save changes</button>

@@ -17,7 +17,7 @@ $album = $_GET['album'] ?? '';
 $id = $_GET['id'] ?? '';
 
 // Fetch music record with user information using JOIN
-$query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+$query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, music.description, music.lyrics, users.id as userid, users.artist
           FROM music
           JOIN users ON music.email = users.email
           WHERE music.album = :album AND music.id = :id";
@@ -91,7 +91,6 @@ $queryNext = "SELECT music.id, music.file, music.email, music.cover, music.album
                  OR (music.album > :album AND music.email = :email)
               ORDER BY music.album ASC, music.id ASC
               LIMIT 1";
-
 $stmtNext = $db->prepare($queryNext);
 $stmtNext->bindParam(':album', $album, PDO::PARAM_STR);
 $stmtNext->bindParam(':id', $id, PDO::PARAM_INT);
@@ -276,57 +275,154 @@ if (isset($_POST['favorite'])) {
             </button>
           </div>
           <div class="modal fade" id="songInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div class="modal-content rounded-4 border-0">
                 <div class="modal-header border-0">
                   <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Information</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                  <div class="metadata">
-                    <div class="mb-2 row">
-                      <label for="title" class="col-4 col-form-label text-nowrap fw-medium">Title :</label>
-                      <div class="col-8">
-                        <p class="form-control-plaintext fw-bold" id="title"><a class="text-decoration-none text-white" href="#"><?php echo $row['title']; ?></a></p>
+                <div class="modal-body p-0">
+                  <div class="accordion" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item border-0">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                          Song's Information
+                        </button>
+                      </h2>
+                      <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                          <div class="metadata">
+                            <div class="mb-2 row">
+                              <label for="title" class="col-4 col-form-label text-nowrap fw-medium">Title :</label>
+                              <div class="col-8">
+                                <p class="form-control-plaintext fw-bold" id="title"><a class="text-decoration-none text-white" href="#"><?php echo $row['title']; ?></a></p>
+                              </div>
+                            </div>
+                            <div class="mb-2 row">
+                              <label for="artist" class="col-4 col-form-label text-nowrap fw-medium">Artist :</label>
+                              <div class="col-8">
+                                <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></p>
+                              </div>
+                            </div>
+                            <div class="mb-2 row">
+                              <label for="album" class="col-4 col-form-label text-nowrap fw-medium">Album :</label>
+                              <div class="col-8">
+                                <p class="form-control-plaintext fw-bold" id="album"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a></p>
+                              </div>
+                            </div>
+                            <div class="mb-2 row">
+                              <label for="duration" class="col-4 col-form-label text-nowrap fw-medium">Duration :</label>
+                              <div class="col-8">
+                                <p class="form-control-plaintext fw-bold text-white" id="duration"><?= $duration ?></p>
+                              </div>
+                            </div>
+                            <div class="mb-2 row">
+                              <label for="bitrate" class="col-4 col-form-label text-nowrap fw-medium">Bitrate :</label>
+                              <div class="col-8">
+                                <p class="form-control-plaintext fw-bold text-white" id="bitrate"><?= $bitrate ?></p>
+                              </div>
+                            </div>
+                            <div class="mb-2 row">
+                              <label for="size" class="col-4 col-form-label text-nowrap fw-medium">Size :</label>
+                              <div class="col-8">
+                                <p class="form-control-plaintext fw-bold text-white" id="size"><?= $size ?></p>
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="audioType" class="col-4 col-form-label text-nowrap fw-medium">Audio Type :</label>
+                              <div class="col-8">
+                                <p class="form-control-plaintext fw-bold text-white" id="audioType"><?= $audioType ?></p>
+                              </div>
+                            </div>
+                            <a class="btn btn-primary fw-bold w-100" href="<?php echo $row['file']; ?>" download>Download Song</a>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="mb-2 row">
-                      <label for="artist" class="col-4 col-form-label text-nowrap fw-medium">Artist :</label>
-                      <div class="col-8">
-                        <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></p>
+                    <div class="accordion-item border-0">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                          Description
+                        </button>
+                      </h2>
+                      <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+                        <div class="accordion-body fw-medium">
+                          <p style="white-space: break-spaces; overflow: hidden;">
+                            <?php
+                              $novelText = isset($row['description']) ? $row['description'] : '';
+
+                              if (!empty($novelText)) {
+                                $paragraphs = explode("\n", $novelText);
+
+                                foreach ($paragraphs as $index => $paragraph) {
+                                  $messageTextWithoutTags = strip_tags($paragraph);
+                                  $pattern = '/\bhttps?:\/\/\S+/i';
+
+                                  $formattedText = preg_replace_callback($pattern, function ($matches) {
+                                    $url = htmlspecialchars($matches[0]);
+
+                                    // Check if the URL ends with .png, .jpg, .jpeg, or .webp
+                                    if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $url)) {
+                                      return '<a href="' . $url . '" target="_blank"><img class="img-fluid rounded-4" loading="lazy" src="' . $url . '" alt="Image"></a>';
+                                    } elseif (strpos($url, 'youtube.com') !== false) {
+                                      // If the URL is from YouTube, embed it as an iframe with a very low-resolution thumbnail
+                                      $videoId = getYouTubeVideoId($url);
+                                      if ($videoId) {
+                                        $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
+                                        return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0" allowfullscreen></iframe></div>';
+                                      } else {
+                                        return '<a href="' . $url . '">' . $url . '</a>';
+                                      }
+                                    } else {
+                                      return '<a href="' . $url . '">' . $url . '</a>';
+                                    }
+                                  }, $messageTextWithoutTags);
+
+                                  echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
+                                }
+                              } else {
+                                echo "Sorry, no text...";
+                              }
+
+                              if (!function_exists('getYouTubeVideoId')) {
+                                function getYouTubeVideoId($url)
+                                {
+                                  $videoId = '';
+                                  $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+                                  if (preg_match($pattern, $url, $matches)) {
+                                    $videoId = $matches[1];
+                                  }
+                                  return $videoId;
+                                }
+                              }
+                            ?>
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div class="mb-2 row">
-                      <label for="album" class="col-4 col-form-label text-nowrap fw-medium">Album :</label>
-                      <div class="col-8">
-                        <p class="form-control-plaintext fw-bold" id="album"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a></p>
+                    <div class="accordion-item border-0">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                          Lyrics
+                        </button>
+                      </h2>
+                      <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+                        <div class="accordion-body fw-medium">
+                          <p style="white-space: break-spaces; overflow: hidden;">
+                            <?php
+                              if (!empty($row['lyrics'])) {
+                                $messageTextLyrics = $row['lyrics'];
+                                $messageTextWithoutTagsLyrics = strip_tags($messageTextLyrics);
+                                $formattedTextWithLineBreaksLyrics = nl2br($messageTextWithoutTagsLyrics);
+                                echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedTextWithLineBreaksLyrics</p>";
+                              } else {
+                                echo "Lyrics are empty.";
+                              }
+                            ?>
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div class="mb-2 row">
-                      <label for="duration" class="col-4 col-form-label text-nowrap fw-medium">Duration :</label>
-                      <div class="col-8">
-                        <p class="form-control-plaintext fw-bold" id="duration"><?= $duration ?></p>
-                      </div>
-                    </div>
-                    <div class="mb-2 row">
-                      <label for="bitrate" class="col-4 col-form-label text-nowrap fw-medium">Bitrate :</label>
-                      <div class="col-8">
-                        <p class="form-control-plaintext fw-bold" id="bitrate"><?= $bitrate ?></p>
-                      </div>
-                    </div>
-                    <div class="mb-2 row">
-                      <label for="size" class="col-4 col-form-label text-nowrap fw-medium">Size :</label>
-                      <div class="col-8">
-                        <p class="form-control-plaintext fw-bold" id="size"><?= $size ?></p>
-                      </div>
-                    </div>
-                    <div class="mb-2 row">
-                      <label for="audioType" class="col-4 col-form-label text-nowrap fw-medium">Audio Type :</label>
-                      <div class="col-8">
-                        <p class="form-control-plaintext fw-bold" id="audioType"><?= $audioType ?></p>
-                      </div>
-                    </div>
-                    <a class="btn btn-primary fw-bold w-100" href="<?php echo $row['file']; ?>" download>Download Song</a>
                   </div>
                 </div>
               </div>
@@ -408,7 +504,7 @@ if (isset($_POST['favorite'])) {
                         <button class="text-decoration-none text-white btn fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                         <ul class="dropdown-menu">
                           <li><button class="dropdown-item" onclick="sharePageS('<?php echo $song['id']; ?>', '<?php echo $song['title']; ?>')"><i class="bi bi-share-fill"></i> share</button></li>
-                          <li><a class="dropdown-item" href="artist.php?name=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
+                          <li><a class="dropdown-item" href="artist.php?id=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
                           <li><a class="dropdown-item" href="album.php?album=<?php echo $song['album']; ?>"><i class="bi bi-disc-fill"></i> show album</a></li>
                         </ul>
                       </div>
@@ -431,7 +527,7 @@ if (isset($_POST['favorite'])) {
                     <button class="text-decoration-none text-white btn fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                     <ul class="dropdown-menu">
                       <li><button class="dropdown-item" onclick="sharePageS('<?php echo $song['id']; ?>', '<?php echo $song['title']; ?>')"><i class="bi bi-share-fill"></i> share</button></li>
-                      <li><a class="dropdown-item" href="artist.php?name=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
+                      <li><a class="dropdown-item" href="artist.php?id=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
                       <li><a class="dropdown-item" href="album.php?album=<?php echo $song['album']; ?>"><i class="bi bi-disc-fill"></i> show album</a></li>
                     </ul>
                   </div>
