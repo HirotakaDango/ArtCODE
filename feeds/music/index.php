@@ -4,7 +4,7 @@ $db = new SQLite3('../../database.sqlite');
 $email = $_SESSION['email'];
 
 $db->exec("CREATE TABLE IF NOT EXISTS favorites_music (id INTEGER PRIMARY KEY AUTOINCREMENT, music_id INTEGER, email TEXT)");
-$db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMENT, file TEXT, email TEXT, cover TEXT, album TEXT, title TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMENT, file TEXT, email TEXT, cover TEXT, album TEXT, title TEXT, description TEXT, lyrics TEXT)");
 
 // Pagination
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
