@@ -208,6 +208,7 @@ if (isset($_POST['favorite'])) {
     <script>
       const player = document.getElementById('player');
       let currentTrackId = <?= $id ?>;
+      let isSeeking = false;
 
       navigator.mediaSession.setActionHandler('previoustrack', function() {
         currentTrackId = <?= $prevRow ? $prevRow['id'] : 0 ?>;
@@ -231,14 +232,87 @@ if (isset($_POST['favorite'])) {
           artist: '<?= htmlspecialchars($row['artist']) ?>',
           album: '<?= htmlspecialchars($row['album']) ?>',
           artwork: [
-            { src: coverPath, sizes: '1600x1600', type: 'image/png' }, // Updated sizes attribute
+            { src: coverPath, sizes: '1600x1600', type: 'image/png' },
             // Add additional artwork sizes if needed
           ],
         });
       };
 
-      // Call the function to set metadata when the page loads
-      setMediaMetadata();
+    // Call the function to set metadata when the page loads
+    setMediaMetadata();
+
+    // Event listener for seeking
+    player.addEventListener('timeupdate', function() {
+      if (!isSeeking) {
+        // Update the current playback position for the media session
+        navigator.mediaSession.setPositionState({
+          duration: player.duration,
+          playbackRate: player.playbackRate,
+          position: player.currentTime,
+        });
+      }
+    });
+
+    // Event listener for slider input
+    const slider = document.getElementById('music-slider');
+    slider.addEventListener('input', function() {
+      isSeeking = true;
+      // Update the playback position when the slider is moved
+      const newPosition = (slider.value / 100) * player.duration;
+      player.currentTime = newPosition;
+    });
+
+    // Event listener for slider release
+    slider.addEventListener('mouseup', function() {
+      isSeeking = false;
+      // Resume playback after seeking
+      if (!player.paused) {
+        player.play();
+      }
+    });
+
+    // Notification button to show the custom notification
+    document.getElementById('show-notification-btn').addEventListener('click', function() {
+      showCustomNotification();
+    });
+
+    // Function to show a custom notification
+    const showCustomNotification = () => {
+      const options = {
+        body: 'Now playing: ' + '<?= htmlspecialchars($row['title']) ?>',
+        icon: 'covers/<?= htmlspecialchars($row['cover']) ?>',
+        actions: [
+          { action: 'prev', title: 'Previous' },
+          { action: 'play', title: 'Play' },
+          { action: 'next', title: 'Next' },
+        ],
+      };
+
+      const notification = new Notification('Music Player', options);
+
+      notification.addEventListener('notificationclick', function(event) {
+        const action = event.action;
+        handleNotificationAction(action);
+      });
+    };
+
+      // Function to handle notification actions
+      const handleNotificationAction = (action) => {
+        switch (action) {
+          case 'prev':
+            // Handle previous track action
+            break;
+          case 'play':
+            // Handle play/pause action
+            break;
+          case 'next':
+            // Handle next track action
+            break;
+          default:
+            // Handle default action
+            break;
+        }
+      };
     </script>
   </head>
   <body>
@@ -463,7 +537,7 @@ if (isset($_POST['favorite'])) {
               </div>
             </div>
           </div>
-          <div class="d-md-none d-lg-none my-auto">
+          <div class="d-md-none d-lg-none mt-auto mb-auto">
             <div class="d-flex justify-content-center btn-group">
               <?php if ($prevRow): ?>
                 <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
@@ -687,6 +761,18 @@ if (isset($_POST['favorite'])) {
             navigateToNextMusic(nextMusicUrl);
           });
         }
+      });
+    </script>
+    <script>
+      // Get a reference to the element
+      const autoHeightDiv = document.getElementById('autoHeightDiv');
+    
+      // Set the element's height to match the screen's height
+      autoHeightDiv.style.height = window.innerHeight + 'px';
+    
+      // Listen for window resize events to update the height dynamically
+      window.addEventListener('resize', () => {
+        autoHeightDiv.style.height = window.innerHeight + 'px';
       });
     </script>
     <script>
