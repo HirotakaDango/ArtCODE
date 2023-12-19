@@ -5,29 +5,6 @@ $email = $_SESSION['email'];
 
 $db->exec("CREATE TABLE IF NOT EXISTS favorites_music (id INTEGER PRIMARY KEY AUTOINCREMENT, music_id INTEGER, email TEXT)");
 $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMENT, file TEXT, email TEXT, cover TEXT, album TEXT, title TEXT, description TEXT, lyrics TEXT)");
-
-// Pagination
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$recordsPerPage = 20;
-$offset = ($page - 1) * $recordsPerPage;
-
-// Fetch music records with user information
-$query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id AS userid, users.artist 
-          FROM music 
-          LEFT JOIN users ON music.email = users.email 
-          ORDER BY music.id DESC 
-          LIMIT :limit OFFSET :offset";
-
-$stmt = $db->prepare($query);
-$stmt->bindValue(':limit', $recordsPerPage, SQLITE3_INTEGER);
-$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
-$result = $stmt->execute();
-
-// Calculate total pages
-$total = $db->querySingle("SELECT COUNT(*) FROM music");
-$totalPages = ceil($total / $recordsPerPage);
-$prevPage = $page - 1;
-$nextPage = $page + 1;
 ?>
 
 <!DOCTYPE html>
@@ -40,61 +17,46 @@ $nextPage = $page + 1;
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container-fluid mt-3">
-      <?php include('header.php'); ?>
-      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
-        <?php while ($row = $result->fetchArray(SQLITE3_ASSOC)) : ?>
-          <div class="col">
-            <div class="card shadow-sm h-100 position-relative rounded-3">
-              <a class="shadow position-relative btn p-0" href="music.php?album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
-                <img class="w-100 object-fit-cover rounded" height="200" src="covers/<?php echo $row['cover']; ?>">
-                <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
-              </a>
-              <div class="p-2 position-absolute bottom-0 start-0">
-                <h5 class="card-text fw-bold text-shadow"><?php echo $row['title']; ?></h5>
-                <p class="card-text small fw-bold text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></small></p>
-              </div>
-            </div>
-          </div>
-        <?php endwhile; ?>
-      </div>
-    </div>
-    <style>
-      .text-shadow {
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
-      }
-    </style>
-
-    <!-- Pagination -->
-    <div class="container mt-3">
-      <div class="pagination d-flex gap-1 justify-content-center mt-3">
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-        <?php endif; ?>
-
-        <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?page=' . $i . '">' . $i . '</a>';
+    <?php include('header.php'); ?>
+    <div class="dropdown mt-3">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=album&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'album') echo 'active'; ?>">album</a></li>
+        <li><a href="?by=asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc') echo 'active'; ?>">ascending</a></li>
+        <li><a href="?by=desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
+      </ul> 
+    </div> 
+        <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
+ 
+          switch ($sort) {
+            case 'newest':
+            include "index_desc.php";
+            break;
+            case 'oldest':
+            include "index_asc.php";
+            break;
+            case 'album':
+            include "index_album.php";
+            break;
+            case 'desc':
+            include "index_order_desc.php";
+            break;
+            case 'asc':
+            include "index_order_asc.php";
+            break;
           }
         }
+        else {
+          include "index_desc.php";
+        }
+        
         ?>
-
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-        <?php endif; ?>
-      </div>
-    </div>
-    <div class="mt-5"></div>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>

@@ -62,18 +62,7 @@ $nextPage = $page + 1;
       <?php include('header.php'); ?>
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
         <?php foreach ($rows as $row): ?>
-          <div class="col">
-            <div class="card shadow-sm h-100 position-relative rounded-3">
-              <a class="shadow position-relative btn p-0" href="music.php?album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
-                <img class="w-100 object-fit-cover rounded" height="200" src="covers/<?php echo $row['cover']; ?>">
-                <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
-              </a>
-              <div class="p-2 position-absolute bottom-0 start-0">
-                <h5 class="card-text fw-bold text-shadow"><?php echo $row['title']; ?></h5>
-                <p class="card-text small fw-bold text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></small></p>
-              </div>
-            </div>
-          </div>
+          <?php include('music_info.php'); ?>
         <?php endforeach; ?>
       </div>
     </div>

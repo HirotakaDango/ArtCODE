@@ -48,7 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $coverName = 'cover_' . uniqid() . '.' . pathinfo($coverFile['name'], PATHINFO_EXTENSION);
     $coverPath = 'covers/' . $coverName; // Adjust the path to "covers" in the current directory
 
-    move_uploaded_file($coverFile['tmp_name'], $coverPath);
+    // Resize or crop the image to maintain a 1x1 aspect ratio
+    $image = imagecreatefromstring(file_get_contents($coverFile['tmp_name']));
+    $width = imagesx($image);
+    $height = imagesy($image);
+    $size = min($width, $height);
+
+    // Create a square canvas
+    $canvas = imagecreatetruecolor($size, $size);
+
+    // Crop or resize the image to fit the square canvas
+    imagecopyresampled($canvas, $image, 0, 0, ($width - $size) / 2, ($height - $size) / 2, $size, $size, $size, $size);
+
+    // Save the processed image
+    imagejpeg($canvas, $coverPath);
+    imagedestroy($canvas);
+    imagedestroy($image);
 
     // Update the music record with the new cover and other information
     $updateCoverQuery = "UPDATE music
@@ -127,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </nav>
       <div class="row">
-        <div class="col-md-6 pe-md-1 mb-2">
+        <div class="col-md-4 pe-md-1 mb-2">
           <a data-bs-toggle="modal" data-bs-target="#originalImage">
             <div class="ratio ratio-1x1">
               <div id="file-preview-container" class="d-flex align-items-center justify-content-center h-100 border border-3 rounded-4">
@@ -143,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
           </a>
         </div>
-        <div class="col-md-6 ps-md-1">
+        <div class="col-md-8 ps-md-1">
           <form oninput="showPreview(event)" enctype="multipart/form-data" action="" method="post">
             <div class="mb-2">
               <label for="cover" class="form-label">Select Cover Image</label>

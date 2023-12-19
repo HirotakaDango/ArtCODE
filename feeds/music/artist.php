@@ -27,40 +27,6 @@ $message_2 = $user['message_2'];
 $message_3 = $user['message_3'];
 $message_4 = $user['message_4'];
 
-// Pagination
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$recordsPerPage = 20;
-$offset = ($page - 1) * $recordsPerPage;
-
-// Fetch music records with user details using JOIN
-$queryMusic = "SELECT music.*, users.id AS userid, users.artist FROM music JOIN users ON music.email = users.email WHERE users.id = :userID ORDER BY music.id DESC LIMIT :limit OFFSET :offset";
-
-$stmt = $db->prepare($queryMusic);
-$stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
-$stmt->bindParam(':limit', $recordsPerPage, PDO::PARAM_INT);
-$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
-
-// Fetch all rows as an associative array
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Calculate total pages for the logged-in user
-$queryTotal = "SELECT COUNT(*) FROM music WHERE email IN (SELECT email FROM users WHERE id = :userID)";
-$stmtTotal = $db->prepare($queryTotal);
-$stmtTotal->bindParam(':userID', $userID, PDO::PARAM_INT);
-$stmtTotal->execute();
-$total = $stmtTotal->fetchColumn();
-$totalPages = ceil($total / $recordsPerPage);
-$prevPage = $page - 1;
-$nextPage = $page + 1;
-
-// Count the number of music records for the user
-$queryCount = "SELECT COUNT(*) FROM music WHERE email IN (SELECT email FROM users WHERE id = :userID)";
-$stmtCount = $db->prepare($queryCount);
-$stmtCount->bindParam(':userID', $userID, PDO::PARAM_INT);
-$stmtCount->execute();
-$musicCount = $stmtCount->fetchColumn();
-
 // Check if the logged-in user is already following the selected user
 $query = $db->prepare('SELECT COUNT(*) FROM following WHERE follower_email = :follower_email AND following_email = :following_email');
 $query->bindParam(':follower_email', $email);
@@ -82,6 +48,13 @@ function formatNumber($num) {
     return $num;
   }
 }
+
+// Count the number of music records for the user
+$queryCount = "SELECT COUNT(*) FROM music WHERE email IN (SELECT email FROM users WHERE id = :userID)";
+$stmtCount = $db->prepare($queryCount);
+$stmtCount->bindParam(':userID', $userID, PDO::PARAM_INT);
+$stmtCount->execute();
+$musicCount = $stmtCount->fetchColumn();
 
 // Get the number of followers for the selected user
 $query = $db->prepare('SELECT COUNT(*) FROM following WHERE following_email = :following_email');
@@ -296,76 +269,34 @@ if (isset($_POST['follow'])) {
       </div>
     </div>
     <!-- End of Profile Header -->
-    <div class="container-fluid">
-      <?php include('header.php'); ?>
-      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
-        <?php foreach ($rows as $row): ?>
-          <div class="col">
-            <div class="card shadow-sm h-100 position-relative rounded-3">
-              <a class="shadow position-relative btn p-0" href="music.php?album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
-                <img class="w-100 object-fit-cover rounded" height="200" src="covers/<?php echo $row['cover']; ?>">
-                <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
-              </a>
-              <div class="p-2 position-absolute bottom-0 start-0">
-                <h5 class="card-text fw-bold text-shadow"><?php echo $row['title']; ?></h5>
-                <p class="card-text small fw-bold text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></small></p>
-              </div>
-            </div>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
-    <style>
-      .text-shadow {
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
-      }
-
-      .button-group {
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      @media only screen and (min-width: 767px) {
-        .rounded-min-5 {
-          border-radius: 1.6rem;
-        }
-      }
-        
-      .button-group button {
-        white-space: nowrap; /* Prevent wrapping of button text */
-      }
-    </style>
-    
-    <!-- Pagination -->
-    <div class="container mt-3">
-      <div class="pagination d-flex gap-1 justify-content-center mt-3">
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $userID; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $userID; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-        <?php endif; ?>
-
-        <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?id=' . $userID . '&page=' . $i . '">' . $i . '</a>';
+    <?php include('header.php'); ?>
+    <div class="dropdown mt-3">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+      </ul> 
+    </div> 
+        <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
+ 
+          switch ($sort) {
+            case 'newest':
+            include "artist_desc.php";
+            break;
+            case 'oldest':
+            include "artist_asc.php";
+            break;
           }
         }
+        else {
+          include "artist_desc.php";
+        }
+        
         ?>
-
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $userID; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $userID; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-        <?php endif; ?>
-      </div>
-    </div>
-    <div class="mt-5"></div>
     <script>
       function sharePage() {
         if (navigator.share) {
