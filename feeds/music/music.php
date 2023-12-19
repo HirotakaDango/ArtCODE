@@ -205,6 +205,41 @@ if (isset($_POST['favorite'])) {
         border-radius: 0;
       }
     </style>
+    <script>
+      const player = document.getElementById('player');
+      let currentTrackId = <?= $id ?>;
+
+      navigator.mediaSession.setActionHandler('previoustrack', function() {
+        currentTrackId = <?= $prevRow ? $prevRow['id'] : 0 ?>;
+        const previousTrackUrl = 'music.php?album=<?= $prevRow ? urlencode($prevRow['album']) : '' ?>&id=' + currentTrackId;
+        window.location.href = previousTrackUrl;
+      });
+
+      navigator.mediaSession.setActionHandler('nexttrack', function() {
+        currentTrackId = <?= $nextRow ? $nextRow['id'] : 0 ?>;
+        const nextTrackUrl = 'music.php?album=<?= $nextRow ? urlencode($nextRow['album']) : '' ?>&id=' + currentTrackId;
+        window.location.href = nextTrackUrl;
+      });
+
+      // Set metadata for the currently playing media
+      const setMediaMetadata = () => {
+        const coverPath = 'covers/<?= htmlspecialchars($row['cover']) ?>';
+        console.log('Cover Path:', coverPath);
+
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: '<?= htmlspecialchars($row['title']) ?>',
+          artist: '<?= htmlspecialchars($row['artist']) ?>',
+          album: '<?= htmlspecialchars($row['album']) ?>',
+          artwork: [
+            { src: coverPath, sizes: '1600x1600', type: 'image/png' }, // Updated sizes attribute
+            // Add additional artwork sizes if needed
+          ],
+        });
+      };
+
+      // Call the function to set metadata when the page loads
+      setMediaMetadata();
+    </script>
   </head>
   <body>
     <div class="container-fluid mt-3">
