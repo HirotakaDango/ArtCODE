@@ -411,7 +411,7 @@ if (isset($_POST['favorite'])) {
                             <div class="mb-2 row">
                               <label for="title" class="col-4 col-form-label text-nowrap fw-medium">Title :</label>
                               <div class="col-8">
-                                <p class="form-control-plaintext fw-bold" id="title"><?php echo $row['title']; ?></p>
+                                <p class="form-control-plaintext fw-bold text-white" id="title"><?php echo $row['title']; ?></p>
                               </div>
                             </div>
                             <div class="mb-2 row">
@@ -655,7 +655,7 @@ if (isset($_POST['favorite'])) {
                   </div>
                 </div>
               <?php endforeach; ?>
-              <br><br><br><br><br>
+              <br><br><br><br><br><br><br>
             </div>
           </div>
         </div>

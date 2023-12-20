@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Check if the form was submitted
   if (
     isset($_FILES['image']) && !empty($_FILES['image']['name']) &&
+    isset($_FILES['musicFile']) && !empty($_FILES['musicFile']['name']) &&
     isset($_POST['album']) && !empty($_POST['album']) &&
     isset($_POST['title']) && !empty($_POST['title'])
   ) {
@@ -100,34 +101,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       echo json_encode(['success' => false, 'message' => 'Invalid file type. Only JPG, JPEG, and PNG are allowed.']);
       exit;
     }
+
+    // Process uploaded music file
+    $originalMusicName = basename($_FILES['musicFile']['name']);
+    $musicExtension = pathinfo($originalMusicName, PATHINFO_EXTENSION);
+
+    if (strtolower($musicExtension) === 'mp3') {
+      $uniqueMusicName = uniqid() . '.' . $musicExtension;
+      $musicFile = $uploadDir . $uniqueMusicName;
+
+      // Move uploaded music file to destination
+      if (!move_uploaded_file($_FILES['musicFile']['tmp_name'], $musicFile)) {
+        // Handle the case where moving the music file fails
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Failed to upload the music file.']);
+        exit;
+      }
+    } else {
+      // Output a JSON response indicating invalid music file type
+      header('Content-Type: application/json');
+      echo json_encode(['success' => false, 'message' => 'Invalid music file type. Only MP3 is allowed.']);
+      exit;
+    }
+
+    // Sanitize input data before using in SQL query
+    $sanitizedAlbum = filter_var($_POST['album'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $sanitizedTitle = filter_var($_POST['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+    $sanitizedLyrics = nl2br(filter_var($_POST['lyrics'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+    $sanitizedDescription = nl2br(filter_var($_POST['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+    // Insert record into the database
+    $stmt = $db->prepare("INSERT INTO music (file, email, cover, album, title, lyrics, description) VALUES (:file, :email, :cover, :album, :title, :lyrics, :description)");
+    $stmt->bindValue(':file', $musicFile, SQLITE3_TEXT); // Use the uploaded music file
+    $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+    $stmt->bindValue(':cover', $coverFile, SQLITE3_TEXT);
+    $stmt->bindValue(':album', $sanitizedAlbum, SQLITE3_TEXT);
+    $stmt->bindValue(':title', $sanitizedTitle, SQLITE3_TEXT);
+    $stmt->bindValue(':lyrics', $sanitizedLyrics, SQLITE3_TEXT);
+    $stmt->bindValue(':description', $sanitizedDescription, SQLITE3_TEXT);
+    $stmt->execute();
+
+    // Output a JSON response
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true]);
+    exit;
+
   } else {
     // If any required input data is missing, do not proceed with upload and insertion
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'message' => 'Missing required input data.']);
     exit;
   }
-
-  // Sanitize input data before using in SQL query
-  $sanitizedAlbum = filter_var($_POST['album'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  $sanitizedTitle = filter_var($_POST['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  $sanitizedLyrics = nl2br(filter_var($_POST['lyrics'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-  $sanitizedDescription = nl2br(filter_var($_POST['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-
-  // Insert record into the database
-  $stmt = $db->prepare("INSERT INTO music (file, email, cover, album, title, lyrics, description) VALUES (:file, :email, :cover, :album, :title, :lyrics, :description)");
-  $stmt->bindValue(':file', $imageFile ?? '', SQLITE3_TEXT); // Use the uploaded image file if available
-  $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-  $stmt->bindValue(':cover', $coverFile, SQLITE3_TEXT);
-  $stmt->bindValue(':album', $sanitizedAlbum, SQLITE3_TEXT);
-  $stmt->bindValue(':title', $sanitizedTitle, SQLITE3_TEXT);
-  $stmt->bindValue(':lyrics', $sanitizedLyrics, SQLITE3_TEXT);
-  $stmt->bindValue(':description', $sanitizedDescription, SQLITE3_TEXT);
-  $stmt->execute();
-
-  // Output a JSON response
-  header('Content-Type: application/json');
-  echo json_encode(['success' => true]);
-  exit;
 }
 ?>
 

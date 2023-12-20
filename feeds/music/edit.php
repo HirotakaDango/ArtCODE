@@ -197,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </div>
             </div>
             <button type="button" class="btn btn-danger w-100 fw-bold border-danger-subtle border border-3 rounded-4 my-2" data-bs-toggle="modal" data-bs-target="#modalDelete">
-              delete this work
+              delete this song
             </button>
             <button type="submit" class="btn btn-primary w-100 fw-bold border-primary-subtle border border-3 rounded-4">save changes</button>
           </form>
@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body py-0 text-center fw-medium">
-            <p>Are you sure want to delete <strong><?php echo $row['title'] ?></strong> from your works?</p>
+            <p>Are you sure want to delete <strong><?php echo $row['title'] ?></strong>?</p>
             <p class="small">(Warning: You can't restore back after you delete this!)</p>
             <div class="btn-group w-100 my-3 gap-3">
               <a class="btn btn-danger px-0 border border-danger-subtle border-3 rounded-4 fw-medium" href="delete.php?id=<?php echo $id; ?>">delete this!</a>
