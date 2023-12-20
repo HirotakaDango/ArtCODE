@@ -69,75 +69,72 @@ $size = !empty($fileInfo['filesize']) ? formatBytes($fileInfo['filesize']) : 'Un
 $audioType = !empty($fileInfo['fileformat']) ? $fileInfo['fileformat'] : 'Unknown';
 $sampleRate = !empty($fileInfo['audio']['sample_rate']) ? $fileInfo['audio']['sample_rate'] . 'Hz' : 'Unknown';
 
-// Fetch all music records for the specified artist
+// Fetch all music records for all artists, ordered by artist, album, and title ascending
 $queryAll = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
              FROM music
              JOIN users ON music.email = users.email
-             WHERE users.id = :artist_id
-             ORDER BY music.album ASC, music.id ASC";
+             ORDER BY users.artist ASC, music.album ASC, music.title ASC";
 $stmtAll = $db->prepare($queryAll);
-$stmtAll->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
 $stmtAll->execute();
 $allRows = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
 
-// Check if there is only one song for the artist and set a flag for looping
+// Check if there is only one song in the playlist and set a flag for looping
 $loopPlaylist = count($allRows) === 1;
 
-// Fetch next music record for the specified artist
+// Fetch next music record for the specified song
 $queryNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE (music.album = :album AND music.id > :id)
-                 OR (music.album = :album AND music.id = (SELECT MIN(id) FROM music WHERE album > :album AND email = :email))
-                 OR (music.album > :album AND music.email = :email)
-              ORDER BY music.album ASC, music.id ASC
+              WHERE (users.artist = :artist AND music.album = :album AND music.title > :title)
+                 OR (users.artist = :artist AND music.album > :album)
+                 OR (users.artist > :artist)
+              ORDER BY users.artist ASC, music.album ASC, music.title ASC
               LIMIT 1";
 $stmtNext = $db->prepare($queryNext);
-$stmtNext->bindParam(':album', $album, PDO::PARAM_STR);
-$stmtNext->bindParam(':id', $id, PDO::PARAM_INT);
-$stmtNext->bindParam(':email', $user_email, PDO::PARAM_STR);
+$stmtNext->bindParam(':artist', $row['artist'], PDO::PARAM_STR);
+$stmtNext->bindParam(':album', $row['album'], PDO::PARAM_STR);
+$stmtNext->bindParam(':title', $row['title'], PDO::PARAM_STR);
 $stmtNext->execute();
 $nextRow = $stmtNext->fetch(PDO::FETCH_ASSOC);
 
 if (!$nextRow) {
-  // If no next row, fetch the first music record for the artist
-  $queryFirstNextArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                          FROM music
-                          JOIN users ON music.email = users.email
-                          WHERE users.id = :artist_id
-                          ORDER BY music.album ASC, music.id ASC
-                          LIMIT 1";
-  $stmtFirstNextArtist = $db->prepare($queryFirstNextArtist);
-  $stmtFirstNextArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
-  $stmtFirstNextArtist->execute();
-  $nextRow = $stmtFirstNextArtist->fetch(PDO::FETCH_ASSOC);
+  // If no next row, fetch the first music record in the playlist
+  $queryFirstNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                     FROM music
+                     JOIN users ON music.email = users.email
+                     ORDER BY users.artist ASC, music.album ASC, music.title ASC
+                     LIMIT 1";
+  $stmtFirstNext = $db->prepare($queryFirstNext);
+  $stmtFirstNext->execute();
+  $nextRow = $stmtFirstNext->fetch(PDO::FETCH_ASSOC);
 }
 
-// Fetch previous music record for the specified artist
+// Fetch previous music record for the specified song
 $queryPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE (music.album = :album AND music.id < :id) OR (music.album < :album)
-              ORDER BY music.album DESC, music.id DESC
+              WHERE (users.artist = :artist AND music.album = :album AND music.title < :title)
+                 OR (users.artist = :artist AND music.album < :album)
+                 OR (users.artist < :artist)
+              ORDER BY users.artist DESC, music.album DESC, music.title DESC
               LIMIT 1";
 $stmtPrev = $db->prepare($queryPrev);
-$stmtPrev->bindParam(':album', $album, PDO::PARAM_STR);
-$stmtPrev->bindParam(':id', $id, PDO::PARAM_INT);
+$stmtPrev->bindParam(':artist', $row['artist'], PDO::PARAM_STR);
+$stmtPrev->bindParam(':album', $row['album'], PDO::PARAM_STR);
+$stmtPrev->bindParam(':title', $row['title'], PDO::PARAM_STR);
 $stmtPrev->execute();
 $prevRow = $stmtPrev->fetch(PDO::FETCH_ASSOC);
 
 if (!$prevRow) {
-  // If no previous row, fetch the last music record for the artist
-  $queryLastPrevArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                         FROM music
-                         JOIN users ON music.email = users.email
-                         WHERE users.id = :artist_id
-                         ORDER BY music.album DESC, music.id DESC
-                         LIMIT 1";
-  $stmtLastPrevArtist = $db->prepare($queryLastPrevArtist);
-  $stmtLastPrevArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
-  $stmtLastPrevArtist->execute();
-  $prevRow = $stmtLastPrevArtist->fetch(PDO::FETCH_ASSOC);
+  // If no previous row, fetch the last music record in the playlist
+  $queryLastPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                    FROM music
+                    JOIN users ON music.email = users.email
+                    ORDER BY users.artist DESC, music.album DESC, music.title DESC
+                    LIMIT 1";
+  $stmtLastPrev = $db->prepare($queryLastPrev);
+  $stmtLastPrev->execute();
+  $prevRow = $stmtLastPrev->fetch(PDO::FETCH_ASSOC);
 }
 
 // If looping is enabled, set the next and previous to the current song
@@ -165,7 +162,7 @@ if (isset($_POST['favorite'])) {
   }
 
   // Redirect to the same page with the appropriate sorting parameter
-  header('Location: music.php?album=' . $row['album'] . '&id=' . $row['id']);
+  header('Location: play_all.php?album=' . $row['album'] . '&id=' . $row['id']);
   exit();
 
 } elseif (isset($_POST['unfavorite'])) {
@@ -176,7 +173,7 @@ if (isset($_POST['favorite'])) {
   $stmt->execute();
 
   // Redirect to the same page with the appropriate sorting parameter
-  header('Location: music.php?album=' . $row['album'] . '&id=' . $row['id']);
+  header('Location: play_all.php?album=' . $row['album'] . '&id=' . $row['id']);
   exit();
 }
 ?>
@@ -213,13 +210,13 @@ if (isset($_POST['favorite'])) {
 
       navigator.mediaSession.setActionHandler('previoustrack', function() {
         currentTrackId = <?= $prevRow ? $prevRow['id'] : 0 ?>;
-        const previousTrackUrl = 'music.php?album=<?= $prevRow ? urlencode($prevRow['album']) : '' ?>&id=' + currentTrackId;
+        const previousTrackUrl = 'play_all.php?album=<?= $prevRow ? urlencode($prevRow['album']) : '' ?>&id=' + currentTrackId;
         window.location.href = previousTrackUrl;
       });
 
       navigator.mediaSession.setActionHandler('nexttrack', function() {
         currentTrackId = <?= $nextRow ? $nextRow['id'] : 0 ?>;
-        const nextTrackUrl = 'music.php?album=<?= $nextRow ? urlencode($nextRow['album']) : '' ?>&id=' + currentTrackId;
+        const nextTrackUrl = 'play_all.php?album=<?= $nextRow ? urlencode($nextRow['album']) : '' ?>&id=' + currentTrackId;
         window.location.href = nextTrackUrl;
       });
 
@@ -330,7 +327,7 @@ if (isset($_POST['favorite'])) {
               <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/music.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>"><?php echo $row['title']; ?></a>
+              <a class="link-body-emphasis text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/play_all.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>"><?php echo $row['title']; ?></a>
             </li>
             <?php if ($user_email === $email): ?>
               <li class="breadcrumb-item">
@@ -351,7 +348,7 @@ if (isset($_POST['favorite'])) {
             <div class="btn-group-vertical w-100">
               <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
               <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/">Home</a>
-              <a class="btn py-2 rounded text-start fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/music.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> <?php echo $row['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/play_all.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> <?php echo $row['title']; ?></a>
               <?php if ($user_email === $email): ?>
                 <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/edit.php?id=<?php echo $row['id']; ?>">Edit <?php echo $row['title']; ?></a>
               <?php endif; ?>
@@ -374,8 +371,8 @@ if (isset($_POST['favorite'])) {
               <button type="button" class="btn btn-dark opacity-50 position-absolute top-0 start-0 mt-1 ms-1 rounded-1 btn-sm" data-bs-toggle="modal" data-bs-target="#songInfo">
                 <i class="bi bi-info-circle-fill"></i>
               </button>
-              <a class="btn btn-dark opacity-50 position-absolute bottom-0 end-0 mb-1 me-1 rounded-1 fw-bold btn-sm" href="play_all.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>">
-                <i class="bi bi-play-fill"></i> play all songs
+              <a class="btn btn-dark opacity-50 position-absolute bottom-0 end-0 mb-1 me-1 rounded-1 fw-bold btn-sm" href="music.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>">
+                <i class="bi bi-play-fill"></i> play from current artist
               </a>
             </div>
           </div>
@@ -386,8 +383,8 @@ if (isset($_POST['favorite'])) {
             <button type="button" class="btn btn-dark opacity-50 position-absolute top-0 start-0 mt-1 ms-1 rounded-1 btn-sm" data-bs-toggle="modal" data-bs-target="#songInfo">
               <i class="bi bi-info-circle-fill"></i>
             </button>
-            <a class="btn btn-dark opacity-50 position-absolute bottom-0 end-0 mb-1 me-1 rounded-1 fw-bold btn-sm" href="play_all.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>">
-              <i class="bi bi-play-fill"></i> play all songs
+            <a class="btn btn-dark opacity-50 position-absolute bottom-0 end-0 mb-1 me-1 rounded-1 fw-bold btn-sm" href="music.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>">
+              <i class="bi bi-play-fill"></i> play from current artist
             </a>
           </div>
           <div class="modal fade" id="songInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -553,13 +550,13 @@ if (isset($_POST['favorite'])) {
           <div class="d-md-none d-lg-none mt-auto mb-auto">
             <div class="d-flex justify-content-center btn-group">
               <?php if ($prevRow): ?>
-                <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
+                <a href="play_all.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
               <?php endif; ?>
               <button class="text-decoration-none btn text-white d-md-none d-lg-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <i class="bi bi-music-note-list display-1"></i>
               </button>
               <?php if ($nextRow): ?>
-                <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
+                <a href="play_all.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
               <?php endif; ?>
             </div>
           </div> 
@@ -597,10 +594,10 @@ if (isset($_POST['favorite'])) {
               <div class="d-none d-md-block d-lg-block">
                 <div class="btn-group">
                   <?php if ($prevRow): ?>
-                    <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-start-fill fs-3"></i></a>
+                    <a href="play_all.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-start-fill fs-3"></i></a>
                   <?php endif; ?>
                   <?php if ($nextRow): ?>
-                    <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-end-fill fs-3"></i></a>
+                    <a href="play_all.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-end-fill fs-3"></i></a>
                   <?php endif; ?>
                 </div>
               </div>
@@ -618,7 +615,7 @@ if (isset($_POST['favorite'])) {
                 <div class="modal-body">
                   <?php foreach ($allRows as $song): ?>
                     <div class="d-flex justify-content-between align-items-center border-bottom">
-                      <a class="text-decoration-none music text-start w-100 text-white btn fw-bold" href="music.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>">
+                      <a class="text-decoration-none music text-start w-100 text-white btn fw-bold" href="play_all.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>">
                         <?php echo $song['title']; ?><br>
                         <small class="text-muted"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small>
                       </a>
@@ -641,7 +638,7 @@ if (isset($_POST['favorite'])) {
               <h3 class="text-start fw-bold"><i class="bi bi-music-note-list"></i> song list from <?php echo $row['artist']; ?></h3>
               <?php foreach ($allRows as $song): ?>
                 <div class="d-flex justify-content-between align-items-center border-bottom">
-                  <a class="text-decoration-none music text-start w-100 text-white btn fw-bold" href="music.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>">
+                  <a class="text-decoration-none music text-start w-100 text-white btn fw-bold" href="play_all.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>">
                     <?php echo $song['title']; ?><br>
                     <small class="text-muted"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small>
                   </a>
@@ -668,63 +665,63 @@ if (isset($_POST['favorite'])) {
             <p class="text-start fw-bold">share to:</p>
             <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- Twitter -->
-              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-twitter"></i>
               </a>
                                 
               <!-- Line -->
-              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-line"></i>
               </a>
                                 
               <!-- Email -->
-              <a class="btn" href="mailto:?body=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>">
+              <a class="btn" href="mailto:?body=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>">
                 <i class="bi bi-envelope-fill"></i>
               </a>
                                 
               <!-- Reddit -->
-              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-reddit"></i>
               </a>
                                 
               <!-- Instagram -->
-              <a class="btn" href="https://www.instagram.com/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.instagram.com/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-instagram"></i>
               </a>
                                 
               <!-- Facebook -->
-              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-facebook"></i>
               </a>
             </div>
             <div class="btn-group w-100" role="group" aria-label="Share Buttons">
               <!-- WhatsApp -->
-              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-whatsapp"></i>
               </a>
     
               <!-- Pinterest -->
-              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-pinterest"></i>
               </a>
     
               <!-- LinkedIn -->
-              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-linkedin"></i>
               </a>
     
               <!-- Messenger -->
-              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-messenger"></i>
               </a>
     
               <!-- Telegram -->
-              <a class="btn" href="https://telegram.me/share/url?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://telegram.me/share/url?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-telegram"></i>
               </a>
     
               <!-- Snapchat -->
-              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/music.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?album=' . $row['album'] . '&id=' . $row['id']); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-snapchat"></i>
               </a>
             </div>
@@ -753,7 +750,7 @@ if (isset($_POST['favorite'])) {
 
         player.on('ended', function(event) {
           // Redirect to the next song URL
-          window.location.href = "music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>";
+          window.location.href = "play_all.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>";
         });
 
         // Function to navigate to the next music page
@@ -807,7 +804,7 @@ if (isset($_POST['favorite'])) {
     <script>
       function sharePageS(musicId, songName) {
         if (navigator.share) {
-          const shareUrl = window.location.origin + '/music.php?id=' + musicId;
+          const shareUrl = window.location.origin + '/play_all.php?id=' + musicId;
           navigator.share({
             title: songName,
             url: shareUrl

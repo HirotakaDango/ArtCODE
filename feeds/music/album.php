@@ -40,6 +40,12 @@ if (!empty($rows)) {
 
   // Extract the image file path from the first row
   $imagePath = $firstRow['cover'];
+
+  // Extract the user ID from the first row
+  $userid = $firstRow['userid'];
+  
+  // Extract the album from the first row
+  $album = $firstRow['album'];
 }
 
 // Calculate the total number of tracks in the same album
@@ -56,7 +62,7 @@ $albumTrackCount = $countResult->fetchArray(SQLITE3_ASSOC)['count'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></title>
-    <link rel="icon" type="image/png" href="../../icon/favicon.png">
+    <link rel="icon" type="image/png" href="covers/<?php echo $imagePath; ?>">
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
@@ -68,12 +74,12 @@ $albumTrackCount = $countResult->fetchArray(SQLITE3_ASSOC)['count'];
             <div class="ratio ratio-1x1">
               <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover img-fluid rounded shadow" alt="..."></a>
             </div>
-            <button class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-medium" onclick="sharePage()"><small><i class="bi bi-share-fill"></i> share</small></button>
+            <button type="button" class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-medium" data-bs-toggle="modal" data-bs-target="#shareLink"><small><i class="bi bi-share-fill"></i> share</small></button>
           </div>
         </div>
         <div class="col-md-7 order-md-2">
           <h2 class="featurette-heading fw-normal fw-bold">Album: <?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></span></h2>
-          <p class="fw-medium mt-3">Artist : <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
+          <p class="fw-medium mt-3">Artist : <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
           <p class="fw-medium mt-3">Total Tracks in Album: <?php echo $albumTrackCount; ?> songs</p>
         </div>
       </div>
@@ -86,12 +92,84 @@ $albumTrackCount = $countResult->fetchArray(SQLITE3_ASSOC)['count'];
         <?php endforeach; ?>
       </div>
     </div>
+    <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="card rounded-4 p-4">
+            <p class="text-start fw-bold">share to:</p>
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+              <!-- Twitter -->
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-twitter"></i>
+              </a>
+                                
+              <!-- Line -->
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-line"></i>
+              </a>
+                                
+              <!-- Email -->
+              <a class="btn" href="mailto:?body=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>">
+                <i class="bi bi-envelope-fill"></i>
+              </a>
+                                
+              <!-- Reddit -->
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-reddit"></i>
+              </a>
+                                
+              <!-- Instagram -->
+              <a class="btn" href="https://www.instagram.com/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-instagram"></i>
+              </a>
+                                
+              <!-- Facebook -->
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-facebook"></i>
+              </a>
+            </div>
+            <div class="btn-group w-100" role="group" aria-label="Share Buttons">
+              <!-- WhatsApp -->
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+    
+              <!-- Pinterest -->
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-pinterest"></i>
+              </a>
+    
+              <!-- LinkedIn -->
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-linkedin"></i>
+              </a>
+    
+              <!-- Messenger -->
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-messenger"></i>
+              </a>
+    
+              <!-- Telegram -->
+              <a class="btn" href="https://telegram.me/share/url?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-telegram"></i>
+              </a>
+    
+              <!-- Snapchat -->
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . $album); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-snapchat"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-transparent border-0 rounded-0">
           <div class="modal-body position-relative">
             <img class="object-fit-contain h-100 w-100 rounded" src="covers/<?php echo $imagePath; ?>">
             <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+            <a class="btn btn-primary fw-bold w-100 mt-2" href="covers/<?php echo $imagePath; ?>" download>Download Cover Image</a>
           </div>
         </div>
       </div>
@@ -102,22 +180,6 @@ $albumTrackCount = $countResult->fetchArray(SQLITE3_ASSOC)['count'];
       }
     </style>
     <div class="mt-5"></div>
-    <script>
-      function sharePage() {
-        if (navigator.share) {
-          navigator.share({
-            title: document.title,
-            url: window.location.href
-          }).then(() => {
-            console.log('Page shared successfully.');
-          }).catch((error) => {
-            console.error('Error sharing page:', error);
-          });
-        } else {
-          console.log('Web Share API not supported.');
-        }
-      }
-    </script>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>
