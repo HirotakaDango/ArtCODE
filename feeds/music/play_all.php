@@ -577,13 +577,13 @@ if (isset($_POST['favorite'])) {
           <div class="d-md-none d-lg-none mt-auto mb-auto">
             <div class="d-flex justify-content-center btn-group">
               <?php if ($prevRow): ?>
-                <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
+                <a href="play_all.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-start-fill display-1"></i></a>
               <?php endif; ?>
               <button class="text-decoration-none btn text-white d-md-none d-lg-none" data-bs-toggle="modal" data-bs-target="#playList">
                 <i class="bi bi-music-note-list display-1"></i>
               </button>
               <?php if ($nextRow): ?>
-                <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
+                <a href="play_all.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end text-white"><i class="bi bi-skip-end-fill display-1"></i></a>
               <?php endif; ?>
             </div>
           </div> 
@@ -623,10 +623,10 @@ if (isset($_POST['favorite'])) {
               <div class="d-none d-md-block d-lg-block">
                 <div class="btn-group">
                   <?php if ($prevRow): ?>
-                    <a href="music.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-start-fill fs-3"></i></a>
+                    <a href="play_all.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-start-fill fs-3"></i></a>
                   <?php endif; ?>
                   <?php if ($nextRow): ?>
-                    <a href="music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-end-fill fs-3"></i></a>
+                    <a href="play_all.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>" class="btn float-end fw-bold" style="color: #4A5464;"><i class="bi bi-skip-end-fill fs-3"></i></a>
                   <?php endif; ?>
                 </div>
               </div>
@@ -861,7 +861,7 @@ if (isset($_POST['favorite'])) {
 
         player.on('ended', function(event) {
           // Redirect to the next song URL
-          window.location.href = "music.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>";
+          window.location.href = "play_all.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>";
         });
 
         // Function to navigate to the next music page
@@ -903,7 +903,7 @@ if (isset($_POST['favorite'])) {
     <script>
       function sharePageS(musicId, songName) {
         if (navigator.share) {
-          const shareUrl = window.location.origin + '/music.php?id=' + musicId;
+          const shareUrl = window.location.origin + '/play_all.php?id=' + musicId;
           navigator.share({
             title: songName,
             url: shareUrl
