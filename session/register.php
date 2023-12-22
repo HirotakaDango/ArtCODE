@@ -52,9 +52,9 @@
           <div class="row justify-content-center p-0">
             <div class="col-md-12 w-100 p-0 col-lg-10">
               <div class="wrap d-md-flex d-lg-flex" style="max-width: 675px;">
-                <div class="text-wrap p-4 p-lg-5 rounded-start-4 bg-dark bg-gradient bg-opacity-75 text-center">
+                <div class="text-wrap p-4 p-lg-5 rounded-start-4 bg-dark bg-gradient bg-opacity-75 text-center" style="max-width: 290px;">
                   <div class="justify-content-center d-flex align-items-center h-100">
-                    <div class="container w-100">
+                    <div class="container">
                       <h2 class="fw-bold">Welcome to signup</h2>
                       <h5 class="text-nowrap fw-bold">Sign up to explore</h5>
                       <p class="fw-medium">Already have an account?</p>
@@ -63,7 +63,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="container-fluid rounded-end-4 bg-dark bg-opacity-25">
+                <div class="container-fluid rounded-end-4 bg-dark bg-opacity-25" style="width: 385px;">
                   <div class="text-center">
                     <h3 class="mt-3 fw-bold">Sign Up</h3>
                   </div>
