@@ -634,8 +634,8 @@ if (isset($_POST['favorite'])) {
           </div>
         </div>
         <div class="col-md-7 order-md-2">
-          <div class="d-md-none d-lg-none" id="playList">
-            <h3 class="text-start fw-bold mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
+          <div class="d-md-none d-lg-none mt-4" id="playList">
+            <h3 class="text-start fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
             <div class="overflow-y-auto" id="autoHeightDivM" style="max-height: 100%;">
               <?php foreach ($allRows as $song): ?>
                 <?php
