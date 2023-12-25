@@ -236,63 +236,63 @@ if (isset($_POST['favorite'])) {
         });
       };
 
-    // Call the function to set metadata when the page loads
-    setMediaMetadata();
+      // Call the function to set metadata when the page loads
+      setMediaMetadata();
 
-    // Event listener for seeking
-    player.addEventListener('timeupdate', function() {
-      if (!isSeeking) {
-        // Update the current playback position for the media session
-        navigator.mediaSession.setPositionState({
-          duration: player.duration,
-          playbackRate: player.playbackRate,
-          position: player.currentTime,
-        });
-      }
-    });
-
-    // Event listener for slider input
-    const slider = document.getElementById('music-slider');
-    slider.addEventListener('input', function() {
-      isSeeking = true;
-      // Update the playback position when the slider is moved
-      const newPosition = (slider.value / 100) * player.duration;
-      player.currentTime = newPosition;
-    });
-
-    // Event listener for slider release
-    slider.addEventListener('mouseup', function() {
-      isSeeking = false;
-      // Resume playback after seeking
-      if (!player.paused) {
-        player.play();
-      }
-    });
-
-    // Notification button to show the custom notification
-    document.getElementById('show-notification-btn').addEventListener('click', function() {
-      showCustomNotification();
-    });
-
-    // Function to show a custom notification
-    const showCustomNotification = () => {
-      const options = {
-        body: 'Now playing: ' + '<?= htmlspecialchars($row['title']) ?>',
-        icon: 'covers/<?= htmlspecialchars($row['cover']) ?>',
-        actions: [
-          { action: 'prev', title: 'Previous' },
-          { action: 'play', title: 'Play' },
-          { action: 'next', title: 'Next' },
-        ],
-      };
-
-      const notification = new Notification('Music Player', options);
-
-      notification.addEventListener('notificationclick', function(event) {
-        const action = event.action;
-        handleNotificationAction(action);
+      // Event listener for seeking
+      player.addEventListener('timeupdate', function() {
+        if (!isSeeking) {
+          // Update the current playback position for the media session
+          navigator.mediaSession.setPositionState({
+            duration: player.duration,
+            playbackRate: player.playbackRate,
+            position: player.currentTime,
+          });
+        }
       });
-    };
+
+      // Event listener for slider input
+      const slider = document.getElementById('music-slider');
+      slider.addEventListener('input', function() {
+        isSeeking = true;
+        // Update the playback position when the slider is moved
+        const newPosition = (slider.value / 100) * player.duration;
+        player.currentTime = newPosition;
+      });
+
+      // Event listener for slider release
+      slider.addEventListener('mouseup', function() {
+        isSeeking = false;
+        // Resume playback after seeking
+        if (!player.paused) {
+          player.play();
+        }
+      });
+
+      // Notification button to show the custom notification
+      document.getElementById('show-notification-btn').addEventListener('click', function() {
+        showCustomNotification();
+      });
+
+      // Function to show a custom notification
+      const showCustomNotification = () => {
+        const options = {
+          body: 'Now playing: ' + '<?= htmlspecialchars($row['title']) ?>',
+          icon: 'covers/<?= htmlspecialchars($row['cover']) ?>',
+          actions: [
+            { action: 'prev', title: 'Previous' },
+            { action: 'play', title: 'Play' },
+            { action: 'next', title: 'Next' },
+          ],
+        };
+
+        const notification = new Notification('Music Player', options);
+
+        notification.addEventListener('notificationclick', function(event) {
+          const action = event.action;
+          handleNotificationAction(action);
+        });
+      };
 
       // Function to handle notification actions
       const handleNotificationAction = (action) => {

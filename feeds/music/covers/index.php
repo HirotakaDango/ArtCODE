@@ -1,5 +1,1 @@
-<?php
-$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/icon/forbidden.php';
-header("Location: $referer");
-exit();
-?>
+<img src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/icon/403-Error-Forbidden.svg" style="width: 100%; height: 100%;"> 
