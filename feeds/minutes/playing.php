@@ -242,7 +242,7 @@ $stmt->execute();
               <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow <?php echo $num_followers ?></small></button>
             <?php endif; ?>
           </form>
-          <div class="d-flex">
+          <div class="d-flex mt-2">
             <div class="ms-auto">
               <div class="btn-group gap-2">
                 <?php
