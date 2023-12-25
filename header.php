@@ -183,6 +183,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/minutes/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/">
+                  <i class="bi bi-person-video2 fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none ms-2">Minutes</span>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'status.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/status.php">
                   <i class="bi bi-card-text fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none ms-2">Status</span>
@@ -272,6 +278,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                           <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/tags.php">
                             <i class="bi bi-tags-fill fs-5"></i>
                             <span class="d-lg-inline ms-2">Tags</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/minutes/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/">
+                            <i class="bi bi-person-video2 fs-5"></i>
+                            <span class="d-lg-inline ms-2">Minutes</span>
                           </a>
                         </li>
                         <li class="nav-item">
