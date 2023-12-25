@@ -12,7 +12,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS videos (id INTEGER PRIMARY KEY AUTOINCREME
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArtCODE - Music</title>
+    <title>ArtCODE - Minutes</title>
     <link rel="icon" type="image/png" href="../../icon/favicon.png">
     <?php include('../../bootstrapcss.php'); ?>
   </head>
