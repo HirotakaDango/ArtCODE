@@ -30,24 +30,39 @@ if ($row['email'] !== $email) {
 
 // Handle deletion
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  // Delete the thumbnail if it exists
-  if (!empty($row['thumb'])) {
-    unlink('thumbnails/' . $row['thumb']); // Adjust the path to "thumbnails" in the current directory
-  }
-
   // Delete the video file if it exists
   if (!empty($row['video'])) {
-    unlink('videos/' . $row['video']); // Adjust the path to "videos" in the current directory
+    $videoFilePath = $row['video']; // Adjust the path to "videos" in the current directory
+
+    // Check if the video file exists before attempting to delete
+    if (file_exists($videoFilePath)) {
+      unlink($videoFilePath);
+    }
+  }
+
+  // Delete the thumbnail if it exists
+  if (!empty($row['thumb']) && $row['thumb'] !== 'default_cover.jpg') {
+    $thumbFilePath = 'thumbnails/' . $row['thumb']; // Adjust the path to "thumbnails" in the current directory
+
+    // Check if the thumbnail file exists before attempting to delete
+    if (file_exists($thumbFilePath)) {
+      unlink($thumbFilePath);
+    }
   }
 
   // Delete the video record from the database
   $deleteQuery = "DELETE FROM videos WHERE id = :id";
   $deleteStmt = $db->prepare($deleteQuery);
   $deleteStmt->bindValue(':id', $id, SQLITE3_INTEGER);
-  $deleteStmt->execute();
-
-  // Redirect to the home page after the deletion
-  header('Location: profile.php');
-  exit;
+  
+  // Check if the deletion query is successful before redirecting
+  if ($deleteStmt->execute()) {
+    header('Location: profile.php');
+    exit;
+  } else {
+    // Handle deletion failure (you may want to log an error or show a user-friendly message)
+    echo "Deletion failed. Please try again.";
+    exit;
+  }
 }
 ?>

@@ -19,20 +19,19 @@ $query = "CREATE TABLE IF NOT EXISTS videos (
 )";
 $db->exec($query);
 
-// Function to resize image to default size and maintain 16:9 aspect ratio
+// Function to resize image to default size and maintain 1x1 aspect ratio
 function resizeImage($sourceFile, $targetFile, $width, $height) {
-  $targetAspectRatio = 16 / 9; // Set the desired aspect ratio
-
   list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourceFile);
 
   $sourceAspectRatio = $sourceWidth / $sourceHeight;
+  $targetAspectRatio = $width / $height;
 
   if ($sourceAspectRatio > $targetAspectRatio) {
     $targetHeight = $height;
-    $targetWidth = $height * $targetAspectRatio;
+    $targetWidth = $height * $sourceAspectRatio;
   } else {
     $targetWidth = $width;
-    $targetHeight = $width / $targetAspectRatio;
+    $targetHeight = $width / $sourceAspectRatio;
   }
 
   $sourceImage = imagecreatefromjpeg($sourceFile); // Assumes JPG, change accordingly
@@ -59,7 +58,6 @@ function resizeImage($sourceFile, $targetFile, $width, $height) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Check if the form was submitted
   if (
-    isset($_FILES['image']) && !empty($_FILES['image']['name']) &&
     isset($_FILES['videoFile']) && !empty($_FILES['videoFile']['name']) &&
     isset($_POST['title']) && !empty($_POST['title'])
   ) {
@@ -71,27 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (!file_exists($coverDir)) {
       mkdir($coverDir, 0777, true);
-    }
-
-    $originalImageName = basename($_FILES['image']['name']);
-    $imageExtension = pathinfo($originalImageName, PATHINFO_EXTENSION);
-
-    if (in_array(strtolower($imageExtension), ['jpg', 'jpeg', 'png'])) {
-      $uniqueImageName = uniqid() . '.' . $imageExtension;
-      $imageFile = $uploadDir . $uniqueImageName;
-      $coverFile = 'cover_' . $uniqueImageName;
-
-      if (move_uploaded_file($_FILES['image']['tmp_name'], $imageFile)) {
-        resizeImage($imageFile, $coverDir . $coverFile, 1262, 1262);
-      } else {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => 'Failed to upload the image.']);
-        exit;
-      }
-    } else {
-      header('Content-Type: application/json');
-      echo json_encode(['success' => false, 'message' => 'Invalid file type. Only JPG, JPEG, and PNG are allowed.']);
-      exit;
     }
 
     $originalVideoName = basename($_FILES['videoFile']['name']);
@@ -113,15 +90,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $title = filter_var($_POST['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $description = nl2br(filter_var($_POST['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+    $description = filter_var($_POST['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    $stmt = $db->prepare("INSERT INTO videos (video, email, thumb, title, description, date) VALUES (:video, :email, :thumb, :title, :description, :date)");
-    $stmt->bindValue(':video', $videoFile, SQLITE3_TEXT);
-    $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-    $stmt->bindValue(':thumb', $coverFile, SQLITE3_TEXT);
-    $stmt->bindValue(':title', $title, SQLITE3_TEXT);
-    $stmt->bindValue(':description', $description, SQLITE3_TEXT);
-    $stmt->bindValue(':date', date('Y-m-d H:i:s'), SQLITE3_TEXT);
+    // Check if an image file is provided
+    if (isset($_FILES['image']) && !empty($_FILES['image']['name'])) {
+      $originalImageName = basename($_FILES['image']['name']);
+      $imageExtension = pathinfo($originalImageName, PATHINFO_EXTENSION);
+
+      if (in_array(strtolower($imageExtension), ['jpg', 'jpeg', 'png'])) {
+        $uniqueImageName = 'cover_' . uniqid() . '.' . $imageExtension;
+        $imageFile = $coverDir . $uniqueImageName;
+
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $imageFile)) {
+          resizeImage($imageFile, $imageFile, 1262, 1262);
+        } else {
+          header('Content-Type: application/json');
+          echo json_encode(['success' => false, 'message' => 'Failed to upload the image.']);
+          exit;
+        }
+      } else {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Invalid file type for image. Only JPG, JPEG, and PNG are allowed.']);
+        exit;
+      }
+    } else {
+      // Use default_cover.jpg if no image file is provided
+      $uniqueImageName = 'default_cover.jpg';
+      $imageFile = $coverDir . $uniqueImageName;
+    }
+
+    $stmt = $db->prepare("INSERT INTO videos (video, email, thumb, title, description, date) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bindParam(1, $videoFile);
+    $stmt->bindParam(2, $email);
+    $stmt->bindParam(3, $uniqueImageName);
+    $stmt->bindParam(4, $title);
+    $stmt->bindParam(5, $description);
+    $stmt->bindParam(6, date('Y-m-d H:i:s'));
 
     $stmt->execute();
 
