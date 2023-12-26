@@ -238,17 +238,19 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             Your browser does not support the video tag.
           </video>
           <h5 class="fw-bold"><?php echo $row['title']; ?></h5>
+          <h6 class="small fw-medium text-nowrap ms-auto"><?php echo $row['view_count']; ?> views</h6>
           <div class="d-flex mt-4">
-            <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><h6 class="small fw-medium text-nowrap"><img height="20" width="20" class="rounded-circle object-fit-cover" src="../../<?php echo $row['pic']; ?>"> <?php echo (!is_null($row['artist']) && strlen($row['artist']) > 15) ? substr($row['artist'], 0, 15) . '...' : $row['artist']; ?></h6></a>
-            <h6 class="small fw-medium text-nowrap ms-auto"><?php echo $row['view_count']; ?> views</h6>
+            <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><h6 class="small fw-medium text-nowrap"><img height="32" width="32" class="rounded-circle border border-dark-subtle border-2 object-fit-cover" src="../../<?php echo $row['pic']; ?>"> <?php echo (!is_null($row['artist']) && strlen($row['artist']) > 15) ? substr($row['artist'], 0, 15) . '...' : $row['artist']; ?></h6></a>
           </div>
+          <div class="d-flex">
           <form class="w-100" method="post">
             <?php if ($is_following): ?>
-              <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow <?php echo $num_followers ?></small></button>
+              <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button> <small class="ms-2 fw-medium"><?php echo $num_followers ?> followers</small>
             <?php else: ?>
-              <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow <?php echo $num_followers ?></small></button>
+              <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button> <small class="ms-2 fw-medium"><?php echo $num_followers ?> followers</small>
             <?php endif; ?>
           </form>
+          </div>
           <div class="d-flex mt-3">
             <div class="ms-auto">
               <div class="btn-group gap-2">
@@ -280,7 +282,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </a>
                 <a class="btn btn-outline-light rounded-pill btn-sm rounded-1 fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#shareLink"><small><i class="bi bi-share-fill"></i> share</small></a>
                 <?php if ($user_email === $email): ?>
-                  <a class="btn btn-outline-light rounded-pill btn-sm rounded-1 fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/edit.php?id=<?php echo $row['id']; ?>"><small><i class="bi bi-pencil-fill"></i> edit <?php echo $row['title']; ?></small></a>
+                  <a class="btn btn-outline-light rounded-pill btn-sm rounded-1 fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/edit.php?id=<?php echo $row['id']; ?>"><small><i class="bi bi-pencil-fill"></i> edit</small></a>
                 <?php endif; ?>
               </div>
             </div>
@@ -314,7 +316,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
               ?>
             </p>
           </div>
-          <div class="mt-2 bg-body-tertiary p-3 rounded-4">
+          <div class="d-none d-md-block d-lg-block mt-2 bg-body-tertiary p-3 rounded-4">
             <h5 class="fw-bold text-center mb-4">comments section</h5>
             <?php foreach ($comments as $comment) : ?>
               <div class="card border-0 shadow mb-1 position-relative">
@@ -451,6 +453,74 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         </div>
+      </div>
+      <div class="d-md-none d-lg-none mt-2 bg-body-tertiary p-3 rounded-4">
+        <h5 class="fw-bold text-center mb-4">comments section</h5>
+        <?php foreach ($comments as $comment) : ?>
+          <div class="card border-0 shadow mb-1 position-relative">
+            <div class="d-flex align-items-center mb-2 position-relative">
+              <div class="position-absolute top-0 start-0 m-1">
+                <img class="rounded-circle" src="../../<?php echo !empty($comment['pic']) ? $comment['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
+                <a class="text-white text-decoration-none fw-semibold" href="../../artist.php?id=<?php echo $comment['iduser']; ?>" target="_blank">@<?php echo $comment['artist']; ?></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
+              </div>
+            </div>
+            <div class="mt-5 container-fluid fw-medium">
+              <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
+                <?php
+                // Function to get YouTube video ID
+                if (!function_exists('getYouTubeVideoId')) {
+                  function getYouTubeVideoId($urlComment1A)
+                  {
+                    $videoId1A = '';
+                    $pattern1A = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+                    if (preg_match($pattern1A, $urlComment1A, $matches1A)) {
+                      $videoId1A = $matches1A[1];
+                    }
+                    return $videoId1A;
+                  }
+                }
+
+                $commentText1A = isset($comment['comment']) ? $comment['comment'] : '';
+
+                if (!empty($commentText1A)) {
+                  $paragraphs1A = explode("\n", $commentText1A);
+
+                  foreach ($paragraphs1A as $index1A => $paragraph1A) {
+                    $messageTextWithoutTags1A = strip_tags($paragraph1A);
+                    $pattern1A = '/\bhttps?:\/\/\S+/i';
+
+                    $formattedText1A = preg_replace_callback($pattern1A, function ($matches1A) {
+                      $urlComment1A = htmlspecialchars($matches1A[0]);
+
+                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment1A)) {
+                        return '<a href="' . $urlComment1A . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment1A . '" alt="Image"></a>';
+                      } elseif (strpos($urlComment1A, 'youtube.com') !== false) {
+                        $videoId1A = getYouTubeVideoId($urlComment1A);
+                        if ($videoId1A) {
+                          $thumbnailUrl1A = 'https://img.youtube.com/vi/' . $videoId1A . '/default.jpg';
+                          return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId1A . '" frameborder="0" allowfullscreen></iframe></div>';
+                        } else {
+                          return '<a href="' . $urlComment1A . '">' . $urlComment1A . '</a>';
+                        }
+                      } else {
+                        return '<a href="' . $urlComment1A . '">' . $urlComment1A . '</a>';
+                      }
+                    }, $messageTextWithoutTags1A);
+        
+                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText1A</p>";
+                  }
+                } else {
+                  echo "Sorry, no text...";
+                }
+                ?>
+              </p>
+            </div>
+            <div class="m-2 ms-auto">
+              <a class="btn btn-sm fw-semibold" href="reply_comments_novel.php?novelid=<?php echo $id; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+            </div>
+          </div>
+        <?php endforeach; ?>
+        <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?id=<?php echo $row['id']; ?>">view all comments</a>
       </div>
     </div>
     <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
