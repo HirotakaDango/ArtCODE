@@ -50,6 +50,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
   }
 
+  // Delete related records from reply_comments_minutes table
+  $deleteReplyCommentsQuery = "DELETE FROM reply_comments_minutes WHERE comment_id IN (SELECT id FROM comments_minutes WHERE minute_id = :id)";
+  $deleteReplyCommentsStmt = $db->prepare($deleteReplyCommentsQuery);
+  $deleteReplyCommentsStmt->bindValue(':id', $id, SQLITE3_INTEGER);
+  $deleteReplyCommentsStmt->execute();
+
+  // Delete associated comments from comments_minutes table
+  $deleteCommentsQuery = "DELETE FROM comments_minutes WHERE minute_id = :id";
+  $deleteCommentsStmt = $db->prepare($deleteCommentsQuery);
+  $deleteCommentsStmt->bindValue(':id', $id, SQLITE3_INTEGER);
+  $deleteCommentsStmt->execute();
+
+  // Delete associations from favorites_minutes table
+  $deleteFavoritesQuery = "DELETE FROM favorites_videos WHERE video_id = :id";
+  $deleteFavoritesStmt = $db->prepare($deleteFavoritesQuery);
+  $deleteFavoritesStmt->bindValue(':id', $id, SQLITE3_INTEGER);
+  $deleteFavoritesStmt->execute();
+
   // Delete the video record from the database
   $deleteQuery = "DELETE FROM videos WHERE id = :id";
   $deleteStmt = $db->prepare($deleteQuery);

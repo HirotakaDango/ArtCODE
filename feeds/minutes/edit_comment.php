@@ -6,15 +6,15 @@ try {
   $db = new PDO('sqlite:../../database.sqlite');
   $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-  // Create comments_novel table if it doesn't exist
-  $createTableQuery = "CREATE TABLE IF NOT EXISTS comments_novel (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at TEXT)";
+  // Create comments_minutes table if it doesn't exist
+  $createTableQuery = "CREATE TABLE IF NOT EXISTS comments_minutes (id INTEGER PRIMARY KEY, minute_id TEXT, email TEXT, comment TEXT, created_at TEXT)";
   $db->exec($createTableQuery);
 
   // Retrieve comment_id from GET parameter
   $comment_id = isset($_GET['commentid']) ? $_GET['commentid'] : null;
 
   // Fetch comment based on comment_id
-  $stmt = $db->prepare("SELECT * FROM comments_novel WHERE id = :comment_id");
+  $stmt = $db->prepare("SELECT * FROM comments_minutes WHERE id = :comment_id");
   $stmt->bindParam(':comment_id', $comment_id, PDO::PARAM_INT);
   $stmt->execute();
   $comment = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -30,14 +30,14 @@ try {
     $reply = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
 
     if (!empty(trim($reply))) {
-      $updateStmt = $db->prepare("UPDATE comments_novel SET comment = :reply WHERE id = :comment_id");
+      $updateStmt = $db->prepare("UPDATE comments_minutes SET comment = :reply WHERE id = :comment_id");
       $updateStmt->bindParam(':reply', $reply, PDO::PARAM_STR);
       $updateStmt->bindParam(':comment_id', $comment_id, PDO::PARAM_INT);
       $updateStmt->execute();
     }
 
     // Redirect to the original comment page
-    header("Location: comments.php?id={$comment['filename']}");
+    header("Location: comments.php?id={$comment['minute_id']}");
     exit();
   }
 } catch (PDOException $e) {
@@ -70,7 +70,7 @@ try {
     </div>
     <script>
       function goBack() {
-        window.location.href = "comments.php?novelid=<?php echo htmlspecialchars($comment['filename']); ?>";
+        window.location.href = "comments.php?id=<?php echo htmlspecialchars($comment['minute_id']); ?>";
       }
     </script> 
   </body>

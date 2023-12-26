@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label class="fw-medium" for="album">description</label>
             </div>
             <button type="button" class="btn btn-danger w-100 fw-bold border-danger-subtle border border-3 rounded-4 my-2" data-bs-toggle="modal" data-bs-target="#modalDelete">
-              delete this song
+              delete this video
             </button>
             <button type="submit" class="btn btn-primary w-100 fw-bold border-primary-subtle border border-3 rounded-4">save changes</button>
           </form>

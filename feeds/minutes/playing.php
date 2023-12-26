@@ -189,6 +189,13 @@ if (isset($_POST['favorite'])) {
 $stmt = $db->prepare("UPDATE videos SET view_count = view_count + 1 WHERE id = :id");
 $stmt->bindParam(':id', $id);
 $stmt->execute();
+
+// Query to fetch comments
+$comments_query = "SELECT comments_minutes.*, users.artist, users.pic, users.id as iduser FROM comments_minutes JOIN users ON comments_minutes.email = users.email WHERE comments_minutes.minute_id = :minute_id ORDER BY comments_minutes.id DESC LIMIT 25";
+$stmt = $db->prepare($comments_query);
+$stmt->bindParam(':minute_id', $id, PDO::PARAM_STR);
+$stmt->execute();
+$comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -242,7 +249,7 @@ $stmt->execute();
               <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow <?php echo $num_followers ?></small></button>
             <?php endif; ?>
           </form>
-          <div class="d-flex mt-2">
+          <div class="d-flex mt-3">
             <div class="ms-auto">
               <div class="btn-group gap-2">
                 <?php
@@ -278,7 +285,7 @@ $stmt->execute();
               </div>
             </div>
           </div>
-          <a class="btn btn-outline-light border-0 rounded-4 w-100 fw-medium mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+          <a class="btn btn-outline-light bg-body-tertiary text-white border-0 rounded-4 w-100 fw-medium mt-3" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
             description
           </a>
           <div class="collapse bg-body-tertiary rounded-4 p-3 mt-2" id="collapseExample">
@@ -289,23 +296,91 @@ $stmt->execute();
                 echo $formattedDate;
               ?>
             </p>
-              <p style="white-space: break-spaces; overflow: hidden; margin-top: -75px;">
-                <?php
-                  $bioText = isset($row['description']) ? $row['description'] : '';
+            <p style="white-space: break-spaces; overflow: hidden; margin-top: -75px;">
+              <?php
+                $bioText = isset($row['description']) ? $row['description'] : '';
 
-                  if (!empty($bioText)) {
-                    $paragraphs = explode("\n", $bioText);
+                if (!empty($bioText)) {
+                  $paragraphs = explode("\n", $bioText);
 
-                    foreach ($paragraphs as $index => $paragraph) {
-                      echo "<p style=\"white-space: break-spaces; overflow: hidden;\">";
-                      echo preg_replace('/\bhttps?:\/\/\S+/i', '<a href="$0" target="_blank">$0</a>', strip_tags($paragraph));
-                      echo "</p>";
-                    }
-                  } else {
-                    echo "Sorry, no text...";
+                  foreach ($paragraphs as $index => $paragraph) {
+                    echo "<p style=\"white-space: break-spaces; overflow: hidden;\">";
+                    echo preg_replace('/\bhttps?:\/\/\S+/i', '<a href="$0" target="_blank">$0</a>', strip_tags($paragraph));
+                    echo "</p>";
                   }
-                ?>
-              </p>
+                } else {
+                  echo "Sorry, no text...";
+                }
+              ?>
+            </p>
+          </div>
+          <div class="mt-2 bg-body-tertiary p-3 rounded-4">
+            <h5 class="fw-bold text-center mb-4">comments section</h5>
+            <?php foreach ($comments as $comment) : ?>
+              <div class="card border-0 shadow mb-1 position-relative">
+                <div class="d-flex align-items-center mb-2 position-relative">
+                  <div class="position-absolute top-0 start-0 m-1">
+                    <img class="rounded-circle" src="../../<?php echo !empty($comment['pic']) ? $comment['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
+                    <a class="text-white text-decoration-none fw-semibold" href="../../artist.php?id=<?php echo $comment['iduser']; ?>" target="_blank">@<?php echo $comment['artist']; ?></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
+                  </div>
+                </div>
+                <div class="mt-5 container-fluid fw-medium">
+                  <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
+                    <?php
+                    // Function to get YouTube video ID
+                    if (!function_exists('getYouTubeVideoId')) {
+                      function getYouTubeVideoId($urlComment1A)
+                      {
+                        $videoId1A = '';
+                        $pattern1A = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+                        if (preg_match($pattern1A, $urlComment1A, $matches1A)) {
+                          $videoId1A = $matches1A[1];
+                        }
+                        return $videoId1A;
+                      }
+                    }
+
+                    $commentText1A = isset($comment['comment']) ? $comment['comment'] : '';
+
+                    if (!empty($commentText1A)) {
+                      $paragraphs1A = explode("\n", $commentText1A);
+
+                      foreach ($paragraphs1A as $index1A => $paragraph1A) {
+                        $messageTextWithoutTags1A = strip_tags($paragraph1A);
+                        $pattern1A = '/\bhttps?:\/\/\S+/i';
+
+                        $formattedText1A = preg_replace_callback($pattern1A, function ($matches1A) {
+                          $urlComment1A = htmlspecialchars($matches1A[0]);
+
+                          if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment1A)) {
+                            return '<a href="' . $urlComment1A . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment1A . '" alt="Image"></a>';
+                          } elseif (strpos($urlComment1A, 'youtube.com') !== false) {
+                            $videoId1A = getYouTubeVideoId($urlComment1A);
+                            if ($videoId1A) {
+                              $thumbnailUrl1A = 'https://img.youtube.com/vi/' . $videoId1A . '/default.jpg';
+                              return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId1A . '" frameborder="0" allowfullscreen></iframe></div>';
+                            } else {
+                              return '<a href="' . $urlComment1A . '">' . $urlComment1A . '</a>';
+                            }
+                          } else {
+                            return '<a href="' . $urlComment1A . '">' . $urlComment1A . '</a>';
+                          }
+                        }, $messageTextWithoutTags1A);
+        
+                        echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText1A</p>";
+                      }
+                    } else {
+                      echo "Sorry, no text...";
+                    }
+                    ?>
+                  </p>
+                </div>
+                <div class="m-2 ms-auto">
+                  <a class="btn btn-sm fw-semibold" href="reply_comments_novel.php?novelid=<?php echo $id; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+                </div>
+              </div>
+            <?php endforeach; ?>
+            <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?id=<?php echo $row['id']; ?>">view all comments</a>
           </div>
         </div>
         <div class="col-md-3 order-md-2 ps-md-1">

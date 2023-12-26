@@ -4,14 +4,14 @@ require_once('../../auth.php');
 // Open the SQLite database
 $db = new SQLite3('../../database.sqlite');
 
-$novelid = $_GET['novelid'];
+$minuteid = $_GET['minuteid'];
 
 // Check if the reply ID is provided
 if (isset($_GET['reply_id'])) {
   $replyId = $_GET['reply_id'];
 
   // Get the reply details from the database
-  $stmt = $db->prepare('SELECT * FROM reply_comments_novel WHERE id = :reply_id');
+  $stmt = $db->prepare('SELECT * FROM reply_comments_minutes WHERE id = :reply_id');
   $stmt->bindValue(':reply_id', $replyId, SQLITE3_INTEGER);
   $reply = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
@@ -27,13 +27,13 @@ if (isset($_GET['reply_id'])) {
         $newReply = nl2br(filter_var($newReply, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
 
         // Update the reply in the database
-        $stmt = $db->prepare('UPDATE reply_comments_novel SET reply = :new_reply WHERE id = :reply_id');
+        $stmt = $db->prepare('UPDATE reply_comments_minutes SET reply = :new_reply WHERE id = :reply_id');
         $stmt->bindValue(':new_reply', $newReply, SQLITE3_TEXT);
         $stmt->bindValue(':reply_id', $replyId, SQLITE3_INTEGER);
         $stmt->execute();
 
         // Redirect back to the reply preview page
-        $redirectUrl = 'reply_comments_novel.php?novelid=' . urlencode($novelid) . '&comment_id=' . urlencode($reply['comment_id']);
+        $redirectUrl = 'reply_comments_minute.php?minuteid=' . urlencode($minuteid) . '&comment_id=' . urlencode($reply['comment_id']);
         header('Location: ' . $redirectUrl);
         exit();
       } else {
@@ -69,7 +69,7 @@ if (isset($_GET['reply_id'])) {
     </div>
     <script>
       function goBack() {
-        window.location.href = "reply_comments_novel.php?novelid=<?php echo urlencode($novelid); ?>&comment_id=<?php echo urlencode($reply['comment_id']); ?>";
+        window.location.href = "reply_comments_minute.php?minuteid=<?php echo urlencode($minuteid); ?>&comment_id=<?php echo urlencode($reply['comment_id']); ?>";
       }
     </script>
     <?php include('../../bootstrapjs.php'); ?>
