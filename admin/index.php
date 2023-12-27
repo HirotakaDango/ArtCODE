@@ -67,15 +67,15 @@ require_once('prompt.php');
                 });
               </script>
               <div class="my-3 row">
-                <label for="totalUsers" class="col-4 col-form-label text-nowrap fw-medium">Total Users :</label>
+                <label for="totalUsers" class="col-4 col-form-label text-nowrap fw-medium">Total Users</label>
                 <div class="col-8">
-                  <input type="text" class="form-control-plaintext fw-bold" id="totalUsers" value="<?= $user_count ?>" readonly>
+                  <input type="text" class="form-control-plaintext fw-bold" id="totalUsers" value=": <?= $user_count ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="totalVisit" class="col-4 col-form-label text-nowrap fw-medium">Total Visit :</label>
+                <label for="totalVisit" class="col-4 col-form-label text-nowrap fw-medium">Total Visit</label>
                 <div class="col-8">
-                  <input type="text" class="form-control-plaintext fw-bold" id="totalVisit" value="<?= $visit_count_total ?>" readonly>
+                  <input type="text" class="form-control-plaintext fw-bold" id="totalVisit" value=": <?= $visit_count_total ?>" readonly>
                 </div>
               </div>
               <div class="mt-3">
@@ -94,6 +94,7 @@ require_once('prompt.php');
 
               // Count the number of images in the "images" table
               $image_count = $db->querySingle('SELECT COUNT(*) FROM images');
+              $image_child_count = $db->querySingle('SELECT COUNT(*) FROM image_child');
               $videos_count = $db->querySingle('SELECT COUNT(*) FROM videos');
               $music_count = $db->querySingle('SELECT COUNT(*) FROM music');
 
@@ -119,7 +120,7 @@ require_once('prompt.php');
                 return $size;
               }
 
-              $image_count_data = $image_count;
+              $image_count_data = $image_count + $image_child_count;
               $size += calculateDirectorySize($image_dir);
               $size += calculateDirectorySize($music_dir);
               $size += calculateDirectorySize($videos_dir);
@@ -132,33 +133,33 @@ require_once('prompt.php');
               ?>
               <canvas id="myChart"></canvas>
               <div class="my-3 row">
-                <label for="totalImages" class="col-4 col-form-label text-nowrap fw-medium">Total Images :</label>
+                <label for="totalImages" class="col-4 col-form-label text-nowrap fw-medium">Total Images</label>
                 <div class="col-8">
-                  <input type="text" class="form-control-plaintext fw-bold" id="totalImages" value="<?= $image_count_data ?>" readonly>
+                  <input type="text" class="form-control-plaintext fw-bold" id="totalImages" value=": <?= $image_count_data ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="totalVideos" class="col-4 col-form-label text-nowrap fw-medium">Total Videos :</label>
+                <label for="totalVideos" class="col-4 col-form-label text-nowrap fw-medium">Total Videos</label>
                 <div class="col-8">
-                  <input type="text" class="form-control-plaintext fw-bold" id="totalVideos" value="<?= $videos_count ?>" readonly>
+                  <input type="text" class="form-control-plaintext fw-bold" id="totalVideos" value=": <?= $videos_count ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="totalMusic" class="col-4 col-form-label text-nowrap fw-medium">Total Music :</label>
+                <label for="totalMusic" class="col-4 col-form-label text-nowrap fw-medium">Total Music</label>
                 <div class="col-8">
-                  <input type="text" class="form-control-plaintext fw-bold" id="totalMusic" value="<?= $music_count ?>" readonly>
+                  <input type="text" class="form-control-plaintext fw-bold" id="totalMusic" value=": <?= $music_count ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="totalTags" class="col-4 col-form-label text-nowrap fw-medium">Total Tags :</label>
+                <label for="totalTags" class="col-4 col-form-label text-nowrap fw-medium">Total Tags</label>
                 <div class="col-8">
-                  <input type="text" class="form-control-plaintext fw-bold" id="totalTags" value="<?= $tag_count ?>" readonly>
+                  <input type="text" class="form-control-plaintext fw-bold" id="totalTags" value=": <?= $tag_count ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="totalSize" class="col-4 col-form-label text-nowrap fw-medium">Total Size :</label>
+                <label for="totalSize" class="col-4 col-form-label text-nowrap fw-medium">Total Size</label>
                 <div class="col-8">
-                  <input type="text" class="form-control-plaintext fw-bold" id="totalSize" value="<?= $total_size_data ?> MB" readonly>
+                  <input type="text" class="form-control-plaintext fw-bold" id="totalSize" value=": <?= $total_size_data ?> MB" readonly>
                 </div>
               </div>
               <a class='btn btn-sm btn-primary fw-bold me-1' href='../admin/remove_images.php'>manage images</a>

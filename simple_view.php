@@ -906,7 +906,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </button>
                 <!-- Data Modal -->
                 <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-scrollable">
+                  <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content rounded-4 border-0">
                       <div class="modal-header border-0">
                         <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">All Data from <?php echo $image['title']; ?></h1>
@@ -922,45 +922,91 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                           </button>
                           <div class="collapse mt-2" id="collapseDataImage1">
                             <?php foreach ($images as $index => $image) { ?>
-                              <div class="mb-3 img-thumbnail border-dark">
-                                <ul class="list-unstyled m-0">
-                                  <li class="mb-2"><i class="bi bi-file-earmark"></i> Filename: <?php echo $image['filename']; ?></li>
-                                  <li class="mb-2"><i class="bi bi-file-earmark-bar-graph"></i> Image data size: <?php echo getImageSizeInMB($image['filename']); ?> MB</li>
-                                  <li class="mb-2"><i class="bi bi-arrows-angle-expand text-stroke"></i> Image dimensions: <?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?></li>
-                                  <li class="mb-2"><i class="bi bi-file-earmark-text"></i> MIME type: <?php echo mime_content_type('images/' . $image['filename']); ?></li>
-                                  <li class="mb-2"><i class="bi bi-calendar"></i> Image date: <?php echo date('Y/m/d', strtotime($image['date'])); ?></li>
-                                  <li class="mb-2">
-                                    <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>">
-                                      <i class="bi bi-arrows-fullscreen text-stroke"></i> View original image
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>" download>
-                                      <i class="bi bi-cloud-arrow-down-fill"></i> Download original image
-                                    </a>
-                                  </li>
-                                </ul>
+                              <div class="mb-3 img-thumbnail border-dark p-3">
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php echo $image['filename']; ?></p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php echo getImageSizeInMB($image['filename']); ?> MB</p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?></p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php echo mime_content_type('images/' . $image['filename']); ?></p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php echo date('Y/m/d', strtotime($image['date'])); ?></p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>">
+                                    <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
+                                  </a>
+                                </div>
+                                <div>
+                                  <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>" download>
+                                    <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
+                                  </a>
+                                </div>
                               </div>
                             <?php } ?>
                             <?php foreach ($image_childs as $index => $image_child) { ?>
-                              <div class="mt-3 mb-3 img-thumbnail border-dark">
-                                <ul class="list-unstyled m-0">
-                                  <li class="mb-2"><i class="bi bi-file-earmark"></i> Filename: <?php echo $image_child['filename']; ?></li>
-                                  <li class="mb-2"><i class="bi bi-file-earmark-bar-graph"></i> Image data size: <?php echo getImageSizeInMB($image_child['filename']); ?> MB</li>
-                                  <li class="mb-2"><i class="bi bi-arrows-angle-expand text-stroke"></i> Image dimensions: <?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?></li>
-                                  <li class="mb-2"><i class="bi bi-file-earmark-text"></i> MIME type: <?php echo mime_content_type('images/' . $image_child['filename']); ?></li>
-                                  <li class="mb-2"><i class="bi bi-calendar"></i> Image date: <?php echo date('Y/m/d', strtotime($image['date'])); ?></li>
-                                  <li class="mb-2">
-                                    <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>">
-                                      <i class="bi bi-arrows-fullscreen text-stroke"></i> View original image
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>" download>
-                                      <i class="bi bi-cloud-arrow-down-fill"></i> Download original image
-                                    </a>
-                                  </li>
-                                </ul>
+                              <div class="mt-3 mb-3 img-thumbnail border-dark p-3">
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php echo $image_child['filename']; ?></p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php echo getImageSizeInMB($image_child['filename']); ?> MB</p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?></p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php echo mime_content_type('images/' . $image_child['filename']); ?></p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
+                                  <div class="col-sm-8">
+                                    <p>: <?php echo date('Y/m/d', strtotime($image['date'])); ?></p>
+                                  </div>
+                                </div>
+                                <div class="mb-3 row">
+                                  <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>">
+                                    <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
+                                  </a>
+                                </div>
+                                <div>
+                                  <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>" download>
+                                    <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
+                                  </a>
+                                </div>
                               </div>
                             <?php } ?>
                             <a class="btn btn-outline-dark fw-bold w-100" href="#downloadOption" data-bs-toggle="modal">

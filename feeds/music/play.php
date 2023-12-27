@@ -436,49 +436,49 @@ if (isset($_POST['favorite'])) {
                         <div class="accordion-body">
                           <div class="metadata">
                             <div class="mb-2 row">
-                              <label for="title" class="col-4 col-form-label text-nowrap fw-medium">Title :</label>
+                              <label for="title" class="col-4 col-form-label text-nowrap fw-medium">Title</label>
                               <div class="col-8">
                                 <p class="form-control-plaintext fw-bold text-white" id="title"><?php echo $row['title']; ?></p>
                               </div>
                             </div>
                             <div class="mb-2 row">
-                              <label for="artist" class="col-4 col-form-label text-nowrap fw-medium">Artist :</label>
+                              <label for="artist" class="col-4 col-form-label text-nowrap fw-medium">Artist</label>
                               <div class="col-8">
                                 <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></p>
                               </div>
                             </div>
                             <div class="mb-2 row">
-                              <label for="album" class="col-4 col-form-label text-nowrap fw-medium">Album :</label>
+                              <label for="album" class="col-4 col-form-label text-nowrap fw-medium">Album</label>
                               <div class="col-8">
                                 <p class="form-control-plaintext fw-bold" id="album"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a></p>
                               </div>
                             </div>
                             <div class="mb-2 row">
-                              <label for="duration" class="col-4 col-form-label text-nowrap fw-medium">Duration :</label>
+                              <label for="duration" class="col-4 col-form-label text-nowrap fw-medium">Duration</label>
                               <div class="col-8">
                                 <p class="form-control-plaintext fw-bold text-white" id="duration"><?= $duration ?></p>
                               </div>
                             </div>
                             <div class="mb-2 row">
-                              <label for="bitrate" class="col-4 col-form-label text-nowrap fw-medium">Bitrate :</label>
+                              <label for="bitrate" class="col-4 col-form-label text-nowrap fw-medium">Bitrate</label>
                               <div class="col-8">
                                 <p class="form-control-plaintext fw-bold text-white" id="bitrate"><?= $bitrate ?></p>
                               </div>
                             </div>
                             <div class="mb-2 row">
-                              <label for="sampleRate" class="col-4 col-form-label text-nowrap fw-medium">Sample Rate :</label>
+                              <label for="sampleRate" class="col-4 col-form-label text-nowrap fw-medium">Sample Rate</label>
                               <div class="col-8">
                                 <p class="form-control-plaintext fw-bold text-white" id="sampleRate"><?= $sampleRate ?></p>
                               </div>
                             </div>
                             <div class="mb-2 row">
-                              <label for="size" class="col-4 col-form-label text-nowrap fw-medium">Size :</label>
+                              <label for="size" class="col-4 col-form-label text-nowrap fw-medium">Size</label>
                               <div class="col-8">
                                 <p class="form-control-plaintext fw-bold text-white" id="size"><?= $size ?></p>
                               </div>
                             </div>
                             <div class="mb-3 row">
-                              <label for="audioType" class="col-4 col-form-label text-nowrap fw-medium">Audio Type :</label>
+                              <label for="audioType" class="col-4 col-form-label text-nowrap fw-medium">Audio Type</label>
                               <div class="col-8">
                                 <p class="form-control-plaintext fw-bold text-white" id="audioType"><?= $audioType ?></p>
                               </div>
