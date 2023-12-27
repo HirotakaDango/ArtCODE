@@ -9,6 +9,28 @@ $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY 
 $stmt->execute();
 $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS image_child (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT NOT NULL, image_id INTEGER NOT NULL, email TEXT NOT NULL, FOREIGN KEY (image_id) REFERENCES images (id))");
 $stmt->execute();
+
+// Create the "visit" table if it doesn't exist
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS visit (visit_count INTEGER PRIMARY KEY AUTOINCREMENT, visit_date DATE DEFAULT CURRENT_DATE)");
+$stmt->execute();
+
+// Process any visit requests
+$stmt = $db->prepare("SELECT visit_count FROM visit WHERE visit_date = CURRENT_DATE");
+$result = $stmt->execute();
+$row = $result->fetchArray(SQLITE3_ASSOC);
+
+if ($row) {
+    // If the record for the current date exists, increment the visit_count
+    $visitCount = $row['visit_count'] + 1;
+    $stmt = $db->prepare("UPDATE visit SET visit_count = :visitCount WHERE visit_date = CURRENT_DATE");
+    $stmt->bindValue(':visitCount', $visitCount, SQLITE3_INTEGER);
+    $stmt->execute();
+} else {
+    // If the record for the current date doesn't exist, insert a new record
+    $stmt = $db->prepare("INSERT INTO visit (visit_count) VALUES (:visitCount)");
+    $stmt->bindValue(':visitCount', 1, SQLITE3_INTEGER);
+    $stmt->execute();
+}
 ?>
 
 <!DOCTYPE html>
