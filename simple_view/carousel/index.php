@@ -576,6 +576,10 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
         width: 100%;
         height: 100%;
       }
+
+      .text-shadow {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+      }
     </style>
     <script>
       var isButtonVisible = true; // Set the initial state to invisible

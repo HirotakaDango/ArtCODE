@@ -93,9 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Get the current image information from the database
-$stmt = $db->prepare("SELECT * FROM images WHERE id = :image_id");
+$stmt = $db->prepare("SELECT * FROM images WHERE id = :image_id AND email = :email");
 $stmt->bindParam(':image_id', $image_id);
-$result = $stmt->execute();  // Execute the prepared statement and get the result set
+$stmt->bindParam(':email', $email);
+$result = $stmt->execute();
 
 // Check for database query errors
 if (!$result) {
@@ -103,7 +104,17 @@ if (!$result) {
   exit;
 }
 
-$image = $result->fetchArray(SQLITE3_ASSOC);  // Fetch the result as an associative array
+// Fetch the result as an associative array
+$image = $result->fetchArray(SQLITE3_ASSOC);
+
+// Check if the image exists and belongs to the logged-in user
+if (!$image) {
+  echo '<meta charset="UTF-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">
+       ';
+  exit();
+}
 
 // Close the database connection
 $db->close();
@@ -114,7 +125,7 @@ $db->close();
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit <?php echo $image['title']; ?></title>
+    <title>Upload New Images to <?php echo $image['title']; ?></title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
@@ -580,26 +591,26 @@ $db->close();
         metadataContainer.appendChild(img);
 
         // Image Name
-        var fileNameElement = createMetadataElement('Image Name :', fileName);
+        var fileNameElement = createMetadataElement('Image Name', fileName);
         metadataContainer.appendChild(fileNameElement);
 
         // Image Size
-        var fileSizeElement = createMetadataElement('Image Size :', fileSizeText);
+        var fileSizeElement = createMetadataElement('Image Size', fileSizeText);
         metadataContainer.appendChild(fileSizeElement);
 
         // Image Type
-        var fileTypeElement = createMetadataElement('Image Type :', fileType);
+        var fileTypeElement = createMetadataElement('Image Type', fileType);
         metadataContainer.appendChild(fileTypeElement);
 
         // Image Date
-        var imageDateElement = createMetadataElement('Image Date :', formatDate(file.lastModifiedDate));
+        var imageDateElement = createMetadataElement('Image Date', formatDate(file.lastModifiedDate));
         metadataContainer.appendChild(imageDateElement);
 
         // Image Resolution
         var img = new Image();
         img.src = URL.createObjectURL(file);
         img.onload = function () {
-          var imageResolutionElement = createMetadataElement('Image Resolution :', this.naturalWidth + 'x' + this.naturalHeight);
+          var imageResolutionElement = createMetadataElement('Image Resolution', this.naturalWidth + 'x' + this.naturalHeight);
           metadataContainer.appendChild(imageResolutionElement);
         };
 
@@ -626,25 +637,25 @@ $db->close();
         }
 
         // JFIF Version
-        var jfifVersionElement = createMetadataElementAsync('JFIF Version :', function(callback) {
+        var jfifVersionElement = createMetadataElementAsync('JFIF Version', function(callback) {
           getJfifVersion(file, function(jfifVersion) {
-            callback('JFIF Version : ' + jfifVersion);
+            callback('JFIF Version' + jfifVersion);
           });
         });
         metadataContainer.appendChild(jfifVersionElement);
 
         // PNG Version
-        var pngVersionElement = createMetadataElementAsync('PNG Version :', function(callback) {
+        var pngVersionElement = createMetadataElementAsync('PNG Version', function(callback) {
           getPngVersion(file, function(pngVersion) {
-            callback('PNG Version : ' + pngVersion);
+            callback('PNG Version' + pngVersion);
           });
         });
         metadataContainer.appendChild(pngVersionElement);
 
         // GIF Version
-        var gifVersionElement = createMetadataElementAsync('GIF Version :', function(callback) {
+        var gifVersionElement = createMetadataElementAsync('GIF Version', function(callback) {
           getGifVersion(file, function(gifVersion) {
-            callback('GIF Version : ' + gifVersion);
+            callback('GIF Version' + gifVersion);
           });
         });
         metadataContainer.appendChild(gifVersionElement);

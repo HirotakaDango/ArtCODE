@@ -656,35 +656,35 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                     }
                                   ?>
                                   <?php foreach ($images as $index => $image) { ?>
-                                    <div class="mt-3 mb-3 img-thumbnail border-light bg-dark text-white p-3">
+                                    <div class="mb-3 img-thumbnail border-dark p-3">
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php echo $image['filename']; ?></p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image['filename']; ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php echo getImageSizeInMB($image['filename']); ?> MB</p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image['filename']); ?> MB" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?></p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php echo mime_content_type('images/' . $image['filename']); ?></p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image['filename']); ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php echo date('Y/m/d', strtotime($image['date'])); ?></p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
@@ -700,35 +700,35 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                     </div>
                                   <?php } ?>
                                   <?php foreach ($image_childs as $index => $image_child) { ?>
-                                    <div class="mt-3 mb-3 img-thumbnail border-light bg-dark text-white p-3">
+                                    <div class="mt-3 mb-3 img-thumbnail border-dark p-3">
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php echo $image_child['filename']; ?></p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image_child['filename']; ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php echo getImageSizeInMB($image_child['filename']); ?> MB</p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image_child['filename']); ?> MB" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?></p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php echo mime_content_type('images/' . $image_child['filename']); ?></p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image_child['filename']); ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
                                         <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
                                         <div class="col-sm-8">
-                                          <p>: <?php echo date('Y/m/d', strtotime($image['date'])); ?></p>
+                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="mb-3 row">
@@ -1334,31 +1334,31 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php echo $image['filename']; ?></p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image['filename']; ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php echo getImageSizeInMB($image['filename']); ?> MB</p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image['filename']); ?> MB" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?></p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php echo mime_content_type('images/' . $image['filename']); ?></p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image['filename']); ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php echo date('Y/m/d', strtotime($image['date'])); ?></p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
@@ -1378,31 +1378,31 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php echo $image_child['filename']; ?></p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image_child['filename']; ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php echo getImageSizeInMB($image_child['filename']); ?> MB</p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image_child['filename']); ?> MB" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?></p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php echo mime_content_type('images/' . $image_child['filename']); ?></p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image_child['filename']); ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
                                   <div class="col-sm-8">
-                                    <p>: <?php echo date('Y/m/d', strtotime($image['date'])); ?></p>
+                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="mb-3 row">

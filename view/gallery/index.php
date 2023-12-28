@@ -145,6 +145,22 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php include('../../bootstrapcss.php'); ?>
     <link rel="stylesheet" href="../../swup/transitions.css" />
     <script type="module" src="../../swup/swup.js"></script>
+    <style>
+      /* For Webkit-based browsers */
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        border-radius: 0;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border-radius: 0;
+      }
+    </style>
   </head>
   <body>
     <?php 

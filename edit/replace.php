@@ -43,7 +43,7 @@ if (isset($_GET['id'])) {
   if (!$image) {
     echo '<meta charset="UTF-8"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <img src="icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">';
+        <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">';
     exit();
   }
 } else {
@@ -184,7 +184,7 @@ function createThumbnail($filePath, $width, $height) {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit <?php echo $image['title']; ?></title>
+    <title>Replace Main Image of <?php echo $image['title']; ?></title>
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('bootstrapcss.php'); ?>
   </head>

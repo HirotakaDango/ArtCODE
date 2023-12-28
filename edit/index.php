@@ -29,7 +29,7 @@ if (isset($_GET['id'])) {
   if (!$image) {
     echo '<meta charset="UTF-8"> 
           <meta name="viewport" content="width=device-width, initial-scale=1">
-          <img src="icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">
+          <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">
          ';
     exit();
   }
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </nav>
       <div class="mt-3">
         <div class="row">
-          <div class="col-md-6 pe-md-1">
+          <div class="col-md-4 pe-md-1">
             <div class="position-relative">
               <a data-bs-toggle="modal" data-bs-target="#originalImage">
                 <img src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
@@ -125,68 +125,114 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   </a>
                   <div class="collapse container" id="collapseExpand">
                     <?php
-                      // Get image size in megabytes
+                      // Your existing code for the main image
                       $image_size = round(filesize('../images/' . $image['filename']) / (1024 * 1024), 2);
-
-                      // Get image dimensions
                       list($width, $height) = getimagesize('../images/' . $image['filename']);
 
-                      // Display image information
-                      echo "<p class='mt-3 text-start ms-1'>Image Filename: <a href='../images/". $image['filename'] ."'>" . $image['filename'] . "</a></p>";
-                      echo "<p class='text-start ms-1'>Image data size: " . $image_size . " MB</p>";
-                      echo "<p class='text-start ms-1'>Image dimensions: " . $width . "x" . $height . "</p>";
-                      echo "<p class='mt-3 text-start ms-1'><a href='../images/". $image['filename'] ."' download>Download Image</a></p>";
+                      echo "<div class='mb-3 row'>
+                              <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Filename</label>
+                                <div class='col-sm-8'>
+                                  <input type='text' class='form-control-plaintext fw-bold' id='' value='" . $image['filename'] . "' readonly>
+                                </div>
+                            </div>";
+  
+                      echo "<div class='mb-3 row'>
+                              <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Data Size</label>
+                              <div class='col-sm-8'>
+                                <input type='text' class='form-control-plaintext fw-bold' id='' value='{$image_size} MB' readonly>
+                              </div>
+                            </div>";
+  
+                      echo "<div class='mb-3 row'>
+                              <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Dimensions</label>
+                              <div class='col-sm-8'>
+                                <input type='text' class='form-control-plaintext fw-bold' id='' value='{$width}x{$height}' readonly>
+                              </div>
+                            </div>";
+  
+                      echo "<div class='mb-3 row'>
+                              <a href=\"../images/{$image['filename']}\" download>Download Image</a>
+                            </div>";
 
                       // Retrieve child images' information
                       $stmt = $db->prepare('SELECT * FROM image_child WHERE image_id = :image_id');
                       $stmt->bindParam(':image_id', $id);
                       $result = $stmt->execute();
-
-                      // Loop through and display child images' information
+                      // Loop through child images
                       while ($childImage = $result->fetchArray(SQLITE3_ASSOC)) {
-                        // Get child image size in megabytes
                         $child_image_size = round(filesize('../images/' . $childImage['filename']) / (1024 * 1024), 2);
-
-                        // Get child image dimensions
                         list($child_width, $child_height) = getimagesize('../images/' . $childImage['filename']);
 
-                        // Display child image information
-                        echo "<hr class='border-dark border-5 rounded-pill'></hr>";
-                        echo "<p class='mt-3 text-start ms-1'>Image Filename: <a href='../images/". $childImage['filename'] ."'>" . $childImage['filename'] . "</a></p>";
-                        echo "<p class='text-start ms-1'>Child Image Data Size: " . $child_image_size . " MB</p>";
-                        echo "<p class='text-start ms-1'>Child Image Dimensions: " . $child_width . "x" . $child_height . "</p>";
-                        echo "<p class='mt-3 text-start ms-1'><a href='../images/". $childImage['filename'] ."' download>Download Image</a></p>";
+                        echo "<hr class='border-dark border-5 rounded-pill'>";
+
+                        echo "<div class='mb-3 row'>
+                                <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Filename</label>
+                                  <div class='col-sm-8'>
+                                    <input type='text' class='form-control-plaintext fw-bold' id='' value='" . $childImage['filename'] . "' readonly>
+                                  </div>
+                              </div>";
+
+                        echo "<div class='mb-3 row'>
+                                <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Data Size</label>
+                                <div class='col-sm-8'>
+                                  <input type='text' class='form-control-plaintext fw-bold' id='' value='{$child_image_size} MB' readonly>
+                                </div>
+                               </div>";
+
+                        echo "<div class='mb-3 row'>
+                                <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Dimensions</label>
+                                <div class='col-sm-8'>
+                                  <input type='text' class='form-control-plaintext fw-bold' id='' value='{$child_width}x{$child_height}' readonly>
+                                </div>
+                              </div>";
+
+                        echo "<div class='mb-3 row'>
+                                <a href=\"../images/{$childImage['filename']}\" download>Download Image</a>
+                              </div>";
                       }
-                    ?> 
+                    ?>
+
                   </div>
                 </div>
               </div>
             </center>
           </div>
         </div>
-        <div class="col-md-6 ps-md-1">
+        <div class="col-md-8 ps-md-1">
           <div class="">
             <form method="POST">
-              <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="500" required>  
-                <label for="floatingInput" class="text-dark fw-bold">Enter title for your image</label>
+              <div class="row">
+                <div class="col-md-6 pe-md-1">
+                  <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['title']); ?>" name="title" placeholder="Image title" maxlength="500" required>  
+                    <label for="floatingInput" class="text-dark fw-bold">Enter title for your image</label>
+                  </div>
+                </div>
+                <div class="col-md-6 ps-md-1">
+                  <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="500" required>
+                    <label for="floatingInput" class="text-dark fw-bold">Enter tag for your image</label>
+                  </div>
+                </div>
               </div>
               <div class="form-floating mb-2">
                 <textarea class="form-control border rounded-3 text-dark fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="2000" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
                 <label for="floatingInput" class="text-dark fw-bold">Enter description for your image</label>
               </div>
-              <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="500" required>
-                <label for="floatingInput" class="text-dark fw-bold">Enter tag for your image</label>
+              <div class="row">
+                <div class="col-md-6 pe-md-1">
+                  <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="300"> 
+                    <label for="floatingInput" class="text-dark fw-bold">Enter link for your image</label>
+                  </div>
+                </div>
+                <div class="col-md-6 ps-md-1">
+                  <select class="form-select rounded-3 text-dark fw-bold mb-2 border-4" style="height: 58px;" name="type" aria-label="Large select example" required>
+                    <option value="safe" <?php echo ($image['type'] === 'safe') ? 'selected' : ''; ?>>Safe For Works</option>
+                    <option value="nsfw" <?php echo ($image['type'] === 'nsfw') ? 'selected' : ''; ?>>NSFW/R-18</option>
+                  </select>
+                </div>
               </div>
-              <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="300"> 
-                <label for="floatingInput" class="text-dark fw-bold">Enter link for your image</label>
-              </div>
-              <select class="form-select rounded-3 text-dark fw-bold mb-2 border-4" style="height: 58px;" name="type" aria-label="Large select example" required>
-                <option value="safe" <?php echo ($image['type'] === 'safe') ? 'selected' : ''; ?>>Safe For Works</option>
-                <option value="nsfw" <?php echo ($image['type'] === 'nsfw') ? 'selected' : ''; ?>>NSFW/R-18</option>
-              </select>
               <div class="btn-group gap-2 w-100">
                 <button type="button" class="btn btn-dark fw-bold w-100 mb-2 rounded" data-bs-toggle="modal" data-bs-target="#deleteImage">
                   <i class="bi bi-trash-fill"></i> delete this image
