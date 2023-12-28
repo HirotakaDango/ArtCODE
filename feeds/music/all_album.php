@@ -49,8 +49,8 @@ $nextPage = $page + 1;
                 <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
               </a>
               <div class="p-2 position-absolute bottom-0 start-0">
-                <h5 class="card-text text-center fw-bold"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a></h5>
-                <p class="card-text small fw-bold text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a></small></p>
+                <h5 class="card-text text-center fw-bold text-shadow"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo (!is_null($row['title']) && strlen($row['title']) > 15) ? substr($row['title'], 0, 15) . '...' : $row['title']; ?></a></h5>
+                <p class="card-text small fw-bold text-shadow text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo (!is_null($row['artist']) && strlen($row['artist']) > 15) ? substr($row['artist'], 0, 15) . '...' : $row['artist']; ?></a></small></p>
               </div>
             </div>
           </div>
@@ -87,6 +87,11 @@ $nextPage = $page + 1;
         <?php endif; ?>
       </div>
     </div>
+    <style>
+      .text-shadow {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+      }
+    </style>
     <div class="mt-5"></div>
     <?php include('../../bootstrapjs.php'); ?>
   </body>

@@ -49,12 +49,12 @@ function formatNumber($num) {
   }
 }
 
-// Count the number of music records for the user
-$queryCount = "SELECT COUNT(*) FROM music WHERE email IN (SELECT email FROM users WHERE id = :userID)";
+// Count the number of video records for the user
+$queryCount = "SELECT COUNT(*) FROM videos WHERE email IN (SELECT email FROM users WHERE id = :userID)";
 $stmtCount = $db->prepare($queryCount);
 $stmtCount->bindParam(':userID', $userID, PDO::PARAM_INT);
 $stmtCount->execute();
-$musicCount = $stmtCount->fetchColumn();
+$videoCount = $stmtCount->fetchColumn();
 
 // Get the number of followers for the selected user
 $query = $db->prepare('SELECT COUNT(*) FROM following WHERE following_email = :following_email');
@@ -133,7 +133,7 @@ if (isset($_POST['follow'])) {
                   <span class="me-3"><button class="btn btn-outline-light rounded-pill fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button></span>
                 <?php endif; ?>
               </form>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $musicCount; ?> <small>songs</small></a></span>
+              <span class="me-4"><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $videoCount; ?> <small>videos</small></a></span>
               <span class="me-4"><a class="btn border-0 fw-medium" href="../../follower.php?id=<?php echo $userID; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
               <span class="me-4"><a class="btn border-0 fw-medium" href="../../following.php?id=<?php echo $userID; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
               <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
@@ -209,11 +209,13 @@ if (isset($_POST['follow'])) {
                 <?php endif; ?>
               </form>
             </div>
-            <div class="text-center">
-              <span class="me-4"><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $musicCount; ?> <small>songs</small></a></span>
-              <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="../../follower.php?id=<?php echo $userID; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="../../following.php?id=<?php echo $userID; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
+            <div class="btn-group w-100 mt-2">
+              <a class="btn border-0 fw-medium text-center w-50" href="../../follower.php?id=<?php echo $userID; ?>"> <?php echo $num_followers ?> <small>Followers</small></a>
+              <a class="btn border-0 fw-medium text-center w-50" href="../../following.php?id=<?php echo $userID; ?>"> <?php echo $num_following ?> <small>Following</small></a>
+            </div>
+            <div class="btn-group w-100 mt-2">
+              <a class="btn border-0 fw-medium text-center w-50" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $videoCount; ?> <small>videos</small></a>
+              <button class="btn border-0 fw-medium text-center w-50" onclick="sharePage()"><small>Shares</small></button>
             </div>
             <p class="mt-4 fw-medium text-break">
               <small>

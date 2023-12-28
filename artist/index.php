@@ -267,9 +267,8 @@ $fav_count = $fav_count->fetchColumn();
     </div>
     <div class="container-fluid d-md-none d-lg-none">
       <div class="row">
-        <div class="mt-2 b-radius position-relative" style="background-image: url('<?php echo !empty($bgpic) ? $bgpic : "../icon/bg.png"; ?>'); background-size: cover; height: 250px; width: 100%;">
+        <div class="b-radius position-relative" style="background-image: url('<?php echo !empty($bgpic) ? $bgpic : "../icon/bg.png"; ?>'); background-size: cover; height: 250px; width: 100%;">
           <img class="img-thumbnail border-0 shadow position-absolute top-50 start-50 translate-middle rounded-circle" src="<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
-          <a class="btn-sm btn btn-dark fw-bold rounded-pill opacity-75 position-absolute top-0 start-0 m-2" type="button" href="setting.php">change background <i class="bi bi-camera-fill"></i></a>
           <button class="btn btn-sm btn-dark opacity-75 rounded-3 position-absolute top-0 end-0 m-2" data-bs-toggle="modal" data-bs-target="#modalUserInfo"><i class="bi bi-info-circle-fill"></i></button>
         </div>
         <div class="d-flex align-items-center justify-content-center">
@@ -316,14 +315,15 @@ $fav_count = $fav_count->fetchColumn();
                 <?php endif; ?>
               </form>
             </div>
-            <div class="text-center">
-              <span class=""><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo count($images); ?> <small> Images</small></a></span>
-              <span class=""><a class="btn border-0 fw-medium" href="../list_favorite.php?id=<?php echo $id; ?>"><?php echo $fav_count;?> <small>Favorites</small></a></span>
-              <span class=""><a class="btn border-0 fw-medium" href="../follower.php?id=<?php echo $id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
-              <span class=""><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
-              <span class=""><button class="btn border-0 fw-medium" onclick="shareArtist(<?php echo $id; ?>)"><small>Shares</small></button></span>
+            <div class="btn-group w-100 mt-2">
+              <a class="btn border-0 fw-medium text-center w-50" href="../../follower.php?id=<?php echo $id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a>
+              <a class="btn border-0 fw-medium text-center w-50" href="../../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a>
+              <a class="btn border-0 fw-medium text-center w-50" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo count($images); ?> <small> Images</small></a>
             </div>
-            
+            <div class="btn-group w-100 mt-2">
+              <a class="btn border-0 fw-medium text-center w-50" href="../list_favorite.php?id=<?php echo $id; ?>"> <?php echo $fav_count;?> <small> Favorites</small></a>
+              <button class="btn border-0 fw-medium text-center w-50" onclick="sharePage()"><small>Shares</small></button>
+            </div>
             <p class="mt-4 fw-medium text-break">
               <small>
                 <?php

@@ -209,11 +209,13 @@ if (isset($_POST['follow'])) {
                 <?php endif; ?>
               </form>
             </div>
-            <div class="text-center">
-              <span class="me-4"><a class="btn border-0 fw-medium" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $musicCount; ?> <small>songs</small></a></span>
-              <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="../../follower.php?id=<?php echo $userID; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
-              <span class="me-4"><a class="btn border-0 fw-medium" href="../../following.php?id=<?php echo $userID; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
+            <div class="btn-group w-100 mt-2">
+              <a class="btn border-0 fw-medium text-center w-50" href="../../follower.php?id=<?php echo $userid; ?>"> <?php echo $num_followers ?> <small>Followers</small></a>
+              <a class="btn border-0 fw-medium text-center w-50" href="../../following.php?id=<?php echo $userid; ?>"> <?php echo $num_following ?> <small>Following</small></a>
+            </div>
+            <div class="btn-group w-100 mt-2">
+              <a class="btn border-0 fw-medium text-center w-50" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $musicCount; ?> <small>songs</small></a>
+              <button class="btn border-0 fw-medium text-center w-50" onclick="sharePage()"><small>Shares</small></button>
             </div>
             <p class="mt-4 fw-medium text-break">
               <small>
