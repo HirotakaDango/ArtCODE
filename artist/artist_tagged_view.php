@@ -1,4 +1,4 @@
-<?php include('header_artist_desc.php'); ?>
+<?php include('header_artist_view.php'); ?>
 <?php
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindParam(':email', $email, PDO::PARAM_STR);
@@ -31,7 +31,7 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count FROM images JOIN users ON images.email = users.email WHERE users.id = :id AND images.tags LIKE :tagPattern ORDER BY images.id DESC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count FROM images JOIN users ON images.email = users.email WHERE users.id = :id AND images.tags LIKE :tagPattern ORDER BY images.view_count DESC LIMIT :limit OFFSET :offset");
   $stmt->bindParam(':id', $id);
   $stmt->bindValue(':tagPattern', "%$tag%", PDO::PARAM_STR);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -63,11 +63,11 @@ if ($stmt->execute()) {
 ?>
 
     <div class="images">
-      <?php foreach ($results as $imageD): ?>
+      <?php foreach ($results as $imageV): ?>
         <div class="image-container">
           <div class="position-relative">
-            <a class="shadow rounded imagesA" href="../image.php?artworkid=<?php echo $imageD['id']; ?>">
-              <img class="lazy-load imagesImg <?php echo ($imageD['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageD['filename']; ?>" alt="<?php echo $imageD['title']; ?>">
+            <a class="shadow rounded imagesA" href="../image.php?artworkid=<?php echo $imageV['id']; ?>">
+              <img class="lazy-load imagesImg <?php echo ($imageV['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageV['filename']; ?>" alt="<?php echo $imageV['title']; ?>">
             </a> 
             <div class="position-absolute top-0 start-0">
               <div class="dropdown">
@@ -76,24 +76,24 @@ if ($stmt->execute()) {
                 </button>
                 <ul class="dropdown-menu">
                   <?php
-                    $is_favorited = $db->query("SELECT COUNT(*) FROM favorites WHERE email = '{$_SESSION['email']}' AND image_id = {$imageD['id']}")->fetchColumn();
+                    $is_favorited = $db->query("SELECT COUNT(*) FROM favorites WHERE email = '{$_SESSION['email']}' AND image_id = {$imageV['id']}")->fetchColumn();
                     if ($is_favorited) {
                   ?>
                     <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $imageD['id']; ?>">
+                      <input type="hidden" name="image_id" value="<?php echo $imageV['id']; ?>">
                       <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
                     </form>
                   <?php } else { ?>
                     <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $imageD['id']; ?>">
+                      <input type="hidden" name="image_id" value="<?php echo $imageV['id']; ?>">
                       <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
                     </form>
                   <?php } ?>
-                  <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $imageD['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
-                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageD['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
+                  <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $imageV['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageV['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                 </ul>
                 
-                <?php include($_SERVER['DOCUMENT_ROOT'] . '/artist/components/card_image_desc.php'); ?>
+                <?php include($_SERVER['DOCUMENT_ROOT'] . '/artist/components/card_image_view.php'); ?>
 
               </div>
             </div>
@@ -108,11 +108,11 @@ if ($stmt->execute()) {
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_newest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_newest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -127,17 +127,17 @@ if ($stmt->execute()) {
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?id=' . $id . 'by=tagged_newest&' . $tag . 'page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?id=' . $id . 'by=tagged_view&' . $tag . 'page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_newest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_newest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>

@@ -384,7 +384,7 @@ $fav_count = $fav_count->fetchColumn();
     <?php include('most_popular_artist.php'); ?>
     
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
-    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'tagged_oldest' || $_GET['by'] === 'tagged_newest' || $_GET['by'] === 'tagged_popular')) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_pop.php') !== false)) ? 'd-none' : ''; ?>">
+    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'tagged_oldest' || $_GET['by'] === 'tagged_newest' || $_GET['by'] === 'tagged_popular' || $_GET['by'] === 'tagged_view')) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_view.php') !== false)) ? 'd-none' : ''; ?>">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
@@ -392,9 +392,10 @@ $fav_count = $fav_count->fetchColumn();
         <li><a href="?id=<?php echo $id; ?>&by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most view</a></li>
       </ul>
     </div> 
-    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest' || $_GET['by'] === 'popular')) || (strpos($_SERVER['REQUEST_URI'], 'artist_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_pop.php') !== false)) ? 'd-none' : ''; ?>">
+    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest' || $_GET['by'] === 'popular' || $_GET['by'] === 'view')) || (strpos($_SERVER['REQUEST_URI'], 'artist_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_view.php') !== false)) ? 'd-none' : ''; ?>">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
@@ -402,6 +403,7 @@ $fav_count = $fav_count->fetchColumn();
         <li><a href="?id=<?php echo $id; ?>&by=tagged_newest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'tagged_newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_oldest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_popular&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_view') echo 'active'; ?>">most view</a></li>
       </ul>
     </div> 
         <?php 
@@ -418,6 +420,9 @@ $fav_count = $fav_count->fetchColumn();
             case 'popular':
             include "artist_pop.php";
             break;
+            case 'view':
+            include "artist_view.php";
+            break;
             case 'tagged_newest':
             include "artist_tagged_desc.php";
             break;
@@ -426,6 +431,9 @@ $fav_count = $fav_count->fetchColumn();
             break;
             case 'tagged_popular':
             include "artist_tagged_pop.php";
+            break;
+            case 'tagged_view':
+            include "artist_tagged_view.php";
             break;
           }
         }

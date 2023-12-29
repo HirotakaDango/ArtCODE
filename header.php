@@ -153,12 +153,6 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'popular.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/popular.php">
-                  <i class="bi bi-star-fill fs-5"></i>
-                  <span class="d-md-none d-lg-inline d-lg-none ms-2">Popular</span>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
                   <i class="bi bi-bell-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none ms-2">Notification</span>
@@ -245,8 +239,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link nav-center py-1 <?php if(basename($_SERVER['PHP_SELF']) == 'popular.php') echo 'active border-bottom border-dark border-3' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/popular.php">
-                  Popular
+                <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) echo 'active border-bottom border-dark border-3'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
+                  Notification
                 </a>
               </li>
               <li class="nav-item">
@@ -262,12 +256,6 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 500px;">
                     <div class="row p-3">
                       <div class="col-6">
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
-                            <i class="bi bi-bell-fill fs-5"></i>
-                            <span class="d-lg-inline ms-2">Notification</span>
-                          </a>
-                        </li>
                         <li class="nav-item">
                           <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notes/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">
                             <i class="bi bi-journal-text fs-5"></i>
