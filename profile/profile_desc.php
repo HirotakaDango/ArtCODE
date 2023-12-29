@@ -41,11 +41,11 @@ if ($stmt->execute()) {
 ?>
 
     <div class="images">
-      <?php foreach ($results as $imageV): ?>
+      <?php foreach ($results as $imageD): ?>
         <div class="image-container">
           <div class="position-relative">
-            <a class="shadow rounded imagesA" href="../image.php?artworkid=<?php echo $imageV['id']; ?>">
-              <img class="lazy-load imagesImg <?php echo ($imageV['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageV['filename']; ?>" alt="<?php echo $imageV['title']; ?>">
+            <a class="shadow rounded imagesA" href="../image.php?artworkid=<?php echo $imageD['id']; ?>">
+              <img class="lazy-load imagesImg <?php echo ($imageD['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageD['filename']; ?>" alt="<?php echo $imageD['title']; ?>">
             </a> 
             <div class="position-absolute top-0 start-0">
               <div class="dropdown">
@@ -53,15 +53,15 @@ if ($stmt->execute()) {
                   <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><button class="dropdown-item fw-bold" onclick="location.href='../edit_image.php?id=<?php echo $imageV['id']; ?>'" ><i class="bi bi-pencil-fill"></i> edit image</button></li>
-                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $imageV['id']; ?>"><i class="bi bi-trash-fill"></i> delete</button></li>
+                  <li><button class="dropdown-item fw-bold" onclick="location.href='../edit_image.php?id=<?php echo $imageD['id']; ?>'" ><i class="bi bi-pencil-fill"></i> edit image</button></li>
+                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $imageD['id']; ?>"><i class="bi bi-trash-fill"></i> delete</button></li>
                   <?php
                   $is_favorited = false; // Initialize to false
 
                   // Check if the image is favorited
                   $stmt = $db->prepare("SELECT COUNT(*) AS num_favorites FROM favorites WHERE email = :email AND image_id = :image_id");
                   $stmt->bindValue(':email', $email);
-                  $stmt->bindValue(':image_id', $imageV['id']);
+                  $stmt->bindValue(':image_id', $imageD['id']);
                   $stmt->execute();
                   $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -76,7 +76,7 @@ if ($stmt->execute()) {
                   $button_label = $is_favorited ? 'unfavorite' : 'favorite';
                   ?>
                   <form method="POST">
-                    <input type="hidden" name="image_id" value="<?php echo $imageV['id']; ?>">
+                    <input type="hidden" name="image_id" value="<?php echo $imageD['id']; ?>">
                     <li>
                       <button type="submit" class="dropdown-item fw-bold" name="<?php echo $form_action ?>">
                         <i class="bi <?php echo $is_favorited ? 'bi-heart-fill' : 'bi-heart' ?>"></i>
@@ -84,8 +84,8 @@ if ($stmt->execute()) {
                       </button>
                     </li>
                   </form>
-                  <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $imageV['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
-                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageV['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
+                  <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $imageD['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageD['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                 </ul>
               </div>
             </div>
