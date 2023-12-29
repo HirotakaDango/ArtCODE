@@ -369,7 +369,7 @@ $fav_count = $fav_row['num_favorites'];
         <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
-        <li><a href="?by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most view</a></li>
+        <li><a href="?by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
       </ul>
     </div> 
     <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest' || $_GET['by'] === 'popular' || $_GET['by'] === 'view')) || (strpos($_SERVER['REQUEST_URI'], 'profile_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_view.php') !== false)) ? 'd-none' : ''; ?>">
@@ -380,7 +380,7 @@ $fav_count = $fav_row['num_favorites'];
         <li><a href="?by=tagged_newest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'tagged_newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=tagged_oldest&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?by=tagged_popular&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_popular') echo 'active'; ?>">popular</a></li>
-        <li><a href="?by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_view') echo 'active'; ?>">most view</a></li>
+        <li><a href="?by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_view') echo 'active'; ?>">most viewed</a></li>
       </ul>
     </div> 
         <?php 
