@@ -110,7 +110,7 @@ if ($comment_id !== null) {
               <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none text-white" href="view.php?id=<?php echo $minute['id']; ?>"><?php echo $minute['title']; ?></a>
+              <a class="link-body-emphasis text-decoration-none text-white" href="playing.php?id=<?php echo $minute['id']; ?>"><?php echo $minute['title']; ?></a>
             </li>
             <li class="breadcrumb-item">
               <a class="link-body-emphasis text-decoration-none text-white" href="comments.php?id=<?php echo $minuteid; ?>">Comment ID: <?php echo $comment['id']; ?></a>
@@ -128,7 +128,7 @@ if ($comment_id !== null) {
             <div class="btn-group-vertical w-100">
               <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
               <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/">Home</a>
-              <a class="btn py-2 rounded text-start fw-medium"href="view.php?id=<?php echo $minute['id']; ?>"><?php echo $minute['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-medium"href="playing.php?id=<?php echo $minute['id']; ?>"><?php echo $minute['title']; ?></a>
               <a class="btn py-2 rounded text-start fw-medium"href="comments.php?id=<?php echo $minuteid; ?>">Comment ID: <?php echo $comment['id']; ?></a>
               <a class="btn py-2 rounded text-start fw-bold disabled border-0"href="#"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Reply</a>
             </div>
@@ -137,11 +137,11 @@ if ($comment_id !== null) {
       </nav>
       <?php if ($comment_id !== null && $comment !== false): ?>
         <div class="modal-dialog my-2" role="document">
-          <div class="modal-content rounded-3 shadow border-4 border">
-            <div class="modal-body p-4">
+          <div class="modal-content card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
+            <div class="modal-body">
               <h5 class="mb-0 fw-bold text-center">Comment Replies</h5>
               <div class="fw-bold mt-2">
-                <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
+                <div class="small">
                   <?php
                     if (!function_exists('getYouTubeVideoId')) {
                       function getYouTubeVideoId($urlCommentReply)
@@ -188,83 +188,94 @@ if ($comment_id !== null) {
                       echo "Sorry, no text...";
                     }
                   ?>
-                </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div>
         <?php
           // Display each reply and a delete button
           while ($reply = $replies->fetchArray(SQLITE3_ASSOC)):
         ?>
-          <div class="card shadow border-0 mb-1">
-            <div class="ms-1">
-              <p class="text-white fw-semibold mt-1">
+          <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
+            <div class="d-flex align-items-center mb-2 position-relative">
+              <div class="position-absolute top-0 start-0 m-1">
                 <img class="rounded-circle" src="../../<?php echo !empty($reply['pic']) ? $reply['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
                 <a class="text-white text-decoration-none" href="../../artist.php?id=<?php echo $reply['userid']; ?>"><small>@<?php echo (mb_strlen($reply['artist']) > 15) ? mb_substr($reply['artist'], 0, 15) . '...' : $reply['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
-              </p>
-              <div class="mt-5 container-fluid fw-medium">
-                <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
-                  <?php
-                    if (!function_exists('getYouTubeVideoId')) {
-                      function getYouTubeVideoId($urlComment)
-                      {
-                        $videoId = '';
-                        $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
-                        if (preg_match($pattern, $urlComment, $matches)) {
-                          $videoId = $matches[1];
-                        }
-                        return $videoId;
+              </div>
+              <?php if ($_SESSION['email'] === $reply['email']): ?>
+                <div class="dropdown ms-auto position-relative">
+                  <button class="btn btn-sm position-absolute top-0 end-0 m-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end">
+                    <form action="" method="get">
+                      <a href="edit_reply_comment_minute.php?reply_id=<?php echo $reply['id']; ?>&minuteid=<?php echo $minuteid; ?>" class="dropdown-item fw-semibold">
+                        <i class="bi bi-pencil-fill"></i> Edit
+                      </a>
+                      <input type="hidden" name="delete_reply_id" value="<?= $reply['id'] ?>">
+                      <input type="hidden" name="minuteid" value="<?= $minuteid ?>" />
+                      <button onclick="return confirm('Are you sure?')" class="dropdown-item fw-semibold " type="submit">
+                        <i class="bi bi-trash-fill"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              <?php endif; ?>
+            </div>
+            <div class="mt-5 container-fluid fw-medium">
+              <div class="small">
+                <?php
+                  if (!function_exists('getYouTubeVideoId')) {
+                    function getYouTubeVideoId($urlComment)
+                    {
+                      $videoId = '';
+                      $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+                      if (preg_match($pattern, $urlComment, $matches)) {
+                        $videoId = $matches[1];
                       }
+                      return $videoId;
                     }
+                  }
 
-                    $commentText = isset($reply['reply']) ? $reply['reply'] : '';
+                  $commentText = isset($reply['reply']) ? $reply['reply'] : '';
 
-                    if (!empty($commentText)) {
-                      $paragraphs = explode("\n", $commentText);
+                  if (!empty($commentText)) {
+                    $paragraphs = explode("\n", $commentText);
 
-                      foreach ($paragraphs as $index => $paragraph) {
-                        $messageTextWithoutTags = strip_tags($paragraph);
-                        $pattern = '/\bhttps?:\/\/\S+/i';
+                    foreach ($paragraphs as $index => $paragraph) {
+                      $messageTextWithoutTags = strip_tags($paragraph);
+                      $pattern = '/\bhttps?:\/\/\S+/i';
 
-                        $formattedText = preg_replace_callback($pattern, function ($matches) {
-                          $urlComment = htmlspecialchars($matches[0]);
+                      $formattedText = preg_replace_callback($pattern, function ($matches) {
+                        $urlComment = htmlspecialchars($matches[0]);
 
-                          if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
-                            return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
-                          } elseif (strpos($urlComment, 'youtube.com') !== false) {
-                            $videoId = getYouTubeVideoId($urlComment);
-                            if ($videoId) {
-                              $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
-                              return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0" allowfullscreen></iframe></div>';
-                            } else {
-                              return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
-                            }
+                        if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
+                          return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
+                        } elseif (strpos($urlComment, 'youtube.com') !== false) {
+                          $videoId = getYouTubeVideoId($urlComment);
+                          if ($videoId) {
+                            $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
+                            return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0" allowfullscreen></iframe></div>';
                           } else {
                             return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
                           }
-                        }, $messageTextWithoutTags);
-                    
-                        echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
-                      }
-                    } else {
-                      echo "Sorry, no text...";
+                        } else {
+                          return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
+                        }
+                      }, $messageTextWithoutTags);
+                  
+                      echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
                     }
-                  ?>
-                </p>
+                  } else {
+                    echo "Sorry, no text...";
+                  }
+                ?>
               </div>
-              <?php if ($_SESSION['email'] === $reply['email']): ?>
-                <form action="" method="get">
-                  <div class="btn-group position-absolute top-0 end-0 mt-1 me-1 opacity-50">
-                    <a href="edit_reply_comment_minute.php?reply_id=<?php echo $reply['id']; ?>&minuteid=<?php echo $minuteid; ?>" class="btn btn-sm btn-secondary"><i class="bi bi-pencil-fill"></i></a>
-                    <input type="hidden" name="delete_reply_id" value="<?= $reply['id'] ?>">
-                    <input type="hidden" name="minuteid" value="<?= $minuteid ?>" />
-                    <button onclick="return confirm('Are you sure?')" class="btn btn-sm btn-secondary " type="submit">
-                      <i class="bi bi-trash-fill"></i>
-                    </button>
-                  </div>
-                </form>
-              <?php endif; ?>
             </div>
           </div>
         <?php endwhile; ?>

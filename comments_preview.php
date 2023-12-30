@@ -123,7 +123,7 @@ $comments = $stmt->execute();
       <?php
         while ($comment = $comments->fetchArray()) :
       ?>
-        <div class="card border-0 shadow mb-1 position-relative">
+        <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
           <div class="d-flex align-items-center mb-2 position-relative">
             <div class="position-absolute top-0 start-0 m-1">
               <img class="rounded-circle" src="<?php echo !empty($comment['pic']) ? $comment['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
@@ -131,18 +131,18 @@ $comments = $stmt->execute();
             </div>
             <?php if ($comment['email'] == $_SESSION['email']) : ?>
               <div class="dropdown ms-auto position-relative">
-                <button class="btn btn-sm btn-secondary opacity-50 position-absolute top-0 end-0 m-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-sm position-absolute top-0 end-0 m-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                   <form action="" method="POST">
                     <a href="edit_comment_preview.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
-                      <i class="bi bi-pencil-fill me-2"></i>Edit
+                      <i class="bi bi-pencil-fill me-2"></i> Edit
                     </a>
                     <input type="hidden" name="filename" value="<?php echo $filename; ?>">
                     <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
                     <button type="submit" name="action" onclick="return confirm('Are you sure?')" value="delete" class="dropdown-item fw-semibold">
-                      <i class="bi bi-trash-fill me-2"></i>Delete
+                      <i class="bi bi-trash-fill me-2"></i> Delete
                     </button>
                   </form>
                 </div>
@@ -150,7 +150,7 @@ $comments = $stmt->execute();
             <?php endif; ?>
           </div>
           <div class="mt-5 container-fluid fw-medium">
-            <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
+            <div class="small">
               <?php
                 if (!function_exists('getYouTubeVideoId')) {
                   function getYouTubeVideoId($urlComment)
@@ -197,7 +197,7 @@ $comments = $stmt->execute();
                   echo "Sorry, no text...";
                 }
               ?>
-            </p>
+            </div>
           </div>
           <div class="m-2 ms-auto">
             <a class="btn btn-sm fw-semibold" href="reply_comment_preview.php?imageid=<?php echo $filename; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
@@ -206,53 +206,53 @@ $comments = $stmt->execute();
       <?php
         endwhile;
       ?>
+    </div>
+    <?php
+      $totalPages = ceil($total_comments / $comments_per_page);
+      $prevPage = $page - 1;
+      $nextPage = $page + 1;
+    ?>
+    <div class="pagination d-flex gap-1 justify-content-center mt-3">
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+      <?php endif; ?>
+
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+      <?php endif; ?>
+
       <?php
-        $totalPages = ceil($total_comments / $comments_per_page);
-        $prevPage = $page - 1;
-        $nextPage = $page + 1;
-      ?>
-      <div class="pagination d-flex gap-1 justify-content-center mt-3">
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-        <?php endif; ?>
+        // Calculate the range of page numbers to display
+        $startPage = max($page - 2, 1);
+        $endPage = min($page + 2, $totalPages);
 
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-        <?php endif; ?>
-
-        <?php
-          // Calculate the range of page numbers to display
-          $startPage = max($page - 2, 1);
-          $endPage = min($page + 2, $totalPages);
-
-          // Display page numbers within the range
-          for ($i = $startPage; $i <= $endPage; $i++) {
-            if ($i === $page) {
-              echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-            } else {
-              echo '<a class="btn btn-sm btn-primary fw-bold" href="?imageid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
-            }
+        // Display page numbers within the range
+        for ($i = $startPage; $i <= $endPage; $i++) {
+          if ($i === $page) {
+            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+          } else {
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?imageid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
           }
-        ?>
+        }
+      ?>
 
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-        <?php endif; ?>
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+      <?php endif; ?>
 
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-        <?php endif; ?>
-      </div>
-      <div class="fixed-bottom w-100">
-        <form action="" method="POST">
-          <div class="input-group w-100 rounded-bottom-2">
-            <textarea id="message-input" name="comment" class="form-control fw-semibold" style="height: 40px; max-height: 150px;" placeholder="Type your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" 
-              onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
-              onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }"></textarea>
-            <button type="submit" class="btn btn-primary fw-bold">send</button>
-          </div>
-        </form> 
-      </div>
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+      <?php endif; ?>
+    </div>
+    <div class="fixed-bottom w-100">
+      <form action="" method="POST">
+        <div class="input-group w-100 rounded-bottom-2">
+          <textarea id="message-input" name="comment" class="form-control fw-semibold" style="height: 40px; max-height: 150px;" placeholder="Type your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" 
+            onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
+            onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }"></textarea>
+          <button type="submit" class="btn btn-primary fw-bold">send</button>
+        </div>
+      </form> 
     </div>
     <br><br><br>
     <style>

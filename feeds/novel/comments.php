@@ -150,7 +150,7 @@ $comments = $stmt->execute();
       <?php
         while ($comment = $comments->fetchArray()) :
       ?>
-        <div class="card border-0 shadow mb-1 position-relative">
+        <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
           <div class="d-flex align-items-center mb-2 position-relative">
             <div class="position-absolute top-0 start-0 m-1">
               <img class="rounded-circle" src="../../<?php echo !empty($comment['pic']) ? $comment['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
@@ -158,7 +158,7 @@ $comments = $stmt->execute();
             </div>
             <?php if ($comment['email'] == $_SESSION['email']) : ?>
               <div class="dropdown ms-auto position-relative">
-                <button class="btn btn-sm btn-secondary opacity-50 position-absolute top-0 end-0 m-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-sm position-absolute top-0 end-0 m-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
@@ -177,7 +177,7 @@ $comments = $stmt->execute();
             <?php endif; ?>
           </div>
           <div class="mt-5 container-fluid fw-medium">
-            <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
+            <div class="small">
               <?php
                 if (!function_exists('getYouTubeVideoId')) {
                   function getYouTubeVideoId($urlComment)
@@ -224,7 +224,7 @@ $comments = $stmt->execute();
                   echo "Sorry, no text...";
                 }
               ?>
-            </p>
+            </div>
           </div>
           <div class="m-2 ms-auto">
             <a class="btn btn-sm fw-semibold" href="reply_comment_novel.php?novelid=<?php echo $filename; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>

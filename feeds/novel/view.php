@@ -329,11 +329,10 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
             </a>
           <?php endforeach; ?>
         </div>
-        
         <hr class="border-4 my-5 rounded-pill">
         <h5 class="fw-bold text-center mb-5">comments section</h5>
         <?php foreach ($comments as $comment) : ?>
-          <div class="card border-0 shadow mb-1 position-relative">
+          <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
             <div class="d-flex align-items-center mb-2 position-relative">
               <div class="position-absolute top-0 start-0 m-1">
                 <img class="rounded-circle" src="../../<?php echo !empty($comment['pic']) ? $comment['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
@@ -341,7 +340,7 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
             <div class="mt-5 container-fluid fw-medium">
-              <p class="mt-3 small" style="white-space: break-spaces; overflow: hidden;">
+              <div class="small">
                 <?php
                 // Function to get YouTube video ID
                 if (!function_exists('getYouTubeVideoId')) {
@@ -389,10 +388,10 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
                   echo "Sorry, no text...";
                 }
                 ?>
-              </p>
+              </div>
             </div>
             <div class="m-2 ms-auto">
-              <a class="btn btn-sm fw-semibold" href="reply_comments_novel.php?novelid=<?php echo $id; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+              <a class="btn btn-sm fw-semibold" href="reply_comment_novel.php?novelid=<?php echo $id; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
             </div>
           </div>
         <?php endforeach; ?>
