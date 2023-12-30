@@ -12,20 +12,6 @@ if (!isset($_GET['id'])) {
 
 $id = $_GET['id'];
 
-// Check and create the chapter table if it doesn't exist
-$createTableQuery = "
-    CREATE TABLE IF NOT EXISTS chapter (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        novel_id INTEGER,
-        email VARCHAR(255),
-        title TEXT,
-        content TEXT,
-        FOREIGN KEY (novel_id) REFERENCES novel(id),
-        FOREIGN KEY (email) REFERENCES users(email)
-    );
-";
-$db->exec($createTableQuery);
-
 // Fetch novel details using JOIN
 $novelQuery = "SELECT novel.id, novel.email, novel.title as novel_title, chapter.title as chapter_title, chapter.content 
                FROM novel 

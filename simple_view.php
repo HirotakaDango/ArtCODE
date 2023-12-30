@@ -121,7 +121,7 @@ if (isset($_POST['favorite'])) {
   exit();
 }
 
-$url_comment = "comment_preview.php?imageid=" . $image_id;
+$url_comment = "comments_preview.php?imageid=" . $image_id;
 
 // Increment the view count for the image
 $stmt = $db->prepare("UPDATE images SET view_count = view_count + 1 WHERE id = :filename");

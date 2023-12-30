@@ -14,13 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
   $email = $_SESSION['email'];
 
   // Get the current time
-  $now = date('Y-m-d');
+  $currentDate  = date("Y/m/d");
 
   // Insert the comment into the database
   $stmt = $db->prepare("INSERT INTO forum (email, comment, created_at) VALUES (:email, :comment, :created_at)");
   $stmt->bindValue(':email', $email, SQLITE3_TEXT);
   $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
-  $stmt->bindValue(':created_at', $now, SQLITE3_TEXT);
+  $stmt->bindValue(':created_at', $currentDate , SQLITE3_TEXT);
   $stmt->execute();
 
   // Redirect back to the image page
@@ -98,6 +98,7 @@ $forum = $stmt->execute();
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
+    <?php include('header.php'); ?>
     <br><br>
     <div class="container-fluid mt-2">
       <?php
@@ -107,7 +108,7 @@ $forum = $stmt->execute();
           <div class="d-flex align-items-center mb-2 position-relative">
             <div class="position-absolute top-0 start-0 m-1">
               <img class="rounded-circle" src="<?php echo !empty($comment['pic']) ? $comment['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-              <a class="text-dark text-decoration-none fw-semibold" href="artist.php?id=<?php echo $comment['iduser'];?>" target="_blank">@<?php echo $comment['artist']; ?></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
+              <a class="text-dark text-decoration-none fw-semibold" href="artist.php?id=<?php echo $comment['iduser'];?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
             </div>
             <?php if ($comment['email'] == $_SESSION['email']) : ?>
               <div class="dropdown ms-auto position-relative">
@@ -247,7 +248,7 @@ $forum = $stmt->execute();
         </div>
       </div>
     </div>
-    <?php include('header.php'); ?>
+    <br><br><br>
     <style>
       .text-stroke {
         -webkit-text-stroke: 1px;

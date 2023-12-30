@@ -1,19 +1,25 @@
 <?php
-require_once('../../auth.php');
+require_once('auth.php');
 
 // Connect to the database
-$db = new SQLite3('../../database.sqlite');
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments_novel (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at TEXT)");
+$db = new SQLite3('database.sqlite');
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at DATETIME)");
 $stmt->execute();
 
 // Get the filename from the query string
-$filename = $_GET['novelid'];
+$filename = $_GET['imageid'];
 
 // Get the image information from the database
-$stmt = $db->prepare("SELECT * FROM novel WHERE id=:filename");
+$stmt = $db->prepare("SELECT * FROM images WHERE id=:filename");
 $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
 $image = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
+// Check if the image exists
+if (!$image) {
+  // Redirect to the homepage if not
+  header('Location: index.php');
+  exit();
+}
 
 // Check if the form was submitted for adding a new comment
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
@@ -28,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
     $currentDate = date("Y/m/d");
 
     // Insert the comment into the database
-    $stmt = $db->prepare("INSERT INTO comments_novel (filename, email, comment, created_at) VALUES (:filename, :email, :comment, :created_at)");
+    $stmt = $db->prepare("INSERT INTO comments (filename, email, comment, created_at) VALUES (:filename, :email, :comment, :created_at)");
     $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
@@ -52,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
   $email = $_SESSION['email'];
 
   // Check if the comment belongs to the current user
-  $stmt = $db->prepare("SELECT * FROM comments_novel WHERE id=:comment_id AND email=:email");
+  $stmt = $db->prepare("SELECT * FROM comments WHERE id=:comment_id AND email=:email");
   $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
   $stmt->bindValue(':email', $email, SQLITE3_TEXT);
   $comment = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
@@ -60,12 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
   if ($comment) {
     if ($action == 'delete') {
       // Delete the comment from the comments table
-      $stmt = $db->prepare("DELETE FROM comments_novel WHERE id=:comment_id");
+      $stmt = $db->prepare("DELETE FROM comments WHERE id=:comment_id");
       $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
       $stmt->execute();
 
       // Delete the corresponding replies from the reply_comments table
-      $stmt = $db->prepare("DELETE FROM reply_comments_novel WHERE comment_id=:comment_id");
+      $stmt = $db->prepare("DELETE FROM reply_comments WHERE comment_id=:comment_id");
       $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
       $stmt->execute();
     }
@@ -88,7 +94,7 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $comments_per_page;
 
 // Get the total number of comments for the current image
-$total_comments_stmt = $db->prepare("SELECT COUNT(*) FROM comments_novel WHERE filename=:filename");
+$total_comments_stmt = $db->prepare("SELECT COUNT(*) FROM comments WHERE filename=:filename");
 $total_comments_stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
 $total_comments = $total_comments_stmt->execute()->fetchArray()[0];
 
@@ -96,7 +102,7 @@ $total_comments = $total_comments_stmt->execute()->fetchArray()[0];
 $total_pages = ceil($total_comments / $comments_per_page);
 
 // Get all comments for the current image for the current page
-$stmt = $db->prepare("SELECT comments_novel.*, users.artist, users.pic, users.id as iduser FROM comments_novel JOIN users ON comments_novel.email = users.email WHERE comments_novel.filename=:filename ORDER BY comments_novel.id DESC LIMIT :comments_per_page OFFSET :offset");
+$stmt = $db->prepare("SELECT comments.*, users.artist, users.pic, users.id as iduser FROM comments JOIN users ON comments.email = users.email WHERE comments.filename=:filename ORDER BY comments.id DESC LIMIT :comments_per_page OFFSET :offset");
 $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
 $stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
@@ -104,57 +110,24 @@ $comments = $stmt->execute();
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html>
   <head>
     <title>Comment Section</title>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="../../icon/favicon.png">
-    <?php include('../../bootstrapcss.php'); ?>
+    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container-fluid mt-3">
-      <nav aria-label="breadcrumb">
-        <div class="d-none d-md-block d-lg-block">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
-                ArtCODE
-              </a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none text-white" href="view.php?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
-            </li>
-            <li class="breadcrumb-item active disabled fw-bold" aria-current="page">
-              Comments
-            </li>
-          </ol>
-        </div>
-        <div class="d-md-none d-lg-none">
-          <a class="btn bg-body-tertiary p-3 fw-bold w-100 text-start mb-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
-            <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
-          </a>
-          <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
-            <div class="btn-group-vertical w-100">
-              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
-              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
-              <a class="btn py-2 rounded text-start fw-medium"href="view.php?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
-              <a class="btn py-2 rounded text-start fw-bold disabled border-0"href="#"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Comments</a>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div class="container-fluid mt-2">
       <?php
         while ($comment = $comments->fetchArray()) :
       ?>
         <div class="card border-0 shadow mb-1 position-relative">
           <div class="d-flex align-items-center mb-2 position-relative">
             <div class="position-absolute top-0 start-0 m-1">
-              <img class="rounded-circle" src="../../<?php echo !empty($comment['pic']) ? $comment['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-              <a class="text-white text-decoration-none fw-semibold" href="../../artist.php?id=<?php echo $comment['iduser'];?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
+              <img class="rounded-circle" src="<?php echo !empty($comment['pic']) ? $comment['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
+              <a class="text-dark text-decoration-none fw-semibold" href="artist.php?id=<?php echo $comment['iduser'];?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
             </div>
             <?php if ($comment['email'] == $_SESSION['email']) : ?>
               <div class="dropdown ms-auto position-relative">
@@ -163,7 +136,7 @@ $comments = $stmt->execute();
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                   <form action="" method="POST">
-                    <a href="edit_comment.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
+                    <a href="edit_comment_preview.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
                       <i class="bi bi-pencil-fill me-2"></i>Edit
                     </a>
                     <input type="hidden" name="filename" value="<?php echo $filename; ?>">
@@ -227,71 +200,58 @@ $comments = $stmt->execute();
             </p>
           </div>
           <div class="m-2 ms-auto">
-            <a class="btn btn-sm fw-semibold" href="reply_comment_novel.php?novelid=<?php echo $filename; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+            <a class="btn btn-sm fw-semibold" href="reply_comment_preview.php?imageid=<?php echo $filename; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
           </div>
         </div>
       <?php
         endwhile;
       ?>
-    </div>
-    <?php
-      $totalPages = ceil($total_comments / $comments_per_page);
-      $prevPage = $page - 1;
-      $nextPage = $page + 1;
-    ?>
-    <div class="pagination d-flex gap-1 justify-content-center mt-3">
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-      <?php endif; ?>
-
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-      <?php endif; ?>
-
       <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?novelid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
-          }
-        }
+        $totalPages = ceil($total_comments / $comments_per_page);
+        $prevPage = $page - 1;
+        $nextPage = $page + 1;
       ?>
+      <div class="pagination d-flex gap-1 justify-content-center mt-3">
+        <?php if ($page > 1): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <?php endif; ?>
 
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-      <?php endif; ?>
+        <?php if ($page > 1): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <?php endif; ?>
 
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-      <?php endif; ?>
-    </div>
-    <nav class="navbar fixed-bottom navbar-expand justify-content-center">
-      <div class="container-fluid">
-        <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">send your comment</button>
+        <?php
+          // Calculate the range of page numbers to display
+          $startPage = max($page - 2, 1);
+          $endPage = min($page + 2, $totalPages);
+
+          // Display page numbers within the range
+          for ($i = $startPage; $i <= $endPage; $i++) {
+            if ($i === $page) {
+              echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+            } else {
+              echo '<a class="btn btn-sm btn-primary fw-bold" href="?imageid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
+            }
+          }
+        ?>
+
+        <?php if ($page < $totalPages): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <?php endif; ?>
+
+        <?php if ($page < $totalPages): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?imageid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <?php endif; ?>
       </div>
-    </nav>
-    <div class="modal fade" id="comments" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
-          <div class="modal-header border-0">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Type something else...</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="fixed-bottom w-100">
+        <form action="" method="POST">
+          <div class="input-group w-100 rounded-bottom-2">
+            <textarea id="message-input" name="comment" class="form-control fw-semibold" style="height: 40px; max-height: 150px;" placeholder="Type your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" 
+              onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
+              onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }"></textarea>
+            <button type="submit" class="btn btn-primary fw-bold">send</button>
           </div>
-          <div>
-            <form class="form-control border-0" action="" method="POST">
-              <textarea type="text" class="form-control fw-semibold rounded-3 mb-2" style="height: 200px; max-height: 800px;" name="comment" placeholder="Type something..." aria-label="Type a message..." aria-describedby="basic-addon2" 
-                onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
-                onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 800) { this.style.height = '800px'; } else { this.style.height = newHeight; }" required></textarea>
-              <button class="w-100 btn btn-primary rounded-3" type="submit"><i class="bi bi-send-fill"></i></button>
-            </form>
-          </div>
-        </div>
+        </form> 
       </div>
     </div>
     <br><br><br>
@@ -404,6 +364,6 @@ $comments = $stmt->execute();
       // Initial loading
       loadMoreImages();
     </script>
-    <?php include('../../bootstrapjs.php'); ?>
+    <?php include('bootstrapjs.php'); ?>
   </body>
 </html>

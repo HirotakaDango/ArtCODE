@@ -3,16 +3,16 @@ require_once('../../auth.php');
 
 // Connect to the database
 $db = new SQLite3('../../database.sqlite');
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments_novel (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at TEXT)");
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments_minutes (id INTEGER PRIMARY KEY, minute_id TEXT, email TEXT, comment TEXT, created_at TEXT)");
 $stmt->execute();
 
-// Get the filename from the query string
-$filename = $_GET['novelid'];
+// Get the id from the query string
+$id = $_GET['id'];
 
 // Get the image information from the database
-$stmt = $db->prepare("SELECT * FROM novel WHERE id=:filename");
-$stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
-$image = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+$stmt = $db->prepare("SELECT * FROM videos WHERE id=:id");
+$stmt->bindValue(':id', $id, SQLITE3_TEXT);
+$minute = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
 
 // Check if the form was submitted for adding a new comment
@@ -28,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
     $currentDate = date("Y/m/d");
 
     // Insert the comment into the database
-    $stmt = $db->prepare("INSERT INTO comments_novel (filename, email, comment, created_at) VALUES (:filename, :email, :comment, :created_at)");
-    $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+    $stmt = $db->prepare("INSERT INTO comments_minutes (minute_id, email, comment, created_at) VALUES (:id, :email, :comment, :created_at)");
+    $stmt->bindValue(':id', $id, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
     $stmt->bindValue(':created_at', $currentDate, SQLITE3_TEXT); // Bind the current date
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
   $email = $_SESSION['email'];
 
   // Check if the comment belongs to the current user
-  $stmt = $db->prepare("SELECT * FROM comments_novel WHERE id=:comment_id AND email=:email");
+  $stmt = $db->prepare("SELECT * FROM comments_minutes WHERE id=:comment_id AND email=:email");
   $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
   $stmt->bindValue(':email', $email, SQLITE3_TEXT);
   $comment = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
@@ -60,12 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
   if ($comment) {
     if ($action == 'delete') {
       // Delete the comment from the comments table
-      $stmt = $db->prepare("DELETE FROM comments_novel WHERE id=:comment_id");
+      $stmt = $db->prepare("DELETE FROM comments_minutes WHERE id=:comment_id");
       $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
       $stmt->execute();
 
       // Delete the corresponding replies from the reply_comments table
-      $stmt = $db->prepare("DELETE FROM reply_comments_novel WHERE comment_id=:comment_id");
+      $stmt = $db->prepare("DELETE FROM reply_comments_minutes WHERE comment_id=:comment_id");
       $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
       $stmt->execute();
     }
@@ -88,16 +88,16 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $comments_per_page;
 
 // Get the total number of comments for the current image
-$total_comments_stmt = $db->prepare("SELECT COUNT(*) FROM comments_novel WHERE filename=:filename");
-$total_comments_stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+$total_comments_stmt = $db->prepare("SELECT COUNT(*) FROM comments_minutes WHERE id=:id");
+$total_comments_stmt->bindValue(':id', $id, SQLITE3_TEXT);
 $total_comments = $total_comments_stmt->execute()->fetchArray()[0];
 
 // Calculate the total number of pages
 $total_pages = ceil($total_comments / $comments_per_page);
 
 // Get all comments for the current image for the current page
-$stmt = $db->prepare("SELECT comments_novel.*, users.artist, users.pic, users.id as iduser FROM comments_novel JOIN users ON comments_novel.email = users.email WHERE comments_novel.filename=:filename ORDER BY comments_novel.id DESC LIMIT :comments_per_page OFFSET :offset");
-$stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+$stmt = $db->prepare("SELECT comments_minutes.*, users.artist, users.pic, users.id as iduser FROM comments_minutes JOIN users ON comments_minutes.email = users.email WHERE comments_minutes.minute_id=:id ORDER BY comments_minutes.id DESC LIMIT :comments_per_page OFFSET :offset");
+$stmt->bindValue(':id', $id, SQLITE3_TEXT);
 $stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $comments = $stmt->execute();
@@ -123,10 +123,10 @@ $comments = $stmt->execute();
               </a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/">Home</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none text-white" href="view.php?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
+              <a class="link-body-emphasis text-decoration-none text-white" href="playing.php?id=<?php echo $minute['id']; ?>"><?php echo $minute['title']; ?></a>
             </li>
             <li class="breadcrumb-item active disabled fw-bold" aria-current="page">
               Comments
@@ -140,8 +140,8 @@ $comments = $stmt->execute();
           <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
             <div class="btn-group-vertical w-100">
               <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
-              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/novel/">Home</a>
-              <a class="btn py-2 rounded text-start fw-medium"href="view.php?id=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
+              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/">Home</a>
+              <a class="btn py-2 rounded text-start fw-medium"href="playing.php?id=<?php echo $minute['id']; ?>"><?php echo $minute['title']; ?></a>
               <a class="btn py-2 rounded text-start fw-bold disabled border-0"href="#"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Comments</a>
             </div>
           </div>
@@ -166,7 +166,7 @@ $comments = $stmt->execute();
                     <a href="edit_comment.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
                       <i class="bi bi-pencil-fill me-2"></i>Edit
                     </a>
-                    <input type="hidden" name="filename" value="<?php echo $filename; ?>">
+                    <input type="hidden" name="id" value="<?php echo $id; ?>">
                     <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
                     <button type="submit" name="action" onclick="return confirm('Are you sure?')" value="delete" class="dropdown-item fw-semibold">
                       <i class="bi bi-trash-fill me-2"></i>Delete
@@ -227,7 +227,7 @@ $comments = $stmt->execute();
             </p>
           </div>
           <div class="m-2 ms-auto">
-            <a class="btn btn-sm fw-semibold" href="reply_comment_novel.php?novelid=<?php echo $filename; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+            <a class="btn btn-sm fw-semibold" href="reply_comment_minute.php?minuteid=<?php echo $id; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
           </div>
         </div>
       <?php
@@ -241,11 +241,11 @@ $comments = $stmt->execute();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?minuteid=<?php echo $id; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?minuteid=<?php echo $id; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -258,17 +258,17 @@ $comments = $stmt->execute();
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?novelid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?minuteid=' . $id . '&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?minuteid=<?php echo $id; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?novelid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?minuteid=<?php echo $id; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <nav class="navbar fixed-bottom navbar-expand justify-content-center">

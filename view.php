@@ -121,7 +121,7 @@ if (isset($_POST['favorite'])) {
   exit();
 }
 
-$url_comment = "comment_preview.php?imageid=" . $image_id;
+$url_comment = "comments_preview.php?imageid=" . $image_id;
 
 // Increment the view count for the image
 $stmt = $db->prepare("UPDATE images SET view_count = view_count + 1 WHERE id = :filename");
@@ -1577,7 +1577,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <button class="form-control bg-primary text-white fw-bold rounded-4" type="submit"><small>add to album</small></button>
                 </form>
                 <iframe class="mt-2 rounded" style="width: 100%; height: 300px;" src="<?php echo $url_comment; ?>"></iframe>
-                <a class="btn btn-primary w-100 rounded-4 fw-bold mt-2 mb-2" href="comment.php?imageid=<?php echo $image['id']; ?>"><i class="bi bi-chat-left-text-fill"></i> <small>view all comments</small></a>
+                <a class="btn btn-primary w-100 rounded-4 fw-bold mt-2 mb-2" href="comments.php?imageid=<?php echo $image['id']; ?>"><i class="bi bi-chat-left-text-fill"></i> <small>view all comments</small></a>
               </div>
               <a class="btn btn-primary rounded-4 w-100 fw-bold text-center" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleButton">
                 <i class="bi bi-caret-down-fill"></i> <small id="toggleText">show more</small>
