@@ -113,7 +113,7 @@ if ($comment_id !== null) {
               <a class="link-body-emphasis text-decoration-none text-white" href="playing.php?id=<?php echo $minute['id']; ?>"><?php echo $minute['title']; ?></a>
             </li>
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none text-white" href="comments.php?id=<?php echo $minuteid; ?>">Comment ID: <?php echo $comment['id']; ?></a>
+              <a class="link-body-emphasis text-decoration-none text-white" href="comments.php?minute_id=<?php echo $minuteid; ?>">Comment ID: <?php echo $comment['id']; ?></a>
             </li>
             <li class="breadcrumb-item active disabled fw-bold" aria-current="page">
               Reply
@@ -129,7 +129,7 @@ if ($comment_id !== null) {
               <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
               <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/minutes/">Home</a>
               <a class="btn py-2 rounded text-start fw-medium"href="playing.php?id=<?php echo $minute['id']; ?>"><?php echo $minute['title']; ?></a>
-              <a class="btn py-2 rounded text-start fw-medium"href="comments.php?id=<?php echo $minuteid; ?>">Comment ID: <?php echo $comment['id']; ?></a>
+              <a class="btn py-2 rounded text-start fw-medium"href="comments.php?minute_id=<?php echo $minuteid; ?>">Comment ID: <?php echo $comment['id']; ?></a>
               <a class="btn py-2 rounded text-start fw-bold disabled border-0"href="#"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Reply</a>
             </div>
           </div>

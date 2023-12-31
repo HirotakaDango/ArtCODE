@@ -80,12 +80,6 @@ $total_items = $total_items_stmt->execute()->fetchArray()[0];
 
 // Calculate the total number of pages
 $total_pages = ceil($total_items / $items_per_page);
-
-// Get all forum items for the current page
-$stmt = $db->prepare("SELECT forum.*, users.artist, users.pic, users.id as iduser FROM forum JOIN users ON forum.email = users.email ORDER BY forum.id DESC LIMIT :items_per_page OFFSET :offset");
-$stmt->bindValue(':items_per_page', $items_per_page, SQLITE3_INTEGER);
-$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
-$forum = $stmt->execute();
 ?>
 
 <!DOCTYPE html>
@@ -99,136 +93,38 @@ $forum = $stmt->execute();
   </head>
   <body>
     <?php include('header.php'); ?>
-    <div class="container-fluid mt-2">
-      <?php
-        while ($comment = $forum->fetchArray()) :
-      ?>
-        <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
-          <div class="d-flex align-items-center mb-2 position-relative">
-            <div class="position-absolute top-0 start-0 m-1">
-              <img class="rounded-circle" src="<?php echo !empty($comment['pic']) ? $comment['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-              <a class="text-dark text-decoration-none fw-semibold" href="artist.php?id=<?php echo $comment['iduser'];?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
-            </div>
-            <?php if ($comment['email'] == $_SESSION['email']) : ?>
-              <div class="dropdown ms-auto position-relative">
-                <button class="btn btn-sm position-absolute top-0 end-0 m-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end">
-                  <form action="" method="POST">
-                    <a href="edit_forum.php?forumid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
-                      <i class="bi bi-pencil-fill me-2"></i> Edit
-                    </a>
-                    <input type="hidden" name="filename" value="<?php echo $filename; ?>">
-                    <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
-                    <button type="submit" name="action" onclick="return confirm('Are you sure?')" value="delete" class="dropdown-item fw-semibold">
-                      <i class="bi bi-trash-fill me-2"></i> Delete
-                    </button>
-                  </form>
-                </div>
-              </div>
-            <?php endif; ?>
-          </div>
-          <div class="mt-5 container-fluid fw-medium">
-            <div class="small">
-              <?php
-                if (!function_exists('getYouTubeVideoId')) {
-                  function getYouTubeVideoId($urlComment)
-                  {
-                    $videoId = '';
-                    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
-                    if (preg_match($pattern, $urlComment, $matches)) {
-                      $videoId = $matches[1];
-                    }
-                    return $videoId;
-                  }
-                }
-
-                $commentText = isset($comment['comment']) ? $comment['comment'] : '';
-
-                if (!empty($commentText)) {
-                  $paragraphs = explode("\n", $commentText);
-
-                  foreach ($paragraphs as $index => $paragraph) {
-                    $messageTextWithoutTags = strip_tags($paragraph);
-                    $pattern = '/\bhttps?:\/\/\S+/i';
-
-                    $formattedText = preg_replace_callback($pattern, function ($matches) {
-                      $urlComment = htmlspecialchars($matches[0]);
-
-                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
-                        return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
-                      } elseif (strpos($urlComment, 'youtube.com') !== false) {
-                        $videoId = getYouTubeVideoId($urlComment);
-                        if ($videoId) {
-                          $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
-                          return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0" allowfullscreen></iframe></div>';
-                        } else {
-                          return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
-                        }
-                      } else {
-                        return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
-                      }
-                    }, $messageTextWithoutTags);
-                
-                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
-                  }
-                } else {
-                  echo "Sorry, no text...";
-                }
-              ?>
-            </div>
-          </div>
-          <div class="m-2 ms-auto">
-            <a class="btn btn-sm fw-semibold" href="reply_forum.php?comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
-          </div>
-        </div>
-      <?php
-        endwhile;
-      ?>
-      <?php
-        $totalPages = ceil($total_items / $items_per_page);
-        $prevPage = $page - 1;
-        $nextPage = $page + 1;
-      ?>
-      <div class="pagination d-flex gap-1 justify-content-center mt-3">
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-        <?php endif; ?>
-
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-        <?php endif; ?>
-
-        <?php
-          // Calculate the range of page numbers to display
-          $startPage = max($page - 2, 1);
-          $endPage = min($page + 2, $totalPages);
-
-          // Display page numbers within the range
-          for ($i = $startPage; $i <= $endPage; $i++) {
-            if ($i === $page) {
-              echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-            } else {
-              echo '<a class="btn btn-sm btn-primary fw-bold" href="?page=' . $i . '">' . $i . '</a>';
-            }
-          }
-        ?>
-
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-        <?php endif; ?>
-
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-        <?php endif; ?>
-      </div>
-      <nav class="navbar fixed-bottom navbar-expand justify-content-center">
-        <div class="container-fluid">
-          <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#forum">send your message</button>
-        </div>
-      </nav>
+    <div class="dropdown">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+      </ul> 
     </div>
+        <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
+ 
+          switch ($sort) {
+            case 'newest':
+            include "forum_desc.php";
+            break;
+            case 'oldest':
+            include "forum_asc.php";
+            break;
+          }
+        }
+        else {
+          include "forum_desc.php";
+        }
+        
+        ?>
+    <nav class="navbar fixed-bottom navbar-expand justify-content-center">
+      <div class="container-fluid">
+        <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#forum">send your message</button>
+      </div>
+    </nav>
     <div class="modal fade" id="forum" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">

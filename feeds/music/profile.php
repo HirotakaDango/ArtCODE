@@ -243,6 +243,8 @@ $formatted_following = formatNumber($num_following);
       <ul class="dropdown-menu">
         <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'asc') echo 'active'; ?>">ascending</a></li>
+        <li><a href="?by=desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
       </ul> 
     </div> 
         <?php 
@@ -255,6 +257,12 @@ $formatted_following = formatNumber($num_following);
             break;
             case 'oldest':
             include "profile_asc.php";
+            break;
+            case 'desc':
+            include "profile_order_desc.php";
+            break;
+            case 'asc':
+            include "profile_order_asc.php";
             break;
           }
         }

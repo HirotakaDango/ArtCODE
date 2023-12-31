@@ -37,7 +37,7 @@ try {
     }
 
     // Redirect to the original comment page
-    header("Location: comments.php?id={$comment['minute_id']}");
+    header("Location: comments.php?minute_id={$comment['minute_id']}");
     exit();
   }
 } catch (PDOException $e) {
@@ -70,7 +70,7 @@ try {
     </div>
     <script>
       function goBack() {
-        window.location.href = "comments.php?id=<?php echo htmlspecialchars($comment['minute_id']); ?>";
+        window.location.href = "comments.php?minute_id=<?php echo htmlspecialchars($comment['minute_id']); ?>";
       }
     </script> 
   </body>

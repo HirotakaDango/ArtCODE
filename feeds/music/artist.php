@@ -279,6 +279,8 @@ if (isset($_POST['follow'])) {
       <ul class="dropdown-menu">
         <li><a href="?by=newest&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=asc&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc') echo 'active'; ?>">ascending</a></li>
+        <li><a href="?by=desc&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
       </ul> 
     </div> 
         <?php 
@@ -291,6 +293,12 @@ if (isset($_POST['follow'])) {
             break;
             case 'oldest':
             include "artist_asc.php";
+            break;
+            case 'desc':
+            include "artist_order_desc.php";
+            break;
+            case 'asc':
+            include "artist_order_asc.php";
             break;
           }
         }

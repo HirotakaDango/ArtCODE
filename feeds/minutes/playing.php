@@ -382,7 +382,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
               </div>
             <?php endforeach; ?>
-            <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?id=<?php echo $row['id']; ?>">view all comments</a>
+            <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?minute_id=<?php echo $row['id']; ?>">view all comments</a>
           </div>
         </div>
         <div class="col-md-3 order-md-2 ps-md-1">
@@ -520,7 +520,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         <?php endforeach; ?>
-        <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?id=<?php echo $row['id']; ?>">view all comments</a>
+        <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?minute_id=<?php echo $row['id']; ?>">view all comments</a>
       </div>
     </div>
     <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
