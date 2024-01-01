@@ -99,7 +99,7 @@ $message_4 = $user['message_4'];
 
 // Check if the logged-in user is already following the selected user
 $query = $db->prepare('SELECT COUNT(*) FROM following WHERE follower_email = :follower_email AND following_email = :following_email');
-$query->bindParam(':follower_email', $email);
+$query->bindParam(':follower_email', $userEmail);
 $query->bindParam(':following_email', $user['email']);
 $query->execute();
 $is_following = $query->fetchColumn();
@@ -120,7 +120,7 @@ $num_following = $query->fetchColumn();
 if (isset($_POST['follow'])) {
   // Add a following relationship between the logged-in user and the selected user
   $query = $db->prepare('INSERT INTO following (follower_email, following_email) VALUES (:follower_email, :following_email)');
-  $query->bindParam(':follower_email', $email);
+  $query->bindParam(':follower_email', $userEmail);
   $query->bindParam(':following_email', $user['email']);
   $query->execute();
   $is_following = true;
@@ -134,7 +134,7 @@ if (isset($_POST['follow'])) {
 } elseif (isset($_POST['unfollow'])) {
   // Remove the following relationship between the logged-in user and the selected user
   $query = $db->prepare('DELETE FROM following WHERE follower_email = :follower_email AND following_email = :following_email');
-  $query->bindParam(':follower_email', $email);
+  $query->bindParam(':follower_email', $userEmail);
   $query->bindParam(':following_email', $user['email']);
   $query->execute();
   $is_following = false;
@@ -168,7 +168,7 @@ if (isset($_POST['follow'])) {
             </div>
             <h5 class="fw-bold mt-3 text-center"><?php echo $artist; ?></h5>
             <div class="d-flex align-content-center justify-content-center">
-              <a class="btn btn-sm rounded-3 btn-secondary fw-bold" href="artist.php?id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right"></i></a>
+              <a class="btn btn-sm rounded-3 btn-outline-light border-0 fw-bold" href="artist.php?id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right text-stroke"></i></a>
             </div>
             <div class="mt-3">
               <form method="post">
@@ -239,18 +239,19 @@ if (isset($_POST['follow'])) {
         </div>
         <div class="col-md-9">
           <div class="p-0">
-            <div class="row mb-3 ps-2">
+            <div class="row mb-3 ps-md-2">
               <div class="col-md-3 order-md-1 mb-3 p-md-0 pe-md-4 p-4">
                 <div class="position-relative">
                   <div class="ratio ratio-1x1">
-                    <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover img-fluid rounded shadow" alt="..."></a>
+                    <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover h-100 w-100 rounded shadow" alt="..."></a>
                   </div>
                   <button type="button" class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-medium" data-bs-toggle="modal" data-bs-target="#shareLink"><small><i class="bi bi-share-fill"></i> share</small></button>
                 </div>
               </div>
               <div class="col-md-7 order-md-2">
-                <h2 class="featurette-heading fw-normal fw-bold">Album: <?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></span></h2>
-                <p class="fw-medium mt-3">Artist : <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
+                <h2 class="featurette-heading fw-normal fw-bold"><?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></span></h2>
+                <p class="fw-medium mt-3 d-none d-md-block d-lg-block">Artist: <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
+                <p class="fw-medium mt-3 d-md-none d-lg-none">Artist: <a class="text-decoration-none text-white" data-bs-toggle="modal" data-bs-target="#profileModal"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
                 <p class="fw-medium mt-3">Total Tracks in Album: <?php echo $albumTrackCount; ?> songs</p>
                 <div class="btn-group gap-2">
                   <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
@@ -265,6 +266,90 @@ if (isset($_POST['follow'])) {
               <?php foreach ($rows as $row): ?>
                 <?php include('music_info.php'); ?>
               <?php endforeach; ?>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content rounded-4 border-0">
+          <div class="modal-header border-0">
+            <h1 class="modal-title fs-5" id="exampleModalLabel"><?php echo $artist; ?>'s Profile</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex align-content-center justify-content-center">
+              <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
+            </div>
+            <h5 class="fw-bold mt-3 text-center"><?php echo $artist; ?></h5>
+            <div class="d-flex align-content-center justify-content-center">
+              <a class="btn btn-sm rounded-3 btn-outline-light border-0 fw-bold" href="artist.php?id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right text-stroke"></i></a>
+            </div>
+            <div class="mt-3">
+              <form method="post">
+                <?php if ($is_following): ?>
+                  <span class="me-3"><button class="btn btn-outline-light rounded-pill fw-medium w-100" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button></span>
+                <?php else: ?>
+                  <span class="me-3"><button class="btn btn-outline-light rounded-pill fw-medium w-100" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button></span>
+                <?php endif; ?>
+              </form>
+              <div class="btn-group w-100 mt-2">
+                <a class="btn border-0 fw-medium text-center w-50" href="../../follower.php?id=<?php echo $userid; ?>"> <?php echo $num_followers ?> <small>Followers</small></a>
+                <a class="btn border-0 fw-medium text-center w-50" href="../../following.php?id=<?php echo $userid; ?>"> <?php echo $num_following ?> <small>Following</small></a>
+              </div>
+              <div class="btn-group w-100 mt-2">
+                <a class="btn border-0 fw-medium text-center w-50" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $userTotalTracksCount; ?> <small>songs</small></a>
+                <button class="btn border-0 fw-medium text-center w-50" onclick="shareArtist(<?php echo $userid; ?>)"><small>Shares</small></button>
+              </div>
+              <p class="mt-4 ms-3 fw-medium text-break">
+                <small>
+                  <?php
+                    if (!empty($desc)) {
+                      $messageText = $desc;
+                      $messageTextWithoutTags = strip_tags($messageText);
+                      $pattern = '/\bhttps?:\/\/\S+/i';
+
+                      $formattedText = preg_replace_callback($pattern, function ($matches) {
+                        $url = htmlspecialchars($matches[0]);
+                        return '<a href="' . $url . '">' . $url . '</a>';
+                      }, $messageTextWithoutTags);
+
+                      $charLimit = 100; // Set your character limit
+
+                      if (strlen($formattedText) > $charLimit) {
+                        $limitedText = substr($formattedText, 0, $charLimit);
+                        echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                        echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                        echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction()" id="myBtn">read more</button>';
+                      } else {
+                        // If the text is within the character limit, just display it with line breaks.
+                        echo nl2br($formattedText);
+                      }
+                    } else {
+                      echo "User description is empty.";
+                    }
+                  ?>
+                </small>
+              </p>
+
+              <script>
+                function myFunction() {
+                  var dots = document.getElementById("limitedText");
+                  var moreText = document.getElementById("more");
+                  var btnText = document.getElementById("myBtn");
+
+                  if (moreText.style.display === "none") {
+                    dots.style.display = "none";
+                    moreText.style.display = "inline";
+                    btnText.innerHTML = "read less";
+                  } else {
+                    dots.style.display = "inline";
+                    moreText.style.display = "none";
+                    btnText.innerHTML = "read more";
+                  }
+                }
+              </script>
             </div>
           </div>
         </div>
