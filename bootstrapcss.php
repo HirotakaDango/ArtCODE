@@ -38,4 +38,8 @@
       .scrollable-div::-webkit-scrollbar-thumb {
         background-color: transparent;
       }
+      
+     .text-stroke {
+       -webkit-text-stroke: 1px;
+     }
     </style>
