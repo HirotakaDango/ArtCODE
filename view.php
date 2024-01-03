@@ -1302,6 +1302,11 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   </ul>
                 </div>
               </div>
+              <?php if (isset($image['episode_name'])): ?>
+                <a class="btn btn-primary fw-bold rounded-4 mb-2 w-100" href="episode/?episode=<?php echo urlencode($image['episode_name']); ?>">
+                  <small>all episodes from <?php echo $image['episode_name']; ?></small>
+                </a>
+              <?php endif; ?>
               <div class="btn-group w-100" role="group" aria-label="Basic example">
                 <button class="btn btn-primary fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
                   <i class="bi bi-share-fill"></i> <small>share</small>

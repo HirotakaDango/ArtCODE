@@ -62,7 +62,7 @@ $result = $stmt->execute();
                   <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                 </ul>
 
-                <?php include('../card_image.php'); ?>
+                <?php include('../contents/card_image_3.php'); ?>
                 
               </div>
             </div>

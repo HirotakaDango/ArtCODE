@@ -7,7 +7,7 @@ require_once('../auth.php');
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ArtCODE</title>
+    <title>Upload Images</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
@@ -41,19 +41,17 @@ require_once('../auth.php');
               </div>
               <div class="modal-body scrollable-div">
                 <form id="upload-form" enctype="multipart/form-data">
-                  <div>
-                    <div class="row">
-                      <div class="col-md-6 pe-md-1">
-                        <div class="form-floating mb-2">
-                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
-                          <label for="title" class="fw-bold">Enter title for your image</label>
-                        </div>
+                  <div class="row">
+                    <div class="col-md-6 pe-md-1">
+                      <div class="form-floating mb-2">
+                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
+                        <label for="title" class="fw-bold">Enter title for your image</label>
                       </div>
-                      <div class="col-md-6 ps-md-1">
-                        <div class="form-floating mb-2">
-                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="500" required>  
-                          <label for="tags" class="fw-bold">Enter tags for your image</label>
-                        </div>
+                    </div>
+                    <div class="col-md-6 ps-md-1">
+                      <div class="form-floating mb-2">
+                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="500" required>  
+                        <label for="tags" class="fw-bold">Enter tags for your image</label>
                       </div>
                     </div>
                   </div>
@@ -61,20 +59,54 @@ require_once('../auth.php');
                     <textarea class="form-control border rounded-3 fw-bold border-4" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="2000" style="height: 200px;" required></textarea>
                     <label for="imgdesc" class="fw-bold">Enter description for your image</label>
                   </div>
-                  <div>
-                    <div class="row">
-                      <div class="col-md-6 pe-md-1">
-                        <div class="form-floating mb-2">
-                          <input class="form-control border rounded-3 fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
-                          <label for="link" class="fw-bold">Enter link for your image</label>
-                        </div>
-                      </div>
-                      <div class="col-md-6 ps-md-1">
-                        <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="type" aria-label="Large select example" required>
-                          <option value="safe" selected>Safe For Works</option>
-                          <option value="nsfw">NSFW/R-18</option>
+                  <div class="row">
+                    <div class="col-md-6 pe-md-1">
+                      <div class="form-floating mb-2">
+                        <select class="form-select border rounded-3 fw-bold border-4 py-0 text-start" name="selected_episode_name">
+                          <option class="form-control" value="">Add episode:</option>
+                          <?php
+                            // Connect to the SQLite database
+                            $db = new SQLite3('../database.sqlite');
+
+                            // Get the email of the current user
+                            $email = $_SESSION['email'];
+
+                            // Retrieve the list of albums created by the current user
+                            $stmt = $db->prepare('SELECT * FROM episode WHERE email = :email ORDER BY id DESC');
+                            $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+                            $results = $stmt->execute();
+
+                            // Loop through each album and create an option in the dropdown list
+                            while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+                              $episode_name = $row['episode_name'];
+                              $id = $row['id'];
+                              echo '<option value="' . htmlspecialchars($episode_name). '">' . htmlspecialchars($episode_name). '</option>';
+                            }
+
+                            $db->close();
+                          ?>
                         </select>
                       </div>
+                    </div>
+                    <div class="col-md-6 ps-md-1">
+                      <div class="form-floating mb-2">
+                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="new_episode_name" id="new_episode_name" placeholder="Add episode name" maxlength="500">  
+                        <label for="episode_name" class="fw-bold">Add episode name</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pe-md-1">
+                      <div class="form-floating mb-2">
+                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
+                        <label for="link" class="fw-bold">Enter link for your image</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6 ps-md-1">
+                      <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="type" aria-label="Large select example" required>
+                        <option value="safe" selected>Safe For Works</option>
+                        <option value="nsfw">NSFW/R-18</option>
+                      </select>
                     </div>
                   </div>
                   <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit"><i class="bi bi-cloud-arrow-up-fill"></i></button>
@@ -473,26 +505,26 @@ require_once('../auth.php');
         metadataContainer.appendChild(img);
 
         // Image Name
-        var fileNameElement = createMetadataElement('Image Name :', fileName);
+        var fileNameElement = createMetadataElement('Image Name', fileName);
         metadataContainer.appendChild(fileNameElement);
 
         // Image Size
-        var fileSizeElement = createMetadataElement('Image Size :', fileSizeText);
+        var fileSizeElement = createMetadataElement('Image Size', fileSizeText);
         metadataContainer.appendChild(fileSizeElement);
 
         // Image Type
-        var fileTypeElement = createMetadataElement('Image Type :', fileType);
+        var fileTypeElement = createMetadataElement('Image Type', fileType);
         metadataContainer.appendChild(fileTypeElement);
 
         // Image Date
-        var imageDateElement = createMetadataElement('Image Date :', formatDate(file.lastModifiedDate));
+        var imageDateElement = createMetadataElement('Image Date', formatDate(file.lastModifiedDate));
         metadataContainer.appendChild(imageDateElement);
 
         // Image Resolution
         var img = new Image();
         img.src = URL.createObjectURL(file);
         img.onload = function () {
-          var imageResolutionElement = createMetadataElement('Image Resolution :', this.naturalWidth + 'x' + this.naturalHeight);
+          var imageResolutionElement = createMetadataElement('Image Resolution', this.naturalWidth + 'x' + this.naturalHeight);
           metadataContainer.appendChild(imageResolutionElement);
         };
 
@@ -519,25 +551,25 @@ require_once('../auth.php');
         }
 
         // JFIF Version
-        var jfifVersionElement = createMetadataElementAsync('JFIF Version :', function(callback) {
+        var jfifVersionElement = createMetadataElementAsync('JFIF Version', function(callback) {
           getJfifVersion(file, function(jfifVersion) {
-            callback('JFIF Version : ' + jfifVersion);
+            callback('JFIF Version' + jfifVersion);
           });
         });
         metadataContainer.appendChild(jfifVersionElement);
 
         // PNG Version
-        var pngVersionElement = createMetadataElementAsync('PNG Version :', function(callback) {
+        var pngVersionElement = createMetadataElementAsync('PNG Version', function(callback) {
           getPngVersion(file, function(pngVersion) {
-            callback('PNG Version : ' + pngVersion);
+            callback('PNG Version' + pngVersion);
           });
         });
         metadataContainer.appendChild(pngVersionElement);
 
         // GIF Version
-        var gifVersionElement = createMetadataElementAsync('GIF Version :', function(callback) {
+        var gifVersionElement = createMetadataElementAsync('GIF Version', function(callback) {
           getGifVersion(file, function(gifVersion) {
-            callback('GIF Version : ' + gifVersion);
+            callback('GIF Version' + gifVersion);
           });
         });
         metadataContainer.appendChild(gifVersionElement);

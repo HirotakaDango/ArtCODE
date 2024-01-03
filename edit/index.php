@@ -14,17 +14,17 @@ if (!isset($_SESSION['email'])) {
 // Retrieve image details
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
-  
+
   // Retrieve the email of the logged-in user
   $email = $_SESSION['email'];
-  
+
   // Select the image details using the image ID and the email of the logged-in user
   $stmt = $db->prepare('SELECT * FROM images WHERE id = :id AND email = :email');
   $stmt->bindParam(':id', $id);
   $stmt->bindParam(':email', $email);
   $result = $stmt->execute();
   $image = $result->fetchArray(SQLITE3_ASSOC); // Retrieve result as an associative array
-  
+
   // Check if the image exists and belongs to the logged-in user
   if (!$image) {
     echo '<meta charset="UTF-8"> 
@@ -33,9 +33,8 @@ if (isset($_GET['id'])) {
          ';
     exit();
   }
-
 } else {
-  // Redirect to error page if image ID is not specified
+  // Redirect to the error page if the image ID is not specified
   header('Location: ?id=' . $id);
   exit();
 }
@@ -48,15 +47,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $tags = filter_var($_POST['tags'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $type = filter_var($_POST['type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the type input
 
-  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type WHERE id = :id');
+  // Check if the user provided a new episode name
+  $new_episode_name = trim($_POST['new_episode_name']);
+  if (!empty($new_episode_name)) {
+    // Check if the episode_name already exists in the episode table
+    $stmt = $db->prepare('SELECT * FROM episode WHERE email = :email AND episode_name = :episode_name');
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':episode_name', $new_episode_name);
+    $result = $stmt->execute();
+    $existingEpisode = $result->fetchArray(SQLITE3_ASSOC);
+
+    // If episode_name doesn't exist, insert it into both episode and images tables
+    if (!$existingEpisode) {
+      $stmt = $db->prepare('INSERT INTO episode (email, episode_name) VALUES (:email, :episode_name)');
+      $stmt->bindParam(':email', $email);
+      $stmt->bindParam(':episode_name', $new_episode_name);
+      $stmt->execute();
+
+      // Update the images table with the new episode_name
+      $episode_name = $new_episode_name;
+    }
+  } else {
+    // Check if the episode_name already exists in the episode table
+    $episode_name = $_POST['selected_episode_name'];
+    $stmt = $db->prepare('SELECT * FROM episode WHERE email = :email AND episode_name = :episode_name');
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':episode_name', $episode_name);
+    $result = $stmt->execute();
+    $existingEpisode = $result->fetchArray(SQLITE3_ASSOC);
+
+    // If episode_name exists, use it for the update
+    if (!$existingEpisode) {
+      // If episode_name doesn't exist, insert it into both episode and images tables
+      $stmt = $db->prepare('INSERT INTO episode (email, episode_name) VALUES (:email, :episode_name)');
+      $stmt->bindParam(':email', $email);
+      $stmt->bindParam(':episode_name', $episode_name);
+      $stmt->execute();
+    }
+  }
+
+  // Update the images table with the selected or new episode_name
+  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name WHERE id = :id');
   $stmt->bindParam(':title', $title);
   $stmt->bindParam(':imgdesc', $imgdesc);
   $stmt->bindParam(':link', $link);
   $stmt->bindParam(':tags', $tags);
   $stmt->bindParam(':type', $type); // Bind the type parameter
+  $stmt->bindParam(':episode_name', $episode_name);
   $stmt->bindParam(':id', $id);
   $stmt->execute();
-  
+
   // Redirect to image details page after update
   header('Location: ?id=' . $id);
   exit();
@@ -222,6 +262,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <div class="row">
                 <div class="col-md-6 pe-md-1">
                   <div class="form-floating mb-2">
+                    <select class="form-select border rounded-3 fw-bold border-4 py-0 text-start" name="selected_episode_name">
+                      <option class="form-control" value="">Make it empty to add your own episode:</option>
+                      <?php
+                        // Connect to the SQLite database
+                        $db = new SQLite3('../database.sqlite');
+
+                        // Get the email of the current user
+                        $email = $_SESSION['email'];
+
+                        // Retrieve the list of albums created by the current user
+                        $stmt = $db->prepare('SELECT * FROM episode WHERE email = :email ORDER BY id DESC');
+                        $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+                        $results = $stmt->execute();
+
+                        // Loop through each episode and create an option in the dropdown list
+                        while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+                          $episode_name = $row['episode_name'];
+                          $id = $row['id'];
+                          $selected = ($image['episode_name'] === $episode_name) ? 'selected' : '';
+                          echo '<option value="' . htmlspecialchars($episode_name) . '" ' . $selected . '>' . htmlspecialchars($episode_name) . '</option>';
+                        }
+
+                        $db->close();
+                      ?>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6 ps-md-1">
+                  <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['episode_name']); ?>" name="new_episode_name" id="new_episode_name" placeholder="Add episode name" maxlength="500">  
+                    <label for="episode_name" class="fw-bold">Add episode name</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 pe-md-1">
+                  <div class="form-floating mb-2">
                     <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="300"> 
                     <label for="floatingInput" class="text-dark fw-bold">Enter link for your image</label>
                   </div>
@@ -238,7 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <i class="bi bi-trash-fill"></i> delete this image
                 </button>
                 <button type="submit" class="btn btn-dark fw-bold w-100 mb-2 rounded">
-                  <i class="bi bi-floppy-fill"></i> save this change
+                  <i class="bi bi-floppy-fill"></i> save changes
                 </button>
               </div>
               <div class="btn-group gap-2 w-100">
