@@ -11,7 +11,7 @@ if (isset($_POST['submit'])) {
   $tags = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $content = nl2br($content);
-  $date = date('Y-m-d'); // format the current date as "YYYY-MM-DD"
+  $date = date('Y/m/d'); // format the current date as "YYYY-MM-DD"
 
   // Prepare and execute the SQL query
   $stmt = $db->prepare("INSERT INTO posts (title, content, tags, email, date) VALUES (:title, :content, :tags, :email, :date)");

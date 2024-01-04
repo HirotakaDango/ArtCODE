@@ -43,8 +43,9 @@ $total = $stmt->execute()->fetchArray()[0];
 
 // Check if there are results
 if ($total > 0) {
-  // Redirect to the desired URL
-  header("Location: tag/?tag=$tag");
+  // Redirect to the desired URL with the encoded tag
+  $encodedTag = urlencode($tag);
+  header("Location: tag/?tag=$encodedTag");
   exit(); // Ensure that no further code is executed after the redirection
 }
 ?>

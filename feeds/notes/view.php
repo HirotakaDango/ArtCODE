@@ -95,7 +95,7 @@ $post = $stmt->fetch();
       <div class="text-white">
         <p style="white-space: break-spaces; overflow: hidden;">
         <hr class="border-4 rounded-pill">
-        <p style="white-space: break-spaces; overflow: hidden;">
+        <div class="small" style="white-space: break-spaces; overflow: hidden;">
           <?php
             $novelText = isset($post['content']) ? $post['content'] : '';
 
@@ -142,7 +142,7 @@ $post = $stmt->fetch();
               return $videoId;
             }
           ?>
-        </p>
+        </div>
         </br>
         <div class="mb-5"></div>
       </div>

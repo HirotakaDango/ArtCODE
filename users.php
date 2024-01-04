@@ -1,79 +1,93 @@
 <?php
 require_once('auth.php');
+
+// Establish SQLite connection
+$db = new SQLite3('database.sqlite');
+
+// Retrieve all users from the database and sort them by letter and number ASC
+$users = $db->query('SELECT *, SUBSTR(artist, 1, 1) AS first_letter FROM users ORDER BY first_letter COLLATE NOCASE ASC, artist COLLATE NOCASE ASC');
+
+// Group users by category
+$groupedUsers = [];
+while ($user = $users->fetchArray()) {
+  $letter = strtoupper($user['first_letter']);
+  $groupedUsers[$letter][] = $user;
+}
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Search User</title>
+    <title>All Users</title>
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
     <?php include('header.php'); ?>
-    <?php include('taguserheader.php'); ?> 
-    <!-- Add a search input field -->
-    <div class="input-group mb-3 mt-2">
-      <input type="text" class="form-control me-2 ms-2 fw-bold" placeholder="Search user" id="search-input">
+    <?php include('taguserheader.php'); ?>
+    <div class="input-group my-3 px-2">
+      <input type="text" class="form-control rounded-4 border border-3 fw-bold" placeholder="Search user" id="search-input">
     </div>
-    <div class="container-fluid">
-      <?php
-        // Establish SQLite connection
-        $db = new SQLite3('database.sqlite');
-
-        // Retrieve all users from the database and sort them by letter and number ASC
-        $users = $db->query('SELECT *, SUBSTR(artist, 1, 1) AS first_letter FROM users ORDER BY first_letter COLLATE NOCASE ASC, artist COLLATE NOCASE ASC');
- 
-        // Pagination
-        $perPage = 5000; // Number of users per page
-        $totalUsers = $db->querySingle('SELECT COUNT(*) FROM users'); // Total number of users
-        $totalPages = ceil($totalUsers / $perPage); // Calculate total pages
-
-        // Get the current page number
-        $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-        if ($currentPage < 1) {
-          $currentPage = 1;
-        } elseif ($currentPage > $totalPages) {
-          $currentPage = $totalPages;
-        }
-
-        // Calculate the offset for the SQL query
-        $offset = ($currentPage - 1) * $perPage;
-
-        // Retrieve the users for the current page
-        $usersPage = $db->query("SELECT *, SUBSTR(artist, 1, 1) AS first_letter FROM users ORDER BY first_letter COLLATE NOCASE ASC, artist COLLATE NOCASE ASC LIMIT $perPage OFFSET $offset");
-      ?>
-        <!-- Display each user's id as a button in a button group -->
-        <div class="row">
-          <?php
-            $currentLetter = null;
-            while ($user = $usersPage->fetchArray()):
-              $letter = strtoupper($user['first_letter']);
-              if ($letter !== $currentLetter):
-                $currentLetter = $letter;
-                echo "<h5 class='fw-bold text-secondary text-start'>Category $letter</h5>"; // Display the category name
-              endif;
-          ?>
-            <div class="col-md-3 col-sm-6">
-              <button type="button" class="btn artist btn-secondary mb-2 fw-bold text-start w-100 opacity-75" onclick="location.href='artist.php?id=<?= $user['id'] ?>'"><?= $user['artist'] ?></button>
+    <div class="container-fluid mt-2">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <?php foreach ($groupedUsers as $group => $users) : ?>
+            <div class="col-4 col-md-2 col-sm-5 px-0">
+              <a class="btn btn-outline-dark border-0 fw-medium d-flex flex-column align-items-center" href="#category-<?php echo $group; ?>">
+                <h6 class="fw-medium">Category</h6>
+                <h6 class="fw-bold"><?php echo $group; ?></h6>
+              </a>
             </div>
-          <?php endwhile; ?>
-        </div> 
-        <div class="mt-5 mb-2 d-flex justify-content-center btn-toolbar container">
-          <?php if ($currentPage > 1): ?>
-            <a href="users.php?page=<?= $currentPage - 1 ?>" class="btn rounded-pill fw-bold btn-secondary opacity-50 me-1"><i class="bi bi-arrow-left-circle-fill"></i> prev</a>
-          <?php endif; ?>
-          <?php if ($currentPage < $totalPages): ?>
-            <a href="users.php?page=<?= $currentPage + 1 ?>" class="btn rounded-pill fw-bold btn-secondary opacity-50 ms-1">next <i class="bi bi-arrow-right-circle-fill"></i></a>
-          <?php endif; ?>
+          <?php endforeach; ?>
         </div>
-      <?php
-        // Close the SQLite connection
-        $db->close();
-      ?>
+      </div>
+      <?php foreach ($groupedUsers as $group => $users) : ?>
+        <div id="category-<?php echo $group; ?>" class="category-section pt-5">
+          <h5 class='fw-bold text-start'>Category <?php echo $group; ?></h5>
+          <div class="row">
+            <?php foreach ($users as $user) : ?>
+              <div class="col-md-2 col-sm-5 px-0">
+                <a class="artist m-1 d-block text-decoration-none" href="artist.php?id=<?= $user['id'] ?>">
+                  <div class="card rounded-4 border-0 shadow text-bg-dark ratio ratio-21x9">
+                    <div class="card-img-overlay d-flex align-items-center justify-content-center">
+                      <span class="fw-bold text-center" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">
+                        <?= $user['artist'] ?>
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php endforeach; ?>
     </div>
+    <div class="mt-5"></div>
+    <button class="z-3 btn btn-primary btn-md rounded-pill fw-bold position-fixed bottom-0 end-0 m-2" id="scrollToTopBtn" onclick="scrollToTop()"><i class="bi bi-chevron-up" style="-webkit-text-stroke: 3px;"></i></button>
+    <script>
+      // Show or hide the button based on scroll position
+      window.onscroll = function() {
+        showScrollButton();
+      };
+
+      // Function to show or hide the button based on scroll position
+      function showScrollButton() {
+        var scrollButton = document.getElementById("scrollToTopBtn");
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          scrollButton.style.display = "block";
+        } else {
+          scrollButton.style.display = "none";
+        }
+      }
+
+      // Function to scroll to the top of the page
+      function scrollToTop() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
+      }
+    </script>
     <script>
       // Get the search input element
       const searchInput = document.getElementById('search-input');
@@ -83,11 +97,11 @@ require_once('auth.php');
 
       // Add an event listener to the search input field
       searchInput.addEventListener('input', () => {
-        const searchTerm = searchInput.value.toLowerCase();
+      const searchTerm = searchInput.value.toLowerCase();
 
         // Filter the artist buttons based on the search term
         artistButtons.forEach(button => {
-          const artistName = button.textContent.toLowerCase();
+        const artistName = button.textContent.toLowerCase();
 
           if (artistName.includes(searchTerm)) {
             button.style.display = 'inline-block';
