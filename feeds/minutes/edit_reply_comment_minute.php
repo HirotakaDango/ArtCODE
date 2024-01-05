@@ -1,5 +1,5 @@
 <?php
-require_once('../../auth.php');
+require_once('auth.php');
 
 // Open the SQLite database
 $db = new SQLite3('../../database.sqlite');

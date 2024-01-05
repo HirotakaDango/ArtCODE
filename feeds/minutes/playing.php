@@ -1,5 +1,5 @@
 <?php
-require_once('../../auth.php');
+require_once('auth.php');
 require_once '../music/getID3/getid3/getid3.php';
 
 try {
