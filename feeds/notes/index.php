@@ -1,41 +1,15 @@
 <?php
-require_once('../../auth.php');
+require_once('auth.php');
 
 $email = $_SESSION['email'];
 
-try {
-  // Connect to the SQLite database
-  $dbPathN = $_SERVER['DOCUMENT_ROOT'] . '/database.sqlite';
-  $db = new PDO("sqlite:$dbPathN");
-  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Connect to the SQLite database
+$dbPathN = $_SERVER['DOCUMENT_ROOT'] . '/database.sqlite';
+$db = new PDO("sqlite:$dbPathN");
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-  // Create the posts table if not exists
-  $db->exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL, email INTEGER NOT NULL, tags TEXT NOT NULL, date DATETIME, FOREIGN KEY (email) REFERENCES users(id))");
-
-  $posts_per_page = 10;
-  $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-  $start_index = ($page - 1) * $posts_per_page;
-
-  // Use prepared statements to prevent SQL injection
-  $query = "SELECT * FROM posts WHERE email = :email ORDER BY id DESC LIMIT :start_index, :posts_per_page";
-  $stmt = $db->prepare($query);
-  $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-  $stmt->bindParam(':start_index', $start_index, PDO::PARAM_INT);
-  $stmt->bindParam(':posts_per_page', $posts_per_page, PDO::PARAM_INT);
-  $stmt->execute();
-  $posts = $stmt->fetchAll();
-
-  // Get total posts count for pagination
-  $count_query = "SELECT COUNT(*) FROM posts WHERE email = :email";
-  $stmt = $db->prepare($count_query);
-  $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-  $stmt->execute();
-  $total_posts = $stmt->fetchColumn();
-  $total_pages = ceil($total_posts / $posts_per_page);
-} catch (PDOException $e) {
-  // Handle database connection errors
-  die("Database error: " . $e->getMessage());
-}
+// Create the posts table if not exists
+$db->exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL, email INTEGER NOT NULL, tags TEXT NOT NULL, date DATETIME, FOREIGN KEY (email) REFERENCES users(id))");
 ?>
 
 <!DOCTYPE html>
@@ -48,46 +22,38 @@ try {
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <main id="swup" class="transition-main">
     <?php include('header.php'); ?>
-    <div class="container-fluid my-4">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-4 g-3">
-        <?php foreach ($posts as $post): ?>
-          <div class="col">
-            <a class="content text-decoration-none" href="view.php?id=<?php echo $post['id'] ?>">
-              <div class="card shadow-sm h-100 position-relative">
-                <div class="d-flex justify-content-center align-items-center text-center">
-                  <i class="bi bi-book-half display-1 p-5 text-secondary border-bottom w-100"></i>
-                </div>
-                <h5 class="text-center w-100 p-3"><?php echo $post['title']; ?></h5>
-                <div class="mt-5">
-                  <small class="text-body-secondary position-absolute bottom-0 end-0 m-2 fw-medium"><?php echo $post['date']; ?></small>
-                </div>
-              </div>
-            </a>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
-    <div class="pagination my-4 justify-content-center gap-2">
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm fw-bold btn-primary" href="?page=<?php echo $page - 1 ?>">Prev</a>
-      <?php endif ?>
-
-      <?php
-      $start_page = max(1, $page - 2);
-      $end_page = min($total_pages, $page + 2);
-
-      for ($i = $start_page; $i <= $end_page; $i++):
-      ?>
-        <a class="btn btn-sm fw-bold btn-primary <?php echo ($i == $page) ? 'active' : ''; ?>" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-      <?php endfor ?>
-
-      <?php if ($page < $total_pages): ?>
-        <a class="btn btn-sm fw-bold btn-primary" href="?page=<?php echo $page + 1 ?>">Next</a>
-      <?php endif ?>
-    </div>
-    </main>
+    <div class="dropdown mt-3">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=date&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'date') echo 'active'; ?>">date</a></li>
+      </ul> 
+    </div> 
+        <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
+ 
+          switch ($sort) {
+            case 'newest':
+            include "index_desc.php";
+            break;
+            case 'oldest':
+            include "index_asc.php";
+            break;
+            case 'date':
+            include "index_date.php";
+            break;
+          }
+        }
+        else {
+          include "index_desc.php";
+        }
+        
+        ?>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>

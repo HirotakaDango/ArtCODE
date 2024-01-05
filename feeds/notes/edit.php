@@ -1,5 +1,5 @@
 <?php
-require_once('../../auth.php');
+require_once('auth.php');
 
 $db = new PDO('sqlite:../../database.sqlite');
 
@@ -12,18 +12,38 @@ if (isset($_POST['submit'])) {
   $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $content = nl2br($content);
 
-  $query = "UPDATE posts SET title='$title', tags='$tags', content='$content' WHERE id='$post_id'";
-  $db->exec($query);
+  // Get the current date and time
+  $currentDateTime = date('Y/m/d');
+
+  // Use prepared statement to prevent SQL injection
+  $query = "UPDATE posts SET title=:title, tags=:tags, content=:content, date=:date WHERE id=:post_id";
+  $stmt = $db->prepare($query);
+  $stmt->bindParam(':title', $title);
+  $stmt->bindParam(':tags', $tags);
+  $stmt->bindParam(':content', $content);
+  $stmt->bindParam(':date', $currentDateTime);
+  $stmt->bindParam(':post_id', $post_id);
+  $stmt->execute();
+
   header('Location: view.php?id=' . $post_id);
 }
 
 if (isset($_GET['id'])) {
   $post_id = $_GET['id'];
-  $query = "SELECT * FROM posts WHERE id='$post_id' AND email='$email'";
-  $post = $db->query($query)->fetch();
+
+  // Use prepared statement to prevent SQL injection
+  $query = "SELECT * FROM posts WHERE id=:post_id AND email=:email";
+  $stmt = $db->prepare($query);
+  $stmt->bindParam(':post_id', $post_id);
+  $stmt->bindParam(':email', $email);
+  $stmt->execute();
+
+  $post = $stmt->fetch();
+
   if (!$post) {
     header('Location: view.php?id=' . $post_id);
   }
+
   $tags = filter_var($post['tags'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // encode tags
 } else {
   header('Location: view.php?id=' . $post_id);

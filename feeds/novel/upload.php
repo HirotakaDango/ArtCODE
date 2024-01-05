@@ -132,7 +132,8 @@ if (isset($_FILES['image'])) {
   </head>
   <body>
     <?php include ('header.php'); ?>
-    <div class="container-fluid">
+    <br>
+    <div class="container-fluid mt-5">
       <form method="post" enctype="multipart/form-data">
         <?php if (isset($_GET['error'])): ?>
           <p><?php echo $_GET['error']; ?></p>

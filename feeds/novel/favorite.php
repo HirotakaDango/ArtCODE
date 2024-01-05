@@ -45,20 +45,11 @@ try {
   </head>
   <body>
     <?php include ('header.php'); ?>
-    <div class="container-fluid">
+    <br>
+    <div class="container-fluid mt-5">
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
-        <?php while ($favoriteNovel = $result->fetch(PDO::FETCH_ASSOC)): ?>
-          <div class="col">
-            <div class="card shadow-sm h-100">
-              <a class="shadow rounded" href="view.php?id=<?php echo $favoriteNovel['id']; ?>">
-                <img class="w-100 object-fit-cover" style="border-radius: 2.9px 2.9px 0 0;" height="200" src="thumbnails/<?php echo $favoriteNovel['filename']; ?>">
-              </a>
-              <div class="card-body">
-                <h5 class="card-text text-center fw-bold"><?php echo $favoriteNovel['title']; ?></h5>
-                <p class="card-text text-center small fw-bold"><small>by <?php echo $favoriteNovel['artist']; ?></small></p>
-              </div>
-            </div>
-          </div>
+        <?php while ($image = $result->fetch(PDO::FETCH_ASSOC)): ?>
+          <?php include ('novel_info.php'); ?>
         <?php endwhile; ?>
       </div>
     </div>
