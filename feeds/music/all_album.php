@@ -1,5 +1,5 @@
-<?php
-require_once('../../auth.php');
+album<?php
+require_once('auth.php');
 $db = new SQLite3('../../database.sqlite');
 $email = $_SESSION['email'];
 
@@ -49,7 +49,7 @@ $nextPage = $page + 1;
                 <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
               </a>
               <div class="p-2 position-absolute bottom-0 start-0">
-                <h5 class="card-text text-center fw-bold text-shadow"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo (!is_null($row['title']) && strlen($row['title']) > 15) ? substr($row['title'], 0, 15) . '...' : $row['title']; ?></a></h5>
+                <h5 class="card-text text-center fw-bold text-shadow"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo (!is_null($row['album']) && strlen($row['album']) > 15) ? substr($row['album'], 0, 15) . '...' : $row['title']; ?></a></h5>
                 <p class="card-text small fw-bold text-shadow text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo (!is_null($row['artist']) && strlen($row['artist']) > 15) ? substr($row['artist'], 0, 15) . '...' : $row['artist']; ?></a></small></p>
               </div>
             </div>

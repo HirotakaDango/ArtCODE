@@ -1,5 +1,5 @@
 <?php
-require_once('../../auth.php');
+require_once('auth.php');
 $db = new SQLite3('../../database.sqlite');
 $email = $_SESSION['email'];
 

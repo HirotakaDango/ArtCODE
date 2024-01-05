@@ -1,5 +1,5 @@
 <?php
-require_once('../../auth.php');
+require_once('auth.php');
 
 try {
   $pdo = new PDO('sqlite:../../database.sqlite');
