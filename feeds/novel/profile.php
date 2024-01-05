@@ -1,5 +1,5 @@
 <?php
-require_once('../../auth.php');
+require_once('auth.php');
 
 // Database connection using PDO
 try {
