@@ -183,9 +183,77 @@
                               </div>
                             </div>
                             <div class="collapse mt-2" id="collapseDownload">
-                              <a class="btn btn-primary fw-bold rounded-4 w-100" href="login.php">
-                                <i class="bi bi-download text-stroke"></i> you must login or signup first
+                              <a class="btn btn-primary fw-bold rounded-4 w-100" href="#" onclick="downloadWithProgressBar(<?php echo $row['id']; ?>, '<?php echo $row['title']; ?>')">
+                                <i class="bi bi-download text-stroke"></i> download all images (<?php echo $total_image_size; ?> MB)
                               </a>
+                              <div class="progress fw-bold mt-2 rounded-4" id="progressBarContainer_<?php echo $image['id']; ?>" style="height: 30px; display: none;">
+                                <div id="progressBar_<?php echo $row['id']; ?>" class="progress-bar progress-bar progress-bar-animated fw-bold" style="width: 0; height: 30px;">0%</div>
+                              </div>
+                              <script>
+                                function downloadWithProgressBar(artworkId, title) {
+                                  var progressBar = document.getElementById('progressBar_' + artworkId);
+                                  var progressBarContainer = document.getElementById('progressBarContainer_' + artworkId);
+                                  title = title.replace(/\s+/g, '_');
+
+                                  // Create a new XMLHttpRequest object
+                                  var xhr = new XMLHttpRequest();
+
+                                  // Function to update the progress bar
+                                  function updateProgress(event) {
+                                    if (event.lengthComputable) {
+                                      var percentComplete = (event.loaded / event.total) * 100;
+                                      progressBar.style.width = percentComplete + '%';
+                                      progressBar.innerHTML = percentComplete.toFixed(2) + '%';
+                                    }
+                                  }
+
+                                  // Set up the XMLHttpRequest object
+                                  xhr.open('GET', '../download_images.php?artworkid=' + artworkId, true);
+
+                                  // Set the responseType to 'blob' to handle binary data
+                                  xhr.responseType = 'blob';
+
+                                  // Track progress with the updateProgress function
+                                  xhr.addEventListener('progress', updateProgress);
+
+                                  // On successful download completion
+                                  xhr.onload = function () {
+                                    progressBar.innerHTML = '100%';
+                                    // Delay hiding the progress bar to show 100% for a brief moment
+                                    setTimeout(function () {
+                                      progressBarContainer.style.display = 'none';
+                                    }, 1000);
+
+                                    // Create a download link for the downloaded file
+                                    var downloadLink = document.createElement('a');
+                                    downloadLink.href = URL.createObjectURL(xhr.response);
+                                    downloadLink.download = title + '_image_id_' + artworkId + '.zip';
+                                    downloadLink.style.display = 'none';
+                                    document.body.appendChild(downloadLink);
+                                    downloadLink.click(); // Trigger the click event to download the file
+                                    document.body.removeChild(downloadLink); // Remove the link from the document
+                                  };
+
+                                  // Show the progress bar container
+                                  progressBarContainer.style.display = 'block';
+
+                                  // Send the XMLHttpRequest to start the download
+                                  xhr.send();
+                                }
+                              </script>
+                              <h5 class="fw-bold text-center mt-2">Please Note!</h5>
+                              <p class="fw-bold text-center container">
+                                <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
+                              </p>
+                              <p class="fw-bold text-center container">
+                                <small>2. If you found download error or failed, <a class="text-decoration-none" href="../download_images.php?artworkid=<?php echo $row['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
+                              </p>
+                              <p class="fw-bold text-center container">
+                                <small>3. If you found problem where the zip contain empty file or 0b, download the images manually.</small>
+                              </p>
+                              <p class="fw-bold text-center container">
+                                <small>4. Server sometimes have problem with file and folder path, download manually is the best option if this happening.</small>
+                              </p>
                             </div>
                           </div>
                         </div>

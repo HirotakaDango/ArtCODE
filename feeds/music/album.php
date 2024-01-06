@@ -1,4 +1,4 @@
-<?php
+ object-fit-cover<?php
 require_once('auth.php');
 $db = new PDO('sqlite:../../database.sqlite');
 $userEmail = $_SESSION['email'];
@@ -164,7 +164,7 @@ if (isset($_POST['follow'])) {
         <div class="col-md-3 pe-md-1">
           <div class="bg-body-tertiary rounded-4 p-3 h-100 w-100 d-none d-md-block d-lg-block">
             <div class="d-flex align-content-center justify-content-center">
-              <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
+              <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3 object-fit-cover" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
             </div>
             <h5 class="fw-bold mt-3 text-center"><?php echo $artist; ?></h5>
             <div class="d-flex align-content-center justify-content-center">
@@ -280,7 +280,7 @@ if (isset($_POST['follow'])) {
           </div>
           <div class="modal-body">
             <div class="d-flex align-content-center justify-content-center">
-              <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
+              <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3 object-fit-cover" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
             </div>
             <h5 class="fw-bold mt-3 text-center"><?php echo $artist; ?></h5>
             <div class="d-flex align-content-center justify-content-center">

@@ -117,7 +117,7 @@ if (isset($_POST['follow'])) {
       <div class="row">
         <div class="col-md-2 d-flex align-item-center">
           <div class="card border-0">
-            <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3 mx-3" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
+            <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3 mx-3 object-fit-cover" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
             <div class="card-body">
               <h6 class="text-center"><span class="badge bg-secondary fw-medium rounded-pill"><?php echo $region; ?></span></h6>
             </div>
@@ -195,7 +195,7 @@ if (isset($_POST['follow'])) {
     <div class="container-fluid d-md-none d-lg-none">
       <div class="row mt-2">
         <div class="mt-5 b-radius position-relative" style="background-image: url('../<?php echo !empty($bgpic) ? $bgpic : "../icon/bg.png"; ?>'); background-size: cover; height: 250px; width: 100%;">
-          <img class="img-thumbnail border-0 shadow position-absolute top-50 start-50 translate-middle rounded-circle" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
+          <img class="img-thumbnail border-0 shadow position-absolute top-50 start-50 translate-middle rounded-circle object-fit-cover" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
         </div>
         <div class="container-fluid w-100">
           <div>
