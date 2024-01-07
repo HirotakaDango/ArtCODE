@@ -42,15 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_history'])) {
         <input type="hidden" name="delete_history" value="true">
         <button type="submit" class="btn btn-sm btn-danger w-100 fw-semibold">Delete All History</button>
       </form>
-      <div class="dropdown mt-1">
-        <button class="btn btn-sm fw-bold rounded-pill btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-images"></i> sort by
-        </button>
-        <ul class="dropdown-menu">
-          <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-          <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        </ul> 
-      </div> 
     </div>
         <?php 
         if(isset($_GET['by'])){

@@ -10,7 +10,16 @@ $stmt->execute();
 $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-   <div class="container mt-2">
+    <div class="container mt-2">
+      <div class="dropdown mt-1 mb-3">
+        <button class="btn btn-sm fw-bold rounded-pill btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-images"></i> sort by
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="?by=newest" class="dropdown-item fw-bold">newest</a></li>
+          <li><a href="?by=oldest" class="dropdown-item fw-bold active">oldest</a></li>
+        </ul> 
+      </div>
       <?php if (count($history) > 0) { ?>
         <?php foreach ($history as $item) { ?>
           <a class="list-group-item list-group-item-action" href="<?php echo $item['history']; ?>">
