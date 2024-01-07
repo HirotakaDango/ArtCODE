@@ -16,7 +16,7 @@
                             <div class="col-sm-6 mb-3 mb-sm-0">
                               <div class="card border-0 rounded-4 overflow-auto scrollable-div" style="max-height: 250px;">
                                 <a class="w-100 h-100" href="image.php?artworkid=<?php echo $image['id']; ?>">
-                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
+                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
                                 </a>
                               </div>
                               <div class="btn-group mt-2 w-100">
@@ -150,23 +150,23 @@
                                   $total_image_size = 0; // Initialize a variable to keep track of total image size
                                 
                                   // Calculate and display image size and dimensions for the main image
-                                  $image_size = round(filesize('images/' . $image['filename']) / (1024 * 1024), 2);
+                                  $image_size = round(filesize('../images/' . $image['filename']) / (1024 * 1024), 2);
                                   $total_image_size += $image_size; // Add the main image size to the total
-                                  list($width, $height) = getimagesize('images/' . $image['filename']);
+                                  list($width, $height) = getimagesize('../images/' . $image['filename']);
                                   echo "<p class='text-start fw-semibold'>Image data size: " . $image_size . " MB</p>";
                                   echo "<p class='text-start fw-semibold'>Image dimensions: " . $width . "x" . $height . "</p>";
-                                  echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='images/" . $image['filename'] . "'>View original image</a></p>";
+                                  echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='../images/" . $image['filename'] . "'>View original image</a></p>";
                                 
                                   // Assuming you have a separate query to fetch child images
                                   $child_images_result = $db1->query("SELECT filename FROM image_child WHERE image_id = " . $image['id']);
                                 
                                   while ($child_image = $child_images_result->fetchArray()) {
-                                    $child_image_size = round(filesize('images/' . $child_image['filename']) / (1024 * 1024), 2);
+                                    $child_image_size = round(filesize('../images/' . $child_image['filename']) / (1024 * 1024), 2);
                                     $total_image_size += $child_image_size; // Add child image size to the total
-                                    list($child_width, $child_height) = getimagesize('images/' . $child_image['filename']);
+                                    list($child_width, $child_height) = getimagesize('../images/' . $child_image['filename']);
                                     echo "<p class='text-start fw-semibold'>Child Image data size: " . $child_image_size . " MB</p>";
                                     echo "<p class='text-start fw-semibold'>Child Image dimensions: " . $child_width . "x" . $child_height . "</p>";
-                                    echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='images/" . $child_image['filename'] . "'>View original child image</a></p>";
+                                    echo "<p class='text-start fw-semibold'><a class='text-decoration-none' href='../images/" . $child_image['filename'] . "'>View original child image</a></p>";
                                   }
                                 
                                   // Display the total image size after processing all images
@@ -200,7 +200,7 @@
                                   }
 
                                   // Set up the XMLHttpRequest object
-                                  xhr.open('GET', 'download_images.php?artworkid=' + artworkId, true);
+                                  xhr.open('GET', '../download_images.php?artworkid=' + artworkId, true);
 
                                   // Set the responseType to 'blob' to handle binary data
                                   xhr.responseType = 'blob';
@@ -238,7 +238,7 @@
                                 <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
                               </p>
                               <p class="fw-bold text-center container">
-                                <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_images.php?artworkid=<?php echo $image['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
+                                <small>2. If you found download error or failed, <a class="text-decoration-none" href="../download_images.php?artworkid=<?php echo $image['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
                               </p>
                               <p class="fw-bold text-center container">
                                 <small>3. If you found problem where the zip contain empty file or 0b, download the images manually.</small>
