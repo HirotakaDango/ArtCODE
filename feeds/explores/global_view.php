@@ -1,6 +1,6 @@
 <?php
 // Get images from the database using parameterized query
-$stmt = $db->prepare("SELECT images.*, users.email FROM images INNER JOIN users ON images.email = users.email ORDER BY images.id DESC LIMIT :limit OFFSET :offset");
+$stmt = $db->prepare("SELECT images.*, users.email FROM images INNER JOIN users ON images.email = users.email ORDER BY images.view_count DESC LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $result = $stmt->execute();
@@ -33,11 +33,11 @@ $result = $stmt->execute();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -50,17 +50,17 @@ $result = $stmt->execute();
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>

@@ -1,20 +1,12 @@
 <?php
-require_once('../../auth.php');
+require_once('../auth.php');
 
 $email = $_SESSION['email'];
 
-// Connect to the SQLite database using parameterized query
-$db = new SQLite3('../../database.sqlite');
+// Establish a connection to the SQLite database
+$database = new SQLite3('../database.sqlite');
 
-// Pagination variables
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$limit = 15;
-$offset = ($page - 1) * $limit;
-
-// Get the total number of images from the database
-$countStmt = $db->prepare("SELECT COUNT(*) FROM images");
-$countResult = $countStmt->execute();
-$total = $countResult->fetchArray()[0];
+$searchTerm = $_GET['q'];
 ?>
 
 <!DOCTYPE html>
@@ -22,22 +14,22 @@ $total = $countResult->fetchArray()[0];
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Explores</title>
-    <link rel="manifest" href="../../manifest.json">
-    <link rel="icon" type="image/png" href="../../icon/favicon.png">
-    <?php include('../../bootstrapcss.php'); ?>
+    <title><?php echo $searchTerm; ?></title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../icon/favicon.png">
+    <?php include('../bootstrapcss.php'); ?>
   </head>
   <body>
-    <?php include('../../contents/path1/header.php'); ?>
+    <?php include('../header.php'); ?>
     <div class="dropdown mt-1">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
-        <li><a href="?by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+        <li><a href="?by=newest&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=popular&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?by=view&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
       </ul> 
     </div> 
         <?php 
@@ -46,21 +38,21 @@ $total = $countResult->fetchArray()[0];
  
           switch ($sort) {
             case 'newest':
-            include "global_desc.php";
+            include "index_desc.php";
             break;
             case 'oldest':
-            include "global_asc.php";
+            include "index_asc.php";
             break;
             case 'popular':
-            include "global_pop.php";
+            include "index_pop.php";
             break;
             case 'view':
-            include "global_view.php";
+            include "index_view.php";
             break;
           }
         }
         else {
-          include "global_desc.php";
+          include "index_desc.php";
         }
         
         ?>
@@ -123,7 +115,7 @@ $total = $countResult->fetchArray()[0];
     <script>
       function shareImage(userId) {
         // Compose the share URL
-        var shareUrl = '../../image.php?artworkid=' + userId;
+        var shareUrl = '../image.php?artworkid=' + userId;
 
         // Check if the Share API is supported by the browser
         if (navigator.share) {
@@ -140,6 +132,6 @@ $total = $countResult->fetchArray()[0];
         }
       }
     </script>
-    <?php include('../../bootstrapjs.php'); ?>
+    <?php include('../bootstrapjs.php'); ?>
   </body>
 </html>

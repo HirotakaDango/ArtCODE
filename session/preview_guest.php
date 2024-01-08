@@ -1,3 +1,18 @@
+<?php
+// Connect to the SQLite database using parameterized query
+$db = new SQLite3('../database.sqlite');
+
+// Pagination variables
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$limit = 15;
+$offset = ($page - 1) * $limit;
+
+// Get the total number of images from the database
+$countStmt = $db->prepare("SELECT COUNT(*) FROM images");
+$countResult = $countStmt->execute();
+$total = $countResult->fetchArray()[0];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,23 +26,41 @@
   </head>
   <body>
     <?php include('lp_header.php'); ?>
-    <?php 
-      if(isset($_GET['by'])){
-        $sort = $_GET['by'];
+    <div class="dropdown mt-1">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+      </ul> 
+    </div> 
+        <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
  
-        switch ($sort) {
-          case 'newest':
-          include "preview_guest_desc.php";
-          break;
-          case 'oldest':
-          include "preview_guest_asc.php";
-          break;
+          switch ($sort) {
+            case 'newest':
+            include "global_desc.php";
+            break;
+            case 'oldest':
+            include "global_asc.php";
+            break;
+            case 'popular':
+            include "global_pop.php";
+            break;
+            case 'view':
+            include "global_view.php";
+            break;
+          }
         }
-      }
-      else {
-        include "preview_guest_desc.php";
-      }
-    ?>
+        else {
+          include "global_desc.php";
+        }
+        
+        ?>
     <style>
       @media (min-width: 768px) {
         .width-btn {
@@ -44,9 +77,13 @@
       .text-stroke {
         -webkit-text-stroke: 1px;
       }
+
+      .text-shadow {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+      }
       
       .card-round {
-        border-radius: 0 0 2.8px 2.8px;
+        1rem;
       }
       
       .overlay {
@@ -62,22 +99,22 @@
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: 2.8px;
+        border-radius: 1rem;
       }
 
       .overlay i {
         font-size: 48px; /* Adjust icon size */
         position: absolute;
-        bottom: 55%;
+        bottom: 45%;
       }
 
       .overlay span {
         font-size: 18px; /* Adjust text size */
-        margin-top: 8px; /* Add spacing between icon and text */
+        margin-top: 35px; /* Add spacing between icon and text */
       }
       
       .rounded-custom {
-        border-radius: 3px;
+        border-radius: 1rem;
       }
     </style>
     <script>

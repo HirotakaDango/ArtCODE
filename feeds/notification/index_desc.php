@@ -1,13 +1,14 @@
 <?php
-// Get images from the database using parameterized query
-$stmt = $db->prepare("SELECT images.*, users.email FROM images INNER JOIN users ON images.email = users.email ORDER BY images.id DESC LIMIT :limit OFFSET :offset");
+// Get images from the database uploaded by users that the current user follows
+$stmt = $db->prepare("SELECT images.* FROM images INNER JOIN following ON images.email = following.following_email WHERE following.follower_email = :email ORDER BY images.id DESC LIMIT :limit OFFSET :offset");
+$stmt->bindValue(':email', $email, SQLITE3_TEXT);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
     <div class="container-fluid">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-1">
+      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-1">
         <?php while ($image = $result->fetchArray()): ?>
           <?php
             $title = $image['title'];
@@ -22,7 +23,7 @@ $result = $stmt->execute();
               $id = $user['id'];
             }
           ?>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/feeds/explores/card_explores.php'); ?>
+          <?php include($_SERVER['DOCUMENT_ROOT'] . '/feeds/notification/card_notification.php'); ?>
         <?php endwhile; ?>
       </div>
     </div>
@@ -69,7 +70,7 @@ $result = $stmt->execute();
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "../../icon/bg.png";
+      const defaultPlaceholder = "../icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {
@@ -86,25 +87,8 @@ $result = $stmt->execute();
           image.src = defaultPlaceholder; // Apply default placeholder
           imageObserver.observe(image);
           image.style.filter = "blur(5px)"; // Apply initial blur to all images
-
-          // Remove blur and apply custom blur to NSFW images after they load
           image.addEventListener("load", function() {
-            image.style.filter = ""; // Remove initial blur
-            if (image.classList.contains("nsfw")) {
-              image.style.filter = "blur(4px)"; // Apply blur to NSFW images
-          
-              // Add overlay with icon and text
-              let overlay = document.createElement("div");
-              overlay.classList.add("overlay", "rounded-custom");
-              let icon = document.createElement("i");
-              icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
-              overlay.appendChild(icon);
-              let text = document.createElement("span");
-              text.textContent = "R-18";
-              text.classList.add("shadowed-text", "fw-bold", "text-white");
-              overlay.appendChild(text);
-              image.parentNode.appendChild(overlay);
-            }
+            image.style.filter = "none"; // Remove blur after image loads
           });
         });
       } else {
@@ -167,15 +151,4 @@ $result = $stmt->execute();
 
       // Initial loading
       loadMoreImages();
-    </script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('../../sw.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
     </script>
