@@ -204,8 +204,8 @@ if ($comment_id !== null) {
           <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
             <div class="d-flex align-items-center mb-2 position-relative">
               <div class="position-absolute top-0 start-0 m-1">
-                <img class="rounded-circle" src="../../<?php echo !empty($reply['pic']) ? $reply['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-                <a class="text-white text-decoration-none" href="../../artist.php?id=<?php echo $reply['userid']; ?>"><small>@<?php echo (mb_strlen($reply['artist']) > 15) ? mb_substr($reply['artist'], 0, 15) . '...' : $reply['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
+                <img class="rounded-circle object-fit-cover" src="../../<?php echo !empty($reply['pic']) ? $reply['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
+                <a class="text-white text-decoration-none fw-medium" href="../../artist.php?id=<?php echo $reply['userid']; ?>"><small>@<?php echo (mb_strlen($reply['artist']) > 15) ? mb_substr($reply['artist'], 0, 15) . '...' : $reply['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
               </div>
               <?php if ($_SESSION['email'] === $reply['email']): ?>
                 <div class="dropdown ms-auto position-relative">
