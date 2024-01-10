@@ -60,7 +60,7 @@ $user_posts_statement->execute();
 $user_posts = $user_posts_statement->fetchAll();
 
 // Query to fetch comments
-$comments_query = "SELECT comments_novel.*, users.artist, users.pic, users.id as iduser FROM comments_novel JOIN users ON comments_novel.email = users.email WHERE comments_novel.filename = :filename ORDER BY comments_novel.id DESC LIMIT 25";
+$comments_query = "SELECT comments_novel.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments_novel.id) as reply_count FROM comments_novel JOIN users ON comments_novel.email = users.email LEFT JOIN reply_comments_novel ON comments_novel.id = reply_comments_novel.comment_id WHERE comments_novel.filename = :filename GROUP BY comments_novel.id ORDER BY comments_novel.id DESC LIMIT 25";
 $stmt = $db->prepare($comments_query);
 $stmt->bindParam(':filename', $id, PDO::PARAM_STR);
 $stmt->execute();
@@ -340,7 +340,7 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
             <div class="mt-5 container-fluid fw-medium">
-              <div class="small">
+              <div>
                 <?php
                 // Function to get YouTube video ID
                 if (!function_exists('getYouTubeVideoId')) {
@@ -382,7 +382,7 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
                       }
                     }, $messageTextWithoutTags1A);
         
-                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText1A</p>";
+                    echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedText1A</p>";
                   }
                 } else {
                   echo "Sorry, no text...";
@@ -390,8 +390,20 @@ $chapters = $chaptersStatement->fetchAll(PDO::FETCH_ASSOC);
                 ?>
               </div>
             </div>
+            <div class="mx-2 me-auto">
+              <h6 class="fw-medium small"><small><?php echo $comment['reply_count']; ?> Replies</small></h6>
+            </div>
             <div class="m-2 ms-auto">
-              <a class="btn btn-sm fw-semibold" href="reply_comment_novel.php?novelid=<?php echo $id; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+              <?php
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+                $comment_id = isset($comment['id']) ? $comment['id'] : '';
+
+                $url = "reply_comment_novel.php?by=$by&novelid=$id&comment_id=$comment_id&page=$page";
+              ?>
+              <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
+                <i class="bi bi-reply-fill"></i> Reply
+              </a>
             </div>
           </div>
         <?php endforeach; ?>

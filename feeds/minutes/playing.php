@@ -191,7 +191,7 @@ $stmt->bindParam(':id', $id);
 $stmt->execute();
 
 // Query to fetch comments
-$comments_query = "SELECT comments_minutes.*, users.artist, users.pic, users.id as iduser FROM comments_minutes JOIN users ON comments_minutes.email = users.email WHERE comments_minutes.minute_id = :minute_id ORDER BY comments_minutes.id DESC LIMIT 25";
+$comments_query = "SELECT comments_minutes.*, users.artist, users.pic, users.id AS iduser, COUNT(reply_comments_minutes.id) AS reply_count FROM comments_minutes JOIN users ON comments_minutes.email = users.email LEFT JOIN reply_comments_minutes ON comments_minutes.id = reply_comments_minutes.comment_id WHERE comments_minutes.minute_id = :minute_id GROUP BY comments_minutes.id ORDER BY comments_minutes.id DESC LIMIT 25";
 $stmt = $db->prepare($comments_query);
 $stmt->bindParam(':minute_id', $id, PDO::PARAM_STR);
 $stmt->execute();
@@ -327,7 +327,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   </div>
                 </div>
                 <div class="mt-5 container-fluid fw-medium">
-                  <div class="small">
+                  <div>
                     <?php
                     // Function to get YouTube video ID
                     if (!function_exists('getYouTubeVideoId')) {
@@ -369,7 +369,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           }
                         }, $messageTextWithoutTags1A);
         
-                        echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText1A</p>";
+                        echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedText1A</p>";
                       }
                     } else {
                       echo "Sorry, no text...";
@@ -377,8 +377,20 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     ?>
                   </div>
                 </div>
+                <div class="mx-2 me-auto">
+                  <h6 class="fw-medium small"><small><?php echo $comment['reply_count']; ?> Replies</small></h6>
+                </div>
                 <div class="m-2 ms-auto">
-                  <a class="btn btn-sm fw-semibold" href="reply_comment_minute.php?minuteid=<?php echo $id; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+                  <?php
+                    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                    $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+                    $comment_id = isset($comment['id']) ? $comment['id'] : '';
+
+                    $url = "reply_comment_minute.php?by=$by&minuteid=$id&comment_id=$comment_id&page=$page";
+                  ?>
+                  <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
+                    <i class="bi bi-reply-fill"></i> Reply
+                  </a>
                 </div>
               </div>
             <?php endforeach; ?>
@@ -465,7 +477,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
             <div class="mt-5 container-fluid fw-medium">
-              <div class="small">
+              <div>
                 <?php
                 // Function to get YouTube video ID
                 if (!function_exists('getYouTubeVideoId')) {
@@ -507,7 +519,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       }
                     }, $messageTextWithoutTags1A);
         
-                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText1A</p>";
+                    echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedText1A</p>";
                   }
                 } else {
                   echo "Sorry, no text...";
@@ -515,8 +527,20 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 ?>
               </div>
             </div>
+            <div class="mx-2 me-auto">
+              <h6 class="fw-medium small"><small><?php echo $comment['reply_count']; ?> Replies</small></h6>
+            </div>
             <div class="m-2 ms-auto">
-              <a class="btn btn-sm fw-semibold" href="reply_comment_minute.php?minuteid=<?php echo $id; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+              <?php
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+                $comment_id = isset($comment['id']) ? $comment['id'] : '';
+
+                $url = "reply_comment_minute.php?by=$by&minuteid=$id&comment_id=$comment_id&page=$page";
+              ?>
+              <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
+                <i class="bi bi-reply-fill"></i> Reply
+              </a>
             </div>
           </div>
         <?php endforeach; ?>

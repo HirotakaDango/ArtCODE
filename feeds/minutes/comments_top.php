@@ -1,7 +1,7 @@
 <?php
-// Get all comments for the current image for the current page along with the count of replies
-$stmt = $db->prepare("SELECT comments_novel.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments_novel.id) as reply_count FROM comments_novel JOIN users ON comments_novel.email = users.email LEFT JOIN reply_comments_novel ON comments_novel.id = reply_comments_novel.comment_id WHERE comments_novel.filename = :filename GROUP BY comments_novel.id ORDER BY comments_novel.id DESC LIMIT :comments_per_page OFFSET :offset");
-$stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+// Get all comments for the current image for the current page
+$stmt = $db->prepare("SELECT comments_minutes.*, users.artist, users.pic, users.id AS iduser, COUNT(reply_comments_minutes.id) AS reply_count FROM comments_minutes JOIN users ON comments_minutes.email = users.email LEFT JOIN reply_comments_minutes ON comments_minutes.id = reply_comments_minutes.comment_id WHERE comments_minutes.minute_id = :minute_id GROUP BY comments_minutes.id ORDER BY reply_count DESC LIMIT :comments_per_page OFFSET :offset");
+$stmt->bindValue(':minute_id', $minute_id, SQLITE3_TEXT);
 $stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $comments = $stmt->execute();
@@ -25,12 +25,12 @@ $comments = $stmt->execute();
                 <div class="dropdown-menu dropdown-menu-end">
                   <form action="" method="POST">
                     <a href="edit_comment.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
-                      <i class="bi bi-pencil-fill me-2"></i>Edit
+                      <i class="bi bi-pencil-fill me-2"></i> Edit
                     </a>
-                    <input type="hidden" name="filename" value="<?php echo $filename; ?>">
+                    <input type="hidden" name="id" value="<?php echo $minute_id; ?>">
                     <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
                     <button type="submit" name="action" onclick="return confirm('Are you sure?')" value="delete" class="dropdown-item fw-semibold">
-                      <i class="bi bi-trash-fill me-2"></i>Delete
+                      <i class="bi bi-trash-fill me-2"></i> Delete
                     </button>
                   </form>
                 </div>
@@ -96,7 +96,7 @@ $comments = $stmt->execute();
               $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
               $comment_id = isset($comment['id']) ? $comment['id'] : '';
 
-              $url = "reply_comment_novel.php?by=$by&novelid=$filename&comment_id=$comment_id&page=$page";
+              $url = "reply_comment_minute.php?by=$by&minuteid=$minute_id&comment_id=$comment_id&page=$page";
             ?>
             <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
               <i class="bi bi-reply-fill"></i> Reply
@@ -114,11 +114,11 @@ $comments = $stmt->execute();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=top&minute_id=<?php echo $minute_id; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=top&minute_id=<?php echo $minute_id; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -131,16 +131,16 @@ $comments = $stmt->execute();
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=top&minute_id=' . $minute_id . '&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=top&minute_id=<?php echo $minute_id; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=top&minute_id=<?php echo $minute_id; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>

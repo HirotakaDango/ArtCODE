@@ -148,6 +148,7 @@ $total_pages = ceil($total_comments / $comments_per_page);
       <ul class="dropdown-menu">
         <li><a href="?by=newest&minute_id=<?php echo $minute_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest&minute_id=<?php echo $minute_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=top&minute_id=<?php echo $minute_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top comments</a></li>
       </ul> 
     </div>
         <?php 
@@ -160,6 +161,9 @@ $total_pages = ceil($total_comments / $comments_per_page);
             break;
             case 'oldest':
             include "comments_asc.php";
+            break;
+            case 'top':
+            include "comments_top.php";
             break;
           }
         }

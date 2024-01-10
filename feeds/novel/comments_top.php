@@ -1,6 +1,6 @@
 <?php
 // Get all comments for the current image for the current page along with the count of replies
-$stmt = $db->prepare("SELECT comments_novel.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments_novel.id) as reply_count FROM comments_novel JOIN users ON comments_novel.email = users.email LEFT JOIN reply_comments_novel ON comments_novel.id = reply_comments_novel.comment_id WHERE comments_novel.filename = :filename GROUP BY comments_novel.id ORDER BY comments_novel.id DESC LIMIT :comments_per_page OFFSET :offset");
+$stmt = $db->prepare("SELECT comments_novel.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments_novel.id) as reply_count FROM comments_novel JOIN users ON comments_novel.email = users.email LEFT JOIN reply_comments_novel ON comments_novel.id = reply_comments_novel.comment_id WHERE comments_novel.filename = :filename GROUP BY comments_novel.id ORDER BY reply_count DESC LIMIT :comments_per_page OFFSET :offset");
 $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
 $stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
@@ -114,11 +114,11 @@ $comments = $stmt->execute();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&novelid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&novelid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -131,16 +131,16 @@ $comments = $stmt->execute();
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&novelid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&novelid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&novelid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&novelid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
