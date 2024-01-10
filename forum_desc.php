@@ -1,12 +1,12 @@
 <?php
-// Get all forum items for the current page
-$stmt = $db->prepare("SELECT forum.*, users.artist, users.pic, users.id as iduser FROM forum JOIN users ON forum.email = users.email ORDER BY forum.id DESC LIMIT :items_per_page OFFSET :offset");
+// Get all forum items for the current page with reply counts
+$stmt = $db->prepare("SELECT forum.*, users.artist, users.pic, users.id AS iduser, COUNT(reply_forum.id) AS reply_count FROM forum JOIN users ON forum.email = users.email LEFT JOIN reply_forum ON forum.id = reply_forum.comment_id GROUP BY forum.id, users.artist, users.pic, users.id ORDER BY forum.id DESC LIMIT :items_per_page OFFSET :offset");
 $stmt->bindValue(':items_per_page', $items_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $forum = $stmt->execute();
 ?>
 
-    <div class="container-fluid">
+    <div class="container">
       <?php
         while ($comment = $forum->fetchArray()) :
       ?>
@@ -36,8 +36,8 @@ $forum = $stmt->execute();
               </div>
             <?php endif; ?>
           </div>
-          <div class="mt-5 container-fluid fw-medium">
-            <div class="small">
+          <div class="mt-5 container fw-medium">
+            <div>
               <?php
                 if (!function_exists('getYouTubeVideoId')) {
                   function getYouTubeVideoId($urlComment)
@@ -78,7 +78,7 @@ $forum = $stmt->execute();
                       }
                     }, $messageTextWithoutTags);
                 
-                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
+                    echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
                   }
                 } else {
                   echo "Sorry, no text...";
@@ -86,8 +86,20 @@ $forum = $stmt->execute();
               ?>
             </div>
           </div>
+          <div class="mx-2 me-auto">
+            <h6 class="fw-medium small"><small><?php echo $comment['reply_count']; ?> Replies</small></h6>
+          </div>
           <div class="m-2 ms-auto">
-            <a class="btn btn-sm fw-semibold" href="reply_forum.php?comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+            <?php
+              $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+              $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+              $comment_id = isset($comment['id']) ? $comment['id'] : '';
+
+              $url = "reply_forum.php?by=$by&comment_id=$comment_id&page=$page";
+            ?>
+            <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
+              <i class="bi bi-reply-fill"></i> Reply
+            </a>
           </div>
         </div>
       <?php

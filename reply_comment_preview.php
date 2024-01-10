@@ -9,6 +9,9 @@ $db->exec('CREATE TABLE IF NOT EXISTS reply_comments (id INTEGER PRIMARY KEY AUT
 
 // Get the image id from comment.php
 $imageid = $_GET['imageid'];
+$pageUrl = $_GET['page'];
+$sortUrl = $_GET['by'];
+$commentId = $_GET['comment_id'];
 
 // Get the id of the image
 $stmt = $db->prepare("SELECT * FROM images WHERE id=:imageid");
@@ -73,180 +76,56 @@ if (isset($_GET['delete_reply_id'])) {
   }
 }
 
-// Get the selected comment based on its ID
-$comment_id = isset($_GET['comment_id']) ? $_GET['comment_id'] : null;
-if ($comment_id !== null) {
-  $comment = $db->prepare('SELECT * FROM comments WHERE id = ?');
-  $comment->bindValue(1, $comment_id, SQLITE3_INTEGER);
-  $comment = $comment->execute()->fetchArray(SQLITE3_ASSOC);
+// Get the current comment from the comments table
+$stmt = $db->prepare("SELECT comment FROM comments WHERE id=:comment_id");
+$stmt->bindValue(':comment_id', $commentId, SQLITE3_INTEGER);
+$commentResult = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
-  // Get all replies for the selected comment from the reply_comments table, along with the user information
-  $replies = $db->prepare('SELECT rc.*, u.artist, u.pic, u.id as userid FROM reply_comments rc JOIN users u ON rc.email = u.email WHERE rc.comment_id = ? ORDER BY rc.id DESC');
-  $replies->bindValue(1, $comment_id, SQLITE3_INTEGER);
-  $replies = $replies->execute();
-}
+// Assign the comment to the variable $commentName
+$commentName = $commentResult['comment'];
 ?>
 
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Reply Section</title>
+    <title>Reply to <?php echo $commentName; ?></title>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container-fluid mt-2">
-      <?php if ($comment_id !== null && $comment !== false): ?>
-        <div class="modal-dialog my-2" role="document">
-          <div class="modal-content card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
-            <div class="modal-body">
-              <h5 class="mb-0 fw-bold text-center">Comment Replies</h5>
-              <div class="fw-bold mt-2">
-                <div class="small">
-                  <?php
-                    if (!function_exists('getYouTubeVideoId')) {
-                      function getYouTubeVideoId($urlCommentReply)
-                      {
-                        $videoIdReply = '';
-                        $patternReply = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
-                        if (preg_match($patternReply, $urlCommentReply, $matchesReply)) {
-                          $videoIdReply = $matchesReply[1];
-                        }
-                        return $videoIdReply;
-                      }
-                    }
-
-                    $commentTextReply = isset($comment['comment']) ? $comment['comment'] : '';
-
-                    if (!empty($commentTextReply)) {
-                      $paragraphsReply = explode("\n", $commentTextReply);
-
-                      foreach ($paragraphsReply as $indexReply => $paragraphReply) {
-                        $messageTextWithoutTagsReply = strip_tags($paragraphReply);
-                        $patternReply = '/\bhttps?:\/\/\S+/i';
-
-                        $formattedTextReply = preg_replace_callback($patternReply, function ($matchesReply) {
-                          $urlCommentReply = htmlspecialchars($matchesReply[0]);
-
-                          if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlCommentReply)) {
-                            return '<a href="' . $urlCommentReply . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlCommentReply . '" alt="Image"></a>';
-                          } elseif (strpos($urlCommentReply, 'youtube.com') !== false) {
-                            $videoIdReply = getYouTubeVideoId($urlCommentReply);
-                            if ($videoIdReply) {
-                              $thumbnailUrlReply = 'https://img.youtube.com/vi/' . $videoIdReply . '/default.jpg';
-                              return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoIdReply . '" frameborder="0" allowfullscreen></iframe></div>';
-                            } else {
-                              return '<a href="' . $urlCommentReply . '">' . $urlCommentReply . '</a>';
-                            }
-                          } else {
-                            return '<a href="' . $urlCommentReply . '">' . $urlCommentReply . '</a>';
-                          }
-                        }, $messageTextWithoutTagsReply);
-                    
-                        echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedTextReply</p>";
-                      }
-                    } else {
-                      echo "Sorry, no text...";
-                    }
-                  ?>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="dropdown">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 my-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest&imageid=<?php echo $imageid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&imageid=<?php echo $imageid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=top&imageid=<?php echo $imageid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top comments</a></li>
+      </ul> 
     </div>
-    <div class="container-fluid">
-      <div>
-        <?php
-          // Display each reply and a delete button
-          while ($reply = $replies->fetchArray(SQLITE3_ASSOC)):
+        <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
+ 
+          switch ($sort) {
+            case 'newest':
+            include "reply_comment_preview_desc.php";
+            break;
+            case 'oldest':
+            include "reply_comment_preview_asc.php";
+            break;
+            case 'top':
+            include "reply_comment_preview_top.php";
+            break;
+          }
+        }
+        else {
+          include "reply_comment_preview_desc.php";
+        }
+        
         ?>
-          <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
-            <div class="d-flex align-items-center mb-2 position-relative">
-              <div class="position-absolute top-0 start-0 m-1">
-                <img class="rounded-circle object-fit-cover" src="<?php echo !empty($reply['pic']) ? $reply['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-                <a class="text-dark text-decoration-none fw-medium" href="artist.php?id=<?php echo $reply['userid']; ?>"><small>@<?php echo (mb_strlen($reply['artist']) > 15) ? mb_substr($reply['artist'], 0, 15) . '...' : $reply['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
-              </div>
-              <?php if ($_SESSION['email'] === $reply['email']): ?>
-                <div class="dropdown ms-auto position-relative">
-                  <button class="btn btn-sm position-absolute top-0 end-0 m-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <form action="" method="get">
-                      <a href="edit_reply_comment_preview.php?reply_id=<?php echo $reply['id']; ?>&imageid=<?php echo $imageid; ?>" class="dropdown-item fw-semibold">
-                        <i class="bi bi-pencil-fill"></i> Edit
-                      </a>
-                      <input type="hidden" name="delete_reply_id" value="<?= $reply['id'] ?>">
-                      <input type="hidden" name="imageid" value="<?= $imageid ?>" />
-                      <button onclick="return confirm('Are you sure?')" class="dropdown-item fw-semibold " type="submit">
-                        <i class="bi bi-trash-fill"></i> Delete
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              <?php endif; ?>
-            </div>
-            <div class="mt-5 container-fluid fw-medium">
-              <div class="small">
-                <?php
-                  if (!function_exists('getYouTubeVideoId')) {
-                    function getYouTubeVideoId($urlComment)
-                    {
-                      $videoId = '';
-                      $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
-                      if (preg_match($pattern, $urlComment, $matches)) {
-                        $videoId = $matches[1];
-                      }
-                      return $videoId;
-                    }
-                  }
-
-                  $commentText = isset($reply['reply']) ? $reply['reply'] : '';
-
-                  if (!empty($commentText)) {
-                    $paragraphs = explode("\n", $commentText);
-
-                    foreach ($paragraphs as $index => $paragraph) {
-                      $messageTextWithoutTags = strip_tags($paragraph);
-                      $pattern = '/\bhttps?:\/\/\S+/i';
-
-                      $formattedText = preg_replace_callback($pattern, function ($matches) {
-                        $urlComment = htmlspecialchars($matches[0]);
-
-                        if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
-                          return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
-                        } elseif (strpos($urlComment, 'youtube.com') !== false) {
-                          $videoId = getYouTubeVideoId($urlComment);
-                          if ($videoId) {
-                            $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
-                            return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0" allowfullscreen></iframe></div>';
-                          } else {
-                            return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
-                          }
-                        } else {
-                          return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
-                        }
-                      }, $messageTextWithoutTags);
-                  
-                      echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
-                    }
-                  } else {
-                    echo "Sorry, no text...";
-                  }
-                ?>
-              </div>
-            </div>
-          </div>
-        <?php endwhile; ?>
-      <?php else:
-        // Display an error message if the comment ID is invalid
-        echo "<p>Invalid comment ID.</p>";
-      endif; ?>
-    </div>
     <div class="fixed-bottom w-100">
       <form action="" method="POST">
         <div class="input-group w-100">
@@ -266,7 +145,7 @@ if ($comment_id !== null) {
     </div>
     <script>
       function goBack() {
-        window.location.href = "comments_preview.php?imageid=<?php echo $imageid; ?>";
+        window.location.href = "comments_preview.php?by=<?php echo $sortUrl; ?>&imageid=<?php echo $imageid; ?>&page=<?php echo $pageUrl; ?>";
         // window.location.href = "index.php";
       }
     </script>

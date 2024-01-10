@@ -1,6 +1,6 @@
 <?php
 // Get all comments for the current image for the current page
-$stmt = $db->prepare("SELECT comments.*, users.artist, users.pic, users.id as iduser FROM comments JOIN users ON comments.email = users.email WHERE comments.filename=:filename ORDER BY comments.id DESC LIMIT :comments_per_page OFFSET :offset");
+$stmt = $db->prepare("SELECT comments.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments.id) as reply_count FROM comments JOIN users ON comments.email = users.email LEFT JOIN reply_comments ON comments.id = reply_comments.comment_id WHERE comments.filename=:filename GROUP BY comments.id ORDER BY comments.id DESC LIMIT :comments_per_page OFFSET :offset");
 $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
 $stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
@@ -38,7 +38,7 @@ $comments = $stmt->execute();
             <?php endif; ?>
           </div>
           <div class="mt-5 container-fluid fw-medium">
-            <div class="small">
+            <div>
               <?php
                 if (!function_exists('getYouTubeVideoId')) {
                   function getYouTubeVideoId($urlComment)
@@ -79,7 +79,7 @@ $comments = $stmt->execute();
                       }
                     }, $messageTextWithoutTags);
                 
-                    echo "<p class='small' style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
+                    echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
                   }
                 } else {
                   echo "Sorry, no text...";
@@ -87,8 +87,20 @@ $comments = $stmt->execute();
               ?>
             </div>
           </div>
+          <div class="mx-2 me-auto">
+            <h6 class="fw-medium small"><small><?php echo $comment['reply_count']; ?> Replies</small></h6>
+          </div>
           <div class="m-2 ms-auto">
-            <a class="btn btn-sm fw-semibold" href="reply_comment_preview.php?imageid=<?php echo $filename; ?>&comment_id=<?php echo $comment['id']; ?>"><i class="bi bi-reply-fill"></i> Reply</a>
+            <?php
+              $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+              $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+              $comment_id = isset($comment['id']) ? $comment['id'] : '';
+
+              $url = "reply_comment_preview.php?by=$by&imageid=$filename&comment_id=$comment_id&page=$page";
+            ?>
+            <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
+              <i class="bi bi-reply-fill"></i> Reply
+            </a>
           </div>
         </div>
       <?php

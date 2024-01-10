@@ -113,12 +113,13 @@ $total_pages = ceil($total_comments / $comments_per_page);
   </head>
   <body>
     <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 my-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
         <li><a href="?by=newest&imageid=<?php echo $filename; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest&imageid=<?php echo $filename; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=top&imageid=<?php echo $filename; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top comments</a></li>
       </ul> 
     </div>
         <?php 
@@ -131,6 +132,9 @@ $total_pages = ceil($total_comments / $comments_per_page);
             break;
             case 'oldest':
             include "comments_preview_asc.php";
+            break;
+            case 'top':
+            include "comments_preview_top.php";
             break;
           }
         }

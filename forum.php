@@ -100,6 +100,7 @@ $total_pages = ceil($total_items / $items_per_page);
       <ul class="dropdown-menu">
         <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=top&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top comments</a></li>
       </ul> 
     </div>
         <?php 
@@ -112,6 +113,9 @@ $total_pages = ceil($total_items / $items_per_page);
             break;
             case 'oldest':
             include "forum_asc.php";
+            break;
+            case 'top':
+            include "forum_top.php";
             break;
           }
         }

@@ -1,13 +1,13 @@
 <?php
-// Get all comments for the current image for the current page
-$stmt = $db->prepare("SELECT comments.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments.id) as reply_count FROM comments JOIN users ON comments.email = users.email LEFT JOIN reply_comments ON comments.id = reply_comments.comment_id WHERE comments.filename=:filename GROUP BY comments.id ORDER BY comments.id ASC LIMIT :comments_per_page OFFSET :offset");
+// Get all comments for the current image for the current page, ordered by most replied
+$stmt = $db->prepare("SELECT comments.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments.id) as reply_count FROM comments JOIN users ON comments.email = users.email LEFT JOIN reply_comments ON comments.id = reply_comments.comment_id WHERE comments.filename=:filename GROUP BY comments.id ORDER BY reply_count DESC, comments.id DESC LIMIT :comments_per_page OFFSET :offset");
 $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
 $stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $comments = $stmt->execute();
 ?>
 
-    <div class="container">
+    <div class="container-fluid">
       <?php
         while ($comment = $comments->fetchArray()) :
       ?>
@@ -24,7 +24,7 @@ $comments = $stmt->execute();
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                   <form action="" method="POST">
-                    <a href="edit_comment.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
+                    <a href="edit_comment_preview.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
                       <i class="bi bi-pencil-fill me-2"></i> Edit
                     </a>
                     <input type="hidden" name="filename" value="<?php echo $filename; ?>">
@@ -96,7 +96,7 @@ $comments = $stmt->execute();
               $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
               $comment_id = isset($comment['id']) ? $comment['id'] : '';
 
-              $url = "reply_comment.php?by=$by&imageid=$filename&comment_id=$comment_id&page=$page";
+              $url = "reply_comment_preview.php?by=$by&imageid=$filename&comment_id=$comment_id&page=$page";
             ?>
             <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
               <i class="bi bi-reply-fill"></i> Reply
@@ -114,11 +114,11 @@ $comments = $stmt->execute();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=top&imageid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=top&imageid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -131,16 +131,16 @@ $comments = $stmt->execute();
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=top&imageid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=top&imageid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=top&imageid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>

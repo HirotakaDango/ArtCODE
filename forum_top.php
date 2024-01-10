@@ -1,15 +1,14 @@
 <?php
-// Get all comments for the current image for the current page
-$stmt = $db->prepare("SELECT comments.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments.id) as reply_count FROM comments JOIN users ON comments.email = users.email LEFT JOIN reply_comments ON comments.id = reply_comments.comment_id WHERE comments.filename=:filename GROUP BY comments.id ORDER BY comments.id ASC LIMIT :comments_per_page OFFSET :offset");
-$stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
-$stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
+// Get all forum items for the current page with reply counts
+$stmt = $db->prepare("SELECT forum.*, users.artist, users.pic, users.id AS iduser, COUNT(reply_forum.id) AS reply_count FROM forum JOIN users ON forum.email = users.email LEFT JOIN reply_forum ON forum.id = reply_forum.comment_id GROUP BY forum.id, users.artist, users.pic, users.id ORDER BY reply_count DESC LIMIT :items_per_page OFFSET :offset");
+$stmt->bindValue(':items_per_page', $items_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
-$comments = $stmt->execute();
+$forum = $stmt->execute();
 ?>
 
     <div class="container">
       <?php
-        while ($comment = $comments->fetchArray()) :
+        while ($comment = $forum->fetchArray()) :
       ?>
         <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
           <div class="d-flex align-items-center mb-2 position-relative">
@@ -24,7 +23,7 @@ $comments = $stmt->execute();
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                   <form action="" method="POST">
-                    <a href="edit_comment.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
+                    <a href="edit_forum.php?forumid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
                       <i class="bi bi-pencil-fill me-2"></i> Edit
                     </a>
                     <input type="hidden" name="filename" value="<?php echo $filename; ?>">
@@ -37,7 +36,7 @@ $comments = $stmt->execute();
               </div>
             <?php endif; ?>
           </div>
-          <div class="mt-5 container-fluid fw-medium">
+          <div class="mt-5 container fw-medium">
             <div>
               <?php
                 if (!function_exists('getYouTubeVideoId')) {
@@ -96,7 +95,7 @@ $comments = $stmt->execute();
               $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
               $comment_id = isset($comment['id']) ? $comment['id'] : '';
 
-              $url = "reply_comment.php?by=$by&imageid=$filename&comment_id=$comment_id&page=$page";
+              $url = "reply_forum.php?by=$by&comment_id=$comment_id&page=$page";
             ?>
             <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
               <i class="bi bi-reply-fill"></i> Reply
@@ -106,41 +105,41 @@ $comments = $stmt->execute();
       <?php
         endwhile;
       ?>
-    </div>
-    <?php
-      $totalPages = ceil($total_comments / $comments_per_page);
-      $prevPage = $page - 1;
-      $nextPage = $page + 1;
-    ?>
-    <div class="pagination d-flex gap-1 justify-content-center mt-3">
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=<?php echo $filename; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-      <?php endif; ?>
-
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=<?php echo $filename; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-      <?php endif; ?>
-
       <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=' . $filename . '&page=' . $i . '">' . $i . '</a>';
-          }
-        }
+        $totalPages = ceil($total_items / $items_per_page);
+        $prevPage = $page - 1;
+        $nextPage = $page + 1;
       ?>
+      <div class="pagination d-flex gap-1 justify-content-center mt-3">
+        <?php if ($page > 1): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?by=top&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <?php endif; ?>
 
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=<?php echo $filename; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-      <?php endif; ?>
+        <?php if ($page > 1): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?by=top&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <?php endif; ?>
 
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&imageid=<?php echo $filename; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-      <?php endif; ?>
+        <?php
+          // Calculate the range of page numbers to display
+          $startPage = max($page - 2, 1);
+          $endPage = min($page + 2, $totalPages);
+
+          // Display page numbers within the range
+          for ($i = $startPage; $i <= $endPage; $i++) {
+            if ($i === $page) {
+              echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+            } else {
+              echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=top&page=' . $i . '">' . $i . '</a>';
+            }
+          }
+        ?>
+
+        <?php if ($page < $totalPages): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?by=top&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <?php endif; ?>
+
+        <?php if ($page < $totalPages): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?by=top&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <?php endif; ?>
+      </div>
     </div>
