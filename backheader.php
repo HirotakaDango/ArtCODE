@@ -50,8 +50,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
           ArtCODE
         </a>
         <div class="dropdown nav-right">
-          <a class="btn btn-sm border-0 rounded-pill fw-bold dropdown-toggle d-none d-md-block d-lg-block ps-0 py-0" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
-            <img class="rounded-circle border-0 object-fit-cover border border-1 m-0" width="32" height="32" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/<?php echo !empty($pic1) ? $pic1 : "icon/profile.svg"; ?>" alt="Profile Picture" style="margin-top: -2px;">
+          <a class="btn btn-sm bg-body-secondary rounded-pill fw-bold dropdown-toggle d-none d-md-block d-lg-block p-1 pe-2 border border-light-subtle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+            <img class="rounded-circle border-0 object-fit-cover border border-1 m-0" width="24" height="24" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/<?php echo !empty($pic1) ? $pic1 : "icon/profile.svg"; ?>" alt="Profile Picture" style="margin-top: -2px;">
             <span><?php echo $artist1; ?></span>
           </a>
           <a class="nav-link px-2 text-secondary dropdown-toggle d-md-none d-lg-none" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
@@ -59,44 +59,45 @@ $fav_count1 = $fav_result1->fetchArray()[0];
           </a>
           <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 300px;">
             <div class="text-center mb-2">
-              <a class="d-block" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/settings/profile_picture.php"><img class="rounded-circle object-fit-cover border border-5" width="150" height="150" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/<?php echo !empty($pic1) ? $pic1 : "icon/profile.svg"; ?>" alt="Profile Picture"></a>
+              <a class="d-block pt-2" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/settings/profile_picture.php"><img class="rounded-circle object-fit-cover border border-5" width="150" height="150" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/<?php echo !empty($pic1) ? $pic1 : "icon/profile.svg"; ?>" alt="Profile Picture"></a>
               <h5 class="fw-bold mt-2 "><?php echo $artist1; ?></h5>
               <p class="fw-medium" style="margin-top: -10px;"><small><?php echo $email1; ?></small></p>
             </div>
-            <div class="btn-group mt-2 mb-1 container" role="group" aria-label="Basic example">
-              <a class="btn btn-sm btn-outline-dark rounded fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'follower.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/follower.php?id=<?php echo $user_id1; ?>"><i class="bi bi-people-fill"></i> <?php echo $num_followers1 ?> <small>followers</small></a>
-              <a class="btn btn-sm btn-outline-dark ms-1 rounded fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'following.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/following.php?id=<?php echo $user_id1; ?>"><i class="bi bi-person-fill"></i> <?php echo $num_following1 ?> <small>following</small></a>
+            <div class="btn-group mt-2 mb-1 w-100 container" role="group" aria-label="Basic example">
+              <a class="btn btn-sm btn-outline-dark rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'follower.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/follower.php?id=<?php echo $user_id1; ?>"><i class="bi bi-people-fill"></i> <?php echo $num_followers1 ?> <small>followers</small></a>
+              <a class="btn btn-sm btn-outline-dark ms-1 rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'following.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/following.php?id=<?php echo $user_id1; ?>"><i class="bi bi-person-fill"></i> <?php echo $num_following1 ?> <small>following</small></a>
             </div>
-            <div class="btn-group mb-3 container" role="group" aria-label="Basic example">
-              <a class="btn btn-sm btn-outline-dark rounded fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'myworks.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php"><i class="bi bi-images"></i> <?php echo $count1; ?> <small>images</small></a>
-              <a class="btn btn-sm btn-outline-dark ms-1 rounded fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php"><i class="bi bi-heart-fill"></i> <?php echo $fav_count1;?> <small>favorites</small></a> 
+            <div class="btn-group mb-3 w-100 container" role="group" aria-label="Basic example">
+              <a class="btn btn-sm btn-outline-dark rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'myworks.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php"><i class="bi bi-images"></i> <?php echo $count1; ?> <small>images</small></a>
+              <a class="btn btn-sm btn-outline-dark ms-1 rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php"><i class="bi bi-heart-fill"></i> <?php echo $fav_count1;?> <small>favorites</small></a> 
             </div>
-            <div class="ms-1 me-1">
-              <li>
-                <a class="dropdown-item hover-effect fw-bold mb-1 <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) || (strpos($_SERVER['PHP_SELF'], '/profile/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'profile') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/profile.php">
+            <div class="container">
+              <div class="btn-group w-100 gap-2 mb-1">
+                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) || (strpos($_SERVER['PHP_SELF'], '/profile/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'profile') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/profile.php">
                   Profile
                 </a>
-              </li>
-              <li>
-                <a class="dropdown-item hover-effect fw-bold mb-1 <?php echo (basename($_SERVER['PHP_SELF']) == 'myworks.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php">
-                  My Works
+                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/favorites/') !== false) || (strpos($_SERVER['PHP_SELF'], '/feeds/favorites/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'profile') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php">
+                  Favorites
                 </a>
-              </li>
-              <li>
-                <a class="dropdown-item hover-effect fw-bold mb-1 <?php echo (basename($_SERVER['PHP_SELF']) == 'album.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php">
+              </div>
+              <div class="btn-group w-100 gap-2 mb-1">
+                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'album.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php">
                   My Albums
                 </a>
-              </li>
-              <li>
-                <a class="dropdown-item hover-effect fw-bold mb-1 <?php echo (basename($_SERVER['PHP_SELF']) == 'history.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/history.php">
-                  History
+                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'myworks.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php">
+                  My Works
                 </a>
-              </li>
-              <li>
-                <a class="dropdown-item hover-effect fw-bold mb-1 <?php echo (basename($_SERVER['PHP_SELF']) == 'setting.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/setting.php">
+              </div>
+              <div class="btn-group w-100 gap-2">
+                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'setting.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/setting.php">
                   Settings
                 </a>
-              </li>
+                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/history/') !== false) || (strpos($_SERVER['PHP_SELF'], '/feeds/history/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'profile') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/history.php">
+                  History
+                </a>
+              </div>
+            </div>
+            <div class="mx-1">
               <hr class="border-3 rounded">
               <div class="container-fluid mb-2">
               <?php if(isset($_SESSION['email']) && isset($_COOKIE['token'])): ?>
