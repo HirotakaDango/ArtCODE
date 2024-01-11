@@ -93,7 +93,7 @@ if ($comment_id !== null) {
                   </button>
                   <div class="dropdown-menu dropdown-menu-end">
                     <form action="" method="get">
-                      <a href="edit_reply_comment_minute.php?reply_id=<?php echo $reply['id']; ?>&minuteid=<?php echo $minuteid; ?>" class="dropdown-item fw-semibold">
+                      <a href="edit_reply_comment_minute.php?sort=<?php echo $replySort; ?>&by=<?php echo $sortUrl; ?>&reply_id=<?php echo $reply['id']; ?>&comment_id=<?php echo $commentId; ?>&minuteid=<?php echo $minuteid; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-semibold">
                         <i class="bi bi-pencil-fill"></i> Edit
                       </a>
                       <input type="hidden" name="delete_reply_id" value="<?= $reply['id'] ?>">

@@ -12,6 +12,8 @@ try {
 
   // Retrieve comment_id from GET parameter
   $comment_id = isset($_GET['commentid']) ? $_GET['commentid'] : null;
+  $sortUrl  = isset($_GET['by']) ? $_GET['by'] : null;
+  $pageUrl = isset($_GET['page']) ? $_GET['page'] : null;
 
   // Fetch comment based on comment_id
   $stmt = $db->prepare("SELECT * FROM comments_novel WHERE id = :comment_id");
@@ -37,7 +39,7 @@ try {
     }
 
     // Redirect to the original comment page
-    header("Location: comments.php?id={$comment['filename']}");
+    header("Location: comments.php?by={$sortUrl}&novelid={$comment['filename']}&page={$pageUrl}");
     exit();
   }
 } catch (PDOException $e) {
@@ -70,7 +72,7 @@ try {
     </div>
     <script>
       function goBack() {
-        window.location.href = "comments.php?novelid=<?php echo htmlspecialchars($comment['filename']); ?>";
+        window.location.href = "comments.php?by=<?php echo urlencode($sortUrl); ?>&novelid=<?php echo htmlspecialchars($comment['filename']); ?>&page=<?php echo urlencode($pageUrl); ?>";
       }
     </script> 
   </body>

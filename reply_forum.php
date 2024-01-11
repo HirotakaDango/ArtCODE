@@ -10,6 +10,7 @@ $db->exec('CREATE TABLE IF NOT EXISTS reply_forum (id INTEGER PRIMARY KEY AUTOIN
 // Get the image id from comment.php
 $pageUrl = $_GET['page'];
 $sortUrl = $_GET['by'];
+$replySort = $_GET['sort'];
 $commentId = $_GET['comment_id'];
 
 // Check if the reply form was submitted
@@ -91,14 +92,14 @@ $commentName = $commentResult['comment'];
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=newest&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=top&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top comments</a></li>
+        <li><a href="?sort=newest&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['sort']) || $_GET['sort'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?sort=oldest&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['sort']) && $_GET['sort'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?sort=top&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['sort']) && $_GET['sort'] == 'top') echo 'active'; ?>">top comments</a></li>
       </ul> 
     </div>
         <?php 
-        if(isset($_GET['by'])){
-          $sort = $_GET['by'];
+        if(isset($_GET['sort'])){
+          $sort = $_GET['sort'];
  
           switch ($sort) {
             case 'newest':

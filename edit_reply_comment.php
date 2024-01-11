@@ -5,6 +5,10 @@ require_once('auth.php');
 $db = new SQLite3('database.sqlite');
 
 $imageid = $_GET['imageid'];
+$pageUrl = $_GET['page'];
+$replySort = $_GET['sort'];
+$sortUrl = $_GET['by'];
+$commentId = $_GET['comment_id'];
 
 // Check if the reply ID is provided
 if (isset($_GET['reply_id'])) {
@@ -33,7 +37,7 @@ if (isset($_GET['reply_id'])) {
         $stmt->execute();
 
         // Redirect back to the reply preview page
-        $redirectUrl = 'reply_comment.php?imageid=' . urlencode($imageid) . '&comment_id=' . urlencode($reply['comment_id']);
+        $redirectUrl = 'reply_comment.php?sort=' . urlencode($replySort) . '&by=' . urlencode($sortUrl) . '&imageid=' . urlencode($imageid) . '&comment_id=' . urlencode($commentId) . '&page=' . urlencode($pageUrl);
         header('Location: ' . $redirectUrl);
         exit();
       } else {
@@ -71,7 +75,7 @@ if (isset($_GET['reply_id'])) {
     </div>
     <script>
       function goBack() {
-        window.location.href = "reply_comment.php?imageid=<?php echo urlencode($imageid); ?>&comment_id=<?php echo urlencode($reply['comment_id']); ?>";
+        window.location.href = "reply_comment.php?sort=<?= urlencode($replySort) ?>&by=<?= urlencode($sortUrl) ?>&imageid=<?= urlencode($imageid) ?>&comment_id=<?= urlencode($commentId) ?>&page=<?= urlencode($pageUrl) ?>";
       }
     </script>
     <?php include('bootstrapjs.php'); ?>

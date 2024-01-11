@@ -6,6 +6,8 @@ $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KE
 $stmt->execute();
 
 $comment_id = $_GET['commentid'];
+$sortUrl = $_GET['by'];
+$pageUrl = $_GET['page'];
 
 $stmt = $db->prepare("SELECT * FROM comments WHERE id=:comment_id");
 $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
@@ -26,7 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
     $stmt->execute();
   }
 
-  header("Location: comment_preview.php?imageid={$comment['filename']}");
+  // Append $sortUrl to the redirect URL
+  $redirectUrl = "comments_preview.php?by={$sortUrl}&imageid={$comment['filename']}&page={$pageUrl}";
+  header("Location: $redirectUrl");
   exit();
 }
 ?>
@@ -63,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
     </div>
     <script>
       function goBack() {
-        window.location.href = "comments_preview.php?imageid=<?php echo $comment['filename']; ?>";
+        window.location.href = "comments_preview.php?by=<?php echo urlencode($sortUrl); ?>&imageid=<?php echo urlencode($comment['filename']); ?>&page=<?php echo urlencode($pageUrl); ?>";
       }
     </script> 
   </body>

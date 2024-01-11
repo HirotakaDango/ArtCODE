@@ -24,8 +24,8 @@ $comments = $stmt->execute();
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                   <form action="" method="POST">
-                    <a href="edit_comment.php?commentid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
-                      <i class="bi bi-pencil-fill me-2"></i>Edit
+                    <a href="edit_comment.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&commentid=<?php echo $comment['id']; ?>&page=<?php echo isset($_GET['page']) ? intval($_GET['page']) : 1; ?>" class="dropdown-item fw-semibold">
+                      <i class="bi bi-pencil-fill me-2"></i> Edit
                     </a>
                     <input type="hidden" name="filename" value="<?php echo $filename; ?>">
                     <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
@@ -94,9 +94,10 @@ $comments = $stmt->execute();
             <?php
               $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
               $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+              $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
               $comment_id = isset($comment['id']) ? $comment['id'] : '';
 
-              $url = "reply_comment_novel.php?by=$by&novelid=$filename&comment_id=$comment_id&page=$page";
+              $url = "reply_comment_novel.php?sort=$sort&by=$by&novelid=$filename&comment_id=$comment_id&page=$page";
             ?>
             <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
               <i class="bi bi-reply-fill"></i> Reply

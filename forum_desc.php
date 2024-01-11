@@ -23,7 +23,7 @@ $forum = $stmt->execute();
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                   <form action="" method="POST">
-                    <a href="edit_forum.php?forumid=<?php echo $comment['id']; ?>" class="dropdown-item fw-semibold">
+                    <a href="edit_forum.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&forumid=<?php echo $comment['id']; ?>&page=<?php echo isset($_GET['page']) ? intval($_GET['page']) : 1; ?>" class="dropdown-item fw-semibold">
                       <i class="bi bi-pencil-fill me-2"></i> Edit
                     </a>
                     <input type="hidden" name="filename" value="<?php echo $filename; ?>">
@@ -93,9 +93,10 @@ $forum = $stmt->execute();
             <?php
               $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
               $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+              $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
               $comment_id = isset($comment['id']) ? $comment['id'] : '';
 
-              $url = "reply_forum.php?by=$by&comment_id=$comment_id&page=$page";
+              $url = "reply_forum.php?sort=$sort&by=$by&comment_id=$comment_id&page=$page";
             ?>
             <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
               <i class="bi bi-reply-fill"></i> Reply

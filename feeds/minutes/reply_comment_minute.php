@@ -11,6 +11,7 @@ $db->exec('CREATE TABLE IF NOT EXISTS reply_comments_minutes (id INTEGER PRIMARY
 $minuteid = $_GET['minuteid'];
 $pageUrl = $_GET['page'];
 $sortUrl = $_GET['by'];
+$replySort = $_GET['sort'];
 $commentId = $_GET['comment_id'];
 
 // Get the id of the image
@@ -39,8 +40,10 @@ if (isset($_POST['reply_comment_id'], $_POST['reply'])) {
     $stmt->bindValue(4, $currentDate, SQLITE3_TEXT);
     $stmt->execute();
 
-    // Redirect back to the current page with the comment_id parameter
-    header('Location: reply_comment_minute.php?minuteid='.$minuteid.'&comment_id=' . $_POST['reply_comment_id']);
+    // Redirect back to the image page
+    $currentURL = $_SERVER['REQUEST_URI'];
+    $redirectURL = $currentURL;
+    header("Location: $redirectURL");
     exit();
   } else {
     // Handle the case where the reply is empty
@@ -67,9 +70,10 @@ if (isset($_GET['delete_reply_id'])) {
     $delete_reply_stmt->bindValue(1, $_GET['delete_reply_id'], SQLITE3_INTEGER);
     $delete_reply_stmt->execute();
 
-    // Redirect back to the current page with the minuteid and comment_id parameters
-    $redirect_url = 'reply_comment_minute.php?minuteid=' . urlencode($minuteid) . '&comment_id=' . urlencode($comment_id);
-    header('Location: ' . $redirect_url);
+    // Redirect back to the image page
+    $currentURL = $_SERVER['REQUEST_URI'];
+    $redirectURL = $currentURL;
+    header("Location: $redirectURL");
     exit();
   } else {
     // Handle the case where the comment_id or image_id could not be retrieved
@@ -139,14 +143,14 @@ $commentName = $commentResult['comment'];
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=newest&minuteid=<?php echo $minuteid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&minuteid=<?php echo $minuteid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=top&minuteid=<?php echo $minuteid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top comments</a></li>
+        <li><a href="?sort=newest&by=<?php echo $sortUrl; ?>&minuteid=<?php echo $minuteid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['sort']) || $_GET['sort'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?sort=oldest&by=<?php echo $sortUrl; ?>&minuteid=<?php echo $minuteid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['sort']) && $_GET['sort'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?sort=top&by=<?php echo $sortUrl; ?>&minuteid=<?php echo $minuteid; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['sort']) && $_GET['sort'] == 'top') echo 'active'; ?>">top comments</a></li>
       </ul> 
     </div>
         <?php 
-        if(isset($_GET['by'])){
-          $sort = $_GET['by'];
+        if(isset($_GET['sort'])){
+          $sort = $_GET['sort'];
  
           switch ($sort) {
             case 'newest':

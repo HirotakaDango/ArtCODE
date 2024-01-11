@@ -5,6 +5,10 @@ require_once('auth.php');
 $db = new SQLite3('database.sqlite');
 
 $reply_id = $_GET['reply_id'];
+$pageUrl = $_GET['page'];
+$replySort = $_GET['sort'];
+$sortUrl = $_GET['by'];
+$commentId = $_GET['comment_id'];
 
 // Check if the reply ID is provided
 if (isset($_GET['reply_id'])) {
@@ -33,7 +37,7 @@ if (isset($_GET['reply_id'])) {
         $stmt->execute();
 
         // Redirect back to the reply preview page
-        $redirectUrl = 'reply_forum.php?reply_id=' . urlencode($reply_id) . '&comment_id=' . urlencode($reply['comment_id']);
+        $redirectUrl = 'reply_forum.php?sort=' . urlencode($replySort) . '&by=' . urlencode($sortUrl) . '&comment_id=' . urlencode($commentId) . '&page=' . urlencode($pageUrl);
         header('Location: ' . $redirectUrl);
         exit();
       } else {
