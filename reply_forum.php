@@ -34,8 +34,10 @@ if (isset($_POST['reply_comment_id'], $_POST['reply'])) {
     $stmt->bindValue(4, $currentDate, SQLITE3_TEXT);
     $stmt->execute();
 
-    // Redirect back to the current page with the comment_id parameter
-    header('Location: reply_forum.php?comment_id=' . $_POST['reply_comment_id']);
+    // Redirect back to the image page
+    $currentURL = $_SERVER['REQUEST_URI'];
+    $redirectURL = $currentURL;
+    header("Location: $redirectURL");
     exit();
   } else {
     // Handle the case where the reply is empty
@@ -49,6 +51,9 @@ if (isset($_GET['delete_reply_id'])) {
   $get_comment_id_stmt = $db->prepare('SELECT comment_id FROM reply_forum WHERE id = ?');
   $get_comment_id_stmt->bindValue(1, $_GET['delete_reply_id'], SQLITE3_INTEGER);
   $comment_id_result = $get_comment_id_stmt->execute()->fetchArray(SQLITE3_ASSOC);
+  $pageUrl = $_GET['page'];
+  $sortUrl = $_GET['by'];
+  $replySort = $_GET['sort'];
 
   if ($comment_id_result !== false) {
     $comment_id = $comment_id_result['comment_id'];
@@ -59,7 +64,8 @@ if (isset($_GET['delete_reply_id'])) {
     $delete_reply_stmt->execute();
 
     // Redirect back to the current page with the comment_id parameter
-    header('Location: reply_forum.php?comment_id=' . $comment_id);
+    $redirect_url = 'reply_forum.php?sort=' . urlencode($replySort) . '&by=' . urlencode($sortUrl) . '&comment_id=' . urlencode($comment_id) . '&page=' . urlencode($pageUrl);
+    header('Location: ' . $redirect_url);
     exit();
   } else {
     // Handle the case where the comment_id could not be retrieved
@@ -87,8 +93,8 @@ $commentName = $commentResult['comment'];
   <body>
     <?php include('backheader.php'); ?>
     <br><br>
-    <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="dropdown container">
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
@@ -119,7 +125,7 @@ $commentName = $commentResult['comment'];
         
         ?>
     <nav class="navbar fixed-bottom navbar-expand justify-content-center">
-      <div class="container-fluid">
+      <div class="container">
         <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">send your comment</button>
       </div>
     </nav>

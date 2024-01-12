@@ -323,7 +323,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="d-flex align-items-center mb-2 position-relative">
                   <div class="position-absolute top-0 start-0 m-1">
                     <img class="rounded-circle" src="../../<?php echo !empty($comment['pic']) ? $comment['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-                    <a class="text-white text-decoration-none fw-semibold" href="../../artist.php?id=<?php echo $comment['iduser']; ?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
+                    <a class="text-white text-decoration-none fw-semibold link-body-emphasis" href="../../artist.php?id=<?php echo $comment['iduser']; ?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
                   </div>
                 </div>
                 <div class="mt-5 container-fluid fw-medium">
@@ -384,11 +384,12 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <?php
                     $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
                     $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+                    $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
                     $comment_id = isset($comment['id']) ? $comment['id'] : '';
 
-                    $url = "reply_comment_minute.php?by=$by&minuteid=$id&comment_id=$comment_id&page=$page";
+                    $url = "reply_comment_minute.php?sort=$sort&by=$by&minuteid=$id&comment_id=$comment_id&page=$page";
                   ?>
-                  <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
+                  <a class="btn btn-sm fw-semibold link-body-emphasis" href="<?php echo $url; ?>">
                     <i class="bi bi-reply-fill"></i> Reply
                   </a>
                 </div>
@@ -473,7 +474,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="d-flex align-items-center mb-2 position-relative">
               <div class="position-absolute top-0 start-0 m-1">
                 <img class="rounded-circle" src="../../<?php echo !empty($comment['pic']) ? $comment['pic'] : "../../icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-                <a class="text-white text-decoration-none fw-semibold" href="../../artist.php?id=<?php echo $comment['iduser']; ?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
+                <a class="text-white text-decoration-none fw-semibold link-body-emphasis" href="../../artist.php?id=<?php echo $comment['iduser']; ?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
               </div>
             </div>
             <div class="mt-5 container-fluid fw-medium">
@@ -534,11 +535,12 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <?php
                 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
                 $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+                $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
                 $comment_id = isset($comment['id']) ? $comment['id'] : '';
 
-                $url = "reply_comment_minute.php?by=$by&minuteid=$id&comment_id=$comment_id&page=$page";
+                $url = "reply_comment_minute.php?sort=$sort&by=$by&minuteid=$id&comment_id=$comment_id&page=$page";
               ?>
-              <a class="btn btn-sm fw-semibold" href="<?php echo $url; ?>">
+              <a class="btn btn-sm fw-semibold link-body-emphasis" href="<?php echo $url; ?>">
                 <i class="bi bi-reply-fill"></i> Reply
               </a>
             </div>

@@ -114,8 +114,8 @@ $total_pages = ceil($total_comments / $comments_per_page);
   <body>
     <?php include('backheader.php'); ?>
     <br><br>
-    <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="dropdown container">
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
@@ -146,7 +146,7 @@ $total_pages = ceil($total_comments / $comments_per_page);
         
         ?>
     <nav class="navbar fixed-bottom navbar-expand justify-content-center">
-      <div class="container-fluid">
+      <div class="container">
         <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">send your comment</button>
       </div>
     </nav>

@@ -58,7 +58,9 @@ if (isset($_GET['delete_reply_id'])) {
   $get_reply_info_stmt->bindValue(1, $_GET['delete_reply_id'], SQLITE3_INTEGER);
   $reply_info_result = $get_reply_info_stmt->execute()->fetchArray(SQLITE3_ASSOC);
   $novelid = $_GET['novelid'];
-  
+  $pageUrl = $_GET['page'];
+  $sortUrl = $_GET['by'];
+  $replySort = $_GET['sort'];
 
   if ($reply_info_result !== false) {
     $comment_id = $reply_info_result['comment_id'];
@@ -70,10 +72,9 @@ if (isset($_GET['delete_reply_id'])) {
     $delete_reply_stmt->bindValue(1, $_GET['delete_reply_id'], SQLITE3_INTEGER);
     $delete_reply_stmt->execute();
 
-    // Redirect back to the image page
-    $currentURL = $_SERVER['REQUEST_URI'];
-    $redirectURL = $currentURL;
-    header("Location: $redirectURL");
+    // Redirect back to the current page with the imageid and comment_id parameters
+    $redirect_url = 'reply_comment_novel.php?sort=' . urlencode($replySort) . '&by=' . urlencode($sortUrl) . '&novelid=' . urlencode($novelid) . '&comment_id=' . urlencode($comment_id) . '&page=' . urlencode($pageUrl);
+    header('Location: ' . $redirect_url);
     exit();
   } else {
     // Handle the case where the comment_id or image_id could not be retrieved
@@ -104,7 +105,7 @@ $commentName = $commentResult['comment'];
         <div class="d-none d-md-block d-lg-block">
           <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
             <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none" href="index.php">
+              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
                 ArtCODE
               </a>
             </li>
@@ -138,8 +139,8 @@ $commentName = $commentResult['comment'];
         </div>
       </nav>
     </div>
-    <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="dropdown container">
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
@@ -170,7 +171,7 @@ $commentName = $commentResult['comment'];
         
         ?>
     <nav class="navbar fixed-bottom navbar-expand justify-content-center">
-      <div class="container-fluid">
+      <div class="container">
         <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">send your comment</button>
       </div>
     </nav>    

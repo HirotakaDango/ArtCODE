@@ -58,7 +58,9 @@ if (isset($_GET['delete_reply_id'])) {
   $get_reply_info_stmt->bindValue(1, $_GET['delete_reply_id'], SQLITE3_INTEGER);
   $reply_info_result = $get_reply_info_stmt->execute()->fetchArray(SQLITE3_ASSOC);
   $imageid = $_GET['imageid'];
-  
+  $pageUrl = $_GET['page'];
+  $sortUrl = $_GET['by'];
+  $replySort = $_GET['sort'];
 
   if ($reply_info_result !== false) {
     $comment_id = $reply_info_result['comment_id'];
@@ -70,10 +72,9 @@ if (isset($_GET['delete_reply_id'])) {
     $delete_reply_stmt->bindValue(1, $_GET['delete_reply_id'], SQLITE3_INTEGER);
     $delete_reply_stmt->execute();
 
-    // Redirect back to the image page
-    $currentURL = $_SERVER['REQUEST_URI'];
-    $redirectURL = $currentURL;
-    header("Location: $redirectURL");
+    // Redirect back to the current page with the imageid and comment_id parameters
+    $redirect_url = 'reply_comment_preview.php?sort=' . urlencode($replySort) . '&by=' . urlencode($sortUrl) . '&imageid=' . urlencode($imageid) . '&comment_id=' . urlencode($comment_id) . '&page=' . urlencode($pageUrl);
+    header('Location: ' . $redirect_url);
     exit();
   } else {
     // Handle the case where the comment_id or image_id could not be retrieved

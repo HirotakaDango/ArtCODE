@@ -58,7 +58,9 @@ if (isset($_GET['delete_reply_id'])) {
   $get_reply_info_stmt->bindValue(1, $_GET['delete_reply_id'], SQLITE3_INTEGER);
   $reply_info_result = $get_reply_info_stmt->execute()->fetchArray(SQLITE3_ASSOC);
   $imageid = $_GET['imageid'];
-  
+  $pageUrl = $_GET['page'];
+  $sortUrl = $_GET['by'];
+  $replySort = $_GET['sort'];
 
   if ($reply_info_result !== false) {
     $comment_id = $reply_info_result['comment_id'];
@@ -70,10 +72,9 @@ if (isset($_GET['delete_reply_id'])) {
     $delete_reply_stmt->bindValue(1, $_GET['delete_reply_id'], SQLITE3_INTEGER);
     $delete_reply_stmt->execute();
 
-    // Redirect back to the image page
-    $currentURL = $_SERVER['REQUEST_URI'];
-    $redirectURL = $currentURL;
-    header("Location: $redirectURL");
+    // Redirect back to the current page with the imageid and comment_id parameters
+    $redirect_url = 'reply_comment.php?sort=' . urlencode($replySort) . '&by=' . urlencode($sortUrl) . '&imageid=' . urlencode($imageid) . '&comment_id=' . urlencode($comment_id) . '&page=' . urlencode($pageUrl);
+    header('Location: ' . $redirect_url);
     exit();
   } else {
     // Handle the case where the comment_id or image_id could not be retrieved
@@ -101,8 +102,8 @@ $commentName = $commentResult['comment'];
   <body>
     <?php include('backheader.php'); ?>
     <br><br>
-    <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="dropdown container">
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
@@ -133,7 +134,7 @@ $commentName = $commentResult['comment'];
         
         ?>
     <nav class="navbar fixed-bottom navbar-expand justify-content-center">
-      <div class="container-fluid">
+      <div class="container">
         <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">send your comment</button>
       </div>
     </nav>    
