@@ -60,7 +60,7 @@ if(isset($_POST['delete'])) {
     <div class="messages">
       <?php foreach ($messages as $message): ?>
         <div class="card mb-1 rounded-4 shadow border-0">
-          <div class="card-header border-0 fw-bold">
+          <div class="card-header rounded-top-4 border-0 fw-bold">
             <img class="rounded-circle object-fit-cover" src="<?php echo !empty($message['pic']) ? $message['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
             <a class="text-dark text-decoration-none fw-medium link-body-emphasis" href="artist.php?id=<?php echo $message['userid'];?>" target="_blank"><small>@<?php echo (mb_strlen($message['artist']) > 15) ? mb_substr($message['artist'], 0, 15) . '...' : $message['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo date('Y/m/d', strtotime($message['date'])); ?></small></small>
           </div>
