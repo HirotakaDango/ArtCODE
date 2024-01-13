@@ -894,7 +894,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   </ul>
                 </div>
               </div>
-              <?php if (isset($image['episode_name'])): ?>
+              <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
                 <a class="btn btn-primary fw-bold rounded-4 mb-2 w-100" href="episode/?episode=<?php echo urlencode($image['episode_name']); ?>">
                   <small>all episodes from <?php echo $image['episode_name']; ?></small>
                 </a>

@@ -59,21 +59,21 @@ $offset = ($page - 1) * $limit;
 // Get the total number of images for the specified episode
 $total = $db->querySingle("SELECT COUNT(*) FROM images WHERE episode_name = '$episodeName'");
 
-// Count the total number of images for the specified episode
+// Count the total number of images for the specified episode with non-empty episode names
 $countStmt = $db->prepare("
     SELECT COUNT(*) as count
     FROM images
-    WHERE episode_name = :episodeName
+    WHERE episode_name = :episodeName AND episode_name != ''
 ");
 $countStmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
 $totalCount = $countStmt->execute()->fetchArray(SQLITE3_ASSOC)['count'];
 
-// Get the images for the current page and specified episode
+// Get the images for the current page and specified episode with non-empty episode names
 $stmt = $db->prepare("
     SELECT images.*, users.artist, users.id AS userid, users.pic
     FROM images
     JOIN users ON images.email = users.email
-    WHERE images.episode_name = :episodeName
+    WHERE images.episode_name = :episodeName AND images.episode_name != ''
     ORDER BY images.id DESC
     LIMIT :offset, :limit
 ");

@@ -131,7 +131,7 @@ if (isset($_FILES['image'])) {
     $checkStmt->bindValue(':episode_name', $episodeName, SQLITE3_TEXT);
     $existingCount = $checkStmt->execute()->fetchArray()[0];
 
-    if ($existingCount == 0) {
+    if ($existingCount == 0 && !empty(trim($episodeName))) {
       // If episode_name doesn't exist, insert it into the "episode" table
       $insertStmt = $db->prepare('INSERT INTO episode (email, episode_name) VALUES (:email, :episode_name)');
       $insertStmt->bindValue(':email', $email, SQLITE3_TEXT);

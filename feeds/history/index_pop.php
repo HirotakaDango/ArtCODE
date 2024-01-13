@@ -1,10 +1,12 @@
 <?php
 // Fetch the user's history with image details from the database
-$stmt = $db->prepare("SELECT h.*, i.filename, i.tags, i.title, i.imgdesc 
+$stmt = $db->prepare("SELECT i.*, h.date_history, h.history, COUNT(f.id) AS favorite_count
                      FROM history h
                      JOIN images i ON h.image_artworkid = i.id
+                     LEFT JOIN favorites f ON i.id = f.image_id
                      WHERE h.email = :email
-                     ORDER BY h.id DESC");
+                     GROUP BY i.id
+                     ORDER BY favorite_count DESC");
 $stmt->bindParam(':email', $email);
 $stmt->execute();
 $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -16,9 +18,9 @@ $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <i class="bi bi-images"></i> sort by
         </button>
         <ul class="dropdown-menu">
-          <li><a href="?by=newest" class="dropdown-item fw-bold active">newest</a></li>
+          <li><a href="?by=newest" class="dropdown-item fw-bold">newest</a></li>
           <li><a href="?by=oldest" class="dropdown-item fw-bold">oldest</a></li>
-          <li><a href="?by=popular" class="dropdown-item fw-bold">popular</a></li>
+          <li><a href="?by=popular" class="dropdown-item fw-bold active">popular</a></li>
           <li><a href="?by=view" class="dropdown-item fw-bold">most viewed</a></li>
         </ul> 
       </div>

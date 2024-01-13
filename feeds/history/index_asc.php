@@ -18,6 +18,8 @@ $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <ul class="dropdown-menu">
           <li><a href="?by=newest" class="dropdown-item fw-bold">newest</a></li>
           <li><a href="?by=oldest" class="dropdown-item fw-bold active">oldest</a></li>
+          <li><a href="?by=popular" class="dropdown-item fw-bold">popular</a></li>
+          <li><a href="?by=view" class="dropdown-item fw-bold">most viewed</a></li>
         </ul> 
       </div>
       <?php if (count($history) > 0) { ?>

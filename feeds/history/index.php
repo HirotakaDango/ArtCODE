@@ -54,6 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_history'])) {
             case 'oldest':
             include "index_asc.php";
             break;
+            case 'popular':
+            include "index_pop.php";
+            break;
+            case 'view':
+            include "index_view.php";
+            break;
           }
         }
         else {
