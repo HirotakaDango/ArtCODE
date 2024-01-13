@@ -2,45 +2,80 @@
 require_once('auth.php');
 
 // Connect to the database
-$db = new SQLite3('database.sqlite');
+$db = new PDO('sqlite:database.sqlite');
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$db->exec("CREATE TABLE IF NOT EXISTS favorites_status (id INTEGER PRIMARY KEY AUTOINCREMENT, status_id INTEGER, email TEXT)");
 
 // Get the email of the current user
 $email = $_SESSION['email'];
 
 // Get the emails of the users that the current user is following
 $following_query = $db->prepare("SELECT following_email FROM following WHERE follower_email = :email");
-$following_query->bindValue(':email', $email, SQLITE3_TEXT);
-$following_result = $following_query->execute();
+$following_query->bindValue(':email', $email, PDO::PARAM_STR);
+$following_query->execute();
 
 // Create an array to store the emails of the users that the current user is following
 $following_emails = array();
-while ($row = $following_result->fetchArray(SQLITE3_ASSOC)) {
+while ($row = $following_query->fetch(PDO::FETCH_ASSOC)) {
   $following_emails[] = $row['following_email'];
 }
 
-// Join the users table and the status table to get the messages from the users that the current user is following
-$status_query = $db->prepare("SELECT users.email, users.artist, users.pic, users.id AS userid, status.message, status.date, status.id FROM users JOIN status ON users.email = status.email WHERE users.email IN (".implode(',', array_fill(0, count($following_emails), '?')).") ORDER BY status.id DESC");
-foreach ($following_emails as $i => $following_email) {
-  $status_query->bindValue($i+1, $following_email, SQLITE3_TEXT);
-}
-$status_result = $status_query->execute();
+// Process any favorite/unfavorite requests
+if (isset($_POST['favorite'])) {
+  $status_id = $_POST['status_id'];
 
-// Create an array to store the messages
-$messages = array();
-while ($row = $status_result->fetchArray(SQLITE3_ASSOC)) {
-  $messages[] = $row;
+  // Check if the status has already been favorited by the current user
+  $stmt = $db->prepare("SELECT COUNT(*) FROM favorites_status WHERE email = :email AND status_id = :status_id");
+  $stmt->bindParam(':email', $_SESSION['email'], PDO::PARAM_STR);
+  $stmt->bindParam(':status_id', $status_id, PDO::PARAM_INT);
+  $stmt->execute();
+  $existing_fav = $stmt->fetchColumn();
+
+  if ($existing_fav == 0) {
+    $stmt = $db->prepare("INSERT INTO favorites_status (email, status_id) VALUES (:email, :status_id)");
+    $stmt->bindParam(':email', $_SESSION['email'], PDO::PARAM_STR);
+    $stmt->bindParam(':status_id', $status_id, PDO::PARAM_INT);
+    $stmt->execute();
+  }
+
+  // Redirect back to the image page
+  $currentURL = $_SERVER['REQUEST_URI'];
+  $redirectURL = $currentURL;
+  header("Location: $redirectURL");
+  exit();
+
+} elseif (isset($_POST['unfavorite'])) {
+  $status_id = $_POST['status_id'];
+  $stmt = $db->prepare("DELETE FROM favorites_status WHERE email = :email AND status_id = :status_id");
+  $stmt->bindParam(':email', $_SESSION['email'], PDO::PARAM_STR);
+  $stmt->bindParam(':status_id', $status_id, PDO::PARAM_INT);
+  $stmt->execute();
+
+  // Redirect back to the image page
+  $currentURL = $_SERVER['REQUEST_URI'];
+  $redirectURL = $currentURL;
+  header("Location: $redirectURL");
+  exit();
 }
 
 // Handle the delete button
 if(isset($_POST['delete'])) {
   $id = $_POST['id'];
   $delete_query = $db->prepare("DELETE FROM status WHERE id = :id AND email = :email");
-  $delete_query->bindValue(':id', $id, SQLITE3_INTEGER);
-  $delete_query->bindValue(':email', $email, SQLITE3_TEXT);
-  $delete_query->execute();
+  $delete_query->bindValue(':id', $id, PDO::PARAM_INT);
+  $delete_query->bindValue(':email', $email, PDO::PARAM_STR);
 
-  // Refresh the page after deleting the message
-  header('Location: ' . $_SERVER['PHP_SELF']);
+  if (!$delete_query->execute()) {
+    // Handle the error, you can output or log the error message
+    die("Error executing delete query: " . implode(" ", $delete_query->errorInfo()));
+  }
+
+  // Redirect back to the image page
+  $currentURL = $_SERVER['REQUEST_URI'];
+  $redirectURL = $currentURL;
+  header("Location: $redirectURL");
+  exit();
 }
 ?>
 
@@ -55,75 +90,42 @@ if(isset($_POST['delete'])) {
   </head>
   <body>
     <?php include('header.php'); ?>
-    <div class="container mt-2">
-    <a href="status_send.php" type="button" class="btn btn-primary w-100 fw-bold mb-3"><i class="bi bi-send-fill"></i> write something</a>
-    <div class="messages">
-      <?php foreach ($messages as $message): ?>
-        <div class="card mb-1 rounded-4 shadow border-0">
-          <div class="card-header rounded-top-4 border-0 fw-bold">
-            <img class="rounded-circle object-fit-cover" src="<?php echo !empty($message['pic']) ? $message['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-            <a class="text-dark text-decoration-none fw-medium link-body-emphasis" href="artist.php?id=<?php echo $message['userid'];?>" target="_blank"><small>@<?php echo (mb_strlen($message['artist']) > 15) ? mb_substr($message['artist'], 0, 15) . '...' : $message['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo date('Y/m/d', strtotime($message['date'])); ?></small></small>
-          </div>
-          <div class="card-body position-relative">
-            <div class="fw-medium">
-              <?php
-                if (!function_exists('getYouTubeVideoId')) {
-                  function getYouTubeVideoId($urlComment)
-                  {
-                    $videoId = '';
-                    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
-                    if (preg_match($pattern, $urlComment, $matches)) {
-                      $videoId = $matches[1];
-                    }
-                    return $videoId;
-                  }
-                }
-
-                $commentText = isset($message['message']) ? $message['message'] : '';
-
-                if (!empty($commentText)) {
-                  $paragraphs = explode("\n", $commentText);
-
-                  foreach ($paragraphs as $index => $paragraph) {
-                    $messageTextWithoutTags = strip_tags($paragraph);
-                    $pattern = '/\bhttps?:\/\/\S+/i';
-
-                    $formattedText = preg_replace_callback($pattern, function ($matches) {
-                      $urlComment = htmlspecialchars($matches[0]);
-
-                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
-                        return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
-                      } elseif (strpos($urlComment, 'youtube.com') !== false) {
-                        $videoId = getYouTubeVideoId($urlComment);
-                        if ($videoId) {
-                          $thumbnailUrl = 'https://img.youtube.com/vi/' . $videoId . '/default.jpg';
-                          return '<div class="w-100 overflow-hidden position-relative ratio ratio-16x9"><iframe loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="rounded-4 position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 border-0 shadow" src="https://www.youtube.com/embed/' . $videoId . '" frameborder="0" allowfullscreen></iframe></div>';
-                        } else {
-                          return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
-                        }
-                      } else {
-                        return '<a href="' . $urlComment . '">' . $urlComment . '</a>';
-                      }
-                    }, $messageTextWithoutTags);
-                
-                    echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedText</p>";
-                  }
-                } else {
-                  echo "Sorry, no text...";
-                }
-              ?>
-            </div>
-            <?php if ($message['email'] == $email): ?>
-              <form method="post" action="">
-                <input type="hidden" name="id" value="<?php echo $message['id']; ?>">
-                <button type="submit" name="delete" class="btn btn-outline-dark border-0 btn-sm position-absolute top-0 end-0 m-2" onclick="return confirm('Are you sure?')"><i class="bi bi-trash"></i></button>
-              </form>
-            <?php endif; ?>
-          </div>
-        </div>
-      <?php endforeach; ?>
-    </div>
-    <div class="mt-5"></div>
+    <div class="dropdown container mt-2">
+      <a href="status_send.php" type="button" class="btn btn-primary w-100 fw-bold mb-2"><i class="bi bi-send-fill"></i> write something</a>
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=top" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">most liked</a></li>
+        <li><a href="?by=least" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least liked</a></li>
+      </ul> 
+    </div> 
+        <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
+ 
+          switch ($sort) {
+            case 'newest':
+            include "status_desc.php";
+            break;
+            case 'oldest':
+            include "status_asc.php";
+            break;
+            case 'top':
+            include "status_top.php";
+            break;
+            case 'least':
+            include "status_least.php";
+            break;
+          }
+        }
+        else {
+          include "status_desc.php";
+        }
+        
+        ?>
     <?php include('bootstrapjs.php'); ?>
   </body>
 </html>
