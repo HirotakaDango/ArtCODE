@@ -13,6 +13,6 @@
               </div>
             </div>
 
-            <?php include($_SERVER['DOCUMENT_ROOT'] . '/feeds/explores/card_image_feeds.php'); ?>
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/session/models/card_image_session.php'); ?>
 
           </div>

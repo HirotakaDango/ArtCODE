@@ -70,7 +70,7 @@ $result = $stmt->execute();
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "../icon/bg.png";
+      const defaultPlaceholder = "../../icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {

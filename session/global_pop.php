@@ -22,7 +22,7 @@ $result = $stmt->execute();
               $id = $user['id'];
             }
           ?>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/feeds/explores/card_explores.php'); ?>
+          <?php include($_SERVER['DOCUMENT_ROOT'] . '/session/card_global.php'); ?>
         <?php endwhile; ?>
       </div>
     </div>
@@ -69,7 +69,7 @@ $result = $stmt->execute();
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "../../icon/bg.png";
+      const defaultPlaceholder = "../icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {

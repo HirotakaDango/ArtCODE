@@ -1,30 +1,22 @@
 <?php
-// Get images from the database using parameterized query
-$stmt = $db->prepare("SELECT images.*, users.email FROM images INNER JOIN users ON images.email = users.email ORDER BY images.id DESC LIMIT :limit OFFSET :offset");
-$stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
+// Get the images for the current page and specified episode with non-empty episode names
+$stmt = $db->prepare("
+    SELECT images.*, users.artist, users.id AS userid, users.pic
+    FROM images
+    JOIN users ON images.email = users.email
+    WHERE images.episode_name = :episodeName AND images.episode_name != ''
+    ORDER BY images.id ASC
+    LIMIT :offset, :limit
+");
+$stmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+$stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
-    <div class="container-fluid">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-1">
-        <?php while ($image = $result->fetchArray()): ?>
-          <?php
-            $title = $image['title'];
-            $filename = $image['filename'];
-            $email = $image['email'];
-            $artist = '';
-            $stmt = $db->prepare("SELECT id, artist FROM users WHERE email = ?");
-            $stmt->bindValue(1, $email, SQLITE3_TEXT);
-            $result2 = $stmt->execute();
-            if ($user = $result2->fetchArray()) {
-              $artist = $user['artist'];
-              $id = $user['id'];
-            }
-          ?>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/session/card_global.php'); ?>
-        <?php endwhile; ?>
-      </div>
+      <?php while ($image = $result->fetchArray()): ?>
+        <?php include('episode_card.php'); ?>
+      <?php endwhile; ?>
     </div>
     <?php
       $totalPages = ceil($total / $limit);
@@ -33,11 +25,11 @@ $result = $stmt->execute();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&episode=<?php echo $episodeName; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&episode=<?php echo $episodeName; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -50,20 +42,25 @@ $result = $stmt->execute();
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&episode=' . $episodeName . '&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&episode=<?php echo $episodeName; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=newest&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&episode=<?php echo $episodeName; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>
+    <style>
+      .img-size {
+        border-radius: 13px 0 0 13px;
+      }
+    </style>
     <script>
       let lazyloadImages = document.querySelectorAll(".lazy-load");
       let imageContainer = document.getElementById("image-container");
@@ -86,25 +83,8 @@ $result = $stmt->execute();
           image.src = defaultPlaceholder; // Apply default placeholder
           imageObserver.observe(image);
           image.style.filter = "blur(5px)"; // Apply initial blur to all images
-
-          // Remove blur and apply custom blur to NSFW images after they load
           image.addEventListener("load", function() {
-            image.style.filter = ""; // Remove initial blur
-            if (image.classList.contains("nsfw")) {
-              image.style.filter = "blur(4px)"; // Apply blur to NSFW images
-          
-              // Add overlay with icon and text
-              let overlay = document.createElement("div");
-              overlay.classList.add("overlay", "rounded-custom");
-              let icon = document.createElement("i");
-              icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
-              overlay.appendChild(icon);
-              let text = document.createElement("span");
-              text.textContent = "R-18";
-              text.classList.add("shadowed-text", "fw-bold", "text-white");
-              overlay.appendChild(text);
-              image.parentNode.appendChild(overlay);
-            }
+            image.style.filter = "none"; // Remove blur after image loads
           });
         });
       } else {
@@ -167,15 +147,4 @@ $result = $stmt->execute();
 
       // Initial loading
       loadMoreImages();
-    </script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('../../sw.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
     </script>
