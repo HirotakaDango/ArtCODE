@@ -93,6 +93,18 @@ if ($row) {
   <body>
     <?php include('../header.php'); ?>
     <?php include '../popular-content.php'; ?>
+    <div class="dropdown">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+        <li><a href="?by=top" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top images</a></li>
+      </ul> 
+    </div> 
     <?php include '../contents/home/tags_group.php'; ?>
         <?php 
         if(isset($_GET['by'])){
@@ -110,6 +122,9 @@ if ($row) {
             break;
             case 'view':
             include "index_view.php";
+            break;
+            case 'top':
+            include "top.php";
             break;
           }
         }

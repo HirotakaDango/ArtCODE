@@ -12,11 +12,11 @@
           <?php if (empty($child_images)) : ?>
             <div class="w-100 h-100">
               <div class="d-flex justify-content-center vh-100">
-                <img src="../../images/<?php echo $image['filename']; ?>" class="mb-1 object-fit-contain" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
+                <img src="../../images/<?php echo $image['filename']; ?>" class="object-fit-contain w-100 h-100" alt="<?php echo $image['title']; ?>">
               </div>
             </div>
           <?php else : ?>
-            <img src="../../images/<?php echo $image['filename']; ?>" class="mb-1" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
+            <img src="../../images/<?php echo $image['filename']; ?>" class="w-100 h-100" alt="<?php echo $image['title']; ?>">
           <?php endif; ?>
         <?php endif; ?>
         <?php foreach ($child_images as $child_image) : ?>
@@ -28,7 +28,7 @@
               </div>
             </div>
           <?php else : ?>
-            <img src="../../images/<?php echo $child_image['filename']; ?>" class="mb-1" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
+            <img src="../../images/<?php echo $child_image['filename']; ?>" class="mt-1 w-100 h-100" alt="<?php echo $image['title']; ?>">
           <?php endif; ?>
         <?php endforeach; ?>
         <?php
@@ -256,7 +256,9 @@
             </form>
           </div>
         </div>
-        <button class="btn btn-sm btn-outline-light rounded-pill ms-2 fw-bold" onclick="window.location.href='?by=horizontal&artworkid=<?php echo $image['id']; ?>'">horizontal</button>
+        <main id="swup" class="transition-main">
+          <button class="btn btn-sm btn-outline-light rounded-pill ms-2 fw-bold" onclick="window.location.href='?by=horizontal&artworkid=<?php echo $image['id']; ?>'">horizontal</button>
+        </main>
       </div>
       <div class="w-100 fixed-bottom" style="background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));">
         <div class="container pt-3 d-flex justify-content-center">
@@ -350,8 +352,8 @@
       }
       
       .my-6 {
-        margin-top: 100px;
-        margin-bottom: 100px;
+        margin-top: 150px;
+        margin-bottom: 150px;
       }
 
       body {

@@ -12,12 +12,12 @@
           <?php if (empty($child_images)) : ?>
             <div class="w-100 h-100">
               <div class="d-flex justify-content-center vh-100">
-                <img src="../../images/<?php echo $image['filename']; ?>" class="mb-1 object-fit-contain" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
+                <img src="../../images/<?php echo $image['filename']; ?>" class="w-100 h-100 object-fit-contain" alt="<?php echo $image['title']; ?>">
               </div>
             </div>
           <?php else : ?>
             <div class="image-container">
-              <img src="../../images/<?php echo $image['filename']; ?>" class="mb-1" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
+              <img src="../../images/<?php echo $image['filename']; ?>" class="w-100 h-100" alt="<?php echo $image['title']; ?>">
             </div>
           <?php endif; ?>
         <?php endif; ?>
@@ -31,7 +31,7 @@
             </div>
           <?php else : ?>
             <div class="image-container">
-              <img src="../../images/<?php echo $child_image['filename']; ?>" class="mb-1" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
+              <img src="../../images/<?php echo $child_image['filename']; ?>" class="w-100 h-100" alt="<?php echo $image['title']; ?>">
             </div>
           <?php endif; ?>
         <?php endforeach; ?>
@@ -260,7 +260,9 @@
             </form>
           </div>
         </div>
-        <button class="btn btn-sm btn-outline-light rounded-pill ms-2 fw-bold" onclick="window.location.href='?by=vertical&artworkid=<?php echo $image['id']; ?>'">vertical</button>
+        <main id="swup" class="transition-main">
+          <button class="btn btn-sm btn-outline-light rounded-pill ms-2 fw-bold" onclick="window.location.href='?by=vertical&artworkid=<?php echo $image['id']; ?>'">vertical</button>
+        </main>
       </div>
       <div class="w-100 fixed-bottom" style="background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));">
         <div class="container pt-3 d-flex justify-content-center">
@@ -351,11 +353,6 @@
       
       .text-stroke-3 {
         -webkit-text-stroke: 3px;
-      }
-      
-      .my-6 {
-        margin-top: 100px;
-        margin-bottom: 100px;
       }
 
       body {
@@ -455,13 +452,13 @@
       option1Button.style.display = 'none'; // Hide option1 by default
 
       option1Button.addEventListener('click', function () {
-        contentDiv.classList.remove('container-sm', 'my-6', 'w-75');
+        contentDiv.classList.remove('container-sm', 'w-75');
         option1Button.style.display = 'none'; // Hide option1
         option2Button.style.display = 'block'; // Show option2
       });
 
       option2Button.addEventListener('click', function () {
-        contentDiv.classList.add('container-sm', 'my-6', 'w-75');
+        contentDiv.classList.add('container-sm', 'w-75');
         option1Button.style.display = 'block'; // Show option1
         option2Button.style.display = 'none'; // Hide option2
       });
