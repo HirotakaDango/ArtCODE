@@ -44,8 +44,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS chapter (id INTEGER PRIMARY KEY AUTOINCREM
   </head>
   <body>
     <?php include('header.php'); ?>
-    <br>
-    <div class="dropdown mt-5">
+    <div class="dropdown mt-3">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>

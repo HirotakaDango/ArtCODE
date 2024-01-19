@@ -131,32 +131,32 @@ $db->close();
           <div class="d-flex align-items-center justify-content-center">
             <div class="container mt-4 pt-3 p-md-5 mt-md-5">
               <div class="mb-3 row">
-                <label for="imageCount" class="col-4 col-form-label text-nowrap fw-medium">Number of Images</label>
-                <div class="col-8">
+                <label for="imageCount" class="col-6 form-label text-nowrap fw-medium">Images</label>
+                <div class="col-6">
                   <input type="text" class="form-control-plaintext fw-bold" id="imageCount" value=": <?php echo $total_count; ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="tagCount" class="col-4 col-form-label text-nowrap fw-medium">Number of Tags</label>
-                <div class="col-8">
+                <label for="tagCount" class="col-6 form-label text-nowrap fw-medium">Tags</label>
+                <div class="col-6">
                   <input type="text" class="form-control-plaintext fw-bold" id="tagCount" value=": <?php echo $tag_count; ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="musicCount" class="col-4 col-form-label text-nowrap fw-medium">Number of Songs</label>
-                <div class="col-8">
+                <label for="musicCount" class="col-6 form-label text-nowrap fw-medium">Songs</label>
+                <div class="col-6">
                   <input type="text" class="form-control-plaintext fw-bold" id="musicCount" value=": <?php echo $count_music; ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="videoCount" class="col-4 col-form-label text-nowrap fw-medium">Number of Videos</label>
-                <div class="col-8">
+                <label for="videoCount" class="col-6 form-label text-nowrap fw-medium">Videos</label>
+                <div class="col-6">
                   <input type="text" class="form-control-plaintext fw-bold" id="videoCount" value=": <?php echo $count_videos; ?>" readonly>
                 </div>
               </div>
               <div class="mb-3 row">
-                <label for="totalSize" class="col-4 col-form-label text-nowrap fw-medium">Total Size</label>
-                <div class="col-8">
+                <label for="totalSize" class="col-6 form-label text-nowrap fw-medium">Total Size</label>
+                <div class="col-6">
                   <input type="text" class="form-control-plaintext fw-bold" id="totalSize" value=": <?php echo $total_size_mb; ?> MB" readonly>
                 </div>
               </div>
