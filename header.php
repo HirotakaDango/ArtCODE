@@ -375,8 +375,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
           <div class="d-flex position-relative">
-            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Notes</h6>
-            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+            <h6 class="fw-bold text-start me-auto ms-3 mt-3">Novel</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto me-1" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
           <div class="modal-body">
             <div class="card-body">
@@ -396,8 +396,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
           <div class="d-flex position-relative">
-            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Music</h6>
-            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+            <h6 class="fw-bold text-start me-auto ms-3 mt-3">Music</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto me-1" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
           <div class="modal-body">
             <div class="card-body">
@@ -419,8 +419,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
           <div class="d-flex position-relative">
-            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Minutes</h6>
-            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+            <h6 class="fw-bold text-start me-auto ms-3 mt-3">Minutes</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto me-1" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
           <div class="modal-body">
             <div class="card-body">
