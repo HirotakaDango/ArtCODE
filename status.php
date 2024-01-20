@@ -98,8 +98,9 @@ if(isset($_POST['delete'])) {
       <ul class="dropdown-menu">
         <li><a href="?by=newest" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=top" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">most liked</a></li>
-        <li><a href="?by=least" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least liked</a></li>
+        <li><a href="?by=top" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">most likes</a></li>
+        <li><a href="?by=least" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least likes</a></li>
+        <li><a href="?by=liked" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
       </ul> 
     </div> 
         <?php 
@@ -118,6 +119,9 @@ if(isset($_POST['delete'])) {
             break;
             case 'least':
             include "status_least.php";
+            break;
+            case 'liked':
+            include "status_like.php";
             break;
           }
         }

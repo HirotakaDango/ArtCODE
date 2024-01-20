@@ -259,22 +259,22 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             <!-- Desktop -->
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-bold d-none-md-lg">
               <li class="nav-item">
-                <a class="fw-medium nav-center btn btn-sm btn-outline-dark rounded-pill text-nowrap py-0 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'upload/index.php') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
-                  <h6><i class="bi bi-cloud-arrow-up-fill fs-5"></i> uploads</h6>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'active border-bottom border-dark border-3'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+                <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'btn rounded-pill border-0 bg-dark-subtle link-body-emphasis'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
                   Home
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link nav-center py-1 <?php if(basename($_SERVER['PHP_SELF']) == 'forum.php') echo 'active border-bottom border-dark border-3' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/forum.php">
+                <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'upload/index.php') !== false) echo 'btn rounded-pill border-0 bg-dark-subtle link-body-emphasis'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
+                  Uploads
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-center py-1 <?php if(basename($_SERVER['PHP_SELF']) == 'forum.php') echo 'btn rounded-pill border-0 bg-dark-subtle link-body-emphasis' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/forum.php">
                   Forum
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) echo 'active border-bottom border-dark border-3'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
+                <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) echo 'btn rounded-pill border-0 bg-dark-subtle link-body-emphasis'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
                   Notification
                 </a>
               </li>
@@ -285,74 +285,60 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               </li>
               <li class="nav-item">
                 <div class="dropdown-center">
-                  <a class="btn btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-grid-3x3-gap-fill fs-5 text-secondary"></i>
+                  <a class="nav-link nav-center py-1 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false">
+                    More
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 500px;">
-                    <div class="row p-3">
-                      <div class="col-6">
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/tags.php">
-                            <i class="bi bi-tags-fill fs-5"></i>
-                            <span class="d-lg-inline ms-2">Tags</span>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notes/') !== false) echo 'active'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseNotes">
-                            <i class="bi bi-journal-text fs-5"></i>
-                            <span class="d-lg-inline ms-2">Notes</span>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/music/') !== false) echo 'active'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseMusic">
-                            <i class="bi bi-vinyl-fill fs-5"></i>
-                            <span class="d-lg-inline ms-2">Music</span>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'status.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/status.php">
-                            <i class="bi bi-card-text fs-5"></i>
-                            <span class="d-lg-inline ms-2">Status</span>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'news.php') echo 'active' ?>" href="news.php">
-                            <i class="bi bi-newspaper fs-5"></i>
-                            <span class="d-lg-inline ms-2">News</span>
-                          </a>
-                        </li>
+                    <div class="container-fluid px-3 overflow-auto">
+                      <div class="btn-group gap-2 w-100 mt-2">
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notes/') !== false) echo 'opacity-75 shadow'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseNotes">
+                          <i class="bi bi-journal-text fs-5"></i>
+                          <span class="d-lg-inline">Notes</span>
+                        </a>
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/novel/') !== false) echo 'opacity-75 shadow'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseNovel">
+                          <i class="bi bi-book-half fs-5"></i>
+                          <span class="d-lg-inline">Novel</span>
+                        </a>
                       </div>
-                      <div class="col-6">
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'users.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/users.php">
-                            <i class="bi bi-people-fill fs-5"></i>
-                            <span class="d-lg-inline ms-2">Users</span>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/novel/') !== false) echo 'active'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseNovel">
-                            <i class="bi bi-book-half fs-5"></i>
-                            <span class="d-lg-inline ms-2">Novel</span>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/minutes/') !== false) echo 'active'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseMinutes">
-                            <i class="bi bi-person-video2 fs-5"></i>
-                            <span class="d-lg-inline ms-2">Minutes</span>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/explores/') !== false) echo 'active'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/explores/">
-                            <i class="bi bi-compass-fill fs-5"></i>
-                            <span class="d-lg-inline ms-2">Explore</span>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link nav-center <?php if(basename($_SERVER['PHP_SELF']) == 'support.php') echo 'active' ?>" href="support.php">
-                            <i class="bi bi-headset fs-5"></i>
-                            <span class="d-lg-inline ms-2">Support</span>
-                          </a>
-                        </li>
+                      <div class="btn-group gap-2 w-100 mt-2">
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/music/') !== false) echo 'opacity-75 shadow'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseMusic">
+                          <i class="bi bi-vinyl-fill fs-5"></i>
+                          <span class="d-lg-inline">Music</span>
+                        </a>
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/minutes/') !== false) echo 'opacity-75 shadow'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseMinutes">
+                          <i class="bi bi-person-video2 fs-5"></i>
+                          <span class="d-lg-inline">Minutes</span>
+                        </a>
+                      </div>
+                      <div class="btn-group gap-2 w-100 mt-2">
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if(basename($_SERVER['PHP_SELF']) == 'status.php') echo 'opacity-75 shadow' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/status.php">
+                          <i class="bi bi-card-text fs-5"></i>
+                          <span class="d-lg-inline">Status</span>
+                        </a>
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'opacity-75 shadow' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/tags.php">
+                          <i class="bi bi-tags-fill fs-5"></i>
+                          <span class="d-lg-inline">Tags</span>
+                        </a>
+                      </div>
+                      <div class="btn-group gap-2 w-100 mt-2">
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/explores/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/explores/">
+                          <i class="bi bi-compass-fill fs-5"></i>
+                          <span class="d-lg-inline">Explore</span>
+                        </a>
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if(basename($_SERVER['PHP_SELF']) == 'users.php') echo 'opacity-75 shadow' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/users.php">
+                          <i class="bi bi-people-fill fs-5"></i>
+                          <span class="d-lg-inline">Users</span>
+                        </a>
+                      </div>
+                      <div class="btn-group gap-2 w-100 my-2">
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if(basename($_SERVER['PHP_SELF']) == 'news.php') echo 'opacity-75 shadow' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/news.php">
+                          <i class="bi bi-newspaper fs-5"></i>
+                          <span class="d-lg-inline">News</span>
+                        </a>
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if(basename($_SERVER['PHP_SELF']) == 'support.php') echo 'opacity-75 shadow' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/support.php">
+                          <i class="bi bi-headset fs-5"></i>
+                          <span class="d-lg-inline">Support</span>
+                        </a>
                       </div>
                     </div>
                   </ul>
@@ -369,9 +355,9 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     <div class="modal fade" id="modalCollapseNotes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
-          <div class="d-flex">
-            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Notes</h6>
-            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+          <div class="d-flex position-relative">
+            <h6 class="fw-bold text-start me-auto ms-3 mt-3">Notes</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto me-1" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
           <div class="modal-body">
             <div class="card-body">
@@ -388,8 +374,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     <div class="modal fade" id="modalCollapseNovel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
-          <div class="d-flex">
-            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Novel</h6>
+          <div class="d-flex position-relative">
+            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Notes</h6>
             <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
           <div class="modal-body">
@@ -409,7 +395,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     <div class="modal fade" id="modalCollapseMusic" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
-          <div class="d-flex">
+          <div class="d-flex position-relative">
             <h6 class="fw-bold text-start me-auto ms-3 mt-2">Music</h6>
             <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
@@ -432,7 +418,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     <div class="modal fade" id="modalCollapseMinutes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
-          <div class="d-flex">
+          <div class="d-flex position-relative">
             <h6 class="fw-bold text-start me-auto ms-3 mt-2">Minutes</h6>
             <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
@@ -583,6 +569,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         .d-none-md-lg {
           display: none;
         }
+        
         .navbar-brand {
           position: static;
           display: block;

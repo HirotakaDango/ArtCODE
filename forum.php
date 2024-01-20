@@ -124,7 +124,7 @@ $total_pages = ceil($total_items / $items_per_page);
         }
         
         ?>
-    <nav class="navbar fixed-bottom navbar-expand justify-content-center">
+    <nav class="navbar fixed-bottom navbar-expand justify-content-center z-2">
       <div class="container">
         <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#forum">send your message</button>
       </div>
