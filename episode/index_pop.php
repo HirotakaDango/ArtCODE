@@ -16,9 +16,12 @@ $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
-      <?php while ($image = $result->fetchArray()): ?>
-        <?php include('episode_card.php'); ?>
-      <?php endwhile; ?>
+    <div class="mt-2">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xxl-4 g-1">
+        <?php while ($image = $result->fetchArray()): ?>
+          <?php include('episode_card.php'); ?>
+        <?php endwhile; ?>
+      </div>
     </div>
     <?php
       $totalPages = ceil($total / $limit);

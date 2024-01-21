@@ -16,13 +16,32 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 // Calculate the offset based on the current page number and limit
 $offset = ($page - 1) * $limit;
 
-// Get the total number of images
-$total = $db->querySingle("SELECT COUNT(*) FROM images");
+// Get the total number of images favorited by the user
+$stmtTotal = $db->prepare("
+    SELECT COUNT(images.id) as total
+    FROM images
+    LEFT JOIN favorites ON images.id = favorites.image_id
+    WHERE favorites.email = :email
+");
 
-// Get the images for the current page
-$stmt = $db->prepare("SELECT * FROM images ORDER BY view_count DESC LIMIT ?, ?");
-$stmt->bindValue(1, $offset, SQLITE3_INTEGER);
-$stmt->bindValue(2, $limit, SQLITE3_INTEGER);
+$stmtTotal->bindValue(':email', $email, SQLITE3_TEXT);
+$resultTotal = $stmtTotal->execute();
+$totalRow = $resultTotal->fetchArray(SQLITE3_ASSOC);
+
+$total = $totalRow['total'];
+
+// Get the images favorited by the user for the current page
+$stmt = $db->prepare("
+    SELECT images.*
+    FROM images
+    LEFT JOIN favorites ON images.id = favorites.image_id
+    WHERE favorites.email = :email
+    ORDER BY images.id DESC
+    LIMIT :limit OFFSET :offset
+");
+$stmt->bindValue(':email', $email, SQLITE3_TEXT);
+$stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
+$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
@@ -72,11 +91,11 @@ $result = $stmt->execute();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=liked&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=liked&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -89,17 +108,17 @@ $result = $stmt->execute();
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=liked&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=liked&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=view&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=liked&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>

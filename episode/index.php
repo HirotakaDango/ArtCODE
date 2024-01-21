@@ -68,7 +68,25 @@ $countStmt = $db->prepare("
 $countStmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
 $totalCount = $countStmt->execute()->fetchArray(SQLITE3_ASSOC)['count'];
 
+// Query to get the first image based on episode_name
+$firstImageStmt = $db->prepare("
+    SELECT id
+    FROM images
+    WHERE episode_name = :episodeName AND episode_name != ''
+    ORDER BY id ASC
+    LIMIT 1
+");
 
+$firstImageStmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
+$firstImageResult = $firstImageStmt->execute();
+$firstImage = $firstImageResult->fetchArray(SQLITE3_ASSOC);
+
+// Check if there is a first image for the specified episode
+if ($firstImage) {
+    $firstEpisode = $firstImage['id'];
+} else {
+    $firstEpisode = null;  // or handle accordingly based on your requirements
+}
 ?>
 
 <!DOCTYPE html>
@@ -86,7 +104,12 @@ $totalCount = $countStmt->execute()->fetchArray(SQLITE3_ASSOC)['count'];
       <div class="bg-body-tertiary rounded-4 p-5 w-100 mb-4 shadow position-relative">
         <h5 class="fw-bold text-start">All episodes from <?php echo $episodeName; ?></h5>
         <h6 class="fw-bold text-start"><?php echo $totalCount; ?> artworks</h6>
-        <button class="btn border-0 fw-bold position-absolute end-0 top-0 m-3" onclick="sharePage()"><small><i class="bi bi-share-fill text-stroke"></i> Share</small></button>
+        <button class="btn border-0 fw-bold position-absolute end-0 top-0 m-3 link-body-emphasis" data-bs-toggle="modal" data-bs-target="#shareLink"><small><i class="bi bi-share-fill text-stroke"></i> Share</small></button>
+        <?php if ($firstEpisode !== null): ?>
+          <a class="btn border-0 bg-dark-subtle rounded-pill fw-bold position-absolute end-0 bottom-0 m-3 link-body-emphasis" href="../image.php?artworkid=<?php echo $firstEpisode; ?>">
+            <small>Read first episode</small>
+          </a>
+        <?php endif; ?>
       </div>
       <div class="dropdown">
         <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -97,6 +120,8 @@ $totalCount = $countStmt->execute()->fetchArray(SQLITE3_ASSOC)['count'];
           <li><a href="?by=oldest&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
           <li><a href="?by=popular&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
           <li><a href="?by=view&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+          <li><a href="?by=least&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
+          <li><a href="?by=liked&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
         </ul> 
       </div> 
         <?php 
@@ -116,6 +141,12 @@ $totalCount = $countStmt->execute()->fetchArray(SQLITE3_ASSOC)['count'];
             case 'view':
             include "index_view.php";
             break;
+            case 'least':
+            include "index_least.php";
+            break;
+            case 'liked':
+            include "index_like.php";
+            break;
           }
         }
         else {
@@ -123,6 +154,77 @@ $totalCount = $countStmt->execute()->fetchArray(SQLITE3_ASSOC)['count'];
         }
         
         ?>
+    <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="card rounded-4 p-4">
+            <p class="text-start fw-bold">share to:</p>
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+              <!-- Twitter -->
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-twitter"></i>
+              </a>
+                                
+              <!-- Line -->
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-line"></i>
+              </a>
+                                
+              <!-- Email -->
+              <a class="btn" href="mailto:?body=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>">
+                <i class="bi bi-envelope-fill"></i>
+              </a>
+                                
+              <!-- Reddit -->
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-reddit"></i>
+              </a>
+                                
+              <!-- Instagram -->
+              <a class="btn" href="https://www.instagram.com/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-instagram"></i>
+              </a>
+                                
+              <!-- Facebook -->
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-facebook"></i>
+              </a>
+            </div>
+            <div class="btn-group w-100" role="group" aria-label="Share Buttons">
+              <!-- WhatsApp -->
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+    
+              <!-- Pinterest -->
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-pinterest"></i>
+              </a>
+    
+              <!-- LinkedIn -->
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-linkedin"></i>
+              </a>
+    
+              <!-- Messenger -->
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-messenger"></i>
+              </a>
+    
+              <!-- Telegram -->
+              <a class="btn" href="https://telegram.me/share/url?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-telegram"></i>
+              </a>
+    
+              <!-- Snapchat -->
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . $episodeName); ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-snapchat"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       function sharePage() {
         if (navigator.share) {
