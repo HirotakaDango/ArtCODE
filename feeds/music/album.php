@@ -1,4 +1,4 @@
- object-fit-cover<?php
+<?php
 require_once('auth.php');
 $db = new PDO('sqlite:../../database.sqlite');
 $userEmail = $_SESSION['email'];
