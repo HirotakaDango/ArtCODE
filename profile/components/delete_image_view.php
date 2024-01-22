@@ -1,9 +1,9 @@
 <?php
 // Get the value of the 'by' parameter from the URL
-$by = isset($_GET['by']) ? $_GET['by'] : 'view';
+$by = isset($_GET['by']) ? $_GET['by'] : 'like';
 
 // Check if $tag is set and we are in one of the tagged views
-if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popular'])) {
+if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view', 'tagged_least', 'tagged_liked'])) {
   $url = "../../profile/delete.php?by=$by&tag=$tag&page=$page";
 } else {
   $url = "../../profile/delete.php?by=$by&page=$page";

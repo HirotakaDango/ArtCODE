@@ -1,4 +1,4 @@
-<?php include('header_profile_view.php'); ?>
+<?php include('header_profile_least.php'); ?>
 <?php
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindParam(':email', $email, PDO::PARAM_STR);
@@ -31,7 +31,7 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT * FROM images WHERE email = :email AND tags LIKE :tagPattern ORDER BY view_count DESC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT * FROM images WHERE email = :email AND tags LIKE :tagPattern ORDER BY view_count ASC LIMIT :limit OFFSET :offset");
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':tagPattern', "%$tag%", PDO::PARAM_STR);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -48,7 +48,7 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT * FROM images WHERE email = :email ORDER BY view_count DESC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT * FROM images WHERE email = :email ORDER BY view_count ASC LIMIT :limit OFFSET :offset");
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -114,8 +114,8 @@ if ($stmt->execute()) {
             </div>
           </div>
 
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/delete_tagged_view.php'); ?>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/card_image_view.php'); ?>
+          <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/delete_tagged_desc.php'); ?>
+          <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/card_image_desc.php'); ?>
 
         </div>
       <?php endforeach; ?>
@@ -127,11 +127,11 @@ if ($stmt->execute()) {
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_least&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_least&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -146,17 +146,17 @@ if ($stmt->execute()) {
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_view&' . $tag . 'page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_least&' . $tag . 'page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_least&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=tagged_least&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>
