@@ -178,7 +178,7 @@ $fav_count = $fav_count->fetchColumn();
               </form>
               <span class="me-4"><a class="btn border-0 fw-medium" href="../follower.php?id=<?php echo $id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a></span>
               <span class="me-4"><a class="btn border-0 fw-medium" href="../following.php?id=<?php echo $id; ?>"> <?php echo $num_following ?> <small>Following</small></a></span>
-              <span class="me-4"><button class="btn border-0 fw-medium" onclick="sharePage()"><small>Shares</small></button></span>
+              <span class="me-4"><button class="btn border-0 fw-medium" href="#" data-bs-toggle="modal" data-bs-target="#shareUser"><small>Shares</small></button></span>
             </div>
             
             <p class="mt-4 ms-3 fw-medium">
@@ -322,7 +322,7 @@ $fav_count = $fav_count->fetchColumn();
             </div>
             <div class="btn-group w-100 mt-2">
               <a class="btn border-0 fw-medium text-center w-50" href="../list_favorite.php?id=<?php echo $id; ?>"> <?php echo $fav_count;?> <small> Favorites</small></a>
-              <button class="btn border-0 fw-medium text-center w-50" onclick="sharePage()"><small>Shares</small></button>
+              <button class="btn border-0 fw-medium text-center w-50" href="#" data-bs-toggle="modal" data-bs-target="#shareUser"><small>Shares</small></button>
             </div>
             <p class="mt-4 fw-medium text-break">
               <small>
@@ -457,6 +457,7 @@ $fav_count = $fav_count->fetchColumn();
         
         ?>
     <div class="mt-5"></div>
+    <?php include('share.php'); ?>
     <style>
       .button-group {
         display: flex;

@@ -651,7 +651,7 @@ if (isset($_POST['favorite'])) {
                   $duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
                 ?>
                 <div id="songM_<?php echo $song['id']; ?>" class="d-flex justify-content-between align-items-center rounded-4 bg-dark-subtle bg-opacity-10 my-2 <?php echo ($song['id'] == $row['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
-                  <a class="text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
+                  <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
                     <?php echo $song['title']; ?><br>
                     <small class="text-muted"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small><br>
                     <small class="text-muted">Playtime : <?php echo $duration; ?></small>
@@ -684,7 +684,7 @@ if (isset($_POST['favorite'])) {
                   $duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
                 ?>
                 <div id="song_<?php echo $song['id']; ?>" class="d-flex justify-content-between align-items-center rounded-4 bg-dark-subtle bg-opacity-10 my-2 <?php echo ($song['id'] == $row['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
-                  <a class="text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
+                  <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
                     <?php echo $song['title']; ?><br>
                     <small class="text-muted"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small><br>
                     <small class="text-muted">Playtime : <?php echo $duration; ?></small>
