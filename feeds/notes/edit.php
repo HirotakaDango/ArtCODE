@@ -48,6 +48,23 @@ if (isset($_GET['id'])) {
 } else {
   header('Location: view.php?id=' . $post_id);
 }
+
+$note_query = "
+  SELECT title, id AS note_id, date
+  FROM posts
+  WHERE email = :email
+  ORDER BY note_id DESC
+";
+$stmt = $db->prepare($note_query);
+$stmt->bindParam(':email', $email);
+$stmt->execute();
+$notes = $stmt->fetchAll();
+
+// Retrieve the list of categories associated with the current user's email
+$stmt = $db->prepare('SELECT category_name FROM category WHERE email = :email ORDER BY category_name ASC');
+$stmt->bindParam(':email', $email);
+$stmt->execute();
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -60,90 +77,96 @@ if (isset($_GET['id'])) {
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <main id="swup" class="transition-main">
-    <form method="post">
-      <div class="container-fluid mt-3 mb-5">
-        <div class="d-none d-md-block d-lg-block">
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="height: 65px;">
-              <li class="breadcrumb-item">
-                <a class="link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
-                  <i class="bi bi-house-fill"></i>
-                </a>
-              </li>
-              <li class="breadcrumb-item">
-                <a class="link-body-emphasis fw-semibold text-decoration-none fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notes/">Home</a>
-              </li>
-              <li class="breadcrumb-item">
-                <a class="link-body-emphasis fw-semibold text-decoration-none text-white fw-medium" href="view.php?id=<?php echo $post_id; ?>"><?php echo $post['title']; ?></a>
-              </li>
-              <li class="breadcrumb-item">
-                <a class="link-body-emphasis border-bottom border-3 py-2 fw-semibold text-decoration-none fw-medium" href="edit.php?id=<?php echo $post_id; ?>">Edit <?php echo $post['title']; ?></a>
-              </li>
-              <li class="ms-auto">
-                <div>
-                  <div class="d-flex">
-                    <div class="btn-group me-auto gap-2">
-                      <button class="btn btn-outline-light fw-bold text-nowrap btn-sm rounded" type="submit" name="submit">save changes</button>
-                      <button type="button" class="btn btn-outline-danger fw-bold text-nowrap btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modalDelete">
-                        delete this work
-                      </button>
+    <div class="container-fluid">
+      <div class="row">
+        <?php include('note_list.php'); ?>
+        <div class="col-md-9 vh-100 overflow-y-auto">
+          <form method="post">
+            <div class="mt-3">
+              <div class="d-none d-md-block d-lg-block">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-4" style="height: 65px;">
+                    <li class="ms-auto">
+                      <div>
+                        <div class="d-flex">
+                          <div class="btn-group me-auto gap-2">
+                            <button class="btn btn-outline-light fw-bold text-nowrap btn-sm rounded" type="submit" name="submit">save changes</button>
+                            <button type="button" class="btn btn-outline-danger fw-bold text-nowrap btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modalDelete">
+                              delete this work
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+              <div class="p-3 bg-body-tertiary rounded-3 d-md-none d-lg-none" style="height: 65px;">
+                <div class="d-flex">
+                  <a class="btn btn-outline-light me-auto btn-sm" href="view.php?id=<?php echo $post_id; ?>"><i class="bi bi-arrow-left" style="-webkit-text-stroke: 1px;"></i></a>
+                  <div class="btn-group ms-auto gap-2">
+                    <button class="btn btn-outline-light fw-bold text-nowrap btn-sm rounded" type="submit" name="submit">save changes</button>
+                    <button type="button" class="btn btn-outline-danger fw-bold text-nowrap btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modalDelete">
+                      delete this work
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid my-4">
+              <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content rounded-4">
+                    <div class="modal-header border-bottom-0">
+                      <h1 class="modal-title fs-5">Delete <?php echo $post['title'] ?></h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-0 text-center fw-medium">
+                      <p>Are you sure want to delete <strong><?php echo $post['title'] ?></strong> from your works?</p>
+                      <p class="small">(Warning: You can't restore back after you delete this!)</p>
+                      <div class="btn-group w-100 mb-3 gap-3">
+                        <a class="btn btn-danger px-0 rounded-3 fw-medium" href="delete.php?id=<?php echo $post_id; ?>">delete this!</a>
+                        <button type="button" class="btn btn-secondary px-4 rounded-3 fw-medium" data-bs-dismiss="modal">cancel</button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </li>
-            </ol>
-          </nav>
-        </div>
-        <div class="p-3 bg-body-tertiary rounded-3 d-md-none d-lg-none" style="height: 65px;">
-          <div class="d-flex">
-            <a class="btn btn-outline-light me-auto btn-sm" href="view.php?id=<?php echo $post_id; ?>"><i class="bi bi-arrow-left" style="-webkit-text-stroke: 1px;"></i></a>
-            <div class="btn-group ms-auto gap-2">
-              <button class="btn btn-outline-light fw-bold text-nowrap btn-sm rounded" type="submit" name="submit">save changes</button>
-              <button type="button" class="btn btn-outline-danger fw-bold text-nowrap btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modalDelete">
-                delete this work
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="container-fluid my-4">
-        <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4">
-              <div class="modal-header border-bottom-0">
-                <h1 class="modal-title fs-5">Delete <?php echo $post['title'] ?></h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body py-0 text-center fw-medium">
-                <p>Are you sure want to delete <strong><?php echo $post['title'] ?></strong> from your works?</p>
-                <p class="small">(Warning: You can't restore back after you delete this!)</p>
-                <div class="btn-group w-100 mb-3 gap-3">
-                  <a class="btn btn-danger px-0 rounded-3 fw-medium" href="delete.php?id=<?php echo $post_id; ?>">delete this!</a>
-                  <button type="button" class="btn btn-secondary px-4 rounded-3 fw-medium" data-bs-dismiss="modal">cancel</button>
-                </div>
               </div>
             </div>
+            <input type="hidden" name="post_id" value="<?php echo $post_id ?>">
+            <div class="input-group gap-2 mb-2">
+              <div class="form-floating">
+                <input class="form-control rounded-4 bg-body-tertiary border-0 focus-ring focus-ring-dark" type="text" name="title" placeholder="Enter title" maxlength="100" required value="<?php echo $post['title'] ?>">  
+                <label for="floatingInput" class="fw-bold"><small>Enter title</small></label>
+              </div>
+              <div class="form-floating">
+                <input class="form-control rounded-4 bg-body-tertiary border-0 focus-ring focus-ring-dark" type="text" name="tags" placeholder="Enter genre" maxlength="50" required value="<?php echo $post['tags'] ?>">  
+                <label for="floatingInput" class="fw-bold"><small>Enter genre</small></label>
+              </div>
+            </div>
+            <div class="form-floating mb-2">
+              <select class="form-select rounded-4 bg-body-tertiary border-0 fw-bold focus-ring focus-ring-dark py-0 text-start" name="category">
+                <option class="form-control" value="">Add category:</option>
+                <?php
+                  // Loop through each category and create an option in the dropdown list
+                  foreach ($results as $row) {
+                    $category_name = $row['category_name'];
+                    $id = $row['id'];
+                    $selected = ($category_name == $post['category']) ? 'selected' : '';
+                    echo '<option value="' . htmlspecialchars($category_name) . '" ' . $selected . '>' . htmlspecialchars($category_name) . '</option>';
+                  }
+                ?>
+              </select>
+            </div>
+            <div class="form-floating mb-2">
+              <textarea class="form-control rounded-4 bg-body-tertiary border-0 focus-ring focus-ring-dark vh-100" name="content" oninput="stripHtmlTags(this)" placeholder="Enter content" required><?php echo strip_tags($post['content']) ?></textarea>
+              <label for="floatingInput" class="fw-bold"><small>Enter content</small></label>
+            </div>
+            <br>
           </div>
-        </div>
-        <input type="hidden" name="post_id" value="<?php echo $post_id ?>">
-        <div class="input-group gap-3 mb-2">
-          <div class="form-floating">
-            <input class="form-control border-top-0 border-start-0 border-end-0 rounded-bottom-0 border-3 focus-ring focus-ring-dark" type="text" name="title" placeholder="Enter title" maxlength="100" required value="<?php echo $post['title'] ?>">  
-            <label for="floatingInput" class="fw-bold"><small>Enter title</small></label>
-          </div>
-          <div class="form-floating">
-            <input class="form-control border-top-0 border-start-0 border-end-0 rounded-bottom-0 border-3 focus-ring focus-ring-dark" type="text" name="tags" placeholder="Enter genre" maxlength="50" required value="<?php echo $post['tags'] ?>">  
-            <label for="floatingInput" class="fw-bold"><small>Enter genre</small></label>
-          </div>
-        </div>
-        <div class="form-floating mb-2">
-          <textarea class="form-control rounded border-3 focus-ring focus-ring-dark vh-100" name="content" oninput="stripHtmlTags(this)" placeholder="Enter content" required><?php echo strip_tags($post['content']) ?></textarea>
-          <label for="floatingInput" class="fw-bold"><small>Enter content</small></label>
-        </div>
+        </form>
       </div>
-    </form>
-    </main>
+    </div>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>

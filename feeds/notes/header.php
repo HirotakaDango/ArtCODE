@@ -1,3 +1,23 @@
+<?php
+require_once('auth.php');
+
+$emailHeader = $_SESSION['email'];
+
+$dbHeader = new PDO('sqlite:../../database.sqlite');
+
+// Query to get distinct categories and count of posts for each category based on email
+$category_queryHeader = "
+  SELECT category_name, id AS category_id
+  FROM category
+  WHERE email = :email
+  ORDER BY category_name ASC
+";
+$stmtHeader = $dbHeader->prepare($category_queryHeader);
+$stmtHeader->bindParam(':email', $emailHeader);
+$stmtHeader->execute();
+$categoriesHeader = $stmtHeader->fetchAll();
+?>
+
     <nav class="navbar fixed-top navbar-expand-md navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE (Notes)</a>
@@ -14,6 +34,9 @@
                 <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'upload.php') echo 'active' ?>" href="upload.php">Upload</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'category.php') echo 'active' ?>" href="#" data-bs-toggle="modal" data-bs-target="#categoryModal">Category</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/profile/?by=newest">Profile</a>
               </li>
             </ul>
@@ -27,6 +50,9 @@
                 <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'upload.php') echo 'active' ?>" href="upload.php">Upload</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'category.php') echo 'active' ?>" href="#" data-bs-toggle="modal" data-bs-target="#categoryModal">Category</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/profile/?by=newest">Profile</a>
               </li>
             </div>
@@ -38,4 +64,5 @@
         </div>
       </div>
     </nav>
+    <?php include('categories.php'); ?>
     <br><br>

@@ -1,4 +1,13 @@
 <?php
+require_once('auth.php');
+
+$email = $_SESSION['email'];
+
+$db = new PDO('sqlite:../../database.sqlite');
+
+// get the tag from the URL parameter
+$categoryBy = isset($_GET['q']) ? $_GET['q'] : '';
+
 // Prepare the query to get the user's numpage
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindValue(':email', $email, PDO::PARAM_STR);
@@ -16,23 +25,43 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 // Calculate the offset based on the current page number and limit
 $offset = ($page - 1) * $limit;
 
-// Get the total number of images
-$count_query = "SELECT COUNT(*) FROM posts WHERE email = :email";
+// Get the total number of images for the specified category
+$count_query = "SELECT COUNT(*) FROM posts WHERE email = :email AND category = :category";
 $stmtCount = $db->prepare($count_query);
 $stmtCount->bindParam(':email', $email, PDO::PARAM_STR);
+$stmtCount->bindParam(':category', $categoryBy, PDO::PARAM_STR);
 $stmtCount->execute();
 $total = $stmtCount->fetchColumn();
 
-// Get the images for the current page
-$query = "SELECT * FROM posts WHERE email = :email ORDER BY id DESC LIMIT :offset, :limit";
+// Get the images for the current page for the specified category
+$query = "
+    SELECT *
+    FROM posts
+    WHERE email = :email AND category = :category
+    ORDER BY id DESC
+    LIMIT :offset, :limit
+";
+
 $stmt = $db->prepare($query);
 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+$stmt->bindParam(':category', $categoryBy, PDO::PARAM_STR);
 $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
 $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 $stmt->execute();
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <link rel="icon" type="image/png" href="../../icon/favicon.png">
+    <title>Category: <?php echo $categoryBy; ?></title>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php include('../../bootstrapcss.php'); ?>
+  </head>
+  <body>
+    <?php include('header.php'); ?>
     <?php include('note_card.php'); ?>
     <?php
       $totalPages = ceil($total / $limit);
@@ -72,3 +101,6 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>
+    <?php include('../../bootstrapjs.php'); ?>
+  </body>
+</html>

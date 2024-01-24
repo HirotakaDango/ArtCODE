@@ -33,25 +33,7 @@ $stmt->execute();
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-    <div class="container-fluid my-4">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-4 g-3">
-        <?php foreach ($posts as $post): ?>
-          <div class="col">
-            <a class="content text-decoration-none" href="view.php?id=<?php echo $post['id'] ?>">
-              <div class="card shadow-sm h-100 position-relative">
-                <div class="d-flex justify-content-center align-items-center text-center">
-                  <i class="bi bi-book-half display-1 p-5 text-secondary border-bottom w-100"></i>
-                </div>
-                <h5 class="text-center w-100 p-3"><?php echo $post['title']; ?></h5>
-                <div class="mt-5">
-                  <small class="text-body-secondary position-absolute bottom-0 end-0 m-2 fw-medium"><?php echo $post['date']; ?></small>
-                </div>
-              </div>
-            </a>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
+    <?php include('note_card.php'); ?>
     <?php
       $totalPages = ceil($total / $limit);
       $prevPage = $page - 1;
