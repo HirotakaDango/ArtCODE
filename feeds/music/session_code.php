@@ -40,7 +40,7 @@ if (isset($_POST['login'])) {
       $stmt->execute();
     
       // Redirect the user to the homepage
-      header("Location: ../music/");
+      header("Location: ../music/?mode=grid&by=newest");
       exit;
     } else {
       echo '

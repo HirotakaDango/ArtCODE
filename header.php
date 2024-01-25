@@ -202,7 +202,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <div class="card card-body rounded-4 border-0 bg-body-tertiary">
                     <div class="btn-group-vertical gap-2">
                       <h6 class="fw-bold text-start">Music</h6>
-                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music">Home</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/?mode=grid&by=newest">Home</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/upload.php">Upload</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/favorite.php">Favorites</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_artist.php">Artists</a>
@@ -375,8 +375,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
           <div class="d-flex position-relative">
-            <h6 class="fw-bold text-start me-auto ms-3 mt-3">Novel</h6>
-            <button type="button" class="btn border-0 link-body-emphasis ms-auto me-1" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Notes</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
           <div class="modal-body">
             <div class="card-body">
@@ -396,13 +396,13 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
           <div class="d-flex position-relative">
-            <h6 class="fw-bold text-start me-auto ms-3 mt-3">Music</h6>
-            <button type="button" class="btn border-0 link-body-emphasis ms-auto me-1" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Music</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
           <div class="modal-body">
             <div class="card-body">
               <div class="btn-group-vertical gap-2">
-                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music">Home</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/?mode=grid&by=newest">Home</a>
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/upload.php">Upload</a>
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/favorite.php">Favorites</a>
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_artist.php">Artists</a>
@@ -419,8 +419,8 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-4 border-0">
           <div class="d-flex position-relative">
-            <h6 class="fw-bold text-start me-auto ms-3 mt-3">Minutes</h6>
-            <button type="button" class="btn border-0 link-body-emphasis ms-auto me-1" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Minutes</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
           </div>
           <div class="modal-body">
             <div class="card-body">

@@ -4,11 +4,13 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $recordsPerPage = 20;
 $offset = ($page - 1) * $recordsPerPage;
 
-// Fetch music records with user information, sorted by album name
-$query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id AS userid, users.artist 
+// Fetch music records with user information
+$query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id AS userid, users.artist, COUNT(favorites_music.id) AS favorites_count
           FROM music 
           LEFT JOIN users ON music.email = users.email 
-          ORDER BY music.album ASC, music.id ASC 
+          LEFT JOIN favorites_music ON music.id = favorites_music.music_id
+          GROUP BY music.id
+          ORDER BY favorites_count DESC, music.id DESC
           LIMIT :limit OFFSET :offset";
 
 $stmt = $db->prepare($query);
@@ -40,8 +42,8 @@ $nextPage = $page + 1;
     <div class="container mt-3">
       <div class="pagination d-flex gap-1 justify-content-center mt-3">
         <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=popular&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=popular&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
         <?php endif; ?>
 
         <?php
@@ -54,14 +56,14 @@ $nextPage = $page + 1;
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=popular&page=' . $i . '">' . $i . '</a>';
           }
         }
         ?>
 
         <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=popular&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=popular&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
         <?php endif; ?>
       </div>
     </div>

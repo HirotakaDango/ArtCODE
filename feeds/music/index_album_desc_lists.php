@@ -1,14 +1,14 @@
 <?php
 // Pagination
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-$recordsPerPage = 20;
+$recordsPerPage = 250;
 $offset = ($page - 1) * $recordsPerPage;
 
 // Fetch music records with user information, sorted by album name
 $query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id AS userid, users.artist 
           FROM music 
           LEFT JOIN users ON music.email = users.email 
-          ORDER BY music.album ASC, music.id ASC 
+          ORDER BY music.album DESC, music.id DESC 
           LIMIT :limit OFFSET :offset";
 
 $stmt = $db->prepare($query);
@@ -24,11 +24,9 @@ $nextPage = $page + 1;
 ?>
 
     <div class="container-fluid">
-      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
-        <?php while ($row = $result->fetchArray(SQLITE3_ASSOC)) : ?>
-          <?php include('music_info.php'); ?>
-        <?php endwhile; ?>
-      </div>
+      <?php while ($row = $result->fetchArray(SQLITE3_ASSOC)) : ?>
+        <?php include('music_info_lists.php'); ?>
+      <?php endwhile; ?>
     </div>
     <style>
       .text-shadow {
@@ -40,8 +38,8 @@ $nextPage = $page + 1;
     <div class="container mt-3">
       <div class="pagination d-flex gap-1 justify-content-center mt-3">
         <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=lists&by=albumdesc_lists&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=lists&by=albumdesc_lists&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
         <?php endif; ?>
 
         <?php
@@ -54,15 +52,32 @@ $nextPage = $page + 1;
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?mode=lists&by=albumdesc_lists&page=' . $i . '">' . $i . '</a>';
           }
         }
         ?>
 
         <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?mode=grid&by=albumasc&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=lists&by=albumdesc_lists&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=lists&by=albumdesc_lists&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
         <?php endif; ?>
       </div>
     </div>
     <div class="mt-5"></div>
+    <script>
+      function sharePageS(musicId, songName) {
+        if (navigator.share) {
+          const shareUrl = window.location.origin + '/play.php?id=' + musicId;
+          navigator.share({
+            title: songName,
+            url: shareUrl
+          }).then(() => {
+            console.log('Page shared successfully.');
+          }).catch((error) => {
+            console.error('Error sharing page:', error);
+          });
+        } else {
+          console.log('Web Share API not supported.');
+        }
+      }
+    </script>
