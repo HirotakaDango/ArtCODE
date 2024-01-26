@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Are you sure want to delete <strong><?php echo $row['title'] ?></strong>?</p>
             <p class="small">(Warning: You can't restore back after you delete this!)</p>
             <div class="btn-group w-100 my-3 gap-3">
-              <a class="btn btn-danger px-0 border border-danger-subtle border-3 rounded-4 fw-medium" href="delete.php?id=<?php echo $id; ?>">delete this!</a>
+              <a class="btn btn-danger px-0 border border-danger-subtle border-3 rounded-4 fw-medium" href="delete.php?mode=<?php echo $mode; ?>&by=<?php echo $by; ?>&id=<?php echo $id; ?>">delete this!</a>
               <button type="button" class="btn btn-secondary px-4 border border-3 rounded-4 fw-medium" data-bs-dismiss="modal">cancel</button>
             </div>
           </div>

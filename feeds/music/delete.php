@@ -5,6 +5,8 @@ $email = $_SESSION['email'];
 
 // Get music ID from the query parameters
 $id = $_GET['id'] ?? '';
+$by = $_GET['by'] ?? '';
+$mode = $_GET['mode'] ?? '';
 
 // Fetch music record with user information using JOIN
 $query = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
@@ -52,8 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $removeFavoriteStmt->bindValue(':music_id', $id, SQLITE3_INTEGER);
   $removeFavoriteStmt->execute();
 
-  // Redirect to the home page after the deletion
-  header('Location: profile.php');
-  exit;
+  // Redirect to the home page after the update
+  $mode = isset($_GET['mode']) ? $_GET['mode'] : 'grid';
+  $by = isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists');
+
+  header('Location: ../music/profile.php?mode=' . $mode . '&by=' . $by;
 }
 ?>

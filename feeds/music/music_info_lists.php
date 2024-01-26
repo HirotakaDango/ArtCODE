@@ -9,7 +9,7 @@
       $duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
     ?>
     <div class="d-flex justify-content-between align-items-center rounded-4 bg-dark-subtle bg-opacity-10 my-2">
-      <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=newest_lists&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
+      <a class="hide-scrollbar link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=newest_lists&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
         <?php echo $row['title']; ?><br>
         <small class="text-muted"><?php echo $row['artist']; ?> - <?php echo $row['album']; ?></small><br>
         <small class="text-muted">Playtime : <?php echo $duration; ?></small>
@@ -24,6 +24,16 @@
         </ul>
       </div>
     </div>
+    <style>
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .hide-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+    </style>
     <script>
       function sharePageM(musicId, songName) {
         if (navigator.share) {
