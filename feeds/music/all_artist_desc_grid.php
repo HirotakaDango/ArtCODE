@@ -35,7 +35,7 @@ $nextPage = $page + 1;
                 <img class="w-100 object-fit-cover rounded" height="200" src="../../<?php echo empty($row['pic']) ? '../../icon/profile.svg' : $row['pic']; ?>">
               </a>
               <div class="p-2 position-absolute bottom-0 start-0">
-                <h5 class="card-text fw-bold text-shadow"><a class="text-decoration-none text-white" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&id=<?php echo $row['id']; ?>"><?php echo $row['artist']; ?></a></h5>
+                <h5 class="card-text fw-bold text-shadow"><a class="text-decoration-none text-white" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['id']; ?>"><?php echo $row['artist']; ?></a></h5>
               </div>
             </div>
           </div>

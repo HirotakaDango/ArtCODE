@@ -202,12 +202,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <div class="card card-body rounded-4 border-0 bg-body-tertiary">
                     <div class="btn-group-vertical gap-2">
                       <h6 class="fw-bold text-start">Music</h6>
-                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/?mode=grid&by=newest">Home</a>
-                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/upload.php">Upload</a>
-                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/favorite.php">Favorites</a>
-                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_artist.php">Artists</a>
-                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_album.php">Albums</a>
-                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/profile.php">Profile</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/?mode=lists&by=newest_lists">Home</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/upload.php?mode=lists">Upload</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/favorite.php?mode=lists">Favorites</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_artist.php?mode=lists&by=desc_lists">Artists</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_album.php?mode=lists&by=desc_lists">Albums</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/profile.php?mode=lists&by=newest_lists">Profile</a>
                     </div>
                   </div>
                 </div>
@@ -402,12 +402,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
           <div class="modal-body">
             <div class="card-body">
               <div class="btn-group-vertical gap-2">
-                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/?mode=grid&by=newest">Home</a>
-                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/upload.php">Upload</a>
-                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/favorite.php">Favorites</a>
-                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_artist.php">Artists</a>
-                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_album.php">Albums</a>
-                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/profile.php">Profile</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/?mode=lists&by=newest_lists">Home</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/upload.php?mode=lists">Upload</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/favorite.php?mode=lists">Favorites</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_artist.php?mode=lists&by=desc_lists">Artists</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/all_album.php?mode=lists&by=desc_lists">Albums</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/profile.php?mode=lists&by=newest_lists">Profile</a>
               </div>
             </div>
           </div>

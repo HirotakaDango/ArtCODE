@@ -78,6 +78,9 @@ $num_following = $row['num_following'];
 // Format the numbers
 $formatted_followers = formatNumber($num_followers);
 $formatted_following = formatNumber($num_following);
+
+// Pagination
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
 ?>
 
 <!DOCTYPE html>
@@ -236,17 +239,38 @@ $formatted_following = formatNumber($num_following);
     </div>
     <!-- End of Profile Header -->
     <?php include('header.php'); ?>
-    <div class="dropdown mt-3">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-images"></i> sort by
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'asc') echo 'active'; ?>">ascending</a></li>
-        <li><a href="?by=desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
-      </ul> 
-    </div> 
+    <div class="container-fluid d-flex">
+      <!-- only visible for grid mode -->
+      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest_lists' || $_GET['by'] === 'oldest_lists' || $_GET['by'] === 'popular_lists' || $_GET['by'] === 'asc_lists' || $_GET['by'] === 'desc_lists')) || (strpos($_SERVER['REQUEST_URI'], 'profile_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_pop_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_order_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_order_desc_lists.php') !== false)) ? 'd-none' : ''; ?>">
+        <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-images"></i> sort by
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc') echo 'active'; ?>">ascending</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
+        </ul> 
+      </div>
+      <!-- only visible for lists mode -->
+      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest' || $_GET['by'] === 'oldest' || $_GET['by'] === 'popular' || $_GET['by'] === 'asc' || $_GET['by'] === 'desc')) || (strpos($_SERVER['REQUEST_URI'], 'profile_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_order_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_order_desc.php') !== false)) ? 'd-none' : ''; ?>">
+        <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-images"></i> sort by
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=newest_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest_lists') echo 'active'; ?>">newest</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=oldest_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest_lists') echo 'active'; ?>">oldest</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=popular_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular_lists') echo 'active'; ?>">popular</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=asc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc_lists') echo 'active'; ?>">ascending</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=desc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc_lists') echo 'active'; ?>">descending</a></li>
+        </ul> 
+      </div>
+      <div class="btn-group mt-2 pt-1">
+        <a class="btn border-0 link-body-emphasis" href="?mode=grid&by=<?php echo isset($_GET['by']) ? str_replace('_lists', '', $_GET['by']) : 'newest'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>"><i class="bi bi-grid-fill"></i></a>
+        <a class="btn border-0 link-body-emphasis" href="?mode=lists&by=<?php echo isset($_GET['by']) ? (strpos($_GET['by'], '_lists') === false ? $_GET['by'] . '_lists' : $_GET['by']) : 'desc'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>"><i class="bi bi-view-list"></i></a>
+      </div>
+    </div>
         <?php 
         if(isset($_GET['by'])){
           $sort = $_GET['by'];
@@ -258,11 +282,29 @@ $formatted_following = formatNumber($num_following);
             case 'oldest':
             include "profile_asc.php";
             break;
+            case 'popular':
+            include "profile_pop.php";
+            break;
             case 'desc':
             include "profile_order_desc.php";
             break;
             case 'asc':
             include "profile_order_asc.php";
+            break;
+            case 'newest_lists':
+            include "profile_desc_lists.php";
+            break;
+            case 'oldest_lists':
+            include "profile_asc_lists.php";
+            break;
+            case 'popular_lists':
+            include "profile_pop_lists.php";
+            break;
+            case 'desc_lists':
+            include "profile_order_desc_lists.php";
+            break;
+            case 'asc_lists':
+            include "profile_order_asc_lists.php";
             break;
           }
         }

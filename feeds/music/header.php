@@ -17,13 +17,13 @@
                 <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="favorite.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>">Favorites</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'all_artist.php') echo 'active' ?>" href="all_artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'desc_lists'; ?>">Artists</a>
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'all_artist.php') echo 'active' ?>" href="all_artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'asc' || $_GET['by'] === 'desc') ? $_GET['by'] : 'desc') : (isset($_GET['by']) && ($_GET['by'] === 'asc_lists' || $_GET['by'] === 'desc_lists') ? $_GET['by'] : 'desc_lists'); ?>">Artists</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'all_album.php') echo 'active' ?>" href="all_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'desc_lists'; ?>">Albums</a>
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'all_album.php') echo 'active' ?>" href="all_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'asc' || $_GET['by'] === 'desc') ? $_GET['by'] : 'desc') : (isset($_GET['by']) && ($_GET['by'] === 'asc_lists' || $_GET['by'] === 'desc_lists') ? $_GET['by'] : 'desc_lists'); ?>">Albums</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'active' ?>" href="profile.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>">My Songs</a>
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'active' ?>" href="profile.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>">My Songs</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/profile/?by=newest">Profile</a>
@@ -42,13 +42,13 @@
                 <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="favorite.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>">Favorites</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'all_artist.php') echo 'active' ?>" href="all_artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'desc_lists'; ?>">Artists</a>
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'all_artist.php') echo 'active' ?>" href="all_artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'asc' || $_GET['by'] === 'desc') ? $_GET['by'] : 'desc') : (isset($_GET['by']) && ($_GET['by'] === 'asc_lists' || $_GET['by'] === 'desc_lists') ? $_GET['by'] : 'desc_lists'); ?>">Artists</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'all_album.php') echo 'active' ?>" href="all_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'desc_lists'; ?>">Albums</a>
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'all_album.php') echo 'active' ?>" href="all_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'asc' || $_GET['by'] === 'desc') ? $_GET['by'] : 'desc') : (isset($_GET['by']) && ($_GET['by'] === 'asc_lists' || $_GET['by'] === 'desc_lists') ? $_GET['by'] : 'desc_lists'); ?>">Albums</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'active' ?>" href="profile.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>">My Songs</a>
+                <a class="nav-link fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'active' ?>" href="profile.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>">My Songs</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/profile/?by=newest">Profile</a>
