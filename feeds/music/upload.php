@@ -165,36 +165,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
+    <?php include('header.php'); ?>
     <div class="container-fluid mt-3">
-      <nav aria-label="breadcrumb">
-        <div class="d-none d-md-block d-lg-block">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
-                ArtCODE
-              </a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/?mode=grid&by=newest">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/upload.php">Upload</a>
-            </li>
-          </ol>
-        </div>
-        <div class="d-md-none d-lg-none">
-          <a class="btn bg-body-tertiary p-3 fw-bold w-100 text-start mb-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
-            <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
-          </a>
-          <div class="collapse bg-body-tertiary mb-2 rounded" id="collapseModal">
-            <div class="btn-group-vertical w-100">
-              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">ArtCODE</a>
-              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/?mode=grid&by=newest">Home</a>
-              <a class="btn py-2 rounded text-start fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/upload.php"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Upload</a>
-            </div>
-          </div>
-        </div>
-      </nav>
       <form id="uploadForm" enctype="multipart/form-data" action="upload.php" method="POST">
         <div class="row">
           <div class="col-md-4 mb-2 pe-md-1">

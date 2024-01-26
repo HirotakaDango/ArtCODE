@@ -5,35 +5,6 @@ $email = $_SESSION['email'];
 
 // Pagination
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-$recordsPerPage = 20;
-$offset = ($page - 1) * $recordsPerPage;
-
-// Fetch favorites records
-$query = "SELECT favorites_music.id, favorites_music.music_id, favorites_music.email, music.*, users.id AS userid, users.artist
-          FROM favorites_music
-          JOIN music ON favorites_music.music_id = music.id
-          JOIN users ON music.email = users.email
-          WHERE favorites_music.email = :email
-          ORDER BY favorites_music.id DESC
-          LIMIT :limit OFFSET :offset";
-
-$stmt = $db->prepare($query);
-$stmt->bindValue(':email', $email, SQLITE3_TEXT);
-$stmt->bindValue(':limit', $recordsPerPage, SQLITE3_INTEGER);
-$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
-$result = $stmt->execute();
-
-// Fetch all rows as an associative array
-$rows = [];
-while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-  $rows[] = $row;
-}
-
-// Calculate total pages for the logged-in user
-$total = $db->querySingle("SELECT COUNT(*) FROM favorites_music WHERE email = '$email'");
-$totalPages = ceil($total / $recordsPerPage);
-$prevPage = $page - 1;
-$nextPage = $page + 1;
 ?>
 
 <!DOCTYPE html>
@@ -46,13 +17,33 @@ $nextPage = $page + 1;
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
+    <?php include('header.php'); ?>
     <div class="container-fluid mt-3">
-      <?php include('header.php'); ?>
-      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
-        <?php foreach ($rows as $row): ?>
-          <?php include('music_info.php'); ?>
-        <?php endforeach; ?>
+      <div class="container-fluid d-flex">
+        <div class="btn-group ms-auto">
+          <a class="btn border-0 link-body-emphasis" href="?mode=grid&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>"><i class="bi bi-grid-fill"></i></a>
+          <a class="btn border-0 link-body-emphasis" href="?mode=lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>"><i class="bi bi-view-list"></i></a>
+        </div>
       </div>
+        <?php 
+        if(isset($_GET['mode'])){
+          $sort = $_GET['mode'];
+ 
+          switch ($sort) {
+            // grid layout
+            case 'grid':
+            include "favorite_grid.php";
+            break;
+            case 'lists':
+            include "favorite_lists.php";
+            break;
+          }
+        }
+        else {
+          include "favorite_grid.php";
+        }
+        
+        ?>
     </div>
     <style>
       .text-shadow {
@@ -64,8 +55,8 @@ $nextPage = $page + 1;
     <div class="container mt-3">
       <div class="pagination d-flex gap-1 justify-content-center mt-3">
         <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
         <?php endif; ?>
 
         <?php
@@ -78,14 +69,14 @@ $nextPage = $page + 1;
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&page=' . $i . '">' . $i . '</a>';
           }
         }
         ?>
 
         <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
         <?php endif; ?>
       </div>
     </div>

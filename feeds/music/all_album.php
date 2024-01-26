@@ -5,27 +5,6 @@ $email = $_SESSION['email'];
 
 // Pagination
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-$recordsPerPage = 20;
-$offset = ($page - 1) * $recordsPerPage;
-
-// Fetch distinct albums and the cover of the first song for each album
-$query = "SELECT MIN(music.id) AS id, music.file, music.email, music.cover, music.album, music.title, users.id AS userid, users.artist 
-          FROM music 
-          LEFT JOIN users ON music.email = users.email 
-          GROUP BY music.album
-          ORDER BY id DESC 
-          LIMIT :limit OFFSET :offset";
-
-$stmt = $db->prepare($query);
-$stmt->bindValue(':limit', $recordsPerPage, SQLITE3_INTEGER);
-$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
-$result = $stmt->execute();
-
-// Calculate total pages
-$total = $db->querySingle("SELECT COUNT(DISTINCT album) FROM music");
-$totalPages = ceil($total / $recordsPerPage);
-$prevPage = $page - 1;
-$nextPage = $page + 1;
 ?>
 
 <!DOCTYPE html>
@@ -38,32 +17,66 @@ $nextPage = $page + 1;
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container-fluid mt-3">
-      <?php include('header.php'); ?>
-      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
-        <?php while ($row = $result->fetchArray(SQLITE3_ASSOC)) : ?>
-          <div class="col">
-            <div class="card shadow-sm h-100 position-relative rounded-3">
-              <a class="shadow position-relative btn p-0" href="album.php?album=<?php echo $row['album']; ?>">
-                <img class="w-100 object-fit-cover rounded" height="200" src="covers/<?php echo $row['cover']; ?>">
-                <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
-              </a>
-              <div class="p-2 position-absolute bottom-0 start-0">
-                <h5 class="card-text text-center fw-bold text-shadow"><a class="text-decoration-none text-white" href="album.php?album=<?php echo $row['album']; ?>"><?php echo (!is_null($row['album']) && strlen($row['album']) > 15) ? substr($row['album'], 0, 15) . '...' : $row['title']; ?></a></h5>
-                <p class="card-text small fw-bold text-shadow text-shadow"><small>by <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><?php echo (!is_null($row['artist']) && strlen($row['artist']) > 15) ? substr($row['artist'], 0, 15) . '...' : $row['artist']; ?></a></small></p>
-              </div>
-            </div>
-          </div>
-        <?php endwhile; ?>
+    <?php include('header.php'); ?>
+    <div class="container-fluid d-flex">
+      <!-- only visible for grid mode -->
+      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'desc_lists' || $_GET['by'] === 'asc_lists')) || (strpos($_SERVER['REQUEST_URI'], 'all_album_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_asc_lists.php') !== false)) ? 'd-none' : ''; ?>">
+        <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-images"></i> sort by
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="?by=desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
+          <li><a href="?by=asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc') echo 'active'; ?>">ascending</a></li>
+        </ul> 
       </div>
+      <!-- only visible for lists mode -->
+      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'desc' || $_GET['by'] === 'asc')) || (strpos($_SERVER['REQUEST_URI'], 'all_album_desc_grid.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_asc_grid.php') !== false)) ? 'd-none' : ''; ?>">
+        <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-images"></i> sort by
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="?by=desc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'desc_lists') echo 'active'; ?>">descending</a></li>
+          <li><a href="?by=asc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc_lists') echo 'active'; ?>">ascending</a></li>
+        </ul> 
+      </div>
+      <div class="btn-group mt-2 pt-1">
+        <a class="btn border-0 link-body-emphasis" href="?mode=grid&by=<?php echo isset($_GET['by']) ? str_replace('_lists', '', $_GET['by']) : 'desc'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>"><i class="bi bi-grid-fill"></i></a>
+        <a class="btn border-0 link-body-emphasis" href="?mode=lists&by=<?php echo isset($_GET['by']) ? (strpos($_GET['by'], '_lists') === false ? $_GET['by'] . '_lists' : $_GET['by']) : 'desc'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>"><i class="bi bi-view-list"></i></a>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
+ 
+          switch ($sort) {
+            case 'asc':
+            include "all_album_asc_grid.php";
+            break;
+            case 'asc_lists':
+            include "all_album_asc_lists.php";
+            break;
+            case 'desc':
+            include "all_album_desc_grid.php";
+            break;
+            case 'desc_lists':
+            include "all_album_desc_lists.php";
+            break;
+          }
+        }
+        else {
+          include "all_album_desc_grid.php";
+        }
+        
+      ?>
     </div>
 
     <!-- Pagination -->
     <div class="container mt-3">
       <div class="pagination d-flex gap-1 justify-content-center mt-3">
         <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'grid'; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'grid'; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
         <?php endif; ?>
 
         <?php
@@ -76,14 +89,14 @@ $nextPage = $page + 1;
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&page=' . $i . '">' . $i . '</a>';
           }
         }
         ?>
 
         <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'grid'; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'grid'; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
         <?php endif; ?>
       </div>
     </div>

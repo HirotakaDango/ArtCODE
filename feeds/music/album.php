@@ -35,11 +35,17 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // Fetch all rows for shuffling
-$stmt->execute();  // No need to assign to $result again
-$rowsForShuffle = [];
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  $rowsForShuffle[] = $row;
-}
+$stmt->execute();
+$rowsForShuffle = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Shuffle the array
+shuffle($rowsForShuffle);
+
+// Get the first row ID
+$firstSongId = isset($rowsForShuffle[0]['id']) ? $rowsForShuffle[0]['id'] : '';
+
+// Get the shuffled ID
+$shuffledId = isset($rowsForShuffle[1]['id']) ? $rowsForShuffle[1]['id'] : '';
 
 // Check if there are any rows
 if (!empty($rows)) {
@@ -254,19 +260,38 @@ if (isset($_POST['follow'])) {
                 <p class="fw-medium mt-3 d-md-none d-lg-none">Artist: <a class="text-decoration-none text-white" data-bs-toggle="modal" data-bs-target="#profileModal"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
                 <p class="fw-medium mt-3">Total Tracks in Album: <?php echo $albumTrackCount; ?> songs</p>
                 <div class="btn-group gap-2">
-                  <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
-                  <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?album=<?php echo $album; ?>&id=<?php echo $shuffledId; ?>"><i class="bi bi-shuffle"></i> shuffle</a>
+                  <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
+                  <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $album; ?>&id=<?php echo $shuffledId; ?>"><i class="bi bi-shuffle"></i> shuffle</a>
                 </div>
               </div>
             </div>
           </div>
           <hr>
           <div class="mt-3">
-            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
-              <?php foreach ($rows as $row): ?>
-                <?php include('music_info.php'); ?>
-              <?php endforeach; ?>
+            <div class="container-fluid d-flex">
+              <div class="btn-group ms-auto">
+                <a class="btn border-0 link-body-emphasis" href="?mode=grid&album=<?php echo $album; ?>"><i class="bi bi-grid-fill"></i></a>
+                <a class="btn border-0 link-body-emphasis" href="?mode=lists&album=<?php echo $album; ?>"><i class="bi bi-view-list"></i></a>
+              </div>
             </div>
+            <?php 
+              if(isset($_GET['mode'])){
+                $sort = $_GET['mode'];
+ 
+                switch ($sort) {
+                  case 'grid':
+                  include "album_grid.php";
+                  break;
+                  case 'lists':
+                  include "album_lists.php";
+                  break;
+                }
+              }
+              else {
+                include "album_grid.php";
+              }
+        
+            ?>
           </div>
         </div>
       </div>
