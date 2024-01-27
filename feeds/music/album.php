@@ -174,7 +174,7 @@ if (isset($_POST['follow'])) {
             </div>
             <h5 class="fw-bold mt-3 text-center"><?php echo $artist; ?></h5>
             <div class="d-flex align-content-center justify-content-center">
-              <a class="btn btn-sm rounded-3 btn-outline-light border-0 fw-bold" href="artist.php?id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right text-stroke"></i></a>
+              <a class="btn btn-sm rounded-3 btn-outline-light border-0 fw-bold" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right text-stroke"></i></a>
             </div>
             <div class="mt-3">
               <form method="post">
@@ -256,12 +256,12 @@ if (isset($_POST['follow'])) {
               </div>
               <div class="col-md-7 order-md-2">
                 <h2 class="featurette-heading fw-normal fw-bold"><?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></span></h2>
-                <p class="fw-medium mt-3 d-none d-md-block d-lg-block">Artist: <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
+                <p class="fw-medium mt-3 d-none d-md-block d-lg-block">Artist: <a class="text-decoration-none text-white" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
                 <p class="fw-medium mt-3 d-md-none d-lg-none">Artist: <a class="text-decoration-none text-white" data-bs-toggle="modal" data-bs-target="#profileModal"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
                 <p class="fw-medium mt-3">Total Tracks in Album: <?php echo $albumTrackCount; ?> songs</p>
                 <div class="btn-group gap-2">
-                  <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
-                  <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $album; ?>&id=<?php echo $shuffledId; ?>"><i class="bi bi-shuffle"></i> shuffle</a>
+                  <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
+                  <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $shuffledId; ?>"><i class="bi bi-shuffle"></i> shuffle</a>
                 </div>
               </div>
             </div>
@@ -309,7 +309,7 @@ if (isset($_POST['follow'])) {
             </div>
             <h5 class="fw-bold mt-3 text-center"><?php echo $artist; ?></h5>
             <div class="d-flex align-content-center justify-content-center">
-              <a class="btn btn-sm rounded-3 btn-outline-light border-0 fw-bold" href="artist.php?id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right text-stroke"></i></a>
+              <a class="btn btn-sm rounded-3 btn-outline-light border-0 fw-bold" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right text-stroke"></i></a>
             </div>
             <div class="mt-3">
               <form method="post">
@@ -392,63 +392,63 @@ if (isset($_POST['follow'])) {
             <p class="text-start fw-bold">share to:</p>
             <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- Twitter -->
-              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-twitter"></i>
               </a>
                                 
               <!-- Line -->
-              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-line"></i>
               </a>
                                 
               <!-- Email -->
-              <a class="btn" href="mailto:?body=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>">
+              <a class="btn" href="mailto:?body=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>">
                 <i class="bi bi-envelope-fill"></i>
               </a>
                                 
               <!-- Reddit -->
-              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-reddit"></i>
               </a>
                                 
               <!-- Instagram -->
-              <a class="btn" href="https://www.instagram.com/?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.instagram.com/?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-instagram"></i>
               </a>
                                 
               <!-- Facebook -->
-              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-facebook"></i>
               </a>
             </div>
             <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- WhatsApp -->
-              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-whatsapp"></i>
               </a>
     
               <!-- Pinterest -->
-              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-pinterest"></i>
               </a>
     
               <!-- LinkedIn -->
-              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-linkedin"></i>
               </a>
     
               <!-- Messenger -->
-              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-messenger"></i>
               </a>
     
               <!-- Telegram -->
-              <a class="btn" href="https://telegram.me/share/url?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://telegram.me/share/url?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-telegram"></i>
               </a>
     
               <!-- Snapchat -->
-              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/album.php?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['by']) ? $_GET['by'] : 'desc') . '&album=' . rawurlencode($album)); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-snapchat"></i>
               </a>
             </div>
@@ -477,7 +477,7 @@ if (isset($_POST['follow'])) {
     <script>
       function shareArtist(userId) {
         // Compose the share URL
-        var shareUrl = 'artist.php?id=' + userId;
+        var shareUrl = 'artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=' + userId;
 
         // Check if the Share API is supported by the browser
         if (navigator.share) {

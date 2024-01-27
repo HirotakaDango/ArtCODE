@@ -393,7 +393,7 @@ if (isset($_POST['favorite'])) {
               <i class="bi bi-info-circle-fill"></i>
             </button>
             <div class="btn-group position-absolute bottom-0 end-0 mb-1 me-1">
-              <a class="btn btn-dark opacity-50 rounded-1 fw-bold btn-sm rounded-end-0" href="play_all.php?album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>">
+              <a class="btn btn-dark opacity-50 rounded-1 fw-bold btn-sm rounded-end-0" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $row['album']; ?>&id=<?php echo $row['id']; ?>">
                 <i class="bi bi-play-fill"></i> play all songs
               </a>
               <div class="d-md-none d-lg-none">
@@ -666,8 +666,8 @@ if (isset($_POST['favorite'])) {
                     <button class="text-decoration-none text-white btn fw-bold border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                     <ul class="dropdown-menu rounded-4">
                       <li><button class="dropdown-item fw-medium" onclick="sharePageS('<?php echo $song['id']; ?>', '<?php echo $song['title']; ?>')"><i class="bi bi-share-fill"></i> share</button></li>
-                      <li><a class="dropdown-item fw-medium" href="artist.php?id=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
-                      <li><a class="dropdown-item fw-medium" href="album.php?album=<?php echo $song['album']; ?>"><i class="bi bi-disc-fill"></i> show album</a></li>
+                      <li><a class="dropdown-item fw-medium" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
+                      <li><a class="dropdown-item fw-medium" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $song['album']; ?>"><i class="bi bi-disc-fill"></i> show album</a></li>
                       <li><a class="dropdown-item fw-medium" href="<?php echo $song['file']; ?>" download><i class="bi bi-cloud-arrow-down-fill"></i> download</a></li>
                     </ul>
                   </div>
@@ -699,8 +699,8 @@ if (isset($_POST['favorite'])) {
                     <button class="text-decoration-none text-white btn fw-bold border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                     <ul class="dropdown-menu rounded-4">
                       <li><button class="dropdown-item fw-medium" onclick="sharePageS('<?php echo $song['id']; ?>', '<?php echo $song['title']; ?>')"><i class="bi bi-share-fill"></i> share</button></li>
-                      <li><a class="dropdown-item fw-medium" href="artist.php?id=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
-                      <li><a class="dropdown-item fw-medium" href="album.php?album=<?php echo $song['album']; ?>"><i class="bi bi-disc-fill"></i> show album</a></li>
+                      <li><a class="dropdown-item fw-medium" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $song['userid']; ?>"><i class="bi bi-person-fill"></i> show artist</a></li>
+                      <li><a class="dropdown-item fw-medium" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $song['album']; ?>"><i class="bi bi-disc-fill"></i> show album</a></li>
                       <li><a class="dropdown-item fw-medium" href="<?php echo $song['file']; ?>" download><i class="bi bi-cloud-arrow-down-fill"></i> download</a></li>
                     </ul>
                   </div>

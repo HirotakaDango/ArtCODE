@@ -31,7 +31,7 @@ $nextPage = $page + 1;
         <?php while ($row = $result->fetchArray(SQLITE3_ASSOC)) : ?>
           <div class="col">
             <div class="card shadow-sm h-100 position-relative rounded-3">
-              <a class="shadow position-relative btn p-0" href="artist.php?id=<?php echo $row['id']; ?>">
+              <a class="shadow position-relative btn p-0" href="mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['id']; ?>">
                 <img class="w-100 object-fit-cover rounded" height="200" src="../../<?php echo empty($row['pic']) ? '../../icon/profile.svg' : $row['pic']; ?>">
               </a>
               <div class="p-2 position-absolute bottom-0 start-0">

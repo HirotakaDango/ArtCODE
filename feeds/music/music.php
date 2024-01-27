@@ -165,7 +165,7 @@ if (isset($_POST['favorite'])) {
   }
 
   // Redirect to the same page with the appropriate sorting parameter
-  header('Location: music.php?album=' . $row['album'] . '&id=' . $row['id']);
+  header('Location: play.php?mode=lists&by=newest_lists&album=' . $row['album'] . '&id=' . $row['id']);
   exit();
 
 } elseif (isset($_POST['unfavorite'])) {
@@ -176,12 +176,12 @@ if (isset($_POST['favorite'])) {
   $stmt->execute();
 
   // Redirect to the same page with the appropriate sorting parameter
-  header('Location: music.php?album=' . $row['album'] . '&id=' . $row['id']);
+  header('Location: play.php?mode=lists&by=newest_lists&album=' . $row['album'] . '&id=' . $row['id']);
   exit();
 }
 
 // Construct the URL
-$redirect_url = 'play.php?album=' . urlencode($row['album']) . '&id=' . urlencode($row['id']);
+$redirect_url = 'play.php?mode=lists&by=newest_lists&album=' . urlencode($row['album']) . '&id=' . urlencode($row['id']);
 
 // Perform the redirect
 header('Location: ' . $redirect_url);
