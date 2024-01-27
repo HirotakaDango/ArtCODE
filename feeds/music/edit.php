@@ -23,7 +23,7 @@ if (!$row) {
   $mode = isset($_GET['mode']) ? $_GET['mode'] : 'grid';
   $by = isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists');
 
-  header('Location: ../music/?mode=' . $mode . '&by=' . $by . '&album=' . $row['album'] . '&id=' . $row['id']);
+  header('Location: ../music/?mode=' . $mode . '&by=' . $by);
 }
 
 // Check if the logged-in user is the owner of the music record
@@ -31,7 +31,7 @@ if ($row['email'] !== $email) {
   $mode = isset($_GET['mode']) ? $_GET['mode'] : 'grid';
   $by = isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists');
 
-  header('Location: ../music/?mode=' . $mode . '&by=' . $by . '&album=' . $row['album'] . '&id=' . $row['id']);
+  header('Location: ../music/?mode=' . $mode . '&by=' . $by);
 }
 
 // Handle form submission

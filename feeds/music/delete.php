@@ -20,13 +20,21 @@ $row = $result->fetchArray(SQLITE3_ASSOC);
 
 // Redirect to the home page if the record is not found
 if (!$row) {
-  header('Location: index.php');
+  // Redirect to the home page after the update
+  $mode = isset($_GET['mode']) ? $_GET['mode'] : 'grid';
+  $by = isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists');
+
+  header('Location: ../music/profile.php?mode=' . $mode . '&by=' . $by);
   exit;
 }
 
 // Check if the logged-in user is the owner of the music record
 if ($row['email'] !== $email) {
-  header('Location: index.php');
+  // Redirect to the home page after the update
+  $mode = isset($_GET['mode']) ? $_GET['mode'] : 'grid';
+  $by = isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists');
+
+  header('Location: ../music/profile.php?mode=' . $mode . '&by=' . $by);
   exit;
 }
 
@@ -58,6 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $mode = isset($_GET['mode']) ? $_GET['mode'] : 'grid';
   $by = isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists');
 
-  header('Location: ../music/profile.php?mode=' . $mode . '&by=' . $by;
+  header('Location: ../music/profile.php?mode=' . $mode . '&by=' . $by);
 }
 ?>
