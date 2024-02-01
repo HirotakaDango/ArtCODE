@@ -123,7 +123,7 @@ $db = null; // Close the PDO connection
                 </div>
                 <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Apply</button>
               </form>
-              <a href="../index.php" class="btn btn-primary w-100 rounded fw-bold mt-2">Done</a>
+              <a href="../tutorials/" class="btn btn-primary w-100 rounded fw-bold mt-2">Done</a>
             </div> 
           </div>
         </div>

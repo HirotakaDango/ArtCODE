@@ -49,7 +49,7 @@ $database->close();
       <form method="POST" action="">
         <div class="input-group">
           <div class="form-floating">
-            <input name="born" type="date" class="form-control fw-bold" id="floatingInput" placeholder="Select date yy/mm/dd" required>
+            <input name="born" type="date" class="form-control fw-bold" id="floatingInput" value="<?php echo $currentborn; ?>" placeholder="Select date yy/mm/dd" required>
             <label class="fw-bold text-secondary" for="floatingInput">Select date yy/mm/dd</label>
           </div>
           <span class="input-group-text"><i class="bi bi-calendar-fill"></i></span>
