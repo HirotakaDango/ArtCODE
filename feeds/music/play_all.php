@@ -644,7 +644,7 @@ if (isset($_POST['favorite'])) {
         </div>
         <div class="col-md-8 col-xl-9 order-md-2">
           <div class="d-md-none d-lg-none mt-4" id="playList">
-            <h3 class="text-start fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists from <?php echo $row['artist']; ?></h3>
+            <h3 class="text-start fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
             <div class="overflow-y-auto" id="autoHeightDivM" style="max-height: 100%;">
               <?php foreach ($allRows as $song): ?>
                 <?php
@@ -677,7 +677,7 @@ if (isset($_POST['favorite'])) {
             </div>
           </div>
           <div class="d-none d-md-block d-lg-block">
-            <h3 class="text-start fw-bold mb-3"><i class="bi bi-music-note-list"></i> all song lists from <?php echo $row['artist']; ?></h3>
+            <h3 class="text-start fw-bold mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
             <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
               <?php foreach ($allRows as $song): ?>
                 <?php
