@@ -14,9 +14,14 @@
                     <h6 class="small">created at <?php echo (new DateTime($note['date']))->format("Y/m/d"); ?></h6>
                   </div>
                 </a>
-                <a class="btn border-0 link-body-emphasis position-absolute end-0 top-50 translate-middle-y me-2" href="edit.php?id=<?php echo $note['note_id'] ?>">
-                  <i class="bi bi-pencil-fill"></i>
-                </a>
+                <div class="btn-group position-absolute end-0 top-50 translate-middle-y me-2">
+                  <a class="btn border-0 link-body-emphasis" href="edit.php?id=<?php echo $note['note_id'] ?>">
+                    <i class="bi bi-pencil-fill"></i>
+                  </a>
+                  <a class="btn border-0 link-body-emphasis" href="download.php?id=<?php echo $note['note_id'] ?>">
+                    <i class="bi bi-download text-stroke"></i>
+                  </a>
+                </div>
               </div>
             </div>
           <?php endforeach; ?>

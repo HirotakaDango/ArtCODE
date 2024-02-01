@@ -94,81 +94,97 @@ if (isset($_POST['favorite'])) {
               </div>
             </nav>
           </div>
-          <div class="fw-bold">
-            <h1 class="text-center fw-bold"><?php echo isset($post['title']) ? $post['title'] : '' ?></h1>
-            <div class="mb-2 row">
-              <label for="artist" class="col-1 col-form-label text-nowrap fw-medium">Author</label>
-              <div class="col-11">
-                <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="#"><?php echo isset($post['artist']) ? $post['artist'] : '' ?></a></p>
-              </div>
-            </div>
-            <div class="mb-2 row">
-              <label for="artist" class="col-1 col-form-label text-nowrap fw-medium">Published</label>
-              <div class="col-11">
-                <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="#"><?php echo isset($post['date']) ? $post['date'] : '' ?></a></p>
-              </div>
-            </div>
-            <div class="mb-2 row">
-              <label for="artist" class="col-1 col-form-label text-nowrap fw-medium">Category</label>
-              <div class="col-11">
-                <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="category.php?q=<?php echo urlencode($post['category']); ?>"><?php echo str_replace('_', ' ', $post['category']); ?></a></p>
-              </div>
-            </div>
-            <div class="mb-2 row">
-              <label for="artist" class="col-1 col-form-label text-nowrap fw-medium">Genre</label>
-              <div class="col-11">
-                <p class="form-control-plaintext fw-bold" id="artist">
-                  <?php
-                    if (isset($tag)) {
-                      echo '<a class="text-decoration-none link-light link-body-emphasis" href="genre.php">All</a> ';
-                    }
+          <button type="button" class="d-none d-md-block d-lg-block position-absolute top-0 end-0 m-2 btn border-0 link-body-emphasis" data-bs-toggle="modal" data-bs-target="#infoModal"><i class="bi bi-info-circle"></i></button>
+          <div class="d-flex">
+            <button type="button" class="d-md-none d-lg-none ms-auto btn border-0 link-body-emphasis" data-bs-toggle="modal" data-bs-target="#infoModal"><i class="bi bi-info-circle"></i></button>
+          </div>
+          <!-- Info Modal -->
+          <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content rounded-4 border-0">
+                <div class="modal-header border-0">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Info</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <h1 class="text-center fw-bold"><?php echo isset($post['title']) ? $post['title'] : '' ?></h1>
+                  <div class="mb-2 row">
+                    <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Author</label>
+                    <div class="col-10">
+                      <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="#"><?php echo isset($post['artist']) ? $post['artist'] : '' ?></a></p>
+                    </div>
+                  </div>
+                  <div class="mb-2 row">
+                    <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Published</label>
+                    <div class="col-10">
+                      <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="#"><?php echo isset($post['date']) ? $post['date'] : '' ?></a></p>
+                    </div>
+                  </div>
+                  <div class="mb-2 row">
+                    <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Category</label>
+                    <div class="col-10">
+                      <p class="form-control-plaintext fw-bold" id="artist"><a class="text-decoration-none text-white" href="category.php?q=<?php echo urlencode($post['category']); ?>"><?php echo str_replace('_', ' ', $post['category']); ?></a></p>
+                    </div>
+                  </div>
+                  <div class="mb-2 row">
+                    <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Genre</label>
+                    <div class="col-10">
+                      <p class="form-control-plaintext fw-bold" id="artist">
+                        <?php
+                          if (isset($tag)) {
+                            echo '<a class="text-decoration-none link-light link-body-emphasis" href="genre.php">All</a> ';
+                          }
 
-                    if (isset($post['tags'])) {
-                      $tags = explode(',', $post['tags']);
-                      $totalTags = count($tags);
+                          if (isset($post['tags'])) {
+                            $tags = explode(',', $post['tags']);
+                            $totalTags = count($tags);
             
-                      foreach ($tags as $index => $tag) {
-                        $tag = trim($tag);
-                        $url = 'genre.php?tag=' . urlencode($tag);
+                            foreach ($tags as $index => $tag) {
+                              $tag = trim($tag);
+                              $url = 'genre.php?tag=' . urlencode($tag);
 
-                        echo '<a class="text-decoration-none link-light link-body-emphasis" href="' . $url . '">' . $tag . '</a>';
+                              echo '<a class="text-decoration-none link-light link-body-emphasis" href="' . $url . '">' . $tag . '</a>';
 
-                        // Add a comma if it's not the last tag
-                        if ($index < $totalTags - 1) {
-                          echo ', ';
-                        }
-                      }
-                    }
-                  ?>
-                </p>
+                              // Add a comma if it's not the last tag
+                              if ($index < $totalTags - 1) {
+                                echo ', ';
+                              }
+                            }
+                          }
+                        ?>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="fw-bold">
+                    <?php
+                      $stmt = $db->prepare("SELECT COUNT(*) FROM starred WHERE email = :email AND note_id = :note_id");
+                      $stmt->bindParam(':email', $email);
+                      $stmt->bindParam(':note_id', $id);
+                      $stmt->execute();
+                      $is_favorited = $stmt->fetchColumn();
+
+                      if ($is_favorited) {
+                    ?>
+                      <form method="POST">
+                        <input type="hidden" name="note_id" value="<?php echo $id; ?>">
+                        <button type="submit" class="btn p-0 link-body-emphasis fw-bold" name="unfavorite">
+                          <i class="bi bi-star-fill"></i> unstar
+                        </button>
+                      </form>
+                    <?php } else { ?>
+                      <form method="POST">
+                        <input type="hidden" name="note_id" value="<?php echo $id; ?>">
+                        <button type="submit" class="btn p-0 link-body-emphasis fw-bold" name="favorite">
+                          <i class="bi bi-star"></i> star
+                        </button>
+                      </form>
+                    <?php } ?>
+                  </div>
+                </div>
               </div>
             </div>
-            <?php
-              $stmt = $db->prepare("SELECT COUNT(*) FROM starred WHERE email = :email AND note_id = :note_id");
-              $stmt->bindParam(':email', $email);
-              $stmt->bindParam(':note_id', $id);
-              $stmt->execute();
-              $is_favorited = $stmt->fetchColumn();
-
-              if ($is_favorited) {
-            ?>
-              <form method="POST">
-                <input type="hidden" name="note_id" value="<?php echo $id; ?>">
-                <button type="submit" class="btn p-0 link-body-emphasis fw-bold" name="unfavorite">
-                  <i class="bi bi-star-fill"></i> unstar
-                </button>
-              </form>
-            <?php } else { ?>
-              <form method="POST">
-                <input type="hidden" name="note_id" value="<?php echo $id; ?>">
-                <button type="submit" class="btn p-0 link-body-emphasis fw-bold" name="favorite">
-                  <i class="bi bi-star"></i> star
-                </button>
-              </form>
-            <?php } ?>
           </div>
           <div class="text-white">
-            <hr class="border-4 rounded-pill">
             <div style="white-space: break-spaces; overflow: hidden;">
               <?php
                 $novelText = isset($post['content']) ? $post['content'] : '';
