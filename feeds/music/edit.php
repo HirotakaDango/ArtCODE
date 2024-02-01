@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $mode = isset($_GET['mode']) ? $_GET['mode'] : 'grid';
   $by = isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists');
 
-  header('Location: ../music/play.php?mode=' . $mode . '&by=' . $by . '&album=' . $row['album'] . '&id=' . $row['id']);
+  header('Location: ../music/play.php?mode=' . $mode . '&by=' . $by . '&album=' . urlencode($row['album']) . '&id=' . $row['id']);
 }
 ?>
 
