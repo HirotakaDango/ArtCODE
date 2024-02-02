@@ -128,7 +128,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             <p class="mb-0 mt-2">You can always comeback whenever you want later.</p>
           </div>
           <div class="modal-footer flex-nowrap p-0">
-            <a class="btn btn-lg btn-link text-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end" href="../logout.php"><strong>Yes, end the session!</strong></a>
+            <a class="btn btn-lg btn-link text-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end" href="logout.php"><strong>Yes, end the session!</strong></a>
             <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel, keep it!</button>
           </div>
         </div>

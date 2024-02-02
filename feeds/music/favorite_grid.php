@@ -9,7 +9,7 @@ $query = "SELECT favorites_music.id, favorites_music.music_id, favorites_music.e
           JOIN music ON favorites_music.music_id = music.id
           JOIN users ON music.email = users.email
           WHERE favorites_music.email = :email
-          ORDER BY favorites_music.id DESC
+          ORDER BY favorites_music.id ASC
           LIMIT :limit OFFSET :offset";
 
 $stmt = $db->prepare($query);
@@ -33,6 +33,6 @@ $nextPage = $page + 1;
 
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-1">
         <?php foreach ($rows as $row): ?>
-          <?php include('music_info.php'); ?>
+          <?php include('music_info_favorite.php'); ?>
         <?php endforeach; ?>
       </div>

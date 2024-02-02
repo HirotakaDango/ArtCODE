@@ -9,7 +9,7 @@ $query = "SELECT favorites_music.id, favorites_music.music_id, favorites_music.e
           JOIN music ON favorites_music.music_id = music.id
           JOIN users ON music.email = users.email
           WHERE favorites_music.email = :email
-          ORDER BY favorites_music.id DESC
+          ORDER BY favorites_music.id ASC
           LIMIT :limit OFFSET :offset";
 
 $stmt = $db->prepare($query);
@@ -32,5 +32,5 @@ $nextPage = $page + 1;
 ?>
 
       <?php while ($row = $result->fetchArray(SQLITE3_ASSOC)) : ?>
-        <?php include('music_info_lists.php'); ?>
+        <?php include('music_info_favorite_lists.php'); ?>
       <?php endwhile; ?>
