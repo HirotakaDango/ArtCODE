@@ -44,9 +44,9 @@ $fav_count1 = $fav_result1->fetchArray()[0];
     <nav class="navbar fixed-top navbar-expand-md navbar-light bg-body-tertiary">
       <div class="container-fluid">
         <button class="navbar-toggler1 d-md-none" type="button" onclick="goBack()">
-          <img src="icon/back.svg" width="22" height="22">
+          <img src="/icon/back.svg" width="22" height="22">
         </button> 
-        <a class="navbar-brand text-secondary fw-bold" href="index.php">
+        <a class="navbar-brand text-secondary fw-bold" href="/index.php">
           ArtCODE
         </a>
         <div class="dropdown nav-right">

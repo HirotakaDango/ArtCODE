@@ -117,20 +117,19 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
         <?php else : ?>
           <div class="position-relative">
-            <img src="../images/<?php echo $child_image['filename']; ?>" class="mb-1 rounded" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
-            <div class="d-flex position-absolute bottom-0 start-0 p-3 fw-bold w-100 bg-dark bg-opacity-75">
+            <img data-src="../images/<?php echo $child_image['filename']; ?>" class="mb-1 rounded lazy-load" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
+            <div class="d-flex position-absolute bottom-0 start-0 fw-bold w-100">
               <div>
-                <p>Image Title: <?php echo $image['title']; ?></p>
-                <p>Image Size: <?php echo getImageSizeInMB($child_image['filename']); ?> MB</p>
+                <div class="badge ms-2 bg-dark bg-opacity-50 rounded-pill"><small><?php echo getImageSizeInMB($child_image['filename']); ?> MB</small></div>
               </div>
-              <button type="button" class="btn btn-outline-light border-0 fw-bold ms-auto my-auto" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $child_image['id']; ?>">
+              <button type="button" class="btn link-body-emphasis border-0 fw-bold ms-auto my-auto text-shadow" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $child_image['id']; ?>">
                 <i class="bi bi-trash-fill"></i>
               </button>
             </div>
           </div>
           <div class="modal fade" id="deleteImage_<?php echo $child_image['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content rounded-3 shadow">
+              <div class="modal-content rounded-4 border-0 shadow">
                 <div class="modal-body p-4 text-center">
                   <h5 class="mb-0">Delete this image "<?php echo $child_image['filename']; ?>"?</h5>
                   <p class="mb-0">This action can't be undone</p>
@@ -148,6 +147,98 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
       <?php endforeach; ?>
     </div>
+    <style>
+      .text-shadow {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+    <script>
+      let lazyloadImages = document.querySelectorAll(".lazy-load");
+      let imageContainer = document.getElementById("image-container");
+
+      // Set the default placeholder image
+      const defaultPlaceholder = "../../icon/bg.png";
+
+      if ("IntersectionObserver" in window) {
+        let imageObserver = new IntersectionObserver(function(entries, observer) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              let image = entry.target;
+              image.src = image.dataset.src;
+              imageObserver.unobserve(image);
+            }
+          });
+        });
+
+        lazyloadImages.forEach(function(image) {
+          image.src = defaultPlaceholder; // Apply default placeholder
+          imageObserver.observe(image);
+          image.style.filter = "blur(5px)"; // Apply initial blur to all images
+          image.addEventListener("load", function() {
+            image.style.filter = "none"; // Remove blur after image loads
+          });
+        });
+      } else {
+        let lazyloadThrottleTimeout;
+
+        function lazyload() {
+          if (lazyloadThrottleTimeout) {
+            clearTimeout(lazyloadThrottleTimeout);
+          }
+          lazyloadThrottleTimeout = setTimeout(function() {
+            let scrollTop = window.pageYOffset;
+            lazyloadImages.forEach(function(img) {
+              if (img.offsetTop < window.innerHeight + scrollTop) {
+                img.src = img.dataset.src;
+                img.classList.remove("lazy-load");
+              }
+            });
+            lazyloadImages = Array.from(lazyloadImages).filter(function(image) {
+              return image.classList.contains("lazy-load");
+            });
+            if (lazyloadImages.length === 0) {
+              document.removeEventListener("scroll", lazyload);
+              window.removeEventListener("resize", lazyload);
+              window.removeEventListener("orientationChange", lazyload);
+            }
+          }, 20);
+        }
+
+        document.addEventListener("scroll", lazyload);
+        window.addEventListener("resize", lazyload);
+        window.addEventListener("orientationChange", lazyload);
+      }
+
+      // Infinite scrolling
+      let loading = false;
+
+      function loadMoreImages() {
+        if (loading) return;
+        loading = true;
+
+        // Simulate loading delay for demo purposes
+        setTimeout(function() {
+          for (let i = 0; i < 10; i++) {
+            if (lazyloadImages.length === 0) {
+              break;
+            }
+            let image = lazyloadImages[0];
+            imageContainer.appendChild(image);
+            lazyloadImages = Array.from(lazyloadImages).slice(1);
+          }
+          loading = false;
+        }, 1000);
+      }
+
+      window.addEventListener("scroll", function() {
+        if (window.innerHeight + window.scrollY >= imageContainer.clientHeight) {
+          loadMoreImages();
+        }
+      });
+
+      // Initial loading
+      loadMoreImages();
+    </script>
     <?php include('bootstrapjs.php'); ?>
   </body>
 </html>
