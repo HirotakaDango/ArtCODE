@@ -223,6 +223,18 @@ if (isset($_POST['favorite'])) {
           font-size: 2.5em;
         }
       }
+
+      .custom-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('covers/<?php echo $coverImage; ?>') center/cover no-repeat fixed;
+        filter: blur(10px);
+        z-index: -1;
+      }
     </style>
   </head>
   <body>
@@ -241,105 +253,102 @@ if (isset($_POST['favorite'])) {
       </nav>
       <div class="row featurette">
         <div class="col-md-4 col-xl-3 order-md-1 mb-5">
-          <div class="p-3 pb-2 bg-body-tertiary rounded-4">
-            <div class="position-relative">
+          <div class="p-3 pb-2 bg-body-tertiary bg-opacity-25 rounded-4">
+            <div class="position-relative custom-bg text-shadow">
               <div class="position-relative">
-                <div class="text-center mb-2 ratio ratio-1x1">
-                  <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-3 shadow"></a>
-                </div>
-                <?php
-                  $stmt = $db->prepare("SELECT COUNT(*) FROM favorites_music WHERE email = :email AND music_id = :music_id");
-                  $stmt->bindParam(':email', $_SESSION['email']);
-                  $stmt->bindParam(':music_id', $row['id']);
-                  $stmt->execute();
-                  $is_favorited = $stmt->fetchColumn();
-
-                  if ($is_favorited) {
-                ?>
-                  <form method="POST">
-                    <input type="hidden" name="music_id" value="<?php echo $row['id']; ?>">
-                    <button type="submit" class="position-absolute bottom-0 end-0 m-1 text-shadow btn border-0 link-body-emphasis" name="unfavorite">
-                      <i class="bi bi-heart-fill text-danger"></i>
-                    </button>
-                  </form>
-                <?php } else { ?>
-                  <form method="POST">
-                    <input type="hidden" name="music_id" value="<?php echo $row['id']; ?>">
-                    <button type="submit" class="position-absolute bottom-0 end-0 m-1 text-shadow btn border-0 link-body-emphasis" name="favorite">
-                      <i class="bi bi-heart"></i>
-                    </button>
-                  </form>
-                <?php } ?>
-              </div>
-              <div class="d-md-none d-lg-none">
-                <h2 class="text-start fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $row['title']; ?></h2>
-              </div>
-              <div class="d-none d-md-block d-lg-block">
-                <h3 class="text-start fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $row['title']; ?></h3>
-              </div>
-              <div class="mb-2" style="overflow-x: auto; white-space: nowrap;">
-                <a class="text-decoration-none text-white small fw-bold" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['userid']; ?>"><i class="bi bi-person-fill"></i> <?php echo $row['artist']; ?></a> - <a class="text-decoration-none text-white small fw-medium" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>"><i class="bi bi-disc-fill"></i> <?php echo $row['album']; ?></a>
-              </div>
-              <div class="d-flex mt-2 fw-medium">
-                <div class="me-auto">
+                <div class="position-relative">
+                  <div class="text-center mb-2 ratio ratio-1x1">
+                    <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-3 shadow"></a>
+                  </div>
                   <?php
-                    // Display HQ or MQ based on the bitrate
-                    $bitrateStatus = ($bitrate >= 320) ? 'HQ' : 'MQ';
-                    if ($bitrate >= 320) {
-                      $bitrate = "HQ/{$bitrate}";
-                    } elseif ($bitrate >= 128) {
-                      $bitrate = "MQ/{$bitrate}";
-                    } else {
-                      $bitrate = "SQ/{$bitrate}";
-                    }
+                    $stmt = $db->prepare("SELECT COUNT(*) FROM favorites_music WHERE email = :email AND music_id = :music_id");
+                    $stmt->bindParam(':email', $_SESSION['email']);
+                    $stmt->bindParam(':music_id', $row['id']);
+                    $stmt->execute();
+                    $is_favorited = $stmt->fetchColumn();
 
-                    $size = !empty($fileInfo['filesize']) ? formatBytes($fileInfo['filesize']) : 'Unknown';
-                    $audioType = !empty($fileInfo['fileformat']) ? $fileInfo['fileformat'] : 'Unknown';
-                    $sampleRate = !empty($fileInfo['audio']['sample_rate']) ? $fileInfo['audio']['sample_rate'] . 'Hz' : 'Unknown';
+                    if ($is_favorited) {
                   ?>
-                  <small>
-                    <span class="border border-white rounded-pill p-1 small">
-                      <?php echo $bitrate; ?>
-                    </span>
-                  </small>
+                    <form method="POST">
+                      <input type="hidden" name="music_id" value="<?php echo $row['id']; ?>">
+                      <button type="submit" class="position-absolute bottom-0 end-0 m-1 btn border-0 link-body-emphasis text-shadow" name="unfavorite">
+                        <i class="bi bi-heart-fill text-danger"></i>
+                      </button>
+                    </form>
+                  <?php } else { ?>
+                    <form method="POST">
+                      <input type="hidden" name="music_id" value="<?php echo $row['id']; ?>">
+                      <button type="submit" class="position-absolute bottom-0 end-0 m-1 btn border-0 link-body-emphasis text-shadow" name="favorite">
+                        <i class="bi bi-heart"></i>
+                      </button>
+                    </form>
+                  <?php } ?>
                 </div>
-                <div class="ms-auto">
-                  <small><a class="border border-white rounded-pill p-1 small link-body-emphasis text-decoration-none" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play From Current Artist</a></small>
+                <div class="d-md-none d-lg-none">
+                  <h2 class="text-start fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $row['title']; ?></h2>
+                </div>
+                <div class="d-none d-md-block d-lg-block">
+                  <h3 class="text-start fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $row['title']; ?></h3>
+                </div>
+                <div class="mb-2" style="overflow-x: auto; white-space: nowrap;">
+                  <a class="text-decoration-none text-white small fw-bold link-body-emphasis" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['userid']; ?>"><i class="bi bi-person-fill"></i> <?php echo $row['artist']; ?></a> - <a class="text-decoration-none text-white small fw-bold link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>"><i class="bi bi-disc-fill"></i> <?php echo $row['album']; ?></a>
+                </div>
+                <div class="d-flex mt-2 fw-medium">
+                  <div class="me-auto">
+                    <?php
+                      // Display HQ or MQ based on the bitrate
+                      $bitrateStatus = ($bitrate >= 320) ? 'HQ' : 'MQ';
+                      if ($bitrate >= 320) {
+                        $bitrate = "HQ/{$bitrate}";
+                      } elseif ($bitrate >= 128) {
+                        $bitrate = "MQ/{$bitrate}";
+                      } else {
+                        $bitrate = "SQ/{$bitrate}";
+                      }
+
+                      $size = !empty($fileInfo['filesize']) ? formatBytes($fileInfo['filesize']) : 'Unknown';
+                      $audioType = !empty($fileInfo['fileformat']) ? $fileInfo['fileformat'] : 'Unknown';
+                      $sampleRate = !empty($fileInfo['audio']['sample_rate']) ? $fileInfo['audio']['sample_rate'] . 'Hz' : 'Unknown';
+                    ?>
+                    <small>
+                      <span class="border border-white rounded-pill p-1 small shadow">
+                        <?php echo $bitrate; ?>
+                      </span>
+                    </small>
+                  </div>
+                  <div class="ms-auto">
+                    <small>
+                      <a class="border border-white rounded-pill p-1 small link-body-emphasis text-decoration-none shadow" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play All Music</a>
+                    </small>
+                  </div>
+                </div>
+                <div class="btn-group w-100 gap-4 my-3">
+                  <a class="text-start me-auto border-0 link-body-emphasis" href="<?php echo $row['file']; ?>" download>
+                    <i class="bi bi-download"></i>
+                  </a>
+                  <a class="text-center mx-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#songInfo">
+                    <i class="bi bi-info-circle"></i>
+                  </a>
+                  <a class="text-center mx-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">
+                    <i class="bi bi-share-fill"></i>
+                  </a>
+                  <a class="text-end ms-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#optionModal">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </a>
                 </div>
               </div>
-              <div class="btn-group w-100 gap-4 my-3">
-                <a class="text-start me-auto border-0 link-body-emphasis" href="<?php echo $row['file']; ?>" download>
-                  <i class="bi bi-download"></i>
+              <?php include('player_card.php'); ?>
+              <div class="btn-group w-100 gap-3">
+                <a class="btn border-0 link-body-emphasis w-50 text-white text-shadow" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
+                  <i class="bi bi-skip-start-fill fs-custom"></i>
                 </a>
-                <a class="text-center mx-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#songInfo">
-                  <i class="bi bi-info-circle"></i>
-                </a>
-                <a class="text-end ms-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">
-                  <i class="bi bi-share-fill"></i>
+                <button class="btn border-0 link-body-emphasis w-50 text-white text-shadow" id="playPauseButton" onclick="togglePlayPause()">
+                  <i class="bi bi-play-fill fs-custom"></i>
+                </button>
+                <a class="btn border-0 link-body-emphasis w-50 text-white text-shadow" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
+                  <i class="bi bi-skip-end-fill fs-custom"></i>
                 </a>
               </div>
-            </div>
-            <div id="music-player" class="w-100">
-              <div class="d-flex fw-medium">
-                <span class="me-auto" id="duration"></span>
-                <span class="ms-auto" id="duration-left"></span>
-              </div>
-              <audio id="player" class="d-none" controls>
-                <source src="<?php echo $musicFile; ?>" type="audio/mpeg">
-                Your browser does not support the audio element.
-              </audio>
-              <input type="range" class="w-100 mt-2 form-range" id="duration-slider" value="0">
-            </div>
-            <div class="btn-group w-100 gap-3">
-              <a class="btn border-0 link-body-emphasis w-50 text-white" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
-                <i class="bi bi-skip-start-fill fs-custom"></i>
-              </a>
-              <button class="btn border-0 link-body-emphasis w-50 text-white" id="playPauseButton" onclick="togglePlayPause()">
-                <i class="bi bi-play-fill fs-custom"></i>
-              </button>
-              <a class="btn border-0 link-body-emphasis w-50 text-white" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
-                <i class="bi bi-skip-end-fill fs-custom"></i>
-              </a>
             </div>
           </div>
           <div class="modal fade" id="songInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -932,10 +941,45 @@ if (isset($_POST['favorite'])) {
 
       setDefaultDurationLabels(); // Set default values
 
+      function getLocalStorageKey() {
+        const album = "<?php echo urlencode($nextRow['album']); ?>";
+        const id = "<?php echo $nextRow['id']; ?>";
+        return `savedPlaytime_${album}_${id}`;
+      }
+
+      // Function to store the current playtime in localStorage
+      function savePlaytime() {
+        localStorage.setItem(getLocalStorageKey(), audioPlayer.currentTime);
+      }
+
+      // Function to retrieve and set the saved playtime
+      function setSavedPlaytime() {
+        const savedPlaytime = localStorage.getItem(getLocalStorageKey());
+        if (savedPlaytime !== null) {
+          audioPlayer.currentTime = parseFloat(savedPlaytime);
+          updateDurationLabels();
+        }
+      }
+
+      // Function to check if the song has ended and reset playtime
+      function checkSongEnded() {
+        if (audioPlayer.currentTime === audioPlayer.duration) {
+          audioPlayer.currentTime = 0; // Reset playtime to the beginning
+          savePlaytime(); // Save the updated playtime
+          updateDurationLabels(); // Update duration labels
+        }
+      }
+
+      // Add event listener to update playtime and save it to localStorage
       audioPlayer.addEventListener('timeupdate', () => {
+        checkSongEnded(); // Check if the song has ended
+        savePlaytime(); // Save the current playtime
         durationSlider.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
         updateDurationLabels();
       });
+
+      // Add event listener to set the saved playtime when the page loads
+      window.addEventListener('load', setSavedPlaytime);
 
       audioPlayer.addEventListener('loadedmetadata', () => {
         setDefaultDurationLabels(); // Reset default values
@@ -946,6 +990,31 @@ if (isset($_POST['favorite'])) {
         const seekTime = (durationSlider.value / 100) * audioPlayer.duration;
         audioPlayer.currentTime = seekTime;
         updateDurationLabels();
+      });
+
+      // Get references to the player and controls
+      const speedControl = document.getElementById('speed');
+      const volumeControl = document.getElementById('volume');
+
+      // Add event listeners to update playback speed and volume
+      speedControl.addEventListener('change', () => {
+        player.playbackRate = parseFloat(speedControl.value);
+      });
+
+      // Retrieve the volume value from localStorage (if available)
+      const savedVolume = localStorage.getItem('savedVolume') || 1;
+
+      // Set the initial volume using the saved value
+      player.volume = parseFloat(savedVolume);
+      volumeControl.value = savedVolume;
+
+      // Add event listener to update volume and save it to localStorage
+      volumeControl.addEventListener('input', () => {
+        const newVolume = parseFloat(volumeControl.value);
+        player.volume = newVolume;
+
+        // Save the new volume value to localStorage
+        localStorage.setItem('savedVolume', newVolume.toString());
       });
     </script>
     <script>
