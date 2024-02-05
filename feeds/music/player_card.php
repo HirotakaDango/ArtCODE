@@ -1,13 +1,13 @@
               <div id="music-player" class="w-100">
-                <div class="d-flex fw-medium">
-                  <span class="me-auto" id="duration"></span>
-                  <span class="ms-auto" id="duration-left"></span>
+                <div class="d-flex fw-medium text-white">
+                  <span class="me-auto small" id="duration"></span>
+                  <span class="ms-auto small" id="duration-left"></span>
                 </div>
                 <audio id="player" class="d-none" controls>
                   <source src="<?php echo $musicFile; ?>" type="audio/mpeg">
                   Your browser does not support the audio element.
                 </audio>
-                <input type="range" class="w-100 mt-2 form-range" id="duration-slider" value="0">
+                <input type="range" class="w-100 form-range" id="duration-slider" value="0">
                 <div class="modal fade" id="optionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content rounded-4 border-0">

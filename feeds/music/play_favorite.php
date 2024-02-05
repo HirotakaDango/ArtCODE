@@ -235,6 +235,10 @@ if (isset($_POST['favorite'])) {
         font-size: 1.3em;
       }
 
+      .fs-custom-3 {
+        font-size: 2.5em;
+      }
+
       .custom-bg::before {
         content: '';
         position: absolute;
@@ -272,7 +276,7 @@ if (isset($_POST['favorite'])) {
       </nav>
       <div class="row featurette">
         <div class="col-md-4 col-xl-3 order-md-1 mb-5">
-          <div class="p-3 pb-2 bg-body-tertiary bg-opacity-25 rounded-4">
+          <div class="p-2 p-md-3 bg-body-tertiary bg-opacity-10 rounded-5">
             <div class="position-relative custom-bg text-shadow">
               <div class="position-relative">
                 <div class="position-relative">
@@ -341,7 +345,7 @@ if (isset($_POST['favorite'])) {
                     </small>
                   </div>
                 </div>
-                <div class="btn-group w-100 gap-4 my-3">
+                <div class="btn-group w-100 gap-4 mt-3 mb-2">
                   <a class="text-start me-auto border-0 link-body-emphasis d-none d-md-block d-lg-block" href="<?php echo $row['file']; ?>" download>
                     <i class="bi bi-download"></i>
                   </a>
@@ -360,18 +364,18 @@ if (isset($_POST['favorite'])) {
                 </div>
               </div>
               <?php include('player_card.php'); ?>
-              <div class="btn-group w-100 align-items-center">
+              <div class="btn-group w-100 align-items-center pb-4">
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                   <i class="bi bi-repeat-1 fs-custom-2"></i>
                 </a>
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_favorite.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
-                  <i class="bi bi-skip-start-fill fs-custom"></i>
+                  <i class="bi bi-skip-start-fill fs-custom-3"></i>
                 </a>
                 <button class="btn border-0 link-body-emphasis w-25 text-white text-shadow" id="playPauseButton" onclick="togglePlayPause()">
-                  <i class="bi bi-play-fill fs-custom"></i>
+                  <i class="bi bi-play-circle-fill fs-custom"></i>
                 </button>
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_favorite.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
-                  <i class="bi bi-skip-end-fill fs-custom"></i>
+                  <i class="bi bi-skip-end-fill fs-custom-3"></i>
                 </a>
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_shuffle.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                   <i class="bi bi-shuffle fs-custom-2"></i>
@@ -928,19 +932,19 @@ if (isset($_POST['favorite'])) {
       function togglePlayPause() {
         if (audioPlayer.paused) {
           audioPlayer.play();
-          playPauseButton.innerHTML = '<i class="bi bi-pause-fill fs-custom"></i>';
+          playPauseButton.innerHTML = '<i class="bi bi-pause-circle-fill fs-custom"></i>';
         } else {
           audioPlayer.pause();
-          playPauseButton.innerHTML = '<i class="bi bi-play-fill fs-custom"></i>';
+          playPauseButton.innerHTML = '<i class="bi bi-play-circle-fill fs-custom"></i>';
         }
       }
 
       audioPlayer.addEventListener('play', () => {
-        playPauseButton.innerHTML = '<i class="bi bi-pause-fill fs-custom"></i>';
+        playPauseButton.innerHTML = '<i class="bi bi-pause-circle-fill fs-custom"></i>';
       });
 
       audioPlayer.addEventListener('pause', () => {
-        playPauseButton.innerHTML = '<i class="bi bi-play-fill fs-custom"></i>';
+        playPauseButton.innerHTML = '<i class="bi bi-play-circle-fill fs-custom"></i>';
       });
 
       function updateDurationLabels() {
