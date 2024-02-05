@@ -235,7 +235,7 @@ if (isset($_POST['favorite'])) {
       }
 
       .fs-custom-3 {
-        font-size: 2.5em;
+        font-size: 2.4em;
       }
 
       .custom-bg::before {
@@ -247,6 +247,7 @@ if (isset($_POST['favorite'])) {
         height: 100%;
         background: url('covers/<?php echo $coverImage; ?>') center/cover no-repeat fixed;
         filter: blur(10px);
+        border-radius: 2em;
         z-index: -1;
       }
       
@@ -275,8 +276,8 @@ if (isset($_POST['favorite'])) {
       </nav>
       <div class="row featurette">
         <div class="col-md-4 col-xl-3 order-md-1 mb-5">
-          <div class="p-2 p-md-3 bg-body-tertiary bg-opacity-10 rounded-5">
-            <div class="position-relative custom-bg text-shadow">
+          <div class="bg-body-tertiary bg-opacity-25 rounded-5">
+            <div class="position-relative custom-bg text-shadow p-3">
               <div class="position-relative">
                 <div class="position-relative">
                   <div class="text-center mb-2 ratio ratio-1x1">
@@ -363,7 +364,7 @@ if (isset($_POST['favorite'])) {
                 </div>
               </div>
               <?php include('player_card.php'); ?>
-              <div class="btn-group w-100 align-items-center pb-4">
+              <div class="btn-group w-100 align-items-center">
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                   <i class="bi bi-repeat-1 fs-custom-2"></i>
                 </a>

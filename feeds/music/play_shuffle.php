@@ -218,7 +218,7 @@ if (isset($_POST['favorite'])) {
       }
 
       .fs-custom-3 {
-        font-size: 2.5em;
+        font-size: 2.4em;
       }
 
       .custom-bg::before {
@@ -230,6 +230,7 @@ if (isset($_POST['favorite'])) {
         height: 100%;
         background: url('covers/<?php echo $coverImage; ?>') center/cover no-repeat fixed;
         filter: blur(10px);
+        border-radius: 2em;
         z-index: -1;
       }
       
@@ -258,12 +259,12 @@ if (isset($_POST['favorite'])) {
       </nav>
       <div class="row featurette">
         <div class="col-md-4 col-xl-3 order-md-1 mb-5">
-          <div class="p-2 p-md-3 bg-body-tertiary bg-opacity-10 rounded-5">
-            <div class="position-relative custom-bg text-shadow">
+          <div class="bg-body-tertiary bg-opacity-25 rounded-5">
+            <div class="position-relative custom-bg text-shadow p-3">
               <div class="position-relative">
                 <div class="position-relative">
                   <div class="text-center mb-2 ratio ratio-1x1">
-                    <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-3 shadow"></a>
+                    <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-4 shadow"></a>
                   </div>
                   <?php
                     $stmt = $db->prepare("SELECT COUNT(*) FROM favorites_music WHERE email = :email AND music_id = :music_id");
@@ -346,7 +347,7 @@ if (isset($_POST['favorite'])) {
                 </div>
               </div>
               <?php include('player_card.php'); ?>
-              <div class="btn-group w-100 align-items-center pb-4">
+              <div class="btn-group w-100 align-items-center">
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                   <i class="bi bi-repeat-1 fs-custom-2"></i>
                 </a>
