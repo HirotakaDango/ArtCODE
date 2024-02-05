@@ -144,7 +144,7 @@ $nextRow = $data[$nextIndex];
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         background: url('<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>') center/cover no-repeat fixed;
         filter: blur(10px);
         border-radius: 2em;
@@ -184,7 +184,7 @@ $nextRow = $data[$nextIndex];
             </audio>
             <input type="range" class="w-100 form-range" id="duration-slider" value="0">
           </div>
-          <div class="btn-group w-100 align-items-center my-2 my-md-0">
+          <div class="btn-group w-100 align-items-center">
             <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play.php?play.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
               <i class="bi bi-skip-start-fill fs-custom-3"></i>
             </a>

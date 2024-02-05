@@ -31,7 +31,7 @@ $websiteUrl = $row ? $row['website_url'] : '';
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ArtCODE - Preview</title>
+    <title>ArtCODE - Music</title>
     <link rel="icon" type="image/png" href="<?php echo $websiteUrl; ?>/icon/favicon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -40,7 +40,7 @@ $websiteUrl = $row ? $row['website_url'] : '';
     <form method="POST">
       <nav class="navbar navbar-expand-lg bg-body-tertiary shadow">
         <div class="container-fluid gap-2 justify-content-end">
-          <a class="navbar-brand me-auto fw-bold text-secondary" href="/">ArtCODE</a>
+          <a class="navbar-brand me-auto fw-bold text-secondary" href="index.php">ArtCODE</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
