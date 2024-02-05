@@ -69,72 +69,78 @@ $size = !empty($fileInfo['filesize']) ? formatBytes($fileInfo['filesize']) : 'Un
 $audioType = !empty($fileInfo['fileformat']) ? $fileInfo['fileformat'] : 'Unknown';
 $sampleRate = !empty($fileInfo['audio']['sample_rate']) ? $fileInfo['audio']['sample_rate'] . 'Hz' : 'Unknown';
 
-// Fetch all music records for all artists, ordered by artist, album, and title ascending
+// Fetch all music records for the specified artist
 $queryAll = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
              FROM music
              JOIN users ON music.email = users.email
-             ORDER BY users.artist ASC, music.album ASC, music.title ASC";
+             WHERE users.id = :artist_id
+             ORDER BY music.album ASC, music.id ASC";
 $stmtAll = $db->prepare($queryAll);
+$stmtAll->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
 $stmtAll->execute();
 $allRows = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
 
-// Check if there is only one song in the playlist and set a flag for looping
+// Check if there is only one song for the artist and set a flag for looping
 $loopPlaylist = count($allRows) === 1;
 
-// Fetch next music record for the specified song
+// Fetch next music record for the specified artist
 $queryNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE (users.artist = :artist AND music.album = :album AND music.title > :title)
-                 OR (users.artist = :artist AND music.album > :album)
-                 OR (users.artist > :artist)
-              ORDER BY users.artist ASC, music.album ASC, music.title ASC
+              WHERE (music.album = :album AND music.id > :id)
+                 OR (music.album = :album AND music.id = (SELECT MIN(id) FROM music WHERE album > :album AND email = :email))
+                 OR (music.album > :album AND music.email = :email)
+              ORDER BY music.album ASC, music.id ASC
               LIMIT 1";
 $stmtNext = $db->prepare($queryNext);
-$stmtNext->bindParam(':artist', $row['artist'], PDO::PARAM_STR);
-$stmtNext->bindParam(':album', $row['album'], PDO::PARAM_STR);
-$stmtNext->bindParam(':title', $row['title'], PDO::PARAM_STR);
+$stmtNext->bindParam(':album', $album, PDO::PARAM_STR);
+$stmtNext->bindParam(':id', $id, PDO::PARAM_INT);
+$stmtNext->bindParam(':email', $user_email, PDO::PARAM_STR);
 $stmtNext->execute();
 $nextRow = $stmtNext->fetch(PDO::FETCH_ASSOC);
 
 if (!$nextRow) {
-  // If no next row, fetch the first music record in the playlist
-  $queryFirstNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                     FROM music
-                     JOIN users ON music.email = users.email
-                     ORDER BY users.artist ASC, music.album ASC, music.title ASC
-                     LIMIT 1";
-  $stmtFirstNext = $db->prepare($queryFirstNext);
-  $stmtFirstNext->execute();
-  $nextRow = $stmtFirstNext->fetch(PDO::FETCH_ASSOC);
+  // If no next row, fetch the first music record for the artist
+  $queryFirstNextArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                          FROM music
+                          JOIN users ON music.email = users.email
+                          WHERE users.id = :artist_id
+                          ORDER BY music.album ASC, music.id ASC
+                          LIMIT 1";
+  $stmtFirstNextArtist = $db->prepare($queryFirstNextArtist);
+  $stmtFirstNextArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
+  $stmtFirstNextArtist->execute();
+  $nextRow = $stmtFirstNextArtist->fetch(PDO::FETCH_ASSOC);
 }
 
-// Fetch previous music record for the specified song
+// Fetch previous music record for the specified artist
 $queryPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE (users.artist = :artist AND music.album = :album AND music.title < :title)
-                 OR (users.artist = :artist AND music.album < :album)
-                 OR (users.artist < :artist)
-              ORDER BY users.artist DESC, music.album DESC, music.title DESC
+              WHERE (music.album = :album AND music.id < :id)
+                 OR (music.album = :album AND music.id = (SELECT MAX(id) FROM music WHERE album < :album AND email = :email))
+                 OR (music.album < :album AND music.email = :email)
+              ORDER BY music.album DESC, music.id DESC
               LIMIT 1";
 $stmtPrev = $db->prepare($queryPrev);
-$stmtPrev->bindParam(':artist', $row['artist'], PDO::PARAM_STR);
-$stmtPrev->bindParam(':album', $row['album'], PDO::PARAM_STR);
-$stmtPrev->bindParam(':title', $row['title'], PDO::PARAM_STR);
+$stmtPrev->bindParam(':album', $album, PDO::PARAM_STR);
+$stmtPrev->bindParam(':id', $id, PDO::PARAM_INT);
+$stmtPrev->bindParam(':email', $user_email, PDO::PARAM_STR);
 $stmtPrev->execute();
 $prevRow = $stmtPrev->fetch(PDO::FETCH_ASSOC);
 
 if (!$prevRow) {
-  // If no previous row, fetch the last music record in the playlist
-  $queryLastPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                    FROM music
-                    JOIN users ON music.email = users.email
-                    ORDER BY users.artist DESC, music.album DESC, music.title DESC
-                    LIMIT 1";
-  $stmtLastPrev = $db->prepare($queryLastPrev);
-  $stmtLastPrev->execute();
-  $prevRow = $stmtLastPrev->fetch(PDO::FETCH_ASSOC);
+  // If no previous row, fetch the last music record for the artist
+  $queryLastPrevArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                         FROM music
+                         JOIN users ON music.email = users.email
+                         WHERE users.id = :artist_id
+                         ORDER BY music.album DESC, music.id DESC
+                         LIMIT 1";
+  $stmtLastPrevArtist = $db->prepare($queryLastPrevArtist);
+  $stmtLastPrevArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
+  $stmtLastPrevArtist->execute();
+  $prevRow = $stmtLastPrevArtist->fetch(PDO::FETCH_ASSOC);
 }
 
 // If looping is enabled, set the next and previous to the current song
@@ -330,13 +336,16 @@ if (isset($_POST['favorite'])) {
                   </div>
                   <div class="ms-auto">
                     <small>
-                      <a class="border border-white rounded-pill p-1 small link-body-emphasis text-decoration-none shadow" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play From Current Artist</a>
+                      <a class="border border-white rounded-pill p-1 small link-body-emphasis text-decoration-none shadow" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play All Music</a>
                     </small>
                   </div>
                 </div>
                 <div class="btn-group w-100 gap-4 my-3">
-                  <a class="text-start me-auto border-0 link-body-emphasis" href="<?php echo $row['file']; ?>" download>
+                  <a class="text-start me-auto border-0 link-body-emphasis d-none d-md-block d-lg-block" href="<?php echo $row['file']; ?>" download>
                     <i class="bi bi-download"></i>
+                  </a>
+                  <a class="text-start me-auto border-0 link-body-emphasis d-md-none d-lg-none" href="#playList">
+                    <i class="bi bi-music-note-list"></i>
                   </a>
                   <a class="text-center mx-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#songInfo">
                     <i class="bi bi-info-circle"></i>
@@ -351,16 +360,16 @@ if (isset($_POST['favorite'])) {
               </div>
               <?php include('player_card.php'); ?>
               <div class="btn-group w-100 align-items-center">
-                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
-                  <i class="bi bi-repeat-1 fs-custom-2"></i>
+                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
+                  <i class="bi bi-repeat fs-custom-2"></i>
                 </a>
-                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
+                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
                   <i class="bi bi-skip-start-fill fs-custom"></i>
                 </a>
                 <button class="btn border-0 link-body-emphasis w-25 text-white text-shadow" id="playPauseButton" onclick="togglePlayPause()">
                   <i class="bi bi-play-fill fs-custom"></i>
                 </button>
-                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
+                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                   <i class="bi bi-skip-end-fill fs-custom"></i>
                 </a>
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_shuffle.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
@@ -532,7 +541,7 @@ if (isset($_POST['favorite'])) {
         </div>
         <div class="col-md-8 col-xl-9 order-md-2">
           <div class="d-md-none d-lg-none mt-4" id="playList">
-            <h3 class="text-start fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
+            <h3 class="text-start fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists from <?php echo $row['artist']; ?></h3>
             <div class="overflow-y-auto" id="autoHeightDivM" style="max-height: 100%;">
               <?php foreach ($allRows as $song): ?>
                 <?php
@@ -545,7 +554,7 @@ if (isset($_POST['favorite'])) {
                   $duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
                 ?>
                 <div id="songM_<?php echo $song['id']; ?>" class="d-flex justify-content-between align-items-center rounded-4 bg-dark-subtle bg-opacity-10 my-2 <?php echo ($song['id'] == $row['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
-                  <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
+                  <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
                     <?php echo $song['title']; ?><br>
                     <small class="text-muted"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small><br>
                     <small class="text-muted">Playtime : <?php echo $duration; ?></small>
@@ -565,7 +574,7 @@ if (isset($_POST['favorite'])) {
             </div>
           </div>
           <div class="d-none d-md-block d-lg-block">
-            <h3 class="text-start fw-bold mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
+            <h3 class="text-start fw-bold mb-3"><i class="bi bi-music-note-list"></i> all song lists from <?php echo $row['artist']; ?></h3>
             <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
               <?php foreach ($allRows as $song): ?>
                 <?php
@@ -578,7 +587,7 @@ if (isset($_POST['favorite'])) {
                   $duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
                 ?>
                 <div id="song_<?php echo $song['id']; ?>" class="d-flex justify-content-between align-items-center rounded-4 bg-dark-subtle bg-opacity-10 my-2 <?php echo ($song['id'] == $row['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
-                  <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
+                  <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
                     <?php echo $song['title']; ?><br>
                     <small class="text-muted"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small><br>
                     <small class="text-muted">Playtime : <?php echo $duration; ?></small>
@@ -607,63 +616,63 @@ if (isset($_POST['favorite'])) {
             <p class="text-start fw-bold">share to:</p>
             <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- Twitter -->
-              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-twitter"></i>
               </a>
                                 
               <!-- Line -->
-              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-line"></i>
               </a>
                                 
               <!-- Email -->
-              <a class="btn" href="mailto:?body=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>">
+              <a class="btn" href="mailto:?body=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>">
                 <i class="bi bi-envelope-fill"></i>
               </a>
                                 
               <!-- Reddit -->
-              <a class="btn" href="https://www.reddit.com/submit?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-reddit"></i>
               </a>
                                 
               <!-- Instagram -->
-              <a class="btn" href="https://www.instagram.com/?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.instagram.com/?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-instagram"></i>
               </a>
                                 
               <!-- Facebook -->
-              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-facebook"></i>
               </a>
             </div>
             <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- WhatsApp -->
-              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-whatsapp"></i>
               </a>
     
               <!-- Pinterest -->
-              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-pinterest"></i>
               </a>
     
               <!-- LinkedIn -->
-              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-linkedin"></i>
               </a>
     
               <!-- Messenger -->
-              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-messenger"></i>
               </a>
     
               <!-- Telegram -->
-              <a class="btn" href="https://telegram.me/share/url?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://telegram.me/share/url?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-telegram"></i>
               </a>
     
               <!-- Snapchat -->
-              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_all.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_repeat.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-snapchat"></i>
               </a>
             </div>
@@ -695,13 +704,13 @@ if (isset($_POST['favorite'])) {
 
       navigator.mediaSession.setActionHandler('previoustrack', function() {
         currentTrackId = <?= $prevRow ? $prevRow['id'] : 0 ?>;
-        const previousTrackUrl = 'play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?= $prevRow ? urlencode($prevRow['album']) : '' ?>&id=' + currentTrackId;
+        const previousTrackUrl = 'play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?= $prevRow ? urlencode($prevRow['album']) : '' ?>&id=' + currentTrackId;
         window.location.href = previousTrackUrl;
       });
 
       navigator.mediaSession.setActionHandler('nexttrack', function() {
         currentTrackId = <?= $nextRow ? $nextRow['id'] : 0 ?>;
-        const nextTrackUrl = 'play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?= $nextRow ? urlencode($nextRow['album']) : '' ?>&id=' + currentTrackId;
+        const nextTrackUrl = 'play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?= $nextRow ? urlencode($nextRow['album']) : '' ?>&id=' + currentTrackId;
         window.location.href = nextTrackUrl;
       });
 
@@ -886,26 +895,25 @@ if (isset($_POST['favorite'])) {
         audioPlayer.play();
 
         audioPlayer.addEventListener('ended', function(event) {
-          // Redirect to the next song URL
-          window.location.href = "play_all.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>";
+          // Restart the current song
+          audioPlayer.currentTime = 0;
+          audioPlayer.play();
         });
 
-        // Event listener for "Next" button
+        // Remove the event listener for "Next" button
         if (nextButton) {
-          nextButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent the default navigation
-
-            // Pause audio player
-            audioPlayer.pause();
-
-            const nextMusicUrl = nextButton.href;
-            navigateToNextMusic(nextMusicUrl);
-          });
+          nextButton.removeEventListener('click', navigateToNextMusic);
         }
 
         // Function to navigate to the next music page
-        function navigateToNextMusic(url) {
-          window.location.href = url;
+        function navigateToNextMusic(event) {
+          event.preventDefault(); // Prevent the default navigation
+
+          // Pause audio player
+          audioPlayer.pause();
+
+          const nextMusicUrl = nextButton.href;
+          window.location.href = nextMusicUrl;
         }
       });
 
@@ -1061,7 +1069,7 @@ if (isset($_POST['favorite'])) {
 
       function sharePageS(musicId, songName) {
         if (navigator.share) {
-          const shareUrl = `${window.location.origin}/play_all.php?id=${musicId}&mode=<?php echo $mode; ?>&by=<?php echo $by; ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>`;
+          const shareUrl = `${window.location.origin}/play_repeat.php?id=${musicId}&mode=<?php echo $mode; ?>&by=<?php echo $by; ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>`;
           navigator.share({
             title: songName,
             url: shareUrl

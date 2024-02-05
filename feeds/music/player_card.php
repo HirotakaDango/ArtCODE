@@ -38,7 +38,7 @@
                             <option value="5.00">5.00x</option>
                           </select>
                         </div>
-                        <div>
+                        <div class="mb-4">
                           <label class="form-label" for="volume">Volume</label>
                           <div class="d-flex justify-content-start align-items-center gap-2">
                             <i class="bi bi-volume-mute-fill me-auto fs-3"></i>
@@ -46,6 +46,7 @@
                             <i class="bi bi-volume-up-fill ms-auto fs-3"></i>
                           </div>
                         </div>
+                        <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100" href="<?php echo $row['file']; ?>" download>Download Song</a>
                       </div>
                     </div>
                   </div>
