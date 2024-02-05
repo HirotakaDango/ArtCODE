@@ -203,13 +203,13 @@ if (isset($_POST['favorite'])) {
       
       @media (max-width: 767px) {
         .fs-custom {
-          font-size: 3em;
+          font-size: 3.5em;
         }
       }
       
       @media (min-width: 768px) {
         .fs-custom {
-          font-size: 2.5em;
+          font-size: 3em;
         }
       }
 
@@ -246,7 +246,7 @@ if (isset($_POST['favorite'])) {
   <body>
     <div class="container-fluid">
       <nav aria-label="breadcrumb">
-        <div class="d-flex">
+        <div class="d-flex my-1">
           <a class="me-auto btn border-0 fw-bold text-start link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>">
             <i class="bi bi-chevron-down text-stroke"></i>
           </a>
@@ -328,7 +328,7 @@ if (isset($_POST['favorite'])) {
                     </small>
                   </div>
                 </div>
-                <div class="btn-group w-100 gap-4 mt-3 mb-2">
+                <div class="btn-group w-100 gap-4 my-3">
                   <a class="text-start me-auto border-0 link-body-emphasis d-none d-md-block d-lg-block" href="<?php echo $row['file']; ?>" download>
                     <i class="bi bi-download"></i>
                   </a>
@@ -347,7 +347,7 @@ if (isset($_POST['favorite'])) {
                 </div>
               </div>
               <?php include('player_card.php'); ?>
-              <div class="btn-group w-100 align-items-center">
+              <div class="btn-group w-100 align-items-center my-2 my-md-0">
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                   <i class="bi bi-repeat-1 fs-custom-2"></i>
                 </a>
