@@ -229,6 +229,16 @@ if (isset($_POST['favorite'])) {
         .fs-custom {
           font-size: 3em;
         }
+        
+        .max-md {
+          max-width: 335px;
+        }
+      }
+
+      @media (min-width: 1140px) {
+        .max-md {
+          max-width: 350px;
+        }
       }
 
       .fs-custom-2 {
@@ -245,10 +255,10 @@ if (isset($_POST['favorite'])) {
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         background: url('covers/<?php echo $coverImage; ?>') center/cover no-repeat fixed;
         filter: blur(10px);
-        border-radius: 2em;
+        border-radius: 0em;
         z-index: -1;
       }
       
@@ -262,9 +272,9 @@ if (isset($_POST['favorite'])) {
     </style>
   </head>
   <body>
-    <div class="container-fluid">
-      <nav aria-label="breadcrumb">
-        <div class="d-flex my-1">
+    <div class="container-fluid custom-bg">
+      <nav class="position-absolute top-0" aria-label="breadcrumb">
+        <div class="d-flex my-1 text-shadow">
           <a class="me-auto btn border-0 fw-bold text-start link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>">
             <i class="bi bi-chevron-down text-stroke"></i>
           </a>
@@ -276,9 +286,9 @@ if (isset($_POST['favorite'])) {
         </div>
       </nav>
       <div class="row featurette">
-        <div class="col-md-4 col-xl-3 order-md-1 mb-5">
-          <div class="bg-body-tertiary bg-opacity-25 rounded-5">
-            <div class="position-relative custom-bg text-shadow p-3">
+        <div class="col-md-6 order-md-1 d-flex justify-content-center align-items-center vh-100 mb-5 mb-md-0">
+          <div class="bg-transparent rounded-5 w-100 max-md">
+            <div class="position-relative text-shadow p-3">
               <div class="position-relative">
                 <div class="position-relative">
                   <div class="text-center mb-2 ratio ratio-1x1">
@@ -338,14 +348,14 @@ if (isset($_POST['favorite'])) {
                       $sampleRate = !empty($fileInfo['audio']['sample_rate']) ? $fileInfo['audio']['sample_rate'] . 'Hz' : 'Unknown';
                     ?>
                     <small>
-                      <span class="small shadow text-white">
+                      <span class="small shadow text-white rounded-pill">
                         <?php echo $bitrate; ?>
                       </span>
                     </small>
                   </div>
                   <div class="ms-auto">
                     <small>
-                      <a class="small link-body-emphasis text-decoration-none shadow" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play From Current Artist</a>
+                      <a class="small link-body-emphasis text-decoration-none shadow rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play From Current Artist</a>
                     </small>
                   </div>
                 </div>
@@ -548,9 +558,9 @@ if (isset($_POST['favorite'])) {
             </div>
           </div>
         </div>
-        <div class="col-md-8 col-xl-9 order-md-2">
-          <div class="d-md-none d-lg-none mt-4" id="playList">
-            <h3 class="text-start fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
+        <div class="col-md-6 order-md-2 d-flex justify-content-center align-items-center">
+          <div class="d-md-none d-lg-none mt-4 w-100" id="playList">
+            <h3 class="text-start fw-bold pt-3 mb-3" style="overflow-x: auto; white-space: nowrap;"><i class="bi bi-music-note-list"></i> all favorited songs</h3>
             <div class="overflow-y-auto" id="autoHeightDivM" style="max-height: 100%;">
               <?php foreach ($allRows as $song): ?>
                 <?php
@@ -562,11 +572,11 @@ if (isset($_POST['favorite'])) {
                   // Extract information
                   $duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
                 ?>
-                <div id="songM_<?php echo $song['id']; ?>" class="d-flex justify-content-between align-items-center rounded-4 bg-dark-subtle bg-opacity-10 my-2 <?php echo ($song['id'] == $row['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
+                <div id="songM_<?php echo $song['id']; ?>" class="link-body-emphasis d-flex justify-content-between align-items-center rounded-4 bg-dark-subtle bg-opacity-10 my-2 text-shadow <?php echo ($song['id'] == $row['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
                   <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play_favorite.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
                     <?php echo $song['title']; ?><br>
-                    <small class="text-muted"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small><br>
-                    <small class="text-muted">Playtime : <?php echo $duration; ?></small>
+                    <small class="text-white"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small><br>
+                    <small class="text-white">Playtime : <?php echo $duration; ?></small>
                   </a>
                   <div class="dropdown dropdown-menu-end">
                     <button class="text-decoration-none text-white btn fw-bold border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
@@ -582,8 +592,8 @@ if (isset($_POST['favorite'])) {
               <br><br><br><br><br><br><br><br><br><br>
             </div>
           </div>
-          <div class="d-none d-md-block d-lg-block">
-            <h3 class="text-start fw-bold mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
+          <div class="d-none d-md-block d-lg-block w-100 overflow-y-auto vh-100 py-2">
+            <h3 class="text-start fw-bold pt-3 mb-3 text-shadow text-white" style="overflow-x: auto; white-space: nowrap;"><i class="bi bi-music-note-list"></i> all favorited songs</h3>
             <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
               <?php foreach ($allRows as $song): ?>
                 <?php
@@ -595,11 +605,11 @@ if (isset($_POST['favorite'])) {
                   // Extract information
                   $duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
                 ?>
-                <div id="song_<?php echo $song['id']; ?>" class="d-flex justify-content-between align-items-center rounded-4 bg-dark-subtle bg-opacity-10 my-2 <?php echo ($song['id'] == $row['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
+                <div id="song_<?php echo $song['id']; ?>" class="link-body-emphasis d-flex justify-content-between align-items-center rounded-4 bg-dark bg-opacity-10 my-2 text-shadow <?php echo ($song['id'] == $row['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
                   <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play_favorite.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>" style="overflow-x: auto; white-space: nowrap;">
                     <?php echo $song['title']; ?><br>
-                    <small class="text-muted"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small><br>
-                    <small class="text-muted">Playtime : <?php echo $duration; ?></small>
+                    <small class="text-white"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small><br>
+                    <small class="text-white">Playtime : <?php echo $duration; ?></small>
                   </a>
                   <div class="dropdown dropdown-menu-end">
                     <button class="text-decoration-none text-white btn fw-bold border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>

@@ -147,7 +147,6 @@ $nextRow = $data[$nextIndex];
         height: 100vh;
         background: url('<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>') center/cover no-repeat fixed;
         filter: blur(10px);
-        border-radius: 2em;
         z-index: -1;
       }
       
@@ -161,39 +160,83 @@ $nextRow = $data[$nextIndex];
     </style>
   </head>
   <body>
-    <div class="container-fluid d-flex vh-100 justify-content-center align-items-center custom-bg">
-      <a class="position-absolute start-0 top-0 btn border-0 link-body-emphasis" href="index.php"><i class="bi bi-chevron-left fs-4 text-stroke"></i></a>
-      <div class="bg-body-tertiary bg-opacity-25 rounded-5 w-100" style="max-width: 325px;">
-        <div class="position-relative text-shadow p-3">
-          <div class="position-relative">
-            <div class="text-center mb-2 ratio ratio-1x1">
-              <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-4 shadow"></a>
+    <div class="container-fluid">
+      <a class="position-absolute start-0 top-0 btn border-0 link-body-emphasis text-shadow" href="index.php"><i class="bi bi-chevron-left fs-4 text-stroke"></i></a>
+      <div class="row">
+        <div class="col-md-6 d-flex justify-content-center align-items-center custom-bg vh-100">
+          <div class="bg-body-tertiary bg-opacity-10 shadow rounded-5 w-100" style="max-width: 325px;">
+            <div class="position-relative text-shadow p-3">
+              <div class="position-relative">
+                <div class="text-center mb-2 ratio ratio-1x1">
+                  <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-4 shadow"></a>
+                </div>
+                <h2 class="text-start text-white fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['title']; ?></h2>
+                <h6 class="text-start text-white fw-bold mb-2" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></h6>
+                <a class="text-decoration-none link-light small fw-medium" href="#" data-bs-toggle="modal" data-bs-target="#lyricsModal">Lyrics</a>
+              </div>
+              <div id="music-player" class="w-100 mt-2">
+                <div class="d-flex fw-medium text-white gap-2">
+                  <span class="me-auto small" id="duration"></span>
+                  <input type="range" class="w-100 form-range mx-auto" id="duration-slider" value="0">
+                  <span class="ms-auto small" id="duration-left"></span>
+                </div>
+                <audio id="player" class="d-none" controls>
+                  <source src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['file']; ?>" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+              <div class="btn-group w-100 align-items-center">
+                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play.php?play.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
+                  <i class="bi bi-skip-start-fill fs-custom-3"></i>
+                </a>
+                <button class="btn border-0 link-body-emphasis w-25 text-white text-shadow" id="playPauseButton" onclick="togglePlayPause()">
+                  <i class="bi bi-play-circle-fill fs-custom"></i>
+                </button>
+                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play.php?play.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
+                  <i class="bi bi-skip-end-fill fs-custom-3"></i>
+                </a>
+              </div>
             </div>
-            <h2 class="text-start text-white fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['title']; ?></h2>
-            <h6 class="text-start text-white fw-bold mb-2" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></h6>
-            <a class="text-decoration-none link-light small fw-medium" href="#" data-bs-toggle="modal" data-bs-target="#lyricsModal">Lyrics</a>
           </div>
-          <div id="music-player" class="w-100 mt-2">
-            <div class="d-flex fw-medium text-white">
-              <span class="me-auto small" id="duration"></span>
-              <span class="ms-auto small" id="duration-left"></span>
+        </div>
+        <div class="col-md-6 d-flex justify-content-center align-items-center mt-5 mt-md-0">
+          <div class="p-md-3 vh-100 w-100 overflow-y-auto py-2">
+            <h3 class="text-start text-white text-shadow fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
+            <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
+              <?php
+                $sourceApiUrl = $websiteUrl . '/feeds/music/api_music.php'; // Construct API URL based on user input
+
+                try {
+                  $json = @file_get_contents($sourceApiUrl);
+                  if ($json === false) {
+                    throw new Exception("<h5 class='text-center'>Error fetching data from API</h5>");
+                  }
+
+                  $data = json_decode($json, true);
+
+                  if (!is_array($data) || empty($data)) {
+                    throw new Exception("<h5 class='text-center'>No data found</h5>");
+                  }
+                ?>
+                  <div class="song-list">
+                    <?php foreach ($data as $song): ?>
+                      <div id="song_<?php echo $song['id']; ?>" class="link-body-emphasis d-flex justify-content-between align-items-center rounded-4 bg-dark bg-opacity-10 my-2 text-shadow <?php echo ($song['id'] == $selectedSong['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
+                        <div class="card-body p-1">
+                          <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>">
+                            <?php echo $song['title']; ?><br>
+                            <small class="small"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small>
+                          </a>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                <?php
+                } catch (Exception $e) {
+                  echo "<h5 class='text-center mt-3 fw-bold'>Error or nothing found: </h5>" . $e->getMessage();
+                }
+              ?>
+              <br><br><br><br><br><br><br><br><br><br>
             </div>
-            <audio id="player" class="d-none" controls>
-              <source src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['file']; ?>" type="audio/mpeg">
-              Your browser does not support the audio element.
-            </audio>
-            <input type="range" class="w-100 form-range" id="duration-slider" value="0">
-          </div>
-          <div class="btn-group w-100 align-items-center">
-            <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play.php?play.php?album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
-              <i class="bi bi-skip-start-fill fs-custom-3"></i>
-            </a>
-            <button class="btn border-0 link-body-emphasis w-25 text-white text-shadow" id="playPauseButton" onclick="togglePlayPause()">
-              <i class="bi bi-play-circle-fill fs-custom"></i>
-            </button>
-            <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow" href="play.php?play.php?album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
-              <i class="bi bi-skip-end-fill fs-custom-3"></i>
-            </a>
           </div>
         </div>
       </div>
@@ -220,6 +263,46 @@ $nextRow = $data[$nextIndex];
         </div>
       </div>
     </div>
+    <script>
+      // Add this function to scroll to the current song and add active class
+      function scrollToCurrentSong() {
+        var currentSongId = "<?php echo $selectedSong['id']; ?>";
+        var element = document.getElementById("song_" + currentSongId);
+        var autoHeightDiv = document.getElementById('autoHeightDiv');
+
+        if (element && autoHeightDiv) {
+          // Remove the active class from all song elements
+          var allSongElements = autoHeightDiv.querySelectorAll('.rounded-4');
+          allSongElements.forEach(function(songElement) {
+            songElement.classList.remove('bg-body-tertiary', 'border', 'border-opacity-25', 'border-light');
+          });
+
+          // Add the active class to the current song element
+          element.classList.add('rounded-4', 'bg-body-tertiary', 'border', 'border-opacity-25', 'border-light');
+
+          // Calculate the scroll position based on the element's position within the container
+          var scrollTop = element.offsetTop - autoHeightDiv.offsetTop;
+
+          // Scroll only the container to the calculated position
+          autoHeightDiv.scrollTop = scrollTop;
+        }
+      }
+
+      // Call the function when the page is loaded
+      window.addEventListener('load', scrollToCurrentSong);
+    </script>
+    <script>
+      // Get a reference to the element
+      const autoHeightDiv = document.getElementById('autoHeightDiv');
+    
+      // Set the element's height to match the screen's height
+      autoHeightDiv.style.height = window.innerHeight + 'px';
+    
+      // Listen for window resize events to update the height dynamically
+      window.addEventListener('resize', () => {
+        autoHeightDiv.style.height = window.innerHeight + 'px';
+      });
+    </script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         const audioPlayer = document.getElementById('player');
