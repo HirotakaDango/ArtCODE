@@ -272,18 +272,7 @@ if (isset($_POST['favorite'])) {
   </head>
   <body>
     <div class="container-fluid custom-bg">
-      <nav class="position-absolute top-0" aria-label="breadcrumb">
-        <div class="d-flex my-1 text-shadow">
-          <a class="me-auto btn border-0 fw-bold text-start link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>">
-            <i class="bi bi-chevron-down text-stroke"></i>
-          </a>
-          <?php if ($user_email === $email): ?>
-            <a class="ms-auto btn border-0 fw-bold text-end link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/edit.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['id']; ?>">
-              <i class="bi bi-pencil-fill"></i>
-            </a>
-          <?php endif; ?>
-        </div>
-      </nav>
+      <?php include('navbar_option.php'); ?>
       <div class="row featurette">
         <div class="col-md-6 order-md-1 d-flex justify-content-center align-items-center vh-100 mb-5 mb-md-0">
           <div class="bg-transparent rounded-5 w-100 max-md">

@@ -46,6 +46,11 @@
                             <i class="bi bi-volume-up-fill ms-auto fs-3"></i>
                           </div>
                         </div>
+                        <?php if ($user_email === $email): ?>
+                          <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/edit.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['id']; ?>">
+                            Edit Song
+                          </a>
+                        <?php endif; ?>
                         <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100" href="<?php echo $row['file']; ?>" download>Download Song</a>
                       </div>
                     </div>
