@@ -61,6 +61,11 @@ $nextRow = $data[$nextIndex];
     <link rel="icon" type="image/png" href="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <meta property="og:image" content="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>"/>
+    <meta property="og:title" content="<?php echo $selectedSong['title']; ?>"/>
+    <meta property="og:description" content="<?php echo $selectedSong['album']; ?>"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/users/?id=<?php echo $user['id']; ?>">
     <script>
       const player = document.getElementById('player');
       let currentTrackId = <?= $songId ?>;
@@ -161,20 +166,25 @@ $nextRow = $data[$nextIndex];
   </head>
   <body>
     <div class="container-fluid">
-      <a class="position-absolute start-0 top-0 btn border-0 link-body-emphasis text-shadow" href="index.php"><i class="bi bi-chevron-left fs-4 text-stroke"></i></a>
+      <a class="m-1 p-3 position-absolute start-0 top-0 btn border-0 link-body-emphasis text-shadow" href="index.php"><i class="bi bi-chevron-down fs-4 text-stroke"></i></a>
       <div class="row">
         <div class="col-md-6 d-flex justify-content-center align-items-center custom-bg vh-100">
-          <div class="bg-body-tertiary bg-opacity-10 shadow rounded-5 w-100" style="max-width: 325px;">
-            <div class="position-relative text-shadow p-3">
+          <div class="bg-transparent rounded-5 w-100" style="max-width: 325px;">
+            <div class="position-relative text-shadow p-2 p-md-0">
               <div class="position-relative">
-                <div class="text-center mb-2 ratio ratio-1x1">
+                <div class="text-center mb-3 ratio ratio-1x1">
                   <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-4 shadow"></a>
                 </div>
                 <h2 class="text-start text-white fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['title']; ?></h2>
-                <h6 class="text-start text-white fw-bold mb-2" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></h6>
-                <a class="text-decoration-none link-light small fw-medium" href="#" data-bs-toggle="modal" data-bs-target="#lyricsModal">Lyrics</a>
+                <h6 class="text-start text-white fw-bold mb-3" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></h6>
+                <div class="d-flex justify-content-start align-items-center">
+                  <a class="text-decoration-none link-light fw-medium me-auto small" href="#" data-bs-toggle="modal" data-bs-target="#lyricsModal">Lyrics</a>
+                  <a class="text-decoration-none link-light fw-medium ms-autod-md-none d-lg-none" href="#playList">
+                    <i class="bi bi-music-note-list"></i>
+                  </a>
+                </div>
               </div>
-              <div id="music-player" class="w-100 mt-2">
+              <div id="music-player" class="w-100 mt-3">
                 <div class="d-flex fw-medium text-white gap-2">
                   <span class="me-auto small" id="duration"></span>
                   <input type="range" class="w-100 form-range mx-auto" id="duration-slider" value="0">
@@ -200,7 +210,7 @@ $nextRow = $data[$nextIndex];
           </div>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-items-center mt-5 mt-md-0">
-          <div class="p-md-3 vh-100 w-100 overflow-y-auto py-2">
+          <div class="p-md-3 vh-100 w-100 overflow-y-auto py-2" id="playList">
             <h3 class="text-start text-white text-shadow fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
             <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
               <?php
