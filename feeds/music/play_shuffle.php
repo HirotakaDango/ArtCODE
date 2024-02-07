@@ -330,23 +330,7 @@ if (isset($_POST['favorite'])) {
                     </small>
                   </div>
                 </div>
-                <div class="btn-group w-100 gap-4 my-3 my-md-2">
-                  <a class="text-start me-auto border-0 link-body-emphasis d-none d-md-block d-lg-block" href="<?php echo $row['file']; ?>" download>
-                    <i class="bi bi-download"></i>
-                  </a>
-                  <a class="text-start me-auto border-0 link-body-emphasis d-md-none d-lg-none" href="#playList">
-                    <i class="bi bi-music-note-list"></i>
-                  </a>
-                  <a class="text-center mx-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#songInfo">
-                    <i class="bi bi-info-circle"></i>
-                  </a>
-                  <a class="text-center mx-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">
-                    <i class="bi bi-share-fill"></i>
-                  </a>
-                  <a class="text-end ms-auto border-0 link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#optionModal">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                </div>
+                <?php include('info_option.php'); ?>
               </div>
               <?php include('player_card.php'); ?>
               <div class="btn-group w-100 align-items-center my-2 my-md-0">
@@ -599,83 +583,7 @@ if (isset($_POST['favorite'])) {
         </div>
       </div>
     </div>
-    <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-transparent border-0 rounded-0">
-          <div class="card rounded-4 p-4">
-            <p class="text-start fw-bold">share to:</p>
-            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
-              <!-- Twitter -->
-              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-twitter"></i>
-              </a>
-                                
-              <!-- Line -->
-              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-line"></i>
-              </a>
-                                
-              <!-- Email -->
-              <a class="btn" href="mailto:?body=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>">
-                <i class="bi bi-envelope-fill"></i>
-              </a>
-                                
-              <!-- Reddit -->
-              <a class="btn" href="https://www.reddit.com/submit?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-reddit"></i>
-              </a>
-                                
-              <!-- Instagram -->
-              <a class="btn" href="https://www.instagram.com/?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-instagram"></i>
-              </a>
-                                
-              <!-- Facebook -->
-              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-facebook"></i>
-              </a>
-            </div>
-            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
-              <!-- WhatsApp -->
-              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-whatsapp"></i>
-              </a>
-    
-              <!-- Pinterest -->
-              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-pinterest"></i>
-              </a>
-    
-              <!-- LinkedIn -->
-              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-linkedin"></i>
-              </a>
-    
-              <!-- Messenger -->
-              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-messenger"></i>
-              </a>
-    
-              <!-- Telegram -->
-              <a class="btn" href="https://telegram.me/share/url?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-telegram"></i>
-              </a>
-    
-              <!-- Snapchat -->
-              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php $url = rawurlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/feeds/music/play_shuffle.php?mode=' . urlencode(isset($_GET['mode']) ? ($_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? '&by=' . $_GET['by'] : '&by=newest') : '') : '&by=newest_lists') . 'album=' . rawurlencode($row['album']) . '&id=' . urlencode($row['id'])); ?>" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-snapchat"></i>
-              </a>
-            </div>
-            <div class="input-group">
-              <input type="text" id="urlInput1" value="<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" class="form-control border-2 fw-bold" readonly>
-              <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard1()">
-                <i class="bi bi-clipboard-fill"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <?php include('share_option.php'); ?>
     <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-transparent border-0 rounded-0">

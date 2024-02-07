@@ -175,17 +175,24 @@ $nextRow = $data[$nextIndex];
                 <div class="text-center mb-3 ratio ratio-1x1">
                   <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-4 shadow"></a>
                 </div>
-                <h2 class="text-start text-white fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['title']; ?></h2>
-                <h6 class="text-start text-white fw-bold mb-3" style="overflow-x: auto; white-space: nowrap;"><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></h6>
+                <div class="w-100 d-flex justify-content-start align-items-center">
+                  <div class="overflow-auto text-nowrap" style="width: 87%; filter: blur(0px);">
+                    <h2 class="text-start text-white fw-bold z-3"><?php echo $selectedSong['title']; ?></h2>
+                  </div>
+                  <div class="text-shadow pb-2" style="width: 13%;">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#shareLink" class="btn border-0 link-body-emphasis ms-1 ps-3"><i class="bi bi-share-fill"></i></a>
+                  </div>
+                </div>
+                <h6 class="text-start text-white fw-bold mb-3 overflow-auto text-nowrap"><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></h6>
                 <div class="d-flex justify-content-start align-items-center">
                   <a class="text-decoration-none link-light fw-medium me-auto small" href="#" data-bs-toggle="modal" data-bs-target="#lyricsModal">Lyrics</a>
-                  <a class="text-decoration-none link-light fw-medium ms-autod-md-none d-lg-none" href="#playList">
-                    <i class="bi bi-music-note-list"></i>
+                  <a class="text-decoration-none link-light fw-medium ms-auto d-md-none d-lg-none" href="#playList">
+                    <i class="bi bi-music-note-list fs-4"></i>
                   </a>
                 </div>
               </div>
               <div id="music-player" class="w-100 mt-3">
-                <div class="d-flex fw-medium text-white gap-2">
+                <div class="d-flex justify-content-start align-items-center fw-medium text-white gap-2">
                   <span class="me-auto small" id="duration"></span>
                   <input type="range" class="w-100 form-range mx-auto" id="duration-slider" value="0">
                   <span class="ms-auto small" id="duration-left"></span>
@@ -253,7 +260,7 @@ $nextRow = $data[$nextIndex];
     </div>
     <div class="modal fade" id="lyricsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-        <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-content bg-dark bg-opacity-50 text-shadow rounded-4 border-0 shadow">
           <div class="modal-header border-0">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Lyrics</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -269,6 +276,43 @@ $nextRow = $data[$nextIndex];
                 echo "<h6 class='text-center'>Lyrics are empty.</h6>";
               }
             ?>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img class="object-fit-contain h-100 w-100 rounded" src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>">
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+            <a class="btn btn-primary fw-bold w-100 mt-2" href="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" download>Download Cover Image</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="card rounded-4 p-4">
+            <p class="text-start fw-bold">share</p>
+            <div class="input-group">
+              <input type="text" id="urlInput1" value="<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" class="form-control border-2 fw-bold" readonly>
+              <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard1()">
+                <i class="bi bi-clipboard-fill"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img class="object-fit-contain h-100 w-100 rounded" src="covers/<?php echo $coverImage; ?>">
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+            <a class="btn btn-primary fw-bold w-100 mt-2" href="covers/<?php echo $coverImage; ?>" download>Download Cover Image</a>
           </div>
         </div>
       </div>
