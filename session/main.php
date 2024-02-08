@@ -1,12 +1,12 @@
         <section id="main">
-          <div class="container py-md-2 py-lg-2">
+          <div class="container-fluid px-md-5 py-md-2 py-lg-2">
             <div class="row align-items-center mt-5 mt-md-0 mt-lg-0 pt-md-4 pt-lg-4">
               <div class="col-md-7 order-md-1">
                 <h1 class="fw-bolder display-4 text-white animate__animated animate__fadeInLeft animate__delay-1s" style="max-width: 35.5rem;">Explore and unleash <span class='text-danger' style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">your creativity <a class="btn btn-outline-danger border-0 rounded-pill" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/login.php"><i class="bi bi-arrow-right display-5 px-3" style="-webkit-text-stroke: 3px;"></i></a></span></h1>
                 <h6 class="pb-2 mb-md-4 mb-lg-5 text-white animate__animated animate__fadeInLeft animate__delay-1s">Unleash Your Creativity with Us! Join a vibrant community of innovators, artists, and visionaries. Sign up now to embark on an inspiring journey where your ideas come to life. Your creative adventure begins here!</h6>
                 <div class="btn-group gap-2 mb-3 d-md-none d-lg-none">
-                  <a class="btn btn-danger rounded-pill fw-bold animate__animated animate__fadeInLeft animate__delay-1s" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/login.php">sign in</a>
-                  <a class="btn btn-outline-light rounded-pill fw-bold animate__animated animate__fadeInLeft animate__delay-1s" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/register.php">sign up</a>
+                  <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/login.php" class="btn text-light-subtle border-0 link-body-emphasis fw-bold me-2"><i class="bi bi-person-fill-up"></i> sign in</a>
+                  <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/register.php" class="btn rounded-pill <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'btn-outline-light' : 'btn-outline-dark'; ?> fw-bold"><i class="bi bi-person-plus-fill"></i> sign up for free</a>
                 </div>
               </div>
               <div class="col-md-5 order-md-2 mb-5 mb-md-0 animate__animated animate__fadeInRight animate__delay-1s d-none d-md-block d-lg-block">

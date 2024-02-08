@@ -4,14 +4,14 @@
             <div class="col d-flex flex-column align-items-start gap-2">
               <h2 class="fw-bold text-body-emphasis">Why ArtCODE? And the reason why choose ArtCODE?</h2>
               <p class="text-body-secondary">ArtCODE is an online platform that combines the best features of Pixiv and Pinterest to create a unique and immersive experience for artists and art enthusiasts alike. Whether you're a seasoned professional or a budding beginner, ArtCODE provides a welcoming community where you can showcase your talent and connect with like-minded individuals from all over the world.</p>
-              <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/upload" class="btn btn-primary btn-lg rounded-pill fw-bold">Upload Your Works <i class="bi bi-arrow-right px-3" style="-webkit-text-stroke: 3px;"></i></a>
+              <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/upload" class="btn btn-primary btn-lg rounded-pill fw-bold">Upload Your Works <i class="bi bi-arrow-right px-3" style="-webkit-text-stroke: 3px; text-white"></i></a>
             </div>
 
             <div class="col">
               <div class="row row-cols-1 row-cols-sm-2 g-4">
                 <div class="col d-flex flex-column gap-2">
                   <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                    <i class="bi bi-images"></i> <!-- Bootstrap's image icon -->
+                    <i class="bi bi-images text-white"></i> <!-- Bootstrap's image icon -->
                   </div>
                   <h4 class="fw-semibold mb-0 text-body-emphasis">Artwork Galleries</h4>
                   <p class="text-body-secondary">Browse and create stunning art galleries to showcase your artwork collections.</p>
@@ -19,7 +19,7 @@
 
                 <div class="col d-flex flex-column gap-2">
                   <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                    <i class="bi bi-people"></i> <!-- Bootstrap's people icon -->
+                    <i class="bi bi-people text-white"></i> <!-- Bootstrap's people icon -->
                   </div>
                   <h4 class="fw-semibold mb-0 text-body-emphasis">Collaboration</h4>
                   <p class="text-body-secondary">Collaborate with other artists and create stunning artworks together.</p>
@@ -27,7 +27,7 @@
 
                 <div class="col d-flex flex-column gap-2">
                   <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                    <i class="bi bi-palette"></i> <!-- Bootstrap's palette icon -->
+                    <i class="bi bi-palette text-white"></i> <!-- Bootstrap's palette icon -->
                   </div>
                   <h4 class="fw-semibold mb-0 text-body-emphasis">Artistic Tools</h4>
                   <p class="text-body-secondary">Access a wide range of artistic tools and resources to enhance your creativity.</p>
@@ -35,7 +35,7 @@
 
                 <div class="col d-flex flex-column gap-2">
                   <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                    <i class="bi bi-globe"></i> <!-- Bootstrap's globe icon -->
+                    <i class="bi bi-globe text-white"></i> <!-- Bootstrap's globe icon -->
                   </div>
                   <h4 class="fw-semibold mb-0 text-body-emphasis">Global Community</h4>
                   <p class="text-body-secondary">Connect with artists from around the world and be part of a thriving creative community.</p>
@@ -46,46 +46,46 @@
           </div>
         </div>
         <div class="container">
-          <div class="row mb-5">
+          <div class="row">
             <div class="col-md-4 py-2">
-              <div class="card h-100 rounded-3 clickable-card">
-                <div class="card-body">
-                  <i class="bi bi-speedometer2 text-primary fs-1 mb-3"></i>
-                  <h3 class="fw-bold">Fast and Easy</h3>
-                  <p class="text-secondary fw-bold">With ArtCODE, you can quickly and easily find the perfect artwork for your project or collection.</p>
+              <div class="card h-100 clickable-card rounded-4 border-0 bg-body-tertiary">
+                <div class="card-body text-center">
+                  <i class="bi bi-speedometer2 fs-1 mb-3 text-white"></i>
+                  <h3 class="fw-bold text-start mt-3">Fast and Easy</h3>
+                  <p class="text-start fw-medium">With ArtCODE, you can quickly and easily find the perfect artwork for your project or collection.</p>
                 </div>
               </div>
             </div>
             <div class="col-md-4 py-2">
-              <div class="card h-100 rounded-3 clickable-card">
-                <div class="card-body">
-                  <i class="bi bi-globe text-primary fs-1 mb-3"></i>
-                  <h3 class="fw-bold">Global Community</h3>
-                  <p class="text-secondary fw-bold">ArtCODE connects you with a global community of artists and art lovers, allowing you to discover new perspectives and inspiration from around the world.</p>
+              <div class="card h-100 clickable-card rounded-4 border-0 bg-body-tertiary">
+                <div class="card-body text-center">
+                  <i class="bi bi-globe fs-1 mb-3 text-white"></i>
+                  <h3 class="fw-bold text-start mt-3">Global Community</h3>
+                  <p class="text-start fw-medium">ArtCODE connects you with a global community of artists and art lovers, allowing you to discover new perspectives and inspiration from around the world.</p>
                 </div>
               </div>
             </div>
             <div class="col-md-4 py-2">
-              <div class="card h-100 rounded-3 clickable-card">
-                <div class="card-body">
-                  <i class="bi bi-award text-primary fs-1 mb-3"></i>
-                  <h3 class="fw-bold">Quality and Diversity</h3>
-                  <p class="text-secondary fw-bold">ArtCODE offers a diverse range of high-quality artworks, including traditional paintings, digital art, and more, to suit any taste and style.</p>
+              <div class="card h-100 clickable-card rounded-4 border-0 bg-body-tertiary">
+                <div class="card-body text-center">
+                  <i class="bi bi-award fs-1 mb-3 text-white"></i>
+                  <h3 class="fw-bold text-start mt-3">Quality and Diversity</h3>
+                  <p class="text-start fw-medium">ArtCODE offers a diverse range of high-quality artworks, including traditional paintings, digital art, and more, to suit any taste and style.</p>
                 </div>
               </div>
             </div>
           </div>
           <div class="row align-items-md-stretch py-3">
-            <div class="col-md-6 mb-2 mb-md-0 mb-lg-0">
-              <div class="h-100 p-5 border rounded-3 clickable-card">
+            <div class="col-md-6 mb-3 mb-md-0 mb-lg-0">
+              <div class="h-100 p-5 border rounded-3 clickable-card rounded-4 border-0 bg-body-tertiary">
                 <h2 class="fw-bold">Best Platform To Share Your Ideas</h2>
-                <p class="fw-bold">With our user-friendly interface, you can easily upload and organize your artwork into collections, share your creations with others, and discover new artists and artwork through our sophisticated recommendation system. You can also connect with other members of the community through comments and private messaging, participate in contests and events to showcase your work and win prizes, and gain exposure for your art through our social media channels.</p>
+                <p class="fw-medium mt-3">With our user-friendly interface, you can easily upload and organize your artwork into collections, share your creations with others, and discover new artists and artwork through our sophisticated recommendation system. You can also connect with other members of the community through comments and private messaging, participate in contests and events to showcase your work and win prizes, and gain exposure for your art through our social media channels.</p>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="h-100 p-5 border rounded-3 clickable-card">
+              <div class="h-100 p-5 border rounded-3 clickable-card rounded-4 border-0 bg-body-tertiary">
                 <h2 class="fw-bold">We're Supporting Your Artworks</h2>
-                <p class="fw-bold">Our team is composed of passionate artists and developers who are dedicated to making ArtCODE the premier online destination for art lovers. We value creativity, diversity, and inclusivity, and we strive to create a platform that is accessible and enjoyable for everyone.</p>
+                <p class="fw-medium mt-3">Our team is composed of passionate artists and developers who are dedicated to making ArtCODE the premier online destination for art lovers. We value creativity, diversity, and inclusivity, and we strive to create a platform that is accessible and enjoyable for everyone.</p>
               </div>
             </div>
           </div>

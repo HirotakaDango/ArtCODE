@@ -59,8 +59,7 @@ $nextRow = $data[$nextIndex];
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $selectedSong['title']; ?></title>
     <link rel="icon" type="image/png" href="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <?php include('../../bootstrapcss.php'); ?>
     <meta property="og:image" content="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>"/>
     <meta property="og:title" content="<?php echo $selectedSong['title']; ?>"/>
     <meta property="og:description" content="<?php echo $selectedSong['album']; ?>"/>
@@ -166,7 +165,7 @@ $nextRow = $data[$nextIndex];
   </head>
   <body>
     <div class="container-fluid">
-      <a class="m-1 p-3 position-absolute start-0 top-0 btn border-0 link-body-emphasis text-shadow" href="index.php"><i class="bi bi-chevron-down fs-4 text-stroke"></i></a>
+      <a class="m-1 p-3 position-absolute start-0 top-0 btn border-0 link-body-emphasis text-shadow" href="/session/music/"><i class="bi bi-chevron-down fs-4 text-stroke"></i></a>
       <div class="row">
         <div class="col-md-6 d-flex justify-content-center align-items-center custom-bg vh-100">
           <div class="bg-transparent rounded-5 w-100" style="max-width: 325px;">
@@ -498,7 +497,6 @@ $nextRow = $data[$nextIndex];
         document.execCommand('copy');
       }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+    <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>
