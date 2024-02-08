@@ -64,6 +64,6 @@ foreach ($images as &$image) {
 
 // Output the updated images array with favorites counts
 header('Content-Type: application/json');
-echo json_encode(['images' => $images, 'image_child' => $imageChildData]);
+echo json_encode(['images' => $images, 'image_child' => $imageChildData], JSON_PRETTY_PRINT);
 
 ?>
