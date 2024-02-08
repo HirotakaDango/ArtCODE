@@ -28,6 +28,7 @@ if ($result) {
     $nextRow = $stmtNext->execute()->fetchArray(SQLITE3_ASSOC);
 
     if (!$nextRow) {
+        // echo $row['album'].'-',$row['title'];
       // If no next row, fetch the first music record in the playlist
       $queryFirstNext = "SELECT * FROM music WHERE (music.album > :album) OR (music.album = :album AND music.title > :title) ORDER BY music.album ASC, music.title ASC LIMIT 1";
       $stmtFirstNext = $db->prepare($queryFirstNext);
@@ -68,8 +69,8 @@ if ($result) {
       $prevRow = $row;
     }
 
-    // Create a new array for each song and add it to the response array
-    $songInfo = array(
+    // Create a new array for each song
+    $songInfo = [
       'id' => $row['id'],
       'file' => $row['file'],
       'cover' => 'covers/' . $row['cover'],
@@ -77,10 +78,22 @@ if ($result) {
       'title' => $row['title'],
       'lyrics' => $row['lyrics'],
       'artist' => $row['artist'],
-      'nextPlay' => $nextRow,
-      'prevPlay' => $prevRow
-    );
-
+      'nextPlay' => [
+        'id' => $nextRow['id'],
+        'file' => $nextRow['file'],
+        'cover' => 'covers/' . $nextRow['cover'],
+        'album' => $nextRow['album'],
+        'title' => $nextRow['title']
+      ],
+      'prevPlay' => [
+        'id' => $prevRow['id'],
+        'file' => $prevRow['file'],
+        'cover' => 'covers/' . $prevRow['cover'],
+        'album' => $prevRow['album'],
+        'title' => $prevRow['title']
+      ]
+    ];
+    
     $response[] = $songInfo;
   }
 
@@ -91,7 +104,7 @@ if ($result) {
   header('Content-Type: application/json');
 
   // Output the JSON response
-  echo json_encode($response);
+  echo json_encode($response, JSON_PRETTY_PRINT);
 } else {
   // If there is an error in the query, return an error response
   echo json_encode(array('error' => 'Error retrieving songs'));
