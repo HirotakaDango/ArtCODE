@@ -1,6 +1,6 @@
 <?php
 // Set the limit of pagination
-$recordsPerPage = 20;
+$recordsPerPage = 250;
 $offset = ($page - 1) * $recordsPerPage;
 
 // Fetch favorites records

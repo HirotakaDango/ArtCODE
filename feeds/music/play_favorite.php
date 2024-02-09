@@ -273,7 +273,7 @@ if (isset($_POST['favorite'])) {
   </head>
   <body>
     <div class="container-fluid custom-bg">
-      <?php include('navbar_option.php'); ?>
+      <?php include('navbar_option_favorite.php'); ?>
       <div class="row featurette">
         <div class="col-md-6 order-md-1 d-flex justify-content-center align-items-center vh-100 mb-5 mb-md-0">
           <div class="bg-transparent rounded-5 w-100 max-md">

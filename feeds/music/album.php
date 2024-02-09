@@ -259,10 +259,11 @@ if (isset($_POST['follow'])) {
                 <p class="fw-medium mt-3 d-none d-md-block d-lg-block">Artist: <a class="text-decoration-none text-white" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
                 <p class="fw-medium mt-3 d-md-none d-lg-none">Artist: <a class="text-decoration-none text-white" data-bs-toggle="modal" data-bs-target="#profileModal"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
                 <p class="fw-medium mt-3">Total Tracks in Album: <?php echo $albumTrackCount; ?> songs</p>
-                <div class="btn-group gap-2">
+                <div class="btn-group gap-2 mb-2">
                   <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
                   <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $shuffledId; ?>"><i class="bi bi-shuffle"></i> shuffle</a>
                 </div>
+                <a class="btn btn-outline-light fw-medium rounded-pill" href="download_batch.php?album=<?php echo urlencode($album); ?>&userid=<?php echo $userid; ?>"><i class="bi bi-download"></i> download all songs from this album</a>
               </div>
             </div>
           </div>
