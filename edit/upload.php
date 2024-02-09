@@ -195,7 +195,7 @@ $db->close();
               </div>
               <div class="modal-body scrollable-div">
                 <form id="upload-form" enctype="multipart/form-data">
-                  <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit"><i class="bi bi-cloud-arrow-up-fill"></i></button>
+                  <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit">UPLOAD</button>
                 </form>
                 <div id="progress-bar-container" class="progress fw-bold" style="height: 45px; display: none;">
                   <div id="progress-bar" class="progress-bar progress-bar progress-bar-animated" style="height: 45px;" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -204,9 +204,12 @@ $db->close();
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-primary w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#uploadModal">
+        <button type="button" class="mb-2 btn btn-primary w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#uploadModal">
           UPLOAD
         </button>
+        <div class="d-flex align-items-center justify-content-center">
+          <a class="text-decoration-none fw-medium link-dark link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#limitationsModal">Note: read our limitations in case you forgot</a>
+        </div>
       </div>
     </div>
     <div class="mt-5"></div>
@@ -224,6 +227,8 @@ $db->close();
         </div>
       </div>
     </div>
+     <!-- Limitations Modal -->
+    <?php include('limitations.php'); ?>
     <style>
       .text-stroke {
         -webkit-text-stroke: 1px;
