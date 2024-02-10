@@ -11,7 +11,6 @@ $query = "SELECT videos.*, users.id AS userid, users.pic, users.artist
           WHERE videos.email = :email
           ORDER BY videos.id ASC
           LIMIT :limit OFFSET :offset";
-
 $stmt = $pdo->prepare($query);
 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
 $stmt->bindParam(':limit', $recordsPerPage, PDO::PARAM_INT);

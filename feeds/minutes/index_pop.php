@@ -5,12 +5,14 @@ $recordsPerPage = 20;
 $offset = ($page - 1) * $recordsPerPage;
 
 // Fetch videos records with user information
-$query = "SELECT videos.*, users.id AS userid, users.pic, users.artist 
+$query = "SELECT videos.*, users.id AS userid, users.pic, users.artist, 
+                 COUNT(favorites_videos.video_id) AS favorite_count
           FROM videos 
           LEFT JOIN users ON videos.email = users.email 
-          ORDER BY videos.view_count DESC, videos.id DESC 
+          LEFT JOIN favorites_videos ON videos.id = favorites_videos.video_id
+          GROUP BY videos.id
+          ORDER BY favorite_count DESC
           LIMIT :limit OFFSET :offset";
-
 $stmt = $db->prepare($query);
 $stmt->bindValue(':limit', $recordsPerPage, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);

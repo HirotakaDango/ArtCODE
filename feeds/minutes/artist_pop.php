@@ -5,8 +5,15 @@ $recordsPerPage = 20;
 $offset = ($page - 1) * $recordsPerPage;
 
 // Fetch videos records with user details using JOIN
-$queryvideos = "SELECT videos.*, users.id AS userid, users.pic, users.artist FROM videos JOIN users ON videos.email = users.email WHERE users.id = :userID ORDER BY videos.view_count DESC LIMIT :limit OFFSET :offset";
-
+$queryvideos = "SELECT videos.*, users.id AS userid, users.pic, users.artist, 
+                       COUNT(favorites_videos.video_id) AS favorite_count
+                FROM videos 
+                JOIN users ON videos.email = users.email 
+                LEFT JOIN favorites_videos ON videos.id = favorites_videos.video_id
+                WHERE users.id = :userID
+                GROUP BY videos.id
+                ORDER BY favorite_count DESC
+                LIMIT :limit OFFSET :offset";
 $stmt = $db->prepare($queryvideos);
 $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
 $stmt->bindParam(':limit', $recordsPerPage, PDO::PARAM_INT);

@@ -280,8 +280,10 @@ if (isset($_POST['follow'])) {
         <li><a href="?by=newest&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
         <li><a href="?by=oldest&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?by=popular&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?by=view&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+        <li><a href="?by=least&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
       </ul> 
-    </div> 
+    </div>
         <?php 
         if(isset($_GET['by'])){
           $sort = $_GET['by'];
@@ -295,6 +297,12 @@ if (isset($_POST['follow'])) {
             break;
             case 'popular':
             include "artist_pop.php";
+            break;
+            case 'view':
+            include "artist_view.php";
+            break;
+            case 'least':
+            include "artist_least.php";
             break;
           }
         }

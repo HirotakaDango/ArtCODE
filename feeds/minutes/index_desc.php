@@ -10,7 +10,6 @@ $query = "SELECT videos.*, users.id AS userid, users.pic, users.artist
           LEFT JOIN users ON videos.email = users.email 
           ORDER BY videos.id DESC 
           LIMIT :limit OFFSET :offset";
-
 $stmt = $db->prepare($query);
 $stmt->bindValue(':limit', $recordsPerPage, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);

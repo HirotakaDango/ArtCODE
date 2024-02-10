@@ -237,21 +237,15 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <source src="<?php echo $videoFile; ?>" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-          <h5 class="fw-bold"><?php echo $row['title']; ?></h5>
-          <h6 class="small fw-medium text-nowrap ms-auto"><?php echo $row['view_count']; ?> views</h6>
-          <div class="d-flex mt-4">
-            <a class="text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><h6 class="small fw-medium text-nowrap"><img height="32" width="32" class="rounded-circle border border-dark-subtle border-2 object-fit-cover" src="../../<?php echo $row['pic']; ?>"> <?php echo (!is_null($row['artist']) && strlen($row['artist']) > 15) ? substr($row['artist'], 0, 15) . '...' : $row['artist']; ?></h6></a>
+          <div class="d-md-none d-lg-none">
+            <h5 class="fw-bold"><?php echo $row['title']; ?></h5>
+            <h6 class="small fw-medium text-nowrap ms-auto"><?php echo $row['view_count']; ?> views</h6>
           </div>
-          <div class="d-flex">
-          <form class="w-100" method="post">
-            <?php if ($is_following): ?>
-              <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button> <small class="ms-2 fw-medium"><?php echo $num_followers ?> followers</small>
-            <?php else: ?>
-              <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button> <small class="ms-2 fw-medium"><?php echo $num_followers ?> followers</small>
-            <?php endif; ?>
-          </form>
-          </div>
-          <div class="d-flex mt-3">
+          <div class="d-flex justify-content-center align-items-center mt-3">
+            <div class="d-none d-md-block d-lg-block me-auto">
+              <h5 class="fw-bold"><?php echo $row['title']; ?></h5>
+              <h6 class="small fw-medium text-nowrap ms-auto"><?php echo $row['view_count']; ?> views</h6>
+            </div>
             <div class="ms-auto">
               <div class="btn-group gap-2">
                 <?php
@@ -287,6 +281,16 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
           </div>
+          <div class="d-flex justify-content-center align-items-center mt-2">
+            <a class="me-auto text-decoration-none text-white" href="artist.php?id=<?php echo $row['userid']; ?>"><h6 class="small fw-medium text-nowrap"><img height="32" width="32" class="rounded-circle border border-dark-subtle border-2 object-fit-cover" src="../../<?php echo $row['pic']; ?>"> <?php echo (!is_null($row['artist']) && strlen($row['artist']) > 15) ? substr($row['artist'], 0, 15) . '...' : $row['artist']; ?></h6></a>
+            <form class="ms-auto" method="post">
+              <?php if ($is_following): ?>
+                <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button> <small class="ms-2 fw-medium"><?php echo $num_followers ?> followers</small>
+              <?php else: ?>
+                <button class="btn btn-outline-light btn-sm rounded-pill fw-medium" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button> <small class="ms-2 fw-medium"><?php echo $num_followers ?> followers</small>
+              <?php endif; ?>
+            </form>
+          </div>
           <a class="btn btn-outline-light bg-body-tertiary text-white border-0 rounded-4 w-100 fw-medium mt-3" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
             description
           </a>
@@ -316,8 +320,8 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
               ?>
             </p>
           </div>
-          <div class="d-none d-md-block d-lg-block mt-2 bg-body-tertiary p-3 rounded-4">
-            <h5 class="fw-bold text-center mb-4">comments section</h5>
+          <div class="d-none d-md-block d-lg-block mt-2 p-0 rounded-4">
+            <h5 class="fw-bold text-center mt-5 mb-4">comments section</h5>
             <?php foreach ($comments as $comment) : ?>
               <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
                 <div class="d-flex align-items-center mb-2 position-relative">
@@ -395,7 +399,9 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
               </div>
             <?php endforeach; ?>
-            <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?minute_id=<?php echo $row['id']; ?>">view all comments</a>
+            <div class="d-flex justify-content-center">
+              <a class="btn border-0 link-body-emphasis fw-bold text-center mt-2" href="comments.php?minute_id=<?php echo $row['id']; ?>">view all comments</a>
+            </div>
           </div>
         </div>
         <div class="col-md-3 order-md-2 ps-md-1">
@@ -546,7 +552,9 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         <?php endforeach; ?>
-        <a class="btn btn-secondary w-100 mt-3 fw-bold border border-3 rounded-4" href="comments.php?minute_id=<?php echo $row['id']; ?>">view all comments</a>
+        <div class="d-flex justify-content-center">
+          <a class="btn border-0 link-body-emphasis fw-bold text-center mt-2" href="comments.php?minute_id=<?php echo $row['id']; ?>">view all comments</a>
+        </div>
       </div>
     </div>
     <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
