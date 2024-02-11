@@ -281,6 +281,7 @@ if (isset($_POST['follow'])) {
         <li><a href="?by=oldest&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?by=popular&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
         <li><a href="?by=view&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+        <li><a href="?by=least&id=<?php echo $userID; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
       </ul> 
     </div> 
         <?php 
@@ -299,6 +300,9 @@ if (isset($_POST['follow'])) {
             break;
             case 'view':
             include "user_view.php";
+            break;
+            case 'least':
+            include "user_least.php";
             break;
           }
         }

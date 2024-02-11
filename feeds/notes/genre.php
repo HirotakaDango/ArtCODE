@@ -14,40 +14,6 @@ $stmt->bindValue(':tag', '%' . $tag . '%');
 $stmt->bindValue(':email', $email);
 $stmt->execute();
 $total_posts = $stmt->fetchColumn();
-
-// Prepare the query to get the user's numpage
-$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
-$queryNum->bindValue(':email', $email, PDO::PARAM_STR);
-$resultNum = $queryNum->execute();
-$user = $queryNum->fetch(PDO::FETCH_ASSOC);
-
-$numpage = $user['numpage'];
-
-// Set the limit of images per page
-$limit = empty($numpage) ? 50 : $numpage;
-
-// Get the current page number, default to 1
-$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-
-// Calculate the offset based on the current page number and limit
-$offset = ($page - 1) * $limit;
-
-// Get the total number of images for the specified tag
-$count_query = "SELECT COUNT(*) FROM posts WHERE email = :email AND tags LIKE :tag";
-$stmtCount = $db->prepare($count_query);
-$stmtCount->bindValue(':email', $email, PDO::PARAM_STR);
-$stmtCount->bindValue(':tag', '%' . $tag . '%', PDO::PARAM_STR);
-$stmtCount->execute();
-$total = $stmtCount->fetchColumn();
-
-// query the database for the posts on the current page
-$stmt = $db->prepare('SELECT * FROM posts WHERE tags LIKE :tag AND email = :email ORDER BY id DESC LIMIT :offset, :limit');
-$stmt->bindValue(':tag', '%' . $tag . '%');
-$stmt->bindValue(':email', $email);
-$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
-$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -61,44 +27,41 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </head>
   <body>
     <?php include('header.php'); ?>
-    <?php include('note_card.php'); ?>
-    <?php
-      $totalPages = ceil($total / $limit);
-      $prevPage = $page - 1;
-      $nextPage = $page + 1;
-    ?>
-    <div class="pagination d-flex gap-1 justify-content-center mt-3">
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?tag=<?php echo $tag; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-      <?php endif; ?>
-
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?tag=<?php echo $tag; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-      <?php endif; ?>
-
-      <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?tag=' . $tag . '&page=' . $i . '">' . $i . '</a>';
+    <div class="dropdown mt-3">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=newest&tag=<?php echo $tag; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&tag=<?php echo $tag; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=date&tag=<?php echo $tag; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'date') echo 'active'; ?>">date</a></li>
+        <li><a href="?by=starred&tag=<?php echo $tag; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'starred') echo 'active'; ?>">starred</a></li>
+      </ul> 
+    </div> 
+        <?php 
+        if(isset($_GET['by'])){
+          $sort = $_GET['by'];
+ 
+          switch ($sort) {
+            case 'newest':
+            include "genre_desc.php";
+            break;
+            case 'oldest':
+            include "genre_asc.php";
+            break;
+            case 'date':
+            include "genre_date.php";
+            break;
+            case 'starred':
+            include "genre_starred.php";
+            break;
           }
         }
-      ?>
-
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?tag=<?php echo $tag; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-      <?php endif; ?>
-
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?tag=<?php echo $tag; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-      <?php endif; ?>
-    </div>
+        else {
+          include "genre_desc.php";
+        }
+        
+        ?>
     <div class="mt-5"></div>
     <?php include('../../bootstrapjs.php'); ?>
   </body>

@@ -57,8 +57,8 @@ $categoriesHeader = $stmtHeader->fetchAll();
               </li>
             </div>
           </ul>
-          <form class="d-flex ms-auto mt-2 mt-md-0 md-lg-0" action="genre.php" role="search">
-            <input class="form-control rounded-end-0 rounded-pill fw-medium focus-ring focus-ring-dark border-end-0" name="tag" type="search" placeholder="Search" aria-label="Search">
+          <form class="d-flex ms-auto mt-2 mt-md-0 md-lg-0" action="search.php" role="search">
+            <input class="form-control rounded-end-0 rounded-pill fw-medium focus-ring focus-ring-dark border-end-0" name="q" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success rounded-start-0 rounded-pill fw-medium" type="submit">Search</button>
           </form>
         </div>

@@ -201,7 +201,7 @@ if (isset($_POST['favorite'])) {
 
                       // Check if the URL ends with .png, .jpg, .jpeg, or .webp
                       if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $url)) {
-                        return '<a href="' . $url . '" target="_blank"><img class="img-fluid rounded-4" loading="lazy" src="' . $url . '" alt="Image"></a>';
+                        return '<a href="' . $url . '" target="_blank"><img class="w-100 h-100 rounded-4" loading="lazy" src="' . $url . '" alt="Image"></a>';
                       } elseif (strpos($url, 'youtube.com') !== false) {
                         // If the URL is from YouTube, embed it as an iframe with a very low-resolution thumbnail
                         $videoId = getYouTubeVideoId($url);
