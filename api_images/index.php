@@ -69,11 +69,11 @@ if ($result) {
         </button>
       </div>
     </nav>
-    <button type="button" class="position-absolute bottom-0 end-0 m-2 btn btn-dark rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#settingsModal">
+    <button type="button" class="position-fixed z-3 bottom-0 end-0 m-2 btn btn-dark rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#settingsModal">
       settings
     </button>
     <?php
-      $limit = $numPage;
+      $limit = !empty($numPage) ? $numPage : 10;
       $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
       $offset = ($page - 1) * $limit;
 
