@@ -340,436 +340,482 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
             <a href="#" id="originalImageLink" data-bs-toggle="modal" data-bs-target="#originalImageModal" data-original-src="images/<?php echo $image['filename']; ?>">
               <img class="img-pointer shadow-lg rounded-r h-100 w-100" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
             </a>
+            
             <!-- Original Image Modal -->
             <div class="modal fade" id="originalImageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered modal-fullscreen modal-dialog-scrollable"> <!-- Add the modal-dialog-scrollable class -->
-                <div class="modal-content border-0 bg-dark">
-                  <div class="modal-body scrollable-div d-flex align-items-center justify-content-center p-0">
-                    <div class="position-relative h-100 w-100 align-items-center">
-                      <div class="position-relative">
-                        <img id="originalImage" class="img-fluid mb-1" src="" alt="Original Image" style="width: 100%; height: auto;">
-                        <div class="card-img-overlay position-absolute bottom-0 start-0 m-3">
-                          <h6 class="card-title text-white fw-bold shadowed-text">
-                            <?php echo $image['title']; ?>          
-                          </h6>
-                        </div>
-                        <div class="position-absolute bottom-0 start-0 m-3">
-                          <h6 class="card-title text-white fw-bold shadowed-text">by           
-                            <a class="text-decoration-none text-white shadowed-text fw-bold rounded-pill" href="artist.php?id=<?= $user['id'] ?>">
-                              <?php if (!empty($user['pic'])): ?>
-                                <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 24px; height: 24px;">
-                              <?php else: ?>
-                                <img class="object-fit-cover border bg-secondary border-1 rounded-circle" src="icon/profile.svg" style="width: 24px; height: 24px;">
-                              <?php endif; ?>
-                              <?php echo (mb_strlen($user['artist']) > 25) ? mb_substr($user['artist'], 0, 25) . '...' : $user['artist']; ?>
-                            </a> 
-                          </h6>
-                        </div>
-                      </div>
-                      <div class="image-container position-relative">
-                        <div class="btn-group position-absolute bottom-0 end-0 m-3">
-                          <a href="images/<?php echo $image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-end-0 opacity-75 fw-bold" download>
-                            <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
-                          </a>
-                          <a href="images/<?php echo $image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-start-0 opacity-75 fw-bold">
-                            <i class="bi bi-arrows-fullscreen text-stroke"></i>
-                          </a>
-                        </div>
-                      </div>
-                      <div class="collapse" id="collapseMoreExpand">
-                        <?php foreach ($child_images as $child_image) : ?>
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen" data-bs-theme="dark">
+                <div class="modal-content border-0">
+                  <div class="modal-body hide-scrollbar p-0">
+                    <button type="button" class="btn border-0 link-body-emphasis z-3 position-fixed top-0 end-0 shadowed-text" data-bs-dismiss="modal">
+                      <i class="bi bi-chevron-down fs-5" style="-webkit-text-stroke: 3px;"></i>
+                    </button>
+                    <div class="row g-0">
+                      <div class="col-md-7 h-100 overflow-auto vh-100 hide-scrollbar bg-body-tertiary">
+                        <div class="position-relative h-100 w-100 align-items-center">
+                          <div class="position-relative">
+                            <img id="originalImage" class="w-100 h-100" src="" alt="Original Image">
+                          </div>
                           <div class="image-container position-relative">
-                            <img data-src="images/<?php echo $child_image['filename']; ?>" class="mb-1 lazy-load" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
-                            <div class="card-img-overlay position-absolute bottom-0 start-0 m-3">
-                              <h6 class="card-title text-white fw-bold shadowed-text">
-                                <?php echo $image['title']; ?>          
-                              </h6>
-                            </div>
-                            <button type="button" class="btn position-absolute border-0 top-0 end-0 m-2" data-bs-dismiss="modal">
-                              <i class="bi bi-chevron-down text-white shadowed-text text-stroke fs-5"></i>
-                            </button>
-                            <div class="position-absolute bottom-0 start-0 m-3">
-                              <h6 class="card-title text-white fw-bold shadowed-text">by           
-                                <a class="text-decoration-none text-white shadowed-text fw-bold rounded-pill" href="artist.php?id=<?= $user['id'] ?>">
-                                  <?php if (!empty($user['pic'])): ?>
-                                    <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 24px; height: 24px;">
-                                  <?php else: ?>
-                                    <img class="object-fit-cover border bg-secondary border-1 rounded-circle" src="icon/profile.svg" style="width: 24px; height: 24px;">
-                                  <?php endif; ?>
-                                  <?php echo (mb_strlen($user['artist']) > 25) ? mb_substr($user['artist'], 0, 25) . '...' : $user['artist']; ?>
-                                </a> 
-                              </h6>
-                            </div>
                             <div class="btn-group position-absolute bottom-0 end-0 m-3">
-                              <a href="images/<?php echo $child_image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-end-0 opacity-75 fw-bold" download>
+                              <a href="images/<?php echo $image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-end-0 opacity-75 fw-bold" download>
                                 <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
                               </a>
-                              <a href="images/<?php echo $child_image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-start-0 opacity-75 fw-bold">
+                              <a href="images/<?php echo $image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-start-0 opacity-75 fw-bold">
                                 <i class="bi bi-arrows-fullscreen text-stroke"></i>
                               </a>
                             </div>
                           </div>
-                        <?php endforeach; ?>
-                      </div>
-                      <button type="button" class="btn position-absolute border-0 top-0 end-0 m-2" data-bs-dismiss="modal">
-                        <i class="bi bi-chevron-down text-white shadowed-text text-stroke fs-5"></i>
-                      </button>
-                      <?php if (!empty($child_image['filename'])) : ?>
-                        <button class="btn btn-outline-light border-0 fw-bold w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMoreExpand" aria-expanded="false" id="toggleButtonExpand" aria-controls="collapseExample">
-                          <i class="bi bi-caret-down-fill"></i> <small id="toggleTextExpand">show more images</small>
-                        </button> 
-                      <?php endif; ?>
-                      <?php
-                        // Get all images for the given user_email
-                        $stmt = $db->prepare("SELECT id, filename, tags, title FROM images WHERE email = :email ORDER BY id DESC");
-                        $stmt->bindParam(':email', $user_email);
-                        $stmt->execute();
-                        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                      ?>
-
-                      <div class="mt-2 mb-2 w-98 scroll-container media-scrollerF snaps-inlineF overflow-auto">
-                        <?php $count = 0; ?>
-                        <?php foreach ($images as $imageU): ?>
-                          <?php
-                            $image_idF = $imageU['id'];
-                            $image_urlF = $imageU['filename'];
-                            $image_titleF = $imageU['title'];
-                            $current_image_idF = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
-                            ?>
-                            <div class="media-elementF d-inline-flex">
-                              <a href="?artworkid=<?php echo $image_idF; ?>">
-                                <img class="hori <?php echo ($image_idF == $current_image_idF) ? 'opacity-50' : ''; ?>" src="thumbnails/<?php echo $image_urlF; ?>" alt="<?php echo $image_titleF; ?>">
-                              </a>
-                            </div>
-                          <?php $count++; ?>
-                          <?php if ($count >= 25) break; ?>
-                        <?php endforeach; ?>
-                        <button id="loadMoreBtnF" class="btn btn-secondary hori opacity-25"><i class="bi bi-plus-circle display-5 text-stroke"></i></button>
-                        <script>
-                          var currentIndexF = <?php echo $count; ?>;
-                          var imagesF = <?php echo json_encode($images); ?>;
-                          var containerF = document.querySelector('.media-scrollerF');
-                          var loadMoreBtnF = document.getElementById('loadMoreBtnF');
-
-                          function loadMoreImagesF() {
-                            for (var i = currentIndexF; i < currentIndexF + 25 && i < imagesF.length; i++) {
-                              var imageUF = imagesF[i];
-                              var image_idF = imageUF['id'];
-                              var image_urlF = imageUF['filename'];
-                              var image_titleF = imageUF['title'];
-                              var current_image_idF = '<?php echo $current_image_idF; ?>';
-
-                              var mediaElementF = document.createElement('div');
-                              mediaElementF.classList.add('media-elementF');
-                              mediaElementF.classList.add('d-inline-flex');
-
-                              var linkF = document.createElement('a');
-                              linkF.href = '?artworkid=' + image_idF;
-
-                              var imageF = document.createElement('img');
-                              imageF.classList.add('hori');
-                              if (image_idF == current_image_idF) {
-                                imageF.classList.add('opacity-50');
-                              }
-                              imageF.src = 'thumbnails/' + image_urlF;
-                              imageF.alt = image_titleF;
-
-                              linkF.appendChild(imageF);
-                              mediaElementF.appendChild(linkF);
-                              containerF.insertBefore(mediaElementF, loadMoreBtnF);
-                            }
-
-                            currentIndexF += 25;
-                            if (currentIndexF >= imagesF.length) {
-                              loadMoreBtnF.style.display = 'none';
-                            }
-                          }
-
-                          loadMoreBtnF.addEventListener('click', loadMoreImagesF);
-                        </script>
-                      </div>
-                      <div class="mb-5">
-                        <?php
-                          // Get all images for the given user_email
-                          $stmt = $db->prepare("SELECT * FROM images WHERE email = :email ORDER BY id DESC");
-                          $stmt->bindParam(':email', $user_email);
-                          $stmt->execute();
-                          $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        ?>
-                        <div class=" mt-2">
-                          <?php
-                            $image_id = $image['id'];
-                            $stmt = $db->query("SELECT COUNT(*) FROM favorites WHERE image_id = $image_id");
-                            $fav_count = $stmt->fetchColumn();
-                            if ($fav_count >= 1000000000) {
-                              $fav_count = round($fav_count / 1000000000, 1) . 'b';
-                            } elseif ($fav_count >= 1000000) {
-                              $fav_count = round($fav_count / 1000000, 1) . 'm';
-                            } elseif ($fav_count >= 1000) {
-                              $fav_count = round($fav_count / 1000, 1) . 'k';
-                            }
-                            $stmt = $db->prepare("SELECT COUNT(*) FROM favorites WHERE email = :email AND image_id = :image_id");
-                            $stmt->bindParam(':email', $email);
-                            $stmt->bindParam(':image_id', $image_id);
-                            $stmt->execute();
-                            $is_favorited = $stmt->fetchColumn();
-                          ?>
-                          <div class="d-flex justify-content-center">
-                            <div class="w-98 fw-bold">
-                              <div class="container-fluid bg-body-secondary p-2 mt-2 mb-2 rounded-4 text-center align-items-center d-flex justify-content-center">
-                                <div class="dropdown-center">
-                                  <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <small>
-                                      <?php echo date('Y/m/d', strtotime($image['date'])); ?>
-                                    </small
-                                  </button>
-                                  <ul class="dropdown-menu">
-                                    <li>
-                                      <a class="dropdown-item fw-semibold text-center" href="#">
-                                        uploaded at <?php echo date('F j, Y', strtotime($image['date'])); ?>
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                                <div class="dropdown-center">
-                                  <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-heart-fill text-sm"></i> <small><?php echo $fav_count; ?></small>
-                                  </button>
-                                  <ul class="dropdown-menu">
-                                    <li>
-                                      <a class="dropdown-item fw-semibold text-center" href="#">
-                                        total <?php echo $fav_count; ?> favorites
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                                <div class="dropdown-center">
-                                  <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-eye-fill"></i> <small><?php echo $viewCount; ?> </small>
-                                  </button>
-                                  <ul class="dropdown-menu">
-                                    <li>
-                                      <a class="dropdown-item fw-semibold text-center" href="#">
-                                        total <?php echo $viewCount; ?> views
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                              <h5 class="text-white text-center shadowed-text fw-bold"><?php echo $image['title']; ?></h5>
-                              <div style="word-break: break-word;">
-                                <p class="text-white shadowed-text small fw-medium" style="word-break: break-word;">
-                                  <?php
-                                    if (!empty($image['imgdesc'])) {
-                                      $messageText = $image['imgdesc'];
-                                      $messageTextWithoutTags = strip_tags($messageText);
-                                      $pattern = '/\bhttps?:\/\/\S+/i';
-
-                                      $formattedText = preg_replace_callback($pattern, function ($matches) {
-                                        $url = htmlspecialchars($matches[0]);
-                                        return '<a href="' . $url . '">' . $url . '</a>';
-                                      }, $messageTextWithoutTags);
-
-                                      $charLimit = 400; // Set your character limit
-
-                                      if (strlen($formattedText) > $charLimit) {
-                                        $limitedText = substr($formattedText, 0, $charLimit);
-                                        echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
-                                        echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
-                                        echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0 text-white" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
-                                      } else {
-                                        // If the text is within the character limit, just display it with line breaks.
-                                        echo nl2br($formattedText);
-                                      }
-                                    } else {
-                                      echo "User description is empty.";
-                                    }
-                                  ?>
-                                  <script>
-                                    function myFunction() {
-                                      var dots = document.getElementById("limitedText");
-                                      var moreText = document.getElementById("more");
-                                      var btnText = document.getElementById("myBtn");
-
-                                      if (moreText.style.display === "none") {
-                                        dots.style.display = "none";
-                                        moreText.style.display = "inline";
-                                        btnText.innerHTML = "read less";
-                                      } else {
-                                        dots.style.display = "inline";
-                                        moreText.style.display = "none";
-                                        btnText.innerHTML = "read more";
-                                      }
-                                    }
-                                  </script>
-                                </p>
-                              </div>
-                              <div class="mb-3">
-                                <?php
-                                  if (!empty($image['tags'])) {
-                                    $tags = explode(',', $image['tags']);
-                                    foreach ($tags as $tag) {
-                                      $tag = trim($tag);
-                                        if (!empty($tag)) {
-                                      ?>
-                                        <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>"
-                                          class="btn btn-sm btn-outline-light mb-1 rounded-3 fw-bold">
-                                          <i class="bi bi-tags-fill"></i> <?php echo $tag; ?>
-                                        </a>
-                                      <?php
-                                      }
-                                    }
-                                  } else {
-                                    echo "No tags available.";
-                                  }
-                                ?>
-                                <a class="btn btn-sm btn-outline-light mb-1 rounded-3 fw-bold" href="tags.php">
-                                  <i class="bi bi-tags-fill"></i> all tags
-                                </a>
-                              </div>
-                              <div class="mb-5">
-                                <button class="btn btn-outline-light fw-bold w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage" aria-expanded="false" id="toggleButton2" aria-controls="collapseExample">
-                                  <i class="bi bi-caret-down-fill"></i>
-                                </button> 
-                                <div class="collapse" id="collapseDataImage">
-                                  <?php
-                                    // Function to calculate the size of an image in MB
-                                    function getImageSizeInMB($filename) {
-                                      return round(filesize('images/' . $filename) / (1024 * 1024), 2);
-                                    }
-
-                                    // Get the total size of images from 'images' table
-                                    $stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-                                    $stmt->bindParam(':filename', $filename);
-                                    $stmt->execute();
-                                    $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                    // Get the total size of images from 'image_child' table
-                                    $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :filename");
-                                    $stmt->bindParam(':filename', $filename);
-                                    $stmt->execute();
-                                    $image_childs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                  
-                                    // Function to format the date
-                                    function formatDate($date) {
-                                      return date('Y/F/l jS') ;
-                                    }
-                                  ?>
-                                  <?php foreach ($images as $index => $image) { ?>
-                                    <div class="mb-3 img-thumbnail border-dark p-3">
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image['filename']; ?>" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image['filename']); ?> MB" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?>" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image['filename']); ?>" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>">
-                                          <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
-                                        </a>
-                                      </div>
-                                      <div>
-                                        <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>" download>
-                                          <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
-                                        </a>
-                                      </div>
-                                    </div>
-                                  <?php } ?>
-                                  <?php foreach ($image_childs as $index => $image_child) { ?>
-                                    <div class="mt-3 mb-3 img-thumbnail border-dark p-3">
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image_child['filename']; ?>" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image_child['filename']); ?> MB" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?>" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image_child['filename']); ?>" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
-                                        <div class="col-sm-8">
-                                          <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-3 row">
-                                        <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>">
-                                          <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
-                                        </a>
-                                      </div>
-                                      <div>
-                                        <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>" download>
-                                          <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
-                                        </a>
-                                      </div>
-                                    </div>
-                                  <?php } ?>
-                                  <?php
-                                    $images_total_size = 0;
-                                    foreach ($images as $image) {
-                                      $images_total_size += getImageSizeInMB($image['filename']);
-                                    }
-
-                                    $image_child_total_size = 0;
-                                    foreach ($image_childs as $image_child) {
-                                      $image_child_total_size += getImageSizeInMB($image_child['filename']);
-                                    }
-                                
-                                    $total_size = $images_total_size + $image_child_total_size;
-                                  ?>
-                                  <div class="text-white mt-3 mb-3">
-                                    <ul class="list-unstyled m-0">
-                                      <li class="mb-2"><i class="bi bi-file-earmark-plus"></i> Total size of all images: <?php echo $total_size; ?> MB</li>
-                                    </ul>
-                                  </div>
-                                  <a class="btn btn-outline-light fw-bold w-100 mb-2" href="#downloadOption" data-bs-toggle="modal">
-                                    <i class="bi bi-cloud-arrow-down-fill"></i> download all
+                          <div class="collapse" id="collapseMoreExpand">
+                            <?php foreach ($child_images as $child_image) : ?>
+                              <div class="image-container position-relative">
+                                <img data-src="images/<?php echo $child_image['filename']; ?>" class="w-100 h-100 mt-1 lazy-load" alt="<?php echo $image['title']; ?>">
+                                <div class="btn-group position-absolute bottom-0 end-0 m-3">
+                                  <a href="images/<?php echo $child_image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-end-0 opacity-75 fw-bold" download>
+                                    <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
                                   </a>
-                                  <button type="button" class="btn btn-outline-light w-100 fw-bold" data-bs-dismiss="modal">
-                                    close
-                                  </button>
+                                  <a href="images/<?php echo $child_image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-start-0 opacity-75 fw-bold">
+                                    <i class="bi bi-arrows-fullscreen text-stroke"></i>
+                                  </a>
                                 </div>
                               </div>
-                            </div> 
+                            <?php endforeach; ?>
+                          </div>
+                          <?php if (!empty($child_image['filename'])) : ?>
+                            <button class="btn bg-body-tertiary border-0 rounded-0 link-body-emphasis fw-bold w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMoreExpand" aria-expanded="false" id="toggleButtonExpand" aria-controls="collapseExample">
+                              <i class="bi bi-caret-down-fill"></i> <small id="toggleTextExpand">show more images</small>
+                            </button> 
+                          <?php endif; ?>
+                        </div>
+                      </div>
+                      <div class="col-md-5 h-100 overflow-auto vh-100 bg-body-tertiary hide-scrollbar">
+                        <div class="p-3 container-fluid text-white">
+                          <div class="mb-3">
+                            <h6 class="card-title text-white fw-bold shadowed-text">all images by           
+                              <a class="text-decoration-none text-white shadowed-text fw-bold rounded-pill" href="artist.php?id=<?= $user['id'] ?>">
+                                <?php if (!empty($user['pic'])): ?>
+                                  <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 24px; height: 24px;">
+                                <?php else: ?>
+                                  <img class="object-fit-cover border bg-secondary border-1 rounded-circle" src="icon/profile.svg" style="width: 24px; height: 24px;">
+                                <?php endif; ?>
+                                <?php echo (mb_strlen($user['artist']) > 25) ? mb_substr($user['artist'], 0, 25) . '...' : $user['artist']; ?>
+                              </a> 
+                            </h6>
+                          </div>
+                          <div class="d-flex gap-2">
+                            <?php if ($next_image): ?>
+                              <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
+                                <div class="position-relative">
+                                  <div class="ratio ratio-1x1">
+                                    <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                                  </div>
+                                  <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                                    <i class="bi bi-arrow-left-circle text-stroke"></i> Next
+                                  </h6>
+                                </div>
+                              </a>
+                            <?php else: ?>
+                              <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
+                                <div class="position-relative">
+                                  <?php if (!empty($user['pic'])): ?>
+                                    <div class="ratio ratio-1x1">
+                                      <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                                    </div>
+                                  <?php else: ?>
+                                    <div class="ratio ratio-1x1">
+                                      <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                                    </div>
+                                  <?php endif; ?>
+                                  <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                                    <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
+                                  </h6>
+                                </div>
+                              </a>
+                            <?php endif; ?>
+                            <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
+                              <div class="ratio ratio-1x1">
+                                <img class="object-fit-cover opacity-50 rounded" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                              </div>
+                            </a>
+                            <?php if ($prev_image): ?>
+                              <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
+                                <div class="position-relative">
+                                  <div class="ratio ratio-1x1">
+                                    <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                                  </div>
+                                  <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                                    Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
+                                  </h6>
+                                </div>
+                              </a>
+                            <?php else: ?>
+                              <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
+                                <div class="position-relative">
+                                  <?php if (!empty($user['pic'])): ?>
+                                    <div class="ratio ratio-1x1">
+                                      <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                                    </div>
+                                  <?php else: ?>
+                                    <div class="ratio ratio-1x1">
+                                      <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                                    </div>
+                                  <?php endif; ?>
+                                  <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                                    <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
+                                  </h6>
+                                </div>
+                              </a>
+                            <?php endif; ?>
+                          </div>
+                          <?php
+                            // Get all images for the given user_email
+                            $stmt = $db->prepare("SELECT id, filename, tags, title FROM images WHERE email = :email ORDER BY id DESC");
+                            $stmt->bindParam(':email', $user_email);
+                            $stmt->execute();
+                            $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                          ?>
+    
+                          <div class="mt-2 mb-2 scroll-container media-scrollerF snaps-inlineF overflow-auto">
+                            <?php $count = 0; ?>
+                            <?php foreach ($images as $imageU): ?>
+                              <?php
+                                $image_idF = $imageU['id'];
+                                $image_urlF = $imageU['filename'];
+                                $image_titleF = $imageU['title'];
+                                $current_image_idF = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
+                                ?>
+                                <div class="media-elementF d-inline-flex">
+                                  <a href="?artworkid=<?php echo $image_idF; ?>">
+                                    <img class="hori <?php echo ($image_idF == $current_image_idF) ? 'opacity-50' : ''; ?>" src="thumbnails/<?php echo $image_urlF; ?>" alt="<?php echo $image_titleF; ?>">
+                                  </a>
+                                </div>
+                              <?php $count++; ?>
+                              <?php if ($count >= 25) break; ?>
+                            <?php endforeach; ?>
+                            <button id="loadMoreBtnF" class="btn btn-secondary hori opacity-25"><i class="bi bi-plus-circle display-5 text-stroke"></i></button>
+                            <script>
+                              var currentIndexF = <?php echo $count; ?>;
+                              var imagesF = <?php echo json_encode($images); ?>;
+                              var containerF = document.querySelector('.media-scrollerF');
+                              var loadMoreBtnF = document.getElementById('loadMoreBtnF');
+    
+                              function loadMoreImagesF() {
+                                for (var i = currentIndexF; i < currentIndexF + 25 && i < imagesF.length; i++) {
+                                  var imageUF = imagesF[i];
+                                  var image_idF = imageUF['id'];
+                                  var image_urlF = imageUF['filename'];
+                                  var image_titleF = imageUF['title'];
+                                  var current_image_idF = '<?php echo $current_image_idF; ?>';
+    
+                                  var mediaElementF = document.createElement('div');
+                                  mediaElementF.classList.add('media-elementF');
+                                  mediaElementF.classList.add('d-inline-flex');
+    
+                                  var linkF = document.createElement('a');
+                                  linkF.href = '?artworkid=' + image_idF;
+    
+                                  var imageF = document.createElement('img');
+                                  imageF.classList.add('hori');
+                                  if (image_idF == current_image_idF) {
+                                    imageF.classList.add('opacity-50');
+                                  }
+                                  imageF.src = 'thumbnails/' + image_urlF;
+                                  imageF.alt = image_titleF;
+    
+                                  linkF.appendChild(imageF);
+                                  mediaElementF.appendChild(linkF);
+                                  containerF.insertBefore(mediaElementF, loadMoreBtnF);
+                                }
+    
+                                currentIndexF += 25;
+                                if (currentIndexF >= imagesF.length) {
+                                  loadMoreBtnF.style.display = 'none';
+                                }
+                              }
+    
+                              loadMoreBtnF.addEventListener('click', loadMoreImagesF);
+                            </script>
+                          </div>
+                          <div class="mb-5">
+                            <?php
+                              // Get all images for the given user_email
+                              $stmt = $db->prepare("SELECT * FROM images WHERE email = :email ORDER BY id DESC");
+                              $stmt->bindParam(':email', $user_email);
+                              $stmt->execute();
+                              $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            ?>
+                            <div class=" mt-2">
+                              <?php
+                                $image_id = $image['id'];
+                                $stmt = $db->query("SELECT COUNT(*) FROM favorites WHERE image_id = $image_id");
+                                $fav_count = $stmt->fetchColumn();
+                                if ($fav_count >= 1000000000) {
+                                  $fav_count = round($fav_count / 1000000000, 1) . 'b';
+                                } elseif ($fav_count >= 1000000) {
+                                  $fav_count = round($fav_count / 1000000, 1) . 'm';
+                                } elseif ($fav_count >= 1000) {
+                                  $fav_count = round($fav_count / 1000, 1) . 'k';
+                                }
+                                $stmt = $db->prepare("SELECT COUNT(*) FROM favorites WHERE email = :email AND image_id = :image_id");
+                                $stmt->bindParam(':email', $email);
+                                $stmt->bindParam(':image_id', $image_id);
+                                $stmt->execute();
+                                $is_favorited = $stmt->fetchColumn();
+                              ?>
+                              <div>
+                                <div class="fw-bold">
+                                  <div class="container-fluid bg-body-secondary p-2 my-4 rounded-4 text-center align-items-center d-flex justify-content-center">
+                                    <div class="dropdown-center">
+                                      <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <small>
+                                          <?php echo date('Y/m/d', strtotime($image['date'])); ?>
+                                        </small
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li>
+                                          <a class="dropdown-item fw-semibold text-center" href="#">
+                                            uploaded at <?php echo date('F j, Y', strtotime($image['date'])); ?>
+                                          </a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <div class="dropdown-center">
+                                      <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-heart-fill text-sm"></i> <small><?php echo $fav_count; ?></small>
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li>
+                                          <a class="dropdown-item fw-semibold text-center" href="#">
+                                            total <?php echo $fav_count; ?> favorites
+                                          </a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <div class="dropdown-center">
+                                      <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-eye-fill"></i> <small><?php echo $viewCount; ?> </small>
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li>
+                                          <a class="dropdown-item fw-semibold text-center" href="#">
+                                            total <?php echo $viewCount; ?> views
+                                          </a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                  <h5 class="text-white text-center shadowed-text fw-bold"><?php echo $image['title']; ?></h5>
+                                  <div class="my-4" style="word-break: break-word;">
+                                    <p class="text-white shadowed-text small fw-medium" style="word-break: break-word;">
+                                      <?php
+                                        if (!empty($image['imgdesc'])) {
+                                          $messageText = $image['imgdesc'];
+                                          $messageTextWithoutTags = strip_tags($messageText);
+                                          $pattern = '/\bhttps?:\/\/\S+/i';
+    
+                                          $formattedText = preg_replace_callback($pattern, function ($matches) {
+                                            $url = htmlspecialchars($matches[0]);
+                                            return '<a href="' . $url . '">' . $url . '</a>';
+                                          }, $messageTextWithoutTags);
+    
+                                          $charLimit = 400; // Set your character limit
+    
+                                          if (strlen($formattedText) > $charLimit) {
+                                            $limitedText = substr($formattedText, 0, $charLimit);
+                                            echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                                            echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                                            echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0 text-white" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
+                                          } else {
+                                            // If the text is within the character limit, just display it with line breaks.
+                                            echo nl2br($formattedText);
+                                          }
+                                        } else {
+                                          echo "User description is empty.";
+                                        }
+                                      ?>
+                                      <script>
+                                        function myFunction() {
+                                          var dots = document.getElementById("limitedText");
+                                          var moreText = document.getElementById("more");
+                                          var btnText = document.getElementById("myBtn");
+    
+                                          if (moreText.style.display === "none") {
+                                            dots.style.display = "none";
+                                            moreText.style.display = "inline";
+                                            btnText.innerHTML = "read less";
+                                          } else {
+                                            dots.style.display = "inline";
+                                            moreText.style.display = "none";
+                                            btnText.innerHTML = "read more";
+                                          }
+                                        }
+                                      </script>
+                                    </p>
+                                  </div>
+                                  <div class="my-4">
+                                    <?php
+                                      if (!empty($image['tags'])) {
+                                        $tags = explode(',', $image['tags']);
+                                        foreach ($tags as $tag) {
+                                          $tag = trim($tag);
+                                            if (!empty($tag)) {
+                                          ?>
+                                            <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>"
+                                              class="btn btn-sm border-0 link-body-emphasis fw-bold">
+                                              <i class="bi bi-tags-fill"></i> <?php echo $tag; ?>
+                                            </a>
+                                          <?php
+                                          }
+                                        }
+                                      } else {
+                                        echo "No tags available.";
+                                      }
+                                    ?>
+                                    <a class="btn btn-sm border-0 link-body-emphasis fw-bold" href="tags.php">
+                                      <i class="bi bi-tags-fill"></i> all tags
+                                    </a>
+                                  </div>
+                                  <div class="mb-5 w-100">
+                                    <button class="btn bg-body-tertiary border-0 rounded-0 link-body-emphasis fw-bold w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage" aria-expanded="false" id="toggleButton2" aria-controls="collapseExample">
+                                      <i class="bi bi-caret-down-fill"></i> show more
+                                    </button> 
+                                    <div class="collapse" id="collapseDataImage">
+                                      <?php
+                                        // Function to calculate the size of an image in MB
+                                        function getImageSizeInMB($filename) {
+                                          return round(filesize('images/' . $filename) / (1024 * 1024), 2);
+                                        }
+    
+                                        // Get the total size of images from 'images' table
+                                        $stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
+                                        $stmt->bindParam(':filename', $filename);
+                                        $stmt->execute();
+                                        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+                                        // Get the total size of images from 'image_child' table
+                                        $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :filename");
+                                        $stmt->bindParam(':filename', $filename);
+                                        $stmt->execute();
+                                        $image_childs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                      
+                                        // Function to format the date
+                                        function formatDate($date) {
+                                          return date('Y/F/l jS') ;
+                                        }
+                                      ?>
+                                      <?php foreach ($images as $index => $image) { ?>
+                                        <div class="mb-3 img-thumbnail border-dark p-3">
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image['filename']; ?>" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image['filename']); ?> MB" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?>" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image['filename']); ?>" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>">
+                                              <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
+                                            </a>
+                                          </div>
+                                          <div>
+                                            <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>" download>
+                                              <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
+                                            </a>
+                                          </div>
+                                        </div>
+                                      <?php } ?>
+                                      <?php foreach ($image_childs as $index => $image_child) { ?>
+                                        <div class="mt-3 mb-3 img-thumbnail border-dark p-3">
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image_child['filename']; ?>" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image_child['filename']); ?> MB" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?>" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image_child['filename']); ?>" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
+                                            <div class="col-sm-8">
+                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="mb-3 row">
+                                            <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>">
+                                              <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
+                                            </a>
+                                          </div>
+                                          <div>
+                                            <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>" download>
+                                              <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
+                                            </a>
+                                          </div>
+                                        </div>
+                                      <?php } ?>
+                                      <?php
+                                        $images_total_size = 0;
+                                        foreach ($images as $image) {
+                                          $images_total_size += getImageSizeInMB($image['filename']);
+                                        }
+    
+                                        $image_child_total_size = 0;
+                                        foreach ($image_childs as $image_child) {
+                                          $image_child_total_size += getImageSizeInMB($image_child['filename']);
+                                        }
+                                    
+                                        $total_size = $images_total_size + $image_child_total_size;
+                                      ?>
+                                      <div class="text-white mt-3 mb-3">
+                                        <ul class="list-unstyled m-0">
+                                          <li class="mb-2"><i class="bi bi-file-earmark-plus"></i> Total size of all images: <?php echo $total_size; ?> MB</li>
+                                        </ul>
+                                      </div>
+                                      <a class="btn bg-body-tertiary border-0 rounded-0 link-body-emphasis fw-bold w-100 mb-2" href="#downloadOption" data-bs-toggle="modal">
+                                        <i class="bi bi-cloud-arrow-down-fill"></i> download all
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div> 
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -778,6 +824,8 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </div>
               </div>
             </div>
+            <!-- End of Original Image Modal -->
+            
             <div class="position-absolute top-0 end-0 me-2 mt-2">
               <div class="btn-group">
                 <?php if ($user_email === $email): ?>
@@ -1160,7 +1208,9 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <?php if ($next_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
                     <div class="position-relative">
-                      <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                      <div class="ratio ratio-1x1">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                      </div>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         <i class="bi bi-arrow-left-circle text-stroke"></i> Next
                       </h6>
@@ -1170,23 +1220,31 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        </div>
                       <?php else: ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
-                    </div> 
+                    </div>
                   </a>
                 <?php endif; ?>
                 <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
-                  <img class="object-fit-cover opacity-50 rounded" style="width: 100%; height: 120px;" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                  <div class="ratio ratio-1x1">
+                    <img class="object-fit-cover opacity-50 rounded" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                  </div>
                 </a>
                 <?php if ($prev_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
                     <div class="position-relative">
-                      <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                      <div class="ratio ratio-1x1">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                      </div>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
                       </h6>
@@ -1196,14 +1254,18 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        </div>
                       <?php else: ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-right text-stroke"></i> All
+                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
-                    </div> 
+                    </div>
                   </a>
                 <?php endif; ?>
               </div>
@@ -1492,7 +1554,9 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <?php if ($next_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
                     <div class="position-relative">
-                      <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                      <div class="ratio ratio-1x1">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                      </div>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         <i class="bi bi-arrow-left-circle text-stroke"></i> Next
                       </h6>
@@ -1502,23 +1566,31 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        </div>
                       <?php else: ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
-                    </div> 
+                    </div>
                   </a>
                 <?php endif; ?>
                 <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
-                  <img class="object-fit-cover opacity-50 rounded" style="width: 100%; height: 160px;" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                  <div class="ratio ratio-1x1">
+                    <img class="object-fit-cover opacity-50 rounded" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                  </div>
                 </a>
                 <?php if ($prev_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
                     <div class="position-relative">
-                      <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                      <div class="ratio ratio-1x1">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                      </div>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
                       </h6>
@@ -1528,15 +1600,19 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        </div>
                       <?php else: ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-right text-stroke"></i> All
+                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
-                    </div> 
-                  </a> 
+                    </div>
+                  </a>
                 <?php endif; ?>
               </div>
               <div class="btn-group w-100">
@@ -1978,17 +2054,21 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
         toggleButton2.addEventListener("click", function() {
           if (caretIcon.classList.contains("bi-caret-down-fill")) {
             caretIcon.classList.replace("bi-caret-down-fill", "bi-caret-up-fill");
+            toggleButton2.innerHTML = "<i class='bi bi-caret-down-fill'></i> <small>show more</small>";
           } else {
             caretIcon.classList.replace("bi-caret-up-fill", "bi-caret-down-fill");
+            toggleButton2.innerHTML = "<i class='bi bi-caret-up-fill'></i> <small>show less</small>";
           }
         });
 
         collapseExample.addEventListener("hidden.bs.collapse", function () {
           caretIcon.classList.replace("bi-caret-up-fill", "bi-caret-down-fill");
+          toggleButton2.innerHTML = "<i class='bi bi-caret-down-fill'></i> <small>show more</small>";
         });
 
         collapseExample.addEventListener("shown.bs.collapse", function () {
           caretIcon.classList.replace("bi-caret-down-fill", "bi-caret-up-fill");
+          toggleButton2.innerHTML = "<i class='bi bi-caret-up-fill'></i> <small>show less</small>";
         });
       });
 

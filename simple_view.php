@@ -752,7 +752,9 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <?php if ($next_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
                     <div class="position-relative">
-                      <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                      <div class="ratio ratio-1x1">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                      </div>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         <i class="bi bi-arrow-left-circle text-stroke"></i> Next
                       </h6>
@@ -762,23 +764,31 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        </div>
                       <?php else: ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
-                    </div> 
+                    </div>
                   </a>
                 <?php endif; ?>
                 <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
-                  <img class="object-fit-cover opacity-50 rounded" style="width: 100%; height: 120px;" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                  <div class="ratio ratio-1x1">
+                    <img class="object-fit-cover opacity-50 rounded" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                  </div>
                 </a>
                 <?php if ($prev_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
                     <div class="position-relative">
-                      <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                      <div class="ratio ratio-1x1">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                      </div>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
                       </h6>
@@ -788,14 +798,18 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        </div>
                       <?php else: ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 120px;" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-right text-stroke"></i> All
+                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
-                    </div> 
+                    </div>
                   </a>
                 <?php endif; ?>
               </div>
@@ -1084,7 +1098,9 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <?php if ($next_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
                     <div class="position-relative">
-                      <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                      <div class="ratio ratio-1x1">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                      </div>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         <i class="bi bi-arrow-left-circle text-stroke"></i> Next
                       </h6>
@@ -1094,23 +1110,31 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        </div>
                       <?php else: ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
-                    </div> 
+                    </div>
                   </a>
                 <?php endif; ?>
                 <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
-                  <img class="object-fit-cover opacity-50 rounded" style="width: 100%; height: 160px;" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                  <div class="ratio ratio-1x1">
+                    <img class="object-fit-cover opacity-50 rounded" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                  </div>
                 </a>
                 <?php if ($prev_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
                     <div class="position-relative">
-                      <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                      <div class="ratio ratio-1x1">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                      </div>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
                         Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
                       </h6>
@@ -1120,15 +1144,19 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                        </div>
                       <?php else: ?>
-                        <img class="img-blur object-fit-cover rounded opacity-75" style="width: 100%; height: 160px;" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                        </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-right text-stroke"></i> All
+                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
-                    </div> 
-                  </a> 
+                    </div>
+                  </a>
                 <?php endif; ?>
               </div>
               <div class="collapse" id="collapseExample">
