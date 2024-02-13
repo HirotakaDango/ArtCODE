@@ -11,6 +11,8 @@ if (!isset($_SESSION['email'])) {
   exit;
 }
 
+$idEdit = $_GET['id'];
+
 // Retrieve image details
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
@@ -355,7 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="mb-0">This action can't be undone</p>
           </div>
           <form method="POST" action="delete.php">
-            <input type="hidden" name="id" value="<?php echo $id; ?>">
+            <input type="hidden" name="id" value="<?php echo $idEdit; ?>">
             <div class="modal-footer flex-nowrap p-0">
               <button type="submit" class="btn btn-lg btn-link fs-6 text-danger text-decoration-none col-6 py-3 m-0 rounded-0 border-end"><strong>Yes, delete</strong></button>
               <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
