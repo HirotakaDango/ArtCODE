@@ -33,33 +33,20 @@
     </style>
     <?php
       // Get all images for the given user_email
-      $stmt = $db->prepare("SELECT id, filename, tags, title, type FROM images WHERE email = :email ORDER BY id DESC");
+      $stmt = $db->prepare("SELECT id, filename, tags, title, imgdesc, type FROM images WHERE email = :email ORDER BY id DESC");
       $stmt->bindParam(':email', $user_email);
       $stmt->execute();
       $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
-    <p class="ms-2 mt-3 text-secondary fw-bold">
+    <p class="ms-2 mt-3 text-dark fw-bold">
       <i class="bi bi-images"></i> Latest images by <?php echo $user['artist']; ?>
     </p>
     <div class="modal fade" id="imgcarousel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content p-0 scrollable-div bg-dark">
-          <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold" id="exampleModalLabel">
-              <a class="text-decoration-none text-white shadowed-text fw-bold rounded-pill" href="artist.php?id=<?= $user['id'] ?>">
-                <?php if (!empty($user['pic'])): ?>
-                  <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 24px; height: 24px;">
-                <?php else: ?>
-                  <img class="object-fit-cover border bg-secondary border-1 rounded-circle" src="icon/profile.svg" style="width: 24px; height: 24px;">
-                <?php endif; ?>
-                <?php echo (mb_strlen($user['artist']) > 25) ? mb_substr($user['artist'], 0, 25) . '...' : $user['artist']; ?>
-              </a> 
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body p-0 scrollable-div">
-            <div id="image-carousel" class="carousel slide carousel-fade d-flex align-items-center justify-content-center h-100 w-100">
-              <div class="carousel-inner">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-0 hide-scrollbar bg-transparent border-0">
+          <div class="modal-body rounded-4 border-0 shadow p-0 bg-dark">
+            <div id="image-carousel" class="carousel slide carousel-fade">
+              <div class="carousel-inner rounded-4">
                 <?php
                 $current_image_id = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
                 $active_index = 0;
@@ -69,28 +56,72 @@
                   $image_id = $imageU['id'];
                   $image_url = $imageU['filename'];
                   $image_title = $imageU['title'];
+                  $image_desc = $imageU['imgdesc'];
+                  $image_tags = $imageU['tags'];
                   $active_class = ($image_id == $current_image_id) ? 'active' : '';
 
                   if ($active_class === 'active') {
                     $active_index = $index;
                   }
                   ?>
-                  <div class="carousel-item h-100 w-100 <?php echo $active_class; ?>">
-                    <a href="image.php?artworkid=<?php echo $image_id; ?>">
-                      <div class="position-relative">
-                        <img class="lazy-load d-block w-100 h-100 object-fit-contain" data-src="thumbnails/<?php echo $image_url; ?>" alt="<?php echo $image_title; ?>">
+                  <div class="carousel-item ratio ratio-16x9 <?php echo $active_class; ?>">
+                    <div class="row g-0">
+                      <div class="col-md-6">
+                        <a href="image.php?artworkid=<?php echo $image_id; ?>">
+                          <div class="position-relative h-100">
+                            <img class="lazy-load w-100 h-100 object-fit-cover" data-src="thumbnails/<?php echo $image_url; ?>" alt="<?php echo $image_title; ?>">
+                          </div>
+                        </a>
                       </div>
-                      <div class="carousel-caption">
-                        <h5 class="fw-bold shadowed-text">
-                          <?php echo $image_title; ?>
-                        </h5>
-                        <p class="fw-bold shadowed-text">
-                          <small>
-                            by <?php echo $user['artist']; ?>
-                          </small>
-                        </p>
+                      <div class="col-md-6 overflow-auto vh-100">
+                        <div class="text-white p-3 my-4">
+                          <h5 class="text-center fw-bold shadowed-text">
+                            <?php echo $image_title; ?>
+                          </h5>
+                          <div class="my-3">
+                            <?php
+                              if (!empty($image_desc)) {
+                                $messageText3 = $image_desc;
+                                $messageTextWithoutTags3 = strip_tags($messageText3);
+                                $pattern3 = '/\bhttps?:\/\/\S+/i';
+
+                                $formattedText3 = preg_replace_callback($pattern3, function ($matches3) {
+                                  $url3 = htmlspecialchars($matches3[0]);
+                                  return '<a href="' . $url3 . '">' . $url3 . '</a>';
+                                }, $messageTextWithoutTags3);
+
+                                echo nl2br($formattedText3); // Display the text with line breaks
+                              } else {
+                                echo "User description is empty.";
+                              }
+                            ?>
+                          </div>
+                          <div class="w-100 mt-4 z-3">
+                            <?php
+                              if (!empty($image_tags)) {
+                                $tags2 = explode(',', $image_tags);
+                                foreach ($tags2 as $tag2) {
+                                  $tag2 = trim($tag2);
+                                    if (!empty($tag2)) {
+                                  ?>
+                                    <a href="tagged_images.php?tag=<?php echo urlencode($tag2); ?>"
+                                      class="btn btn-sm border-0 text-white link-body-emphasis fw-bold">
+                                      <i class="bi bi-tags-fill"></i> <?php echo $tag2; ?>
+                                    </a>
+                                  <?php
+                                  }
+                                }
+                              } else {
+                                echo "No tags available.";
+                              }
+                            ?>
+                            <a class="btn btn-sm border-0 text-white link-body-emphasis fw-bold" href="tags.php">
+                              <i class="bi bi-tags-fill"></i> all tags
+                            </a>
+                          </div>
+                        </div>
                       </div>
-                    </a>
+                    </div>
                   </div>
                 <?php endforeach; ?>
               </div>

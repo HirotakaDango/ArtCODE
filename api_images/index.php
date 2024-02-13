@@ -103,42 +103,8 @@ if ($result) {
         echo "<div class='d-flex justify-content-center align-items-center vh-100'><h5 class='text-center mt-3 fw-bold'>Error or nothing found: </h5></div>" . $e->getMessage();
       }
     ?>
-    <?php include('view.php'); ?>
-    <!-- Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 border-0">
-          <div class="modal-header border-0">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Settings</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <form method="POST">
-            <div class="modal-body border-0">
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="website_url" value="<?php echo $websiteUrl; ?>" placeholder="Website address">
-                <label for="floatingInput">Website address</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="folder_path" value="<?php echo $folderPath; ?>" placeholder="Images path">
-                <label for="floatingInput">Images path</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="thumb_path" value="<?php echo $thumbPath; ?>" placeholder="Thumbnails path">
-                <label for="floatingInput">Thumbnails path</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="number_page" value="<?php echo $numPage; ?>" placeholder="Number per page">
-                <label for="floatingInput">Number per page</label>
-              </div>
-              <div class="btn-group w-100 gap-2 border-0">
-                <button type="button" class="w-50 rounded fw-bold btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="w-50 rounded fw-bold btn btn-primary">Save changes</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <?php include('images.php'); ?>
+    <?php include('settings.php'); ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if (isset($page) && isset($totalPages)): ?>
         <a class="btn btn-sm btn-primary fw-bold" href="?page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
@@ -322,6 +288,27 @@ if ($result) {
 
       // Initial loading
       loadMoreImages();
+
+      window.addEventListener('DOMContentLoaded', (event) => {
+        const div1 = document.getElementById('div1');
+        const div2 = document.getElementById('div2');
+
+        function addClassBasedOnViewport() {
+          if (window.innerWidth >= 768) {
+            div1.classList.add('vh-100');
+            div2.classList.add('vh-100');
+          } else {
+            div1.classList.remove('vh-100');
+            div2.classList.remove('vh-100');
+          }
+        }
+
+        // Call the function initially
+        addClassBasedOnViewport();
+
+        // Call the function whenever the window is resized
+        window.addEventListener('resize', addClassBasedOnViewport);
+      });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>

@@ -350,7 +350,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       <i class="bi bi-chevron-down fs-5" style="-webkit-text-stroke: 3px;"></i>
                     </button>
                     <div class="row g-0">
-                      <div class="col-md-7 h-100 overflow-auto vh-100 hide-scrollbar bg-body-tertiary">
+                      <div id="div1" class="col-md-7 h-100 overflow-auto hide-scrollbar bg-body-tertiary">
                         <div class="position-relative h-100 w-100 align-items-center">
                           <div class="position-relative">
                             <img id="originalImage" class="w-100 h-100" src="" alt="Original Image">
@@ -387,7 +387,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                           <?php endif; ?>
                         </div>
                       </div>
-                      <div class="col-md-5 h-100 overflow-auto vh-100 bg-body-tertiary hide-scrollbar">
+                      <div id="div2" class="col-md-5 h-100 overflow-auto bg-body-tertiary hide-scrollbar">
                         <div class="p-3 container-fluid text-white">
                           <div class="mb-3">
                             <h6 class="card-title text-white fw-bold shadowed-text">all images by           
@@ -2295,6 +2295,27 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
 
       // Initial loading
       loadMoreImages();
+
+      window.addEventListener('DOMContentLoaded', (event) => {
+        const div1 = document.getElementById('div1');
+        const div2 = document.getElementById('div2');
+
+        function addClassBasedOnViewport() {
+          if (window.innerWidth >= 768) {
+            div1.classList.add('vh-100');
+            div2.classList.add('vh-100');
+          } else {
+            div1.classList.remove('vh-100');
+            div2.classList.remove('vh-100');
+          }
+        }
+
+        // Call the function initially
+        addClassBasedOnViewport();
+
+        // Call the function whenever the window is resized
+        window.addEventListener('resize', addClassBasedOnViewport);
+      });
     </script>
     <?php include('bootstrapjs.php'); ?>
   </body>
