@@ -12,8 +12,8 @@
                   </div>
                 </a>
               </div>
+              <?php include('view.php'); ?>
             </div>
-            <?php include('view.php'); ?>
           <?php endforeach; ?>
         </div>
       <?php endif; ?>
