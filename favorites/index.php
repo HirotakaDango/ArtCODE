@@ -89,6 +89,7 @@ if (isset($_POST['favorite']) || isset($_POST['unfavorite'])) {
         <li><a href="?by=popular&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
         <li><a href="?by=view&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
         <li><a href="?by=least&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
+        <li><a href="?by=liked&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
       </ul> 
     </div> 
         <?php 
@@ -110,6 +111,9 @@ if (isset($_POST['favorite']) || isset($_POST['unfavorite'])) {
             break;
             case 'least':
             include "index_least.php";
+            break;
+            case 'liked':
+            include "index_liked.php";
             break;
           }
         }

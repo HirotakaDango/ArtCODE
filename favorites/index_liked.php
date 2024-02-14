@@ -16,8 +16,13 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 // Calculate the offset based on the current page number and limit
 $offset = ($page - 1) * $limit;
 
-// Get favorite images with pagination, sorted by popularity (view_count)
-$query = $db->prepare('SELECT images.filename, images.id, images.imgdesc, images.title, images.tags, images.type, images.view_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY COUNT(favorites.id) DESC, images.view_count DESC LIMIT :limit OFFSET :offset');
+// Get favorite tagged images with pagination
+$query = $db->prepare('SELECT images.filename, images.id, images.imgdesc, images.title, images.tags, images.type, images.view_count FROM images 
+JOIN favorites ON images.id = favorites.image_id 
+WHERE favorites.email = :email AND images.tags IS NOT NULL AND images.tags != "" 
+ORDER BY favorites.id DESC 
+LIMIT :limit OFFSET :offset');
+$query->bindParam(':email', $current_email);
 $query->bindParam(':limit', $limit, PDO::PARAM_INT);
 $query->bindParam(':offset', $offset, PDO::PARAM_INT);
 $query->execute();
@@ -83,11 +88,11 @@ $favorite_images = $query->fetchAll(PDO::FETCH_ASSOC);
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=popular&id=<?php echo $current_user_id; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=liked&id=<?php echo $current_user_id; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=popular&id=<?php echo $current_user_id; ?>&page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=liked&id=<?php echo $current_user_id; ?>&page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -100,17 +105,17 @@ $favorite_images = $query->fetchAll(PDO::FETCH_ASSOC);
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=popular&id=' . $current_user_id . '&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=liked&id=' . $current_user_id . '&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=popular&id=<?php echo $current_user_id; ?>&page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=liked&id=<?php echo $current_user_id; ?>&page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=popular&id=<?php echo $current_user_id; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=liked&id=<?php echo $current_user_id; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>

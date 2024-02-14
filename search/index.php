@@ -30,6 +30,8 @@ $searchTerm = $_GET['q'];
         <li><a href="?by=oldest&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?by=popular&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
         <li><a href="?by=view&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+        <li><a href="?by=least&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
+        <li><a href="?by=liked&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
       </ul> 
     </div> 
         <?php 
@@ -48,6 +50,12 @@ $searchTerm = $_GET['q'];
             break;
             case 'view':
             include "index_view.php";
+            break;
+            case 'least':
+            include "index_least.php";
+            break;
+            case 'liked':
+            include "index_liked.php";
             break;
           }
         }

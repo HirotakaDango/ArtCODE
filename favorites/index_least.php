@@ -69,7 +69,7 @@ $favorite_images = $query->fetchAll(PDO::FETCH_ASSOC);
       <div class='container'>
         <p class="text-secondary text-center fw-bold">Oops... sorry, no favorited images!</p>
         <p class='text-secondary text-center fw-bold'>The one that make sense is, this user hasn't favorited any image...</p>
-        <img src='icon/Empty.svg' style='width: 100%; height: 100%;'>
+        <img src='/icon/Empty.svg' style='width: 100%; height: 100%;'>
       </div>
     <?php endif; ?>
     <div style="position: fixed; bottom: 20px; right: 20px;">
