@@ -4,7 +4,7 @@
                   <div class="modal-body p-0">
                     <button type="button" class="btn border-0 link-body-emphasis z-3 position-fixed top-0 end-0 text-shadow" data-bs-dismiss="modal"><i class="bi bi-chevron-down fs-3" style="-webkit-text-stroke: 3px;"></i></button>
                     <div class="row g-0">
-                      <div class="col-md-7 h-100 overflow-auto vh-100">
+                      <div id="div1" class="col-md-7 h-100">
                         <div>
                           <div class="position-relative">
                             <img class="w-100 h-100 lazy-load" data-src="<?= $websiteUrl . '/' . $folderPath . '/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
@@ -22,7 +22,7 @@
                           ?>
                         </div>
                       </div>
-                      <div class="col-md-5 h-100 overflow-auto vh-100 bg-body-tertiary">
+                      <div id="div2" class="col-md-5 h-100 bg-body-tertiary">
                         <div class="p-3">
                           <p class="text-start fw-medium mt-3"><small><i>images uploaded by <a href="<?php echo $websiteUrl . '/artist.php?id=' . $image['userId']; ?>"><?= $image['artist']; ?></a></i></small></p>
                           <h5 class="text-center fw-bold my-4"><?= $image['title']; ?></h5>
