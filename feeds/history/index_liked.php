@@ -1,10 +1,13 @@
 <?php
 // Fetch the user's history with image details from the database
-$stmt = $db->prepare("SELECT h.*, i.filename, i.tags, i.title, i.imgdesc 
-                     FROM history h
-                     JOIN images i ON h.image_artworkid = i.id
-                     WHERE h.email = :email
-                     ORDER BY h.id DESC");
+$stmt = $db->prepare("
+    SELECT images.*
+    FROM images
+    JOIN favorites ON images.id = favorites.image_id
+    WHERE favorites.email = :email
+    ORDER BY images.id DESC
+    LIMIT :limit OFFSET :offset
+");
 $stmt->bindParam(':email', $email);
 $stmt->execute();
 $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -20,8 +23,6 @@ $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <li><a href="?by=oldest" class="dropdown-item fw-bold">oldest</a></li>
           <li><a href="?by=popular" class="dropdown-item fw-bold">popular</a></li>
           <li><a href="?by=view" class="dropdown-item fw-bold">most viewed</a></li>
-          <li><a href="?by=view" class="dropdown-item fw-bold">least viewed</a></li>
-          <li><a href="?by=view" class="dropdown-item fw-bold">liked</a></li>
         </ul> 
       </div>
       <?php if (count($history) > 0) { ?>

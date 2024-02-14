@@ -288,27 +288,6 @@ if ($result) {
 
       // Initial loading
       loadMoreImages();
-
-      window.addEventListener('DOMContentLoaded', (event) => {
-        const div1 = document.getElementById('div1');
-        const div2 = document.getElementById('div2');
-
-        function addClassBasedOnViewport() {
-          if (window.innerWidth >= 768) {
-            div1.classList.add('vh-100');
-            div2.classList.add('vh-100');
-          } else {
-            div1.classList.remove('vh-100');
-            div2.classList.remove('vh-100');
-          }
-        }
-
-        // Call the function initially
-        addClassBasedOnViewport();
-
-        // Call the function whenever the window is resized
-        window.addEventListener('resize', addClassBasedOnViewport);
-      });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>

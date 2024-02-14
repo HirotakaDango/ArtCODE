@@ -261,12 +261,12 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </div>
                 <div class="col-7 order-2">
                   <div class="btn-group w-100 mb-1 gap-1" role="group" aria-label="Basic example">
-                    <a class="btn btn-sm btn-outline-dark rounded fw-bold" href="follower.php?id=<?php echo $user['id']; ?>"><small>followers</small></a>
-                    <a class="btn btn-sm btn-outline-dark rounded fw-bold" href="following.php?id=<?php echo $user['id']; ?>"><small>following</small></a>
+                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="follower.php?id=<?php echo $user['id']; ?>"><small>followers</small></a>
+                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="following.php?id=<?php echo $user['id']; ?>"><small>following</small></a>
                   </div>
                   <div class="btn-group w-100 mb-1 gap-1" role="group" aria-label="Basic example">
-                    <a class="btn btn-sm btn-outline-dark rounded fw-bold" href="artist.php?id=<?php echo $user['id']; ?>"><small>images</small></a>
-                    <a class="btn btn-sm btn-outline-dark rounded fw-bold" href="list_favorite.php?id=<?php echo $user['id']; ?>"><small>favorites</small></a> 
+                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="artist.php?id=<?php echo $user['id']; ?>"><small>images</small></a>
+                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="list_favorite.php?id=<?php echo $user['id']; ?>"><small>favorites</small></a> 
                   </div>
                   <a class="btn btn-sm btn-outline-dark w-100 rounded fw-bold" href="artist.php?id=<?php echo $user['id']; ?>"><small>view profile</small></a>
                 </div>

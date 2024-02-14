@@ -1,10 +1,6 @@
 <?php
-require_once('../../auth.php');
-
-$email = $_SESSION['email'];
-
 // Connect to the SQLite database using parameterized query
-$db = new SQLite3('../../database.sqlite');
+$db = new SQLite3('../database.sqlite');
 
 // Pagination variables
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -12,8 +8,7 @@ $limit = 15;
 $offset = ($page - 1) * $limit;
 
 // Get the total number of images from the database
-$countStmt = $db->prepare("SELECT COUNT(*) FROM images INNER JOIN following ON images.email = following.following_email WHERE following.follower_email = :email");
-$countStmt->bindValue(':email', $email, SQLITE3_TEXT);
+$countStmt = $db->prepare("SELECT COUNT(*) FROM images");
 $countResult = $countStmt->execute();
 $total = $countResult->fetchArray()[0];
 ?>
@@ -23,14 +18,14 @@ $total = $countResult->fetchArray()[0];
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Notification</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="../../icon/favicon.png">
-    <?php include('../../bootstrapcss.php'); ?>
+    <title>ArtCODE</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../icon/favicon.png">
+    <?php include('../bootstrapcss.php'); ?>
+    <link rel="stylesheet" href="../style.css">
   </head>
   <body>
-    <?php include('../../contents/path1/header.php'); ?>
-    <h5 class="fw-bold mb-2 ms-2"><i class="bi bi-bell-fill"></i> Notification</h5>
+    <?php include('lp_header.php'); ?>
     <div class="dropdown mt-1">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
@@ -41,7 +36,6 @@ $total = $countResult->fetchArray()[0];
         <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
         <li><a href="?by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
         <li><a href="?by=least&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
-        <li><a href="?by=liked&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
       </ul> 
     </div> 
         <?php 
@@ -50,31 +44,40 @@ $total = $countResult->fetchArray()[0];
  
           switch ($sort) {
             case 'newest':
-            include "index_desc.php";
+            include "global_desc.php";
             break;
             case 'oldest':
-            include "index_asc.php";
+            include "global_asc.php";
             break;
             case 'popular':
-            include "index_pop.php";
+            include "global_pop.php";
             break;
             case 'view':
-            include "index_view.php";
+            include "global_view.php";
             break;
             case 'least':
-            include "index_least.php";
-            break;
-            case 'liked':
-            include "index_liked.php";
+            include "global_least.php";
             break;
           }
         }
         else {
-          include "index_desc.php";
+          include "global_desc.php";
         }
         
         ?>
     <style>
+      @media (min-width: 768px) {
+        .width-btn {
+          width: 200px;
+        }
+      }
+      
+      @media (max-width: 767px) {
+        .width-btn {
+          width: 100px;
+        } 
+      }
+      
       .text-stroke {
         -webkit-text-stroke: 1px;
       }
@@ -82,11 +85,46 @@ $total = $countResult->fetchArray()[0];
       .text-shadow {
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
       }
+      
+      .card-round {
+        1rem;
+      }
+      
+      .overlay {
+        position: relative;
+        display: flex;
+        flex-direction: column; /* Change to column layout */
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Adjust background color and opacity */
+        text-align: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 1rem;
+      }
+
+      .overlay i {
+        font-size: 48px; /* Adjust icon size */
+        position: absolute;
+        bottom: 45%;
+      }
+
+      .overlay span {
+        font-size: 18px; /* Adjust text size */
+        margin-top: 35px; /* Add spacing between icon and text */
+      }
+      
+      .rounded-custom {
+        border-radius: 1rem;
+      }
     </style>
     <script>
       function shareImage(userId) {
         // Compose the share URL
-        var shareUrl = '../../image.php?artworkid=' + userId;
+        var shareUrl = '../image.php?artworkid=' + userId;
 
         // Check if the Share API is supported by the browser
         if (navigator.share) {
@@ -103,17 +141,6 @@ $total = $countResult->fetchArray()[0];
         }
       }
     </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', function() {
-            navigator.serviceWorker.register('sw.js').then(function(registration) {
-              console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, function(err) {
-              console.log('ServiceWorker registration failed: ', err);
-            });
-          });
-        }
-    </script>
-    <?php include('../../bootstrapjs.php'); ?>
+    <?php include('../bootstrapjs.php'); ?>
   </body>
 </html>

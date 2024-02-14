@@ -60,6 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_history'])) {
             case 'view':
             include "index_view.php";
             break;
+            case 'least':
+            include "index_least.php";
+            break;
+            case 'like':
+            include "index_liked.php";
+            break;
           }
         }
         else {

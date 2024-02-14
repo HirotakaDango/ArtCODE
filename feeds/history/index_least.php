@@ -4,7 +4,7 @@ $stmt = $db->prepare("SELECT h.*, i.filename, i.tags, i.title, i.imgdesc
                      FROM history h
                      JOIN images i ON h.image_artworkid = i.id
                      WHERE h.email = :email
-                     ORDER BY h.id DESC");
+                     ORDER BY i.view_count ASC");
 $stmt->bindParam(':email', $email);
 $stmt->execute();
 $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -16,11 +16,11 @@ $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <i class="bi bi-images"></i> sort by
         </button>
         <ul class="dropdown-menu">
-          <li><a href="?by=newest" class="dropdown-item fw-bold active">newest</a></li>
+          <li><a href="?by=newest" class="dropdown-item fw-bold">newest</a></li>
           <li><a href="?by=oldest" class="dropdown-item fw-bold">oldest</a></li>
           <li><a href="?by=popular" class="dropdown-item fw-bold">popular</a></li>
           <li><a href="?by=view" class="dropdown-item fw-bold">most viewed</a></li>
-          <li><a href="?by=view" class="dropdown-item fw-bold">least viewed</a></li>
+          <li><a href="?by=view" class="dropdown-item fw-bold active">least viewed</a></li>
           <li><a href="?by=view" class="dropdown-item fw-bold">liked</a></li>
         </ul> 
       </div>
