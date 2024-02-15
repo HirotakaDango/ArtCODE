@@ -13,61 +13,22 @@ $result = $db->query($query);
 if ($result) {
   $response = array(); // Initialize the response array
 
-  // Fetch each row and store in the $response array
+  // Fetch all rows and store in the $rows array
+  $rows = [];
   while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-    // Fetch next music record for the specified song
-    $queryNext = "SELECT music.id, music.file, music.cover, music.album, music.title
-                  FROM music
-                  WHERE (music.album = :album AND music.title > :title)
-                     OR (music.album > :album)
-                  ORDER BY music.album ASC, music.title ASC
-                  LIMIT 1";
-    $stmtNext = $db->prepare($queryNext);
-    $stmtNext->bindParam(':album', $row['album'], SQLITE3_TEXT);
-    $stmtNext->bindParam(':title', $row['title'], SQLITE3_TEXT);
-    $nextRow = $stmtNext->execute()->fetchArray(SQLITE3_ASSOC);
+    $rows[] = $row;
+  }
+  $totalRows = count($rows);
 
-    if (!$nextRow) {
-        // echo $row['album'].'-',$row['title'];
-      // If no next row, fetch the first music record in the playlist
-      $queryFirstNext = "SELECT * FROM music WHERE (music.album > :album) OR (music.album = :album AND music.title > :title) ORDER BY music.album ASC, music.title ASC LIMIT 1";
-      $stmtFirstNext = $db->prepare($queryFirstNext);
-      $stmtFirstNext->bindParam(':album', $row['album'], SQLITE3_TEXT);
-      $stmtFirstNext->bindParam(':title', $row['title'], SQLITE3_TEXT);
-      $firstNextRow = $stmtFirstNext->execute()->fetchArray(SQLITE3_ASSOC);
-      $nextRow = $firstNextRow ? $firstNextRow : $row;
-    }
+  // Iterate through each row
+  foreach ($rows as $index => $row) {
+    // Fetch next music record for the specified song
+    $nextIndex = ($index + 1) % $totalRows;
+    $nextRow = $rows[$nextIndex];
 
     // Fetch previous music record for the specified song
-    $queryPrev = "SELECT music.id, music.file, music.cover, music.album, music.title
-                  FROM music
-                  WHERE (music.album = :album AND music.title < :title)
-                     OR (music.album < :album)
-                  ORDER BY music.album DESC, music.title DESC
-                  LIMIT 1";
-    $stmtPrev = $db->prepare($queryPrev);
-    $stmtPrev->bindParam(':album', $row['album'], SQLITE3_TEXT);
-    $stmtPrev->bindParam(':title', $row['title'], SQLITE3_TEXT);
-    $prevRow = $stmtPrev->execute()->fetchArray(SQLITE3_ASSOC);
-
-    if (!$prevRow) {
-      // If no previous row, fetch the last music record in the playlist
-      $queryLastPrev = "SELECT * FROM music WHERE (music.album < :album) OR (music.album = :album AND music.title < :title) ORDER BY music.album DESC, music.title DESC LIMIT 1";
-      $stmtLastPrev = $db->prepare($queryLastPrev);
-      $stmtLastPrev->bindParam(':album', $row['album'], SQLITE3_TEXT);
-      $stmtLastPrev->bindParam(':title', $row['title'], SQLITE3_TEXT);
-      $lastPrevRow = $stmtLastPrev->execute()->fetchArray(SQLITE3_ASSOC);
-      $prevRow = $lastPrevRow ? $lastPrevRow : $row;
-    }
-
-    // Check if there is only one song in the playlist and set a flag for looping
-    $loopPlaylist = $nextRow === $prevRow && $nextRow === $row;
-
-    // If looping is enabled, set the next and previous to the current song
-    if ($loopPlaylist) {
-      $nextRow = $row;
-      $prevRow = $row;
-    }
+    $prevIndex = ($index - 1 + $totalRows) % $totalRows;
+    $prevRow = $rows[$prevIndex];
 
     // Create a new array for each song
     $songInfo = [

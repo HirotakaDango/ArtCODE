@@ -41,7 +41,13 @@ $websiteUrl = $row ? $row['website_url'] : '';
   </head>
   <body>
     <?php include('../lp_header.php'); ?>
-    <div class="container-fluid mt-5">
+    <form class="container-fluid mt-5" method="POST">
+      <div class="input-group">
+        <input class="form-control bg-dark-subtle border-0 focus-ring focus-ring-dark rounded-start-4 fw-medium" type="text" name="website_url" value="<?php echo $websiteUrl; ?>" placeholder="website url">
+        <button class="btn bg-dark-subtle border-0 link-body-emphasis fw-medium rounded-end-4">save</button>
+      </div>
+    </form>
+    <div class="container-fluid mt-2">
       <?php
         $sourceApiUrl = $websiteUrl . '/feeds/music/api_music.php'; // Construct API URL based on user input
 
