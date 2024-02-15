@@ -20,7 +20,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMEN
     <?php include('header.php'); ?>
     <div class="container-fluid d-flex">
       <!-- only visible for grid mode -->
-      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest_lists' || $_GET['by'] === 'oldest_lists' || $_GET['by'] === 'popular_lists' || $_GET['by'] === 'albumasc_lists' || $_GET['by'] === 'albumdesc_lists' || $_GET['by'] === 'asc_lists' || $_GET['by'] === 'desc_lists')) || (strpos($_SERVER['REQUEST_URI'], 'index_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_pop_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_desc_lists.php') !== false)) ? 'd-none' : ''; ?>">
+      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest_lists' || $_GET['by'] === 'oldest_lists' || $_GET['by'] === 'popular_lists' || $_GET['by'] === 'albumasc_lists' || $_GET['by'] === 'albumdesc_lists' || $_GET['by'] === 'asc_lists' || $_GET['by'] === 'artistasc_lists' || $_GET['by'] === 'artistdesc_lists' || $_GET['by'] === 'desc_lists')) || (strpos($_SERVER['REQUEST_URI'], 'index_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_pop_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_artist_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_artist_desc_lists.php') !== false)) ? 'd-none' : ''; ?>">
         <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-images"></i> sort by
         </button>
@@ -30,12 +30,14 @@ $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMEN
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=albumasc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'albumasc') echo 'active'; ?>">album ascending</a></li>
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=albumdesc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'albumdesc') echo 'active'; ?>">album descending</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=artistdesc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'artistasc') echo 'active'; ?>">artist ascending</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=artistasc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'artistdesc') echo 'active'; ?>">artist descending</a></li>
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc') echo 'active'; ?>">ascending</a></li>
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
         </ul> 
       </div>
       <!-- only visible for lists mode -->
-      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest' || $_GET['by'] === 'oldest' || $_GET['by'] === 'popular' || $_GET['by'] === 'albumasc' || $_GET['by'] === 'albumdesc' || $_GET['by'] === 'asc' || $_GET['by'] === 'desc')) || (strpos($_SERVER['REQUEST_URI'], 'index_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_desc.php') !== false)) ? 'd-none' : ''; ?>">
+      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest' || $_GET['by'] === 'oldest' || $_GET['by'] === 'popular' || $_GET['by'] === 'albumasc' || $_GET['by'] === 'albumdesc' || $_GET['by'] === 'asc' || $_GET['by'] === 'desc' || $_GET['by'] === 'artistasc' || $_GET['by'] === 'artistdesc')) || (strpos($_SERVER['REQUEST_URI'], 'index_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_artist_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_artist_desc.php') !== false)) ? 'd-none' : ''; ?>">
         <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-images"></i> sort by
         </button>
@@ -45,6 +47,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMEN
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=popular_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular_lists') echo 'active'; ?>">popular</a></li>
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=albumasc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'albumasc_lists') echo 'active'; ?>">album ascending</a></li>
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=albumdesc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'albumdesc_lists') echo 'active'; ?>">album descending</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=artistdesc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'artistasc_lists') echo 'active'; ?>">artist ascending</a></li>
+          <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=artistasc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'artistdesc_lists') echo 'active'; ?>">artist descending</a></li>
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=asc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc_lists') echo 'active'; ?>">ascending</a></li>
           <li><a href="?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=desc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc_lists') echo 'active'; ?>">descending</a></li>
         </ul> 
@@ -81,6 +85,12 @@ $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMEN
             case 'desc':
             include "index_order_desc.php";
             break;
+            case 'artistasc':
+            include "index_artist_asc.php";
+            break;
+            case 'artistdesc':
+            include "index_artist_desc.php";
+            break;
             // vertical lists layout
             case 'newest_lists':
             include "index_desc_lists.php";
@@ -102,6 +112,12 @@ $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMEN
             break;
             case 'desc_lists':
             include "index_order_desc_lists.php";
+            break;
+            case 'artistasc_lists':
+            include "index_artist_asc_lists.php";
+            break;
+            case 'artistdesc_lists':
+            include "index_artist_desc_lists.php";
             break;
           }
         }
