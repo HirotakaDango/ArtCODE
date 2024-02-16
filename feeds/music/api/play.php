@@ -160,6 +160,14 @@ $nextRow = $data[$nextIndex];
       #duration-slider::-webkit-slider-thumb {
         background-color: white;
       }
+
+      .box-shadow::-webkit-slider-runnable-track {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .box-shadow::-webkit-slider-thumb {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
     </style>
   </head>
   <body>
@@ -194,7 +202,7 @@ $nextRow = $data[$nextIndex];
               <div id="music-player" class="w-100 mt-3">
                 <div class="d-flex justify-content-start align-items-center fw-medium text-white gap-2">
                   <span class="me-auto small" id="duration"></span>
-                  <input type="range" class="w-100 form-range mx-auto" id="duration-slider" value="0">
+                  <input type="range" class="w-100 form-range mx-auto box-shadow" id="duration-slider" value="0">
                   <span class="ms-auto small" id="duration-left"></span>
                 </div>
                 <audio id="player" class="d-none" controls>

@@ -1,7 +1,7 @@
               <div id="music-player" class="w-100">
                 <div class="d-flex fw-medium text-white gap-2 justify-content-center align-items-center">
                   <span class="me-auto small" id="duration"></span>
-                  <input type="range" class="w-100 form-range m-auto" id="duration-slider" value="0">
+                  <input type="range" class="w-100 form-range mx-auto box-shadow" id="duration-slider" value="0">
                   <span class="ms-auto small" id="duration-left"></span>
                 </div>
                 <audio id="player" class="d-none" controls>
@@ -51,10 +51,36 @@
                             Edit Song
                           </a>
                         <?php endif; ?>
-                        <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Simple Mode</a>
+                        <?php if(basename($_SERVER['PHP_SELF']) === 'play.php'): ?>
+                          <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Full Mode</a>
+                        <?php endif; ?>
+                        <?php if(basename($_SERVER['PHP_SELF']) === 'play_all.php'): ?>
+                          <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_all_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Full Mode</a>
+                        <?php endif; ?>
+                        <?php if(basename($_SERVER['PHP_SELF']) === 'play_album.php'): ?>
+                          <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_album_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Full Mode</a>
+                        <?php endif; ?>
+                        <?php if(basename($_SERVER['PHP_SELF']) === 'play_favorite.php'): ?>
+                          <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_favorite_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Full Mode</a>
+                        <?php endif; ?>
+                        <?php if(basename($_SERVER['PHP_SELF']) === 'play_shuffle.php'): ?>
+                          <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_shuffle_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Full Mode</a>
+                        <?php endif; ?>
+                        <?php if(basename($_SERVER['PHP_SELF']) === 'play_repeat.php'): ?>
+                          <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_repeat_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Full Mode</a>
+                        <?php endif; ?>
                         <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100" href="<?php echo $row['file']; ?>" download>Download Song</a>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <style>
+                .box-shadow::-webkit-slider-runnable-track {
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+
+                .box-shadow::-webkit-slider-thumb {
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+              </style>

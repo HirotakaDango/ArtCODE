@@ -69,78 +69,79 @@ $size = !empty($fileInfo['filesize']) ? formatBytes($fileInfo['filesize']) : 'Un
 $audioType = !empty($fileInfo['fileformat']) ? $fileInfo['fileformat'] : 'Unknown';
 $sampleRate = !empty($fileInfo['audio']['sample_rate']) ? $fileInfo['audio']['sample_rate'] . 'Hz' : 'Unknown';
 
-// Fetch all music records for the specified artist
+// Fetch all favorited music records for the current user, ordered by favorites_music.id
 $queryAll = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
              FROM music
              JOIN users ON music.email = users.email
-             WHERE users.id = :artist_id
-             ORDER BY music.album ASC, music.id ASC";
+             JOIN favorites_music ON music.id = favorites_music.music_id
+             WHERE favorites_music.email = :email
+             ORDER BY favorites_music.id ASC";
 $stmtAll = $db->prepare($queryAll);
-$stmtAll->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
+$stmtAll->bindParam(':email', $email, PDO::PARAM_STR);
 $stmtAll->execute();
 $allRows = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
 
-// Check if there is only one song for the artist and set a flag for looping
+// Check if there is only one song in the playlist and set a flag for looping
 $loopPlaylist = count($allRows) === 1;
 
-// Fetch next music record for the specified artist
+// Fetch next favorited music record for the specified song
 $queryNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-              FROM music
+              FROM favorites_music
+              JOIN music ON favorites_music.music_id = music.id
               JOIN users ON music.email = users.email
-              WHERE (music.album = :album AND music.id > :id)
-                 OR (music.album = :album AND music.id = (SELECT MIN(id) FROM music WHERE album > :album AND email = :email))
-                 OR (music.album > :album AND music.email = :email)
-              ORDER BY music.album ASC, music.id ASC
+              WHERE favorites_music.email = :email
+                AND favorites_music.id > (SELECT favorites_music.id FROM favorites_music WHERE email = :email AND music_id = :music_id)
+              ORDER BY favorites_music.id ASC
               LIMIT 1";
 $stmtNext = $db->prepare($queryNext);
-$stmtNext->bindParam(':album', $album, PDO::PARAM_STR);
-$stmtNext->bindParam(':id', $id, PDO::PARAM_INT);
-$stmtNext->bindParam(':email', $user_email, PDO::PARAM_STR);
+$stmtNext->bindParam(':email', $email, PDO::PARAM_STR);
+$stmtNext->bindParam(':music_id', $id, PDO::PARAM_INT);
 $stmtNext->execute();
 $nextRow = $stmtNext->fetch(PDO::FETCH_ASSOC);
 
 if (!$nextRow) {
-  // If no next row, fetch the first music record for the artist
-  $queryFirstNextArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                          FROM music
-                          JOIN users ON music.email = users.email
-                          WHERE users.id = :artist_id
-                          ORDER BY music.album ASC, music.id ASC
-                          LIMIT 1";
-  $stmtFirstNextArtist = $db->prepare($queryFirstNextArtist);
-  $stmtFirstNextArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
-  $stmtFirstNextArtist->execute();
-  $nextRow = $stmtFirstNextArtist->fetch(PDO::FETCH_ASSOC);
+  // If no next favorited row, wrap around and fetch the first favorited music record in the playlist
+  $queryFirstNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                     FROM favorites_music
+                     JOIN music ON favorites_music.music_id = music.id
+                     JOIN users ON music.email = users.email
+                     WHERE favorites_music.email = :email
+                     ORDER BY favorites_music.id ASC
+                     LIMIT 1";
+  $stmtFirstNext = $db->prepare($queryFirstNext);
+  $stmtFirstNext->bindParam(':email', $email, PDO::PARAM_STR);
+  $stmtFirstNext->execute();
+  $nextRow = $stmtFirstNext->fetch(PDO::FETCH_ASSOC);
 }
 
-// Fetch previous music record for the specified artist
+// Fetch previous favorited music record for the specified song
 $queryPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-              FROM music
+              FROM favorites_music
+              JOIN music ON favorites_music.music_id = music.id
               JOIN users ON music.email = users.email
-              WHERE (music.album = :album AND music.id < :id)
-                 OR (music.album = :album AND music.id = (SELECT MAX(id) FROM music WHERE album < :album AND email = :email))
-                 OR (music.album < :album AND music.email = :email)
-              ORDER BY music.album DESC, music.id DESC
+              WHERE favorites_music.email = :email
+                AND favorites_music.id < (SELECT favorites_music.id FROM favorites_music WHERE email = :email AND music_id = :music_id)
+              ORDER BY favorites_music.id DESC
               LIMIT 1";
 $stmtPrev = $db->prepare($queryPrev);
-$stmtPrev->bindParam(':album', $album, PDO::PARAM_STR);
-$stmtPrev->bindParam(':id', $id, PDO::PARAM_INT);
-$stmtPrev->bindParam(':email', $user_email, PDO::PARAM_STR);
+$stmtPrev->bindParam(':email', $email, PDO::PARAM_STR);
+$stmtPrev->bindParam(':music_id', $id, PDO::PARAM_INT);
 $stmtPrev->execute();
 $prevRow = $stmtPrev->fetch(PDO::FETCH_ASSOC);
 
 if (!$prevRow) {
-  // If no previous row, fetch the last music record for the artist
-  $queryLastPrevArtist = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-                         FROM music
-                         JOIN users ON music.email = users.email
-                         WHERE users.id = :artist_id
-                         ORDER BY music.album DESC, music.id DESC
-                         LIMIT 1";
-  $stmtLastPrevArtist = $db->prepare($queryLastPrevArtist);
-  $stmtLastPrevArtist->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
-  $stmtLastPrevArtist->execute();
-  $prevRow = $stmtLastPrevArtist->fetch(PDO::FETCH_ASSOC);
+  // If no previous favorited row, wrap around and fetch the last favorited music record in the playlist
+  $queryLastPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
+                    FROM favorites_music
+                    JOIN music ON favorites_music.music_id = music.id
+                    JOIN users ON music.email = users.email
+                    WHERE favorites_music.email = :email
+                    ORDER BY favorites_music.id DESC
+                    LIMIT 1";
+  $stmtLastPrev = $db->prepare($queryLastPrev);
+  $stmtLastPrev->bindParam(':email', $email, PDO::PARAM_STR);
+  $stmtLastPrev->execute();
+  $prevRow = $stmtLastPrev->fetch(PDO::FETCH_ASSOC);
 }
 
 // If looping is enabled, set the next and previous to the current song
@@ -272,7 +273,7 @@ if (isset($_POST['favorite'])) {
   </head>
   <body>
     <div class="container-fluid custom-bg">
-      <a class="z-3 text-shadow position-absolute top-0 start-0 ms-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/music/?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>">
+      <a class="z-3 text-shadow position-absolute top-0 start-0 ms-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="favorite.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>">
         <i class="bi bi-chevron-down fs-4" style="-webkit-text-stroke: 3px;"></i>
       </a>
       <a class="z-3 text-shadow position-absolute top-0 end-0 me-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">
@@ -321,13 +322,13 @@ if (isset($_POST['favorite'])) {
               <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_repeat_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                 <i class="bi bi-repeat-1 fs-custom-2"></i>
               </a>
-              <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
+              <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_favorite_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
                 <i class="bi bi-skip-start-fill fs-custom-3"></i>
               </a>
               <button class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-center mx-auto" id="playPauseButton" onclick="togglePlayPause()">
                 <i class="bi bi-play-circle-fill fs-custom"></i>
               </button>
-              <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
+              <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play_favorite_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                 <i class="bi bi-skip-end-fill fs-custom-3"></i>
               </a>
               <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play_shuffle_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
@@ -517,13 +518,13 @@ if (isset($_POST['favorite'])) {
 
       navigator.mediaSession.setActionHandler('previoustrack', function() {
         currentTrackId = <?= $prevRow ? $prevRow['id'] : 0 ?>;
-        const previousTrackUrl = 'play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?= $prevRow ? urlencode($prevRow['album']) : '' ?>&id=' + currentTrackId;
+        const previousTrackUrl = 'play_favorite_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?= $prevRow ? urlencode($prevRow['album']) : '' ?>&id=' + currentTrackId;
         window.location.href = previousTrackUrl;
       });
 
       navigator.mediaSession.setActionHandler('nexttrack', function() {
         currentTrackId = <?= $nextRow ? $nextRow['id'] : 0 ?>;
-        const nextTrackUrl = 'play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?= $nextRow ? urlencode($nextRow['album']) : '' ?>&id=' + currentTrackId;
+        const nextTrackUrl = 'play_favorite_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?= $nextRow ? urlencode($nextRow['album']) : '' ?>&id=' + currentTrackId;
         window.location.href = nextTrackUrl;
       });
 
@@ -629,7 +630,7 @@ if (isset($_POST['favorite'])) {
 
         audioPlayer.addEventListener('ended', function(event) {
           // Redirect to the next song URL
-          window.location.href = "play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>";
+          window.location.href = "play_favorite_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>";
         });
 
         // Event listener for "Next" button
@@ -803,7 +804,7 @@ if (isset($_POST['favorite'])) {
 
       function sharePageS(musicId, songName) {
         if (navigator.share) {
-          const shareUrl = `${window.location.origin}/play_simple.php?id=${musicId}&mode=<?php echo $mode; ?>&by=<?php echo $by; ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>`;
+          const shareUrl = `${window.location.origin}/play_favorite_simple.php?id=${musicId}&mode=<?php echo $mode; ?>&by=<?php echo $by; ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>`;
           navigator.share({
             title: songName,
             url: shareUrl
