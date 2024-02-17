@@ -1,4 +1,4 @@
-              <div class="btn-group w-100 gap-4 my-3 my-md-2">
+              <div class="btn-group d-flex justify-content-center align-items-center w-100 gap-4 my-3 my-md-2">
                 <a class="text-start me-auto w-50 border-0 link-body-emphasis" href="<?php echo $row['file']; ?>" download>
                   <i class="bi bi-download fs-5"></i>
                 </a>
