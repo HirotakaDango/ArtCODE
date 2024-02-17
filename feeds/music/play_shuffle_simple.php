@@ -263,8 +263,8 @@ if (isset($_POST['favorite'])) {
       </a>
       <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="bg-transparent rounded-5 w-100 max-md">
-          <div class="position-relative text-shadow p-1">
-            <div class="position-relative container-fluid">
+          <div class="position-relative text-shadow">
+            <div class="position-relative container-fluid p-1">
               <div class="position-relative">
                 <div class="text-center mb-2 ratio ratio-1x1">
                   <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-4 shadow"></a>
@@ -298,8 +298,10 @@ if (isset($_POST['favorite'])) {
                 <a class="text-decoration-none text-white small fw-bold link-body-emphasis" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a> - <a class="text-decoration-none text-white small fw-bold link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a>
               </div>
             </div>
-            <?php include('info_option_simple.php'); ?>
-            <?php include('player_card_simple.php'); ?>
+            <div class="container-fluid px-2">
+              <?php include('info_option_simple.php'); ?>
+              <?php include('player_card_simple.php'); ?>
+            </div>
             <div class="btn-group w-100 d-flex justify-content-center align-items-center gap-2 my-2 my-md-0">
               <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_repeat_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                 <i class="bi bi-repeat-1 fs-custom-2"></i>

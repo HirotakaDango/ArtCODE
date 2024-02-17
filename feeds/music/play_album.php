@@ -272,8 +272,8 @@ if (isset($_POST['favorite'])) {
       <div class="row featurette">
         <div class="col-md-6 order-md-1 d-flex justify-content-center align-items-center vh-100 mb-5 mb-md-0">
           <div class="bg-transparent rounded-5 w-100 max-md">
-            <div class="position-relative text-shadow p-1">
-              <div class="position-relative container-fluid">
+            <div class="position-relative text-shadow">
+              <div class="position-relative container-fluid p-1">
                 <div class="position-relative">
                   <div class="text-center mb-2 ratio ratio-1x1">
                     <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $coverImage; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-4 shadow"></a>
@@ -345,7 +345,9 @@ if (isset($_POST['favorite'])) {
                 </div>
                 <?php include('info_option.php'); ?>
               </div>
-              <?php include('player_card.php'); ?>
+              <div class="container-fluid px-2">
+                <?php include('player_card.php'); ?>
+              </div>
               <div class="btn-group w-100 d-flex justify-content-center align-items-center gap-2 my-2 my-md-0">
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_repeat.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                   <i class="bi bi-repeat-1 fs-custom-2"></i>
