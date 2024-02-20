@@ -72,12 +72,12 @@ $nextRow = $data[$nextIndex];
       let isSeeking = false;
 
       navigator.mediaSession.setActionHandler('previoustrack', function() {
-        const previousTrackUrl = 'play.php?album=<?php echo urlencode(($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['album'] : $prevRow['album']); ?>&id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>';
+        const previousTrackUrl = 'play_repeat.php?album=<?php echo urlencode(($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['album'] : $prevRow['album']); ?>&id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>';
         window.location.href = previousTrackUrl;
       });
 
       navigator.mediaSession.setActionHandler('nexttrack', function() {
-        const nextTrackUrl = 'play.php?album=<?php echo urlencode(($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['album'] : $nextRow['album']); ?>&id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>';
+        const nextTrackUrl = 'play_repeat.php?album=<?php echo urlencode(($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['album'] : $nextRow['album']); ?>&id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>';
         window.location.href = nextTrackUrl;
       });
 
@@ -212,16 +212,16 @@ $nextRow = $data[$nextIndex];
               </div>
               <div class="btn-group w-100 d-flex justify-content-center align-items-center" style="gap: 0.7em;">
                 <!-- (debugging) <?php echo $prevIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[1]['id']."-".$prevRow['id']; ?> -->
-                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_repeat.php?album=<?php echo urlencode($selectedSong['album']); ?>&id=<?php echo $songId; ?>">
-                  <i class="bi bi-repeat-1 fs-custom-2"></i>
+                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play.php?album=<?php echo urlencode($selectedSong['album']); ?>&id=<?php echo $songId; ?>">
+                  <i class="bi bi-repeat fs-custom-2"></i>
                 </a>
-                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play.php?album=<?php echo urlencode(($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['album'] : $prevRow['album']); ?>&id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>">
+                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_repeat.php?album=<?php echo urlencode(($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['album'] : $prevRow['album']); ?>&id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>">
                   <i class="bi bi-skip-start-fill fs-custom-3"></i>
                 </a>
                 <button class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-center mx-auto" id="playPauseButton" onclick="togglePlayPause()">
                   <i class="bi bi-play-circle-fill fs-custom"></i>
                 </button>
-                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play.php?album=<?php echo urlencode(($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['album'] : $nextRow['album']); ?>&id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>">
+                <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play_repeat.php?album=<?php echo urlencode(($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['album'] : $nextRow['album']); ?>&id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>">
                   <i class="bi bi-skip-end-fill fs-custom-3"></i>
                 </a>
                 <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play_shuffle.php?album=<?php echo urlencode($selectedSong['album']); ?>&id=<?php echo $songId; ?>">
@@ -255,7 +255,7 @@ $nextRow = $data[$nextIndex];
                     <?php foreach ($data as $song): ?>
                       <div id="song_<?php echo $song['id']; ?>" class="link-body-emphasis d-flex justify-content-between align-items-center rounded-4 bg-dark bg-opacity-10 my-2 text-shadow <?php echo ($song['id'] == $selectedSong['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
                         <div class="card-body p-1">
-                          <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>">
+                          <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="play_repeat.php?album=<?php echo urlencode($song['album']); ?>&id=<?php echo $song['id']; ?>">
                             <?php echo $song['title']; ?><br>
                             <small class="small"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small>
                           </a>
@@ -445,7 +445,7 @@ $nextRow = $data[$nextIndex];
 
         audioPlayer.addEventListener('ended', function(event) {
           // Redirect to the next song URL
-          window.location.href = "play.php?album=<?php echo urlencode(($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['album'] : $nextRow['album']); ?>&id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>";
+          window.location.href = "play_repeat.php?album=<?php echo urlencode($selectedSong['album']); ?>&id=<?php echo $songId; ?>";
         });
 
         // Event listener for "Next" button
