@@ -69,7 +69,7 @@ $size = !empty($fileInfo['filesize']) ? formatBytes($fileInfo['filesize']) : 'Un
 $audioType = !empty($fileInfo['fileformat']) ? $fileInfo['fileformat'] : 'Unknown';
 $sampleRate = !empty($fileInfo['audio']['sample_rate']) ? $fileInfo['audio']['sample_rate'] . 'Hz' : 'Unknown';
 
-// Fetch all music records for all artists, ordered by artist, album, and title ascending
+// Fetch all music records
 $queryAll = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
              FROM music
              JOIN users ON music.email = users.email
@@ -96,15 +96,6 @@ function getNextOrPrev($array, $currentElement, $next = true) {
 
   return $array[$newIndex];
 }
-
-// Fetch all music records
-$queryAll = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
-             FROM music
-             JOIN users ON music.email = users.email
-             ORDER BY users.artist ASC, music.album ASC, music.title ASC";
-$stmtAll = $db->prepare($queryAll);
-$stmtAll->execute();
-$allRows = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
 
 // Shuffle the playlist using the shuffle operator
 $shuffledRows = $allRows;
@@ -303,7 +294,7 @@ if (isset($_POST['favorite'])) {
               <?php include('player_card_simple.php'); ?>
             </div>
             <div class="btn-group w-100 d-flex justify-content-center align-items-center gap-2 my-2 my-md-0">
-              <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_repeat_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
+              <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_repeat_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
                 <i class="bi bi-repeat-1 fs-custom-2"></i>
               </a>
               <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-start me-auto" href="play_shuffle_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($prevRow['album']); ?>&id=<?php echo $prevRow['id']; ?>">
@@ -315,7 +306,7 @@ if (isset($_POST['favorite'])) {
               <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play_shuffle_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
                 <i class="bi bi-skip-end-fill fs-custom-3"></i>
               </a>
-              <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($nextRow['album']); ?>&id=<?php echo $nextRow['id']; ?>">
+              <a class="btn border-0 link-body-emphasis w-25 text-white text-shadow text-end ms-auto" href="play_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
                 <i class="bi bi-filter-right fs-custom-2"></i>
               </a>
             </div>
