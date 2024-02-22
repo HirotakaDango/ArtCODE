@@ -6,6 +6,21 @@ $db = new SQLite3('database.sqlite');
 $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS forum (id INTEGER PRIMARY KEY, email TEXT, comment TEXT, title TEXT, category TEXT, created_at TEXT)");
 $stmt->execute();
 
+// Get the artist information from the database
+$email = $_SESSION['email'];
+
+// Get the user ID from the URL parameter and URL decode it
+$userid = isset($_GET['id']) ? urldecode($_GET['id']) : '';
+
+// Query to get the artist name of the current user ID
+$stmt_artist = $db->prepare("SELECT id, email, artist FROM users WHERE id = :userid");
+$stmt_artist->bindValue(':userid', $userid, SQLITE3_TEXT);
+$artist_result = $stmt_artist->execute();
+$artist_row = $artist_result->fetchArray(SQLITE3_ASSOC);
+$artist_name = $artist_row['artist'];
+$artist_email = $artist_row['email'];
+$artist_id = $artist_row['id'];
+
 // Check if the form was submitted for adding a new comment
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
   // Get the comment from the form data
@@ -79,7 +94,8 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $items_per_page;
 
 // Get the total number of forum items
-$total_items_stmt = $db->prepare("SELECT COUNT(*) FROM forum");
+$total_items_stmt = $db->prepare("SELECT COUNT(*) FROM forum WHERE email IN (SELECT email FROM users WHERE id = :userid)");
+$total_items_stmt->bindValue(':userid', $userid, SQLITE3_TEXT);
 $total_items = $total_items_stmt->execute()->fetchArray()[0];
 
 // Calculate the total number of pages
@@ -98,7 +114,7 @@ $categories = array();
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Forum</title>
+    <title><?php echo $artist_name; ?></title>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="icon/favicon.png">
@@ -111,9 +127,9 @@ $categories = array();
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=top&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top</a></li>
+        <li><a href="?by=newest&id=<?php echo $userid; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&id=<?php echo $userid; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=top&id=<?php echo $userid; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top</a></li>
       </ul> 
     </div>
     <form class="input-group container mb-2" role="search" action="forum_search.php">
@@ -127,26 +143,28 @@ $categories = array();
  
           switch ($sort) {
             case 'newest':
-            include "forum_desc.php";
+            include "forum_user_desc.php";
             break;
             case 'oldest':
-            include "forum_asc.php";
+            include "forum_user_asc.php";
             break;
             case 'top':
-            include "forum_top.php";
+            include "forum_user_top.php";
             break;
           }
         }
         else {
-          include "forum_desc.php";
+          include "forum_user_desc.php";
         }
         
         ?>
-    <nav class="navbar fixed-bottom navbar-expand justify-content-center z-2">
-      <div class="container">
-        <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#forum">upload your post</button>
-      </div>
-    </nav>
+    <?php if ($artist_email == $email) : ?>
+      <nav class="navbar fixed-bottom navbar-expand justify-content-center z-2">
+        <div class="container">
+          <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#forum">upload your post</button>
+        </div>
+      </nav>
+    <?php endif; ?>
     <div class="modal fade" id="forum" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content border-0 rounded-4 shadow">

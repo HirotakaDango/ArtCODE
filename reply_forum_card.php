@@ -1,8 +1,14 @@
           <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
             <div class="d-flex align-items-center mb-2 position-relative">
-              <div class="position-absolute top-0 start-0 m-1">
+              <div class="d-flex align-items-center gap-2 position-absolute top-0 start-0 m-1">
                 <img class="rounded-circle object-fit-cover" src="<?php echo !empty($reply['pic']) ? $reply['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-                <a class="text-dark text-decoration-none fw-medium link-body-emphasis" href="artist.php?id=<?php echo $reply['userid']; ?>"><small>@<?php echo (mb_strlen($reply['artist']) > 15) ? mb_substr($reply['artist'], 0, 15) . '...' : $reply['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
+                <div class="dropdown">
+                  <a class="text-dark text-decoration-none fw-medium link-body-emphasis" href="#" data-bs-toggle="dropdown" aria-expanded="false"><small>@<?php echo (mb_strlen($reply['artist']) > 15) ? mb_substr($reply['artist'], 0, 15) . '...' : $reply['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item fw-medium" href="artist.php?id=<?php echo $reply['userid'];?>" target="_blank">view user's profile</a></li>
+                    <li><a class="dropdown-item fw-medium" href="forum_user.php?id=<?php echo $reply['userid'];?>" target="_blank">view user's forum profile</a></li>
+                  </ul>
+                </div>
               </div>
               <?php if ($_SESSION['email'] === $reply['email']): ?>
                 <div class="dropdown ms-auto position-relative">

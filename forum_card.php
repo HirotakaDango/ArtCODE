@@ -1,8 +1,14 @@
         <div class="card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
           <div class="d-flex align-items-center mb-2 position-relative">
-            <div class="position-absolute top-0 start-0 m-1">
+            <div class="d-flex align-items-center gap-2 position-absolute top-0 start-0 m-1">
               <img class="rounded-circle object-fit-cover" src="<?php echo !empty($comment['pic']) ? $comment['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-              <a class="text-dark text-decoration-none fw-medium link-body-emphasis" href="artist.php?id=<?php echo $comment['iduser'];?>" target="_blank"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
+              <div class="dropdown">
+                <a class="text-dark text-decoration-none fw-medium link-body-emphasis" href="#" data-bs-toggle="dropdown" aria-expanded="false"><small>@<?php echo (mb_strlen($comment['artist']) > 15) ? mb_substr($comment['artist'], 0, 15) . '...' : $comment['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $comment['created_at']; ?></small></small>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item fw-medium" href="artist.php?id=<?php echo $comment['iduser'];?>" target="_blank">view user's profile</a></li>
+                  <li><a class="dropdown-item fw-medium" href="forum_user.php?id=<?php echo $comment['iduser'];?>" target="_blank">view user's forum profile</a></li>
+                </ul>
+              </div>
             </div>
             <?php if ($comment['email'] == $_SESSION['email']) : ?>
               <div class="dropdown ms-auto position-relative">
@@ -25,6 +31,8 @@
             <?php endif; ?>
           </div>
           <div class="mt-5 container fw-medium">
+            <a class="btn bg-dark-subtle btn-sm fw-bold rounded-pill link-body-emphasis mb-2" href="forum_category.php?q=<?php echo urlencode($comment['category']); ?>"><small><?php echo str_replace('_', ' ', $comment['category']); ?></small></a>
+            <h5 class="fw-bold mb-3"><?php echo $comment['title']; ?></h5>
             <div>
               <?php
                 if (!function_exists('getYouTubeVideoId')) {

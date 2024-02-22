@@ -6,68 +6,8 @@ $db = new SQLite3('database.sqlite');
 $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS forum (id INTEGER PRIMARY KEY, email TEXT, comment TEXT, title TEXT, category TEXT, created_at TEXT)");
 $stmt->execute();
 
-// Check if the form was submitted for adding a new comment
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
-  // Get the comment from the form data
-  $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  $comment = nl2br($comment);
-  $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  $email = $_SESSION['email'];
-
-  // Get the current time
-  $currentDate  = date("Y/m/d");
-
-  // Insert the comment into the database
-  $stmt = $db->prepare("INSERT INTO forum (email, comment, title, category, created_at) VALUES (:email, :comment, :title, :category, :created_at)");
-  $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-  $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
-  $stmt->bindValue(':title', $title, SQLITE3_TEXT);
-  $stmt->bindValue(':category', $category, SQLITE3_TEXT);
-  $stmt->bindValue(':created_at', $currentDate , SQLITE3_TEXT);
-  $stmt->execute();
-
-  // Redirect back to the image page
-  $currentURL = $_SERVER['REQUEST_URI'];
-  $redirectURL = $currentURL;
-  header("Location: $redirectURL");
-  exit();
-}
-
-// Check if the form was submitted for updating or deleting a comment
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
-  $action = $_POST['action'];
-  $comment_id = $_POST['comment_id'];
-
-  // Get the email of the current user
-  $email = $_SESSION['email'];
-
-  // Check if the comment belongs to the current user
-  $stmt = $db->prepare("SELECT * FROM forum WHERE id=:comment_id AND email=:email");
-  $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
-  $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-  $comment = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
-
-  if ($comment) {
-    if ($action == 'delete') {
-      // Delete the comment from the comments table
-      $stmt = $db->prepare("DELETE FROM forum WHERE id=:comment_id");
-      $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
-      $stmt->execute();
-
-      // Delete the corresponding replies from the reply_comments table
-      $stmt = $db->prepare("DELETE FROM reply_forum WHERE comment_id=:comment_id");
-      $stmt->bindValue(':comment_id', $comment_id, SQLITE3_INTEGER);
-      $stmt->execute();
-    }
-  }
-
-  // Redirect back to the image page
-  $currentURL = $_SERVER['REQUEST_URI'];
-  $redirectURL = $currentURL;
-  header("Location: $redirectURL");
-  exit();
-}
+// Get the category from the URL parameter and URL decode it
+$search = isset($_GET['q']) ? urldecode($_GET['q']) : '';
 
 // Set the number of items to display per page
 $items_per_page = 100;
@@ -87,7 +27,8 @@ $total_pages = ceil($total_items / $items_per_page);
 
 // Query to get categories
 $stmt = $db->prepare('SELECT * FROM category_forum ORDER BY category_name ASC');
-$results = $stmt->execute();
+$results = [];
+$result = $stmt->execute();
 
 // Query to get distinct categories and count of posts for each category
 $category_query = "SELECT category, COUNT(*) as post_count FROM (SELECT DISTINCT category, id FROM forum) AS distinct_categories GROUP BY category ORDER BY post_count DESC";
@@ -98,7 +39,7 @@ $categories = array();
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Forum</title>
+    <title>Search for <?php echo urlencode($search); ?></title>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="icon/favicon.png">
@@ -111,9 +52,9 @@ $categories = array();
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=top&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top</a></li>
+        <li><a href="?by=newest&q=<?php echo urlencode($search); ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&q=<?php echo urlencode($search); ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=top&q=<?php echo urlencode($search); ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top</a></li>
       </ul> 
     </div>
     <form class="input-group container mb-2" role="search" action="forum_search.php">
@@ -127,61 +68,21 @@ $categories = array();
  
           switch ($sort) {
             case 'newest':
-            include "forum_desc.php";
+            include "forum_search_desc.php";
             break;
             case 'oldest':
-            include "forum_asc.php";
+            include "forum_search_asc.php";
             break;
             case 'top':
-            include "forum_top.php";
+            include "forum_search_top.php";
             break;
           }
         }
         else {
-          include "forum_desc.php";
+          include "forum_search_desc.php";
         }
         
         ?>
-    <nav class="navbar fixed-bottom navbar-expand justify-content-center z-2">
-      <div class="container">
-        <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#forum">upload your post</button>
-      </div>
-    </nav>
-    <div class="modal fade" id="forum" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-        <div class="modal-content border-0 rounded-4 shadow">
-          <div class="modal-header border-0">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Type something else...</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form class="form-control border-0 mb-2" action="" method="POST">
-              <div class="form-floating">
-                <input type="text" class="form-control fw-bold rounded-3 mb-2" name="title" id="floatingInputInvalid" placeholder="Title" required>
-                <label class="fw-bold" for="floatingTextarea">Title</label>
-              </div>
-              <div class="form-floating">
-                <select class="form-select fw-bold rounded-3 mb-2 py-0 text-start" name="category" required>
-                  <option class="form-control" value="">Add category:</option>
-                  <?php
-                    // Loop through each category and create an option in the dropdown list
-                    while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
-                        $category_name = $row['category_name'];
-                        $id = $row['id'];
-                        echo '<option value="' . htmlspecialchars($category_name) . '">' . htmlspecialchars($category_name) . '</option>';
-                    }
-                  ?>
-                </select>
-              </div>
-              <textarea type="text" class="form-control fw-bold rounded-3 mb-2" style="height: 200px; max-height: 800px;" name="comment" placeholder="Type something..." aria-label="Type a message..." aria-describedby="basic-addon2" 
-                onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
-                onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 800) { this.style.height = '800px'; } else { this.style.height = newHeight; }" required></textarea>
-              <button class="w-100 btn btn-primary rounded-3" type="submit"><i class="bi bi-send-fill"></i></button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
     <br><br><br>
     <style>
       .text-stroke {
