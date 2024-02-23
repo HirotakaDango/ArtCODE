@@ -18,6 +18,10 @@ $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMEN
   </head>
   <body>
     <?php include('header.php'); ?>
+    <div class="container-fluid">
+      <?php include('best_music.php'); ?>
+      <?php include('best_album.php'); ?>
+    </div>
     <div class="container-fluid d-flex">
       <!-- only visible for grid mode -->
       <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest_lists' || $_GET['by'] === 'oldest_lists' || $_GET['by'] === 'popular_lists' || $_GET['by'] === 'albumasc_lists' || $_GET['by'] === 'albumdesc_lists' || $_GET['by'] === 'asc_lists' || $_GET['by'] === 'artistasc_lists' || $_GET['by'] === 'artistdesc_lists' || $_GET['by'] === 'desc_lists')) || (strpos($_SERVER['REQUEST_URI'], 'index_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_pop_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_album_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_order_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_artist_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'index_artist_desc_lists.php') !== false)) ? 'd-none' : ''; ?>">

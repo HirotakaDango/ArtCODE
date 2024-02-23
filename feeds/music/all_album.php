@@ -20,23 +20,29 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
     <?php include('header.php'); ?>
     <div class="container-fluid d-flex">
       <!-- only visible for grid mode -->
-      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'desc_lists' || $_GET['by'] === 'asc_lists')) || (strpos($_SERVER['REQUEST_URI'], 'all_album_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_asc_lists.php') !== false)) ? 'd-none' : ''; ?>">
+      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest_lists' || $_GET['by'] === 'oldest_lists' || $_GET['by'] === 'popular_lists' || $_GET['by'] === 'desc_lists' || $_GET['by'] === 'asc_lists')) || (strpos($_SERVER['REQUEST_URI'], 'all_album_desc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_pop_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_order_asc_lists.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_order_desc_lists.php') !== false)) ? 'd-none' : ''; ?>">
         <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-images"></i> sort by
         </button>
         <ul class="dropdown-menu">
-          <li><a href="?by=desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
+          <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+          <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+          <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
           <li><a href="?by=asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc') echo 'active'; ?>">ascending</a></li>
+          <li><a href="?by=desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc') echo 'active'; ?>">descending</a></li>
         </ul> 
       </div>
       <!-- only visible for lists mode -->
-      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'desc' || $_GET['by'] === 'asc')) || (strpos($_SERVER['REQUEST_URI'], 'all_album_desc_grid.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_asc_grid.php') !== false)) ? 'd-none' : ''; ?>">
+      <div class="dropdown mt-3 me-auto <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'newest' || $_GET['by'] === 'oldest' || $_GET['by'] === 'popular' || $_GET['by'] === 'desc' || $_GET['by'] === 'asc')) || (strpos($_SERVER['REQUEST_URI'], 'all_album_desc_grid.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_asc_grid.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_pop_grid.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_order_asc_grid.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'all_album_order_desc_grid.php') !== false)) ? 'd-none' : ''; ?>">
         <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-images"></i> sort by
         </button>
         <ul class="dropdown-menu">
-          <li><a href="?by=desc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'desc_lists') echo 'active'; ?>">descending</a></li>
+          <li><a href="?by=newest_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest_lists') echo 'active'; ?>">newest</a></li>
+          <li><a href="?by=oldest_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest_lists') echo 'active'; ?>">oldest</a></li>
+          <li><a href="?by=popular_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular_lists') echo 'active'; ?>">popular</a></li>
           <li><a href="?by=asc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'asc_lists') echo 'active'; ?>">ascending</a></li>
+          <li><a href="?by=desc_lists&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'desc_lists') echo 'active'; ?>">descending</a></li>
         </ul> 
       </div>
       <div class="btn-group mt-2 pt-1">
@@ -45,22 +51,42 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
       </div>
     </div>
     <div class="container-fluid">
-      <?php 
+        <?php 
         if(isset($_GET['by'])){
           $sort = $_GET['by'];
  
           switch ($sort) {
-            case 'asc':
-            include "all_album_asc_grid.php";
-            break;
-            case 'asc_lists':
-            include "all_album_asc_lists.php";
-            break;
-            case 'desc':
+            // grid layout
+            case 'newest':
             include "all_album_desc_grid.php";
             break;
-            case 'desc_lists':
+            case 'oldest':
+            include "all_album_asc_grid.php";
+            break;
+            case 'popular':
+            include "all_album_pop_grid.php";
+            break;
+            case 'asc':
+            include "all_album_order_asc_grid.php";
+            break;
+            case 'desc':
+            include "all_album_order_desc_grid.php";
+            break;
+            // vertical lists layout
+            case 'newest_lists':
             include "all_album_desc_lists.php";
+            break;
+            case 'oldest_lists':
+            include "all_album_asc_lists.php";
+            break;
+            case 'popular_lists':
+            include "all_album_pop_lists.php";
+            break;
+            case 'asc_lists':
+            include "all_album_order_asc_lists.php";
+            break;
+            case 'desc_lists':
+            include "all_album_order_desc_lists.php";
             break;
           }
         }
@@ -68,7 +94,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
           include "all_album_desc_grid.php";
         }
         
-      ?>
+        ?>
     </div>
 
     <!-- Pagination -->

@@ -57,6 +57,7 @@
           </ul>
           <form class="d-flex ms-auto mt-2 mt-md-0 md-lg-0" action="search.php" role="search">
             <input type="hidden" name="mode" value="<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>">
+            <input type="hidden" name="by" value="<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>">
             <input class="form-control rounded-end-0 rounded-pill fw-medium focus-ring focus-ring-dark border-end-0" name="q" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success rounded-start-0 rounded-pill fw-medium" type="submit">Search</button>
           </form>

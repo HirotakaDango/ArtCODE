@@ -8,7 +8,7 @@ $query = "SELECT MIN(music.id) AS id, music.file, music.email, music.cover, musi
           FROM music 
           LEFT JOIN users ON music.email = users.email 
           GROUP BY music.album
-          ORDER BY music.id ASC 
+          ORDER BY music.title ASC 
           LIMIT :limit OFFSET :offset";
 
 $stmt = $db->prepare($query);
@@ -33,7 +33,7 @@ $nextPage = $page + 1;
             </h6>
             <p class="card-text small fw-bold text-shadow text-shadow">
               <small>by
-                <a class="text-decoration-none link-light link-body-emphasis" href="mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&&id=<?php echo $row['userid']; ?>">
+                <a class="text-decoration-none link-light link-body-emphasis" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['userid']; ?>">
                   <?php echo (!is_null($row['artist']) && strlen($row['artist']) > 25) ? mb_substr($row['artist'], 0, 25) . '...' : $row['artist']; ?>
                 </a>
               </small>

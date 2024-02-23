@@ -4,12 +4,21 @@ $recordsPerPage = 20;
 $offset = ($page - 1) * $recordsPerPage;
 
 // Fetch distinct albums and the cover of the first song for each album
-$query = "SELECT MIN(music.id) AS id, music.file, music.email, music.cover, music.album, music.title, users.id AS userid, users.artist 
-          FROM music 
-          LEFT JOIN users ON music.email = users.email 
-          GROUP BY music.album
-          ORDER BY music.id ASC 
-          LIMIT :limit OFFSET :offset";
+$query = "SELECT MIN(music.id) AS id, 
+                    music.file, 
+                    music.email, 
+                    music.cover, 
+                    music.album, 
+                    music.title, 
+                    users.id AS userid, 
+                    users.artist,
+                    COUNT(favorites_music.music_id) AS favorites_count
+              FROM music 
+              LEFT JOIN users ON music.email = users.email
+              LEFT JOIN favorites_music ON music.id = favorites_music.music_id
+              GROUP BY music.album
+              ORDER BY favorites_count DESC
+              LIMIT :limit OFFSET :offset";
 
 $stmt = $db->prepare($query);
 $stmt->bindValue(':limit', $recordsPerPage, SQLITE3_INTEGER);

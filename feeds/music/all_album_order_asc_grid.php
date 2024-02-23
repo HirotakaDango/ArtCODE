@@ -8,7 +8,7 @@ $query = "SELECT MIN(music.id) AS id, music.file, music.email, music.cover, musi
           FROM music 
           LEFT JOIN users ON music.email = users.email 
           GROUP BY music.album
-          ORDER BY music.id ASC 
+          ORDER BY music.title ASC 
           LIMIT :limit OFFSET :offset";
 
 $stmt = $db->prepare($query);
