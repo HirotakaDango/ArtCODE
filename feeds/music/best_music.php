@@ -28,7 +28,7 @@ $resultPop = $stmtPop->execute();
                   <div class="col">
                     <div class="shadow-sm position-relative rounded-3 h-100">
                       <div class="card border-0 position-relative">
-                        <a class="shadow position-relative btn p-0" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>">
+                        <a class="shadow position-relative btn p-0" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
                           <img class="h-100 w-100 object-fit-cover rounded" src="covers/<?php echo $row['cover']; ?>">
                           <i class="bi bi-play-fill position-absolute start-50 top-50 translate-middle"></i>
                         </a>
