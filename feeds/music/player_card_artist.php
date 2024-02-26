@@ -60,6 +60,12 @@
                           <?php if(basename($_SERVER['PHP_SELF']) === 'play_artist_repeat.php'): ?>
                             <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_artist_repeat_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Simple Mode</a>
                           <?php endif; ?>
+                          <?php if(basename($_SERVER['PHP_SELF']) === 'play_artist_order_asc.php'): ?>
+                            <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_artist_order_asc_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Simple Mode</a>
+                          <?php endif; ?>
+                          <?php if(basename($_SERVER['PHP_SELF']) === 'play_artist_order_desc.php'): ?>
+                            <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100 mb-2" href="play_artist_order_desc_simple.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">Play Simple Mode</a>
+                          <?php endif; ?>
                           <a class="btn border-0 bg-body-tertiary link-body-emphasis fw-bold w-100" href="<?php echo $row['file']; ?>" download>Download Song</a>
                         </div>
                       </div>

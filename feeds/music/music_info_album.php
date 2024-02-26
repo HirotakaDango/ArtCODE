@@ -1,6 +1,6 @@
     <div class="col">
       <div class="card shadow-sm h-100 position-relative rounded-3">
-        <a class="shadow position-relative btn p-0" href="play_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
+        <a class="shadow position-relative btn p-0" href="play_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=newest&album=<?php echo urlencode($row['album']); ?>&id=<?php echo $row['id']; ?>">
           <img class="w-100 object-fit-cover rounded" height="200" src="covers/<?php echo $row['cover']; ?>">
           <i class="bi bi-play-fill position-absolute start-50 top-50 display-1 translate-middle"></i>
         </a>
