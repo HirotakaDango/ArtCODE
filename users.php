@@ -4,15 +4,7 @@ require_once('auth.php');
 // Establish SQLite connection
 $db = new SQLite3('database.sqlite');
 
-// Retrieve all users from the database and sort them by letter and number ASC
-$users = $db->query('SELECT *, SUBSTR(artist, 1, 1) AS first_letter FROM users ORDER BY first_letter COLLATE NOCASE ASC, artist COLLATE NOCASE ASC');
-
-// Group users by category
-$groupedUsers = [];
-while ($user = $users->fetchArray()) {
-  $letter = strtoupper($user['first_letter']);
-  $groupedUsers[$letter][] = $user;
-}
+$searchQuery = isset($_GET['q']) ? $_GET['q'] : ''; // Capture the search query
 ?>
 
 <!DOCTYPE html>
@@ -27,27 +19,44 @@ while ($user = $users->fetchArray()) {
   <body>
     <?php include('header.php'); ?>
     <?php include('taguserheader.php'); ?>
-    <div class="input-group my-3 px-2">
-      <input type="text" class="form-control rounded-4 border border-3 fw-bold" placeholder="Search user" id="search-input">
-    </div>
-    <div class="container-fluid mt-2">
-      <div class="container-fluid">
-        <div class="row justify-content-center">
-          <?php foreach ($groupedUsers as $group => $users) : ?>
-            <div class="col-4 col-md-2 col-sm-5 px-0">
-              <a class="btn btn-outline-dark border-0 fw-medium d-flex flex-column align-items-center" href="#category-<?php echo $group; ?>">
-                <h6 class="fw-medium">Category</h6>
-                <h6 class="fw-bold"><?php echo $group; ?></h6>
-              </a>
-            </div>
-          <?php endforeach; ?>
-        </div>
+    <form action="users.php" method="GET">
+      <div class="input-group my-3 px-2 w-100">
+        <input type="hidden" name="by" value="<?php echo isset($_GET['by']) ? $_GET['by'] : 'ascending'; ?>">
+        <input type="text" class="form-control rounded-4 rounded-end-0 border border-3 fw-bold" placeholder="Search user" name="q" value="<?php echo $searchQuery = isset($_GET['q']) ? $_GET['q'] : ''; ?>">
+        <button class="btn btn-outline-secondary rounded-4 rounded-start-0 border border-start-0 border-3 fw-bold" type="submit">Search</button>
       </div>
-      <?php foreach ($groupedUsers as $group => $users) : ?>
-        <?php include('user_card.php'); ?>
-      <?php endforeach; ?>
-    </div>
-    <div class="mt-5"></div>
+    </form>
+    <div class="dropdown">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-images"></i> sort by
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="?by=ascending&q=<?php echo htmlspecialchars($searchQuery); ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'ascending') echo 'active'; ?>">ascending</a></li>
+        <li><a href="?by=descending&q=<?php echo htmlspecialchars($searchQuery); ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'descending') echo 'active'; ?>">descending</a></li>
+        <li><a href="?by=popular&q=<?php echo htmlspecialchars($searchQuery); ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+      </ul> 
+    </div> 
+    <?php 
+    if(isset($_GET['by'])){
+      $sort = $_GET['by'];
+    
+      switch ($sort) {
+        case 'ascending':
+          include "users_asc.php";
+          break;
+        case 'descending':
+          include "users_desc.php";
+          break;
+        case 'popular':
+          include "users_pop.php";
+          break;
+      }
+    }
+    else {
+      include "users_asc.php"; // Include ascending by default
+    }
+    
+    ?>
     <button class="z-3 btn btn-primary btn-md rounded-pill fw-bold position-fixed bottom-0 end-0 m-2" id="scrollToTopBtn" onclick="scrollToTop()"><i class="bi bi-chevron-up" style="-webkit-text-stroke: 3px;"></i></button>
     <script>
       // Show or hide the button based on scroll position
