@@ -5,6 +5,114 @@ require_once('auth.php');
 $db = new SQLite3('database.sqlite');
 $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS forum (id INTEGER PRIMARY KEY, email TEXT, comment TEXT, title TEXT, category TEXT, created_at TEXT)");
 $stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS reply_forum (id INTEGER PRIMARY KEY AUTOINCREMENT, comment_id INTEGER, email TEXT, reply TEXT, date DATETIME, FOREIGN KEY (comment_id) REFERENCES comments(id))");
+$stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS category_forum (id INTEGER PRIMARY KEY AUTOINCREMENT, category_name TEXT)");
+$stmt->execute();
+
+// Define categories
+$categories = [
+  'Anime_&_Japan',
+  'Country',
+  'Technology_&_Gadgets',
+  'Music',
+  'Movies_&_TV_Shows',
+  'Books_&_Literature',
+  'Science',
+  'Food_&_Cooking',
+  'Fitness_&_Health',
+  'Travel_&_Adventure',
+  'Art_&_Design',
+  'History',
+  'Fashion_&_Style',
+  'Gaming',
+  'Sports',
+  'Programming_&_Coding',
+  'Pets_&_Animals',
+  'Nature',
+  'Photography',
+  'Social_Media_&_Internet',
+  'Education',
+  'Business',
+  'Finance',
+  'Politics',
+  'Religion',
+  'Self_Improvement',
+  'Parenting',
+  'Relationships',
+  'Environment',
+  'Motivation',
+  'Career_Development',
+  'Human_Rights',
+  'Entertainment_News',
+  'Medical',
+  'Mental_Health',
+  'Product_Reviews',
+  'DIY_&_Crafts',
+  'Celebrity_Gossip',
+  'Automotive',
+  'Home_Decor',
+  'Outdoors',
+  'Fitness_Tracking',
+  
+  // Additional Japanese culture categories
+  'Japanese_Language',
+  'Traditional_Arts',
+  'Japanese_Festivals',
+  'Japanese_Food',
+  'Japanese_Fashion',
+  'Japanese_History',
+  'Anime_Cosplay',
+  'Japanese_Music',
+  'Manga',
+  'Japanese_Traditions',
+  'Samurai_Culture',
+  'Geisha_Culture',
+  'Japanese_Architecture',
+  'Tea_Ceremony',
+  'Kabuki_Theater',
+  'Japanese_Gardens',
+  'Sumo_Wrestling',
+  'Sushi',
+  'Karaoke',
+  'Hanami_Festivals',
+  
+  // Additional anime, manga, light novel, video games, doujinshi categories
+  'Anime_Reviews',
+  'Manga_Reviews',
+  'Light_Novels',
+  'Video_Game_Reviews',
+  'Anime_Recommendations',
+  'Manga_Recommendations',
+  'Video_Game_Recommendations',
+  'Anime_Merchandise',
+  'Manga_Merchandise',
+  'Video_Game_Merchandise',
+  'Cosplay',
+  'Anime_Conventions',
+  'Video_Game_Development',
+  'Doujinshi_Creation',
+  'Anime_Streaming_Services',
+  'Manga_Artists',
+  'Anime_Studio_News',
+  'Visual_Novels',
+  'Anime_Culture',
+  'Otaku_Lifestyle',
+];
+
+// Insert categories if they don't already exist
+foreach ($categories as $category) {
+  $stmt = $db->prepare("SELECT category_name FROM category_forum WHERE category_name = :category");
+  $stmt->bindValue(':category', $category, SQLITE3_TEXT);
+  $result = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+
+  // Check if category exists
+  if (!$result) {
+    $stmt = $db->prepare("INSERT INTO category_forum (category_name) VALUES (:category)");
+    $stmt->bindValue(':category', $category, SQLITE3_TEXT);
+    $stmt->execute();
+  }
+}
 
 // Check if the form was submitted for adding a new comment
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
