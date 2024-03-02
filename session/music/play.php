@@ -384,17 +384,6 @@ $nextRow = $data[$nextIndex];
         </div>
       </div>
     </div>
-    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content bg-transparent border-0 rounded-0">
-          <div class="modal-body position-relative">
-            <img class="object-fit-contain h-100 w-100 rounded" src="covers/<?php echo $coverImage; ?>">
-            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
-            <a class="btn btn-primary fw-bold w-100 mt-2" href="covers/<?php echo $coverImage; ?>" download>Download Cover Image</a>
-          </div>
-        </div>
-      </div>
-    </div>
     <script>
       // Add this function to scroll to the current song and add active class
       function scrollToCurrentSong() {
