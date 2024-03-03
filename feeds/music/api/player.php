@@ -194,7 +194,7 @@ $nextRow = $data[$nextIndex];
   </head>
   <body>
     <nav class="bg-transparent text-shadow fixed-bottom shadow">
-      <div class="container-fluid p-2 bg-body-tertiary shadow border-0 position-relative rounded-top-4">
+      <div class="container-fluid p-3 bg-body-tertiary shadow border-0 position-relative rounded-top-4">
         <div class="row g-2 d-flex justify-content-center align-items-center">
           <?php if (!empty($selectedSong)): ?>
             <div class="mt-2">
