@@ -160,7 +160,7 @@ $nextRow = $data[$nextIndex];
       }
       
       .fs-custom {
-        font-size: 1.5em;
+        font-size: 2em;
       }
 
       .custom-bg::before {
@@ -222,13 +222,13 @@ $nextRow = $data[$nextIndex];
             <div class="col-4 col-md-2 d-flex justify-content-center align-items-center">
               <div class="btn-group d-flex justify-content-center align-items-center gap-0">
                 <!-- (debugging) <?php echo $prevIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[1]['id']."-".$prevRow['id']; ?> -->
-                <a class="btn border-0 link-body-emphasis text-white text-shadow text-start me-auto" href="?id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>">
+                <a class="p-1 btn border-0 link-body-emphasis text-white text-shadow text-start me-auto" href="?id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>">
                   <i class="bi bi-skip-start-fill fs-custom"></i>
                 </a>
-                <button class="btn border-0 link-body-emphasis text-white text-shadow text-center mx-auto" id="playPauseButton" onclick="togglePlayPause()">
+                <button class="p-1 btn border-0 link-body-emphasis text-white text-shadow text-center mx-auto" id="playPauseButton" onclick="togglePlayPause()">
                   <i class="bi bi-play-circle-fill fs-custom"></i>
                 </button>
-                <a class="btn border-0 link-body-emphasis text-white text-shadow text-end ms-auto" href="?id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>">
+                <a class="p-1 btn border-0 link-body-emphasis text-white text-shadow text-end ms-auto" href="?id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>">
                   <i class="bi bi-skip-end-fill fs-custom"></i>
                 </a>
                 <!-- (debugging) <?php echo $nextIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[0]['id']."-".$nextRow['id']; ?> -->
