@@ -160,15 +160,7 @@ $nextRow = $data[$nextIndex];
       }
       
       .fs-custom {
-        font-size: 2.5em;
-      }
-
-      .fs-custom-2 {
-        font-size: 2em;
-      }
-
-      .fs-custom-3 {
-        font-size: 1em;
+        font-size: 1.5em;
       }
 
       .custom-bg::before {
@@ -201,36 +193,10 @@ $nextRow = $data[$nextIndex];
     </style>
   </head>
   <body>
-    <div class="container d-flex justify-content-center align-items-center vh-100 custom-bg text-shadow">
-      <a class="m-2 position-absolute end-0 top-0 btn border-0 link-body-emphasis text-shadow" href="#" data-bs-toggle="modal" data-bs-target="#settingModal"><i class="bi bi-gear-fill fs-5"></i></a>
-      <div class="container p-3 rounded-4 shadow border-0 position-relative" style="max-width: 350px;">
-        <a class="position-absolute end-0 top-0 btn border-0 link-body-emphasis text-shadow" href="#" data-bs-toggle="modal" data-bs-target="#optionModal"><i class="bi bi-three-dots-vertical"></i></a>
-        <div class="row g-2">
+    <nav class="bg-transparent text-shadow fixed-bottom shadow">
+      <div class="container-fluid p-2 bg-body-tertiary shadow border-0 position-relative rounded-top-4">
+        <div class="row g-2 d-flex justify-content-center align-items-center">
           <?php if (!empty($selectedSong)): ?>
-            <div class="col-5">
-              <div class="text-center ratio ratio-1x1">
-                <a class="shadow" data-bs-toggle="modal" data-bs-target="#originalImage"><img src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" alt="Song Image" class="h-100 w-100 object-fit-cover rounded-3 shadow"></a>
-              </div>
-            </div>
-            <div class="col-7 d-flex justify-content-center align-items-center">
-              <div class="text-center overflow-auto text-nowrap mt-2">
-                <h6 class="text-white fw-bold overflow-auto text-nowrap small"><?php echo $selectedSong['title']; ?></h6>
-                <h6 class="text-white fw-bold overflow-auto text-nowrap small"><small><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></small></h6>
-                <div class="btn-group w-100 d-flex justify-content-center align-items-center gap-0">
-                  <!-- (debugging) <?php echo $prevIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[1]['id']."-".$prevRow['id']; ?> -->
-                  <a class="btn border-0 link-body-emphasis text-white text-shadow text-start me-auto" href="?id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>">
-                    <i class="bi bi-skip-start-fill fs-custom-2"></i>
-                  </a>
-                  <button class="btn border-0 link-body-emphasis text-white text-shadow text-center mx-auto" id="playPauseButton" onclick="togglePlayPause()">
-                    <i class="bi bi-play-circle-fill fs-custom"></i>
-                  </button>
-                  <a class="btn border-0 link-body-emphasis text-white text-shadow text-end ms-auto" href="?id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>">
-                    <i class="bi bi-skip-end-fill fs-custom-2"></i>
-                  </a>
-                  <!-- (debugging) <?php echo $nextIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[0]['id']."-".$nextRow['id']; ?> -->
-                </div>
-              </div>
-            </div>
             <div class="mt-2">
               <div id="music-player" class="w-100">
                 <div class="d-flex justify-content-start align-items-center fw-medium text-white gap-2">
@@ -242,6 +208,30 @@ $nextRow = $data[$nextIndex];
                   <source src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['file']; ?>" type="audio/mpeg">
                   Your browser does not support the audio element.
                 </audio>
+              </div>
+            </div>
+            <div class="col-2">
+              <a class="shadow" data-bs-toggle="modal" data-bs-target="#originalImage"><img src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" alt="Song Image" height="50" width="50" class="object-fit-cover rounded-3 shadow"></a>
+            </div>
+            <div class="col-6 col-md-8 container-fluid d-flex justify-content-center align-items-center" style="margin-bottom: -20px;">
+              <div class="text-center overflow-auto text-nowrap">
+                <h6 class="text-white fw-bold overflow-auto text-nowrap small"><?php echo $selectedSong['title']; ?></h6>
+                <h6 class="text-white fw-bold overflow-auto text-nowrap small"><small><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></small></h6>
+              </div>
+            </div>
+            <div class="col-4 col-md-2 d-flex justify-content-center align-items-center">
+              <div class="btn-group d-flex justify-content-center align-items-center gap-0">
+                <!-- (debugging) <?php echo $prevIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[1]['id']."-".$prevRow['id']; ?> -->
+                <a class="btn border-0 link-body-emphasis text-white text-shadow text-start me-auto" href="?id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>">
+                  <i class="bi bi-skip-start-fill fs-custom"></i>
+                </a>
+                <button class="btn border-0 link-body-emphasis text-white text-shadow text-center mx-auto" id="playPauseButton" onclick="togglePlayPause()">
+                  <i class="bi bi-play-circle-fill fs-custom"></i>
+                </button>
+                <a class="btn border-0 link-body-emphasis text-white text-shadow text-end ms-auto" href="?id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>">
+                  <i class="bi bi-skip-end-fill fs-custom"></i>
+                </a>
+                <!-- (debugging) <?php echo $nextIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[0]['id']."-".$nextRow['id']; ?> -->
               </div>
             </div>
           <?php else: ?>
@@ -262,6 +252,45 @@ $nextRow = $data[$nextIndex];
             ?>
           <?php endif; ?>
         </div>
+      </div>
+    </nav>
+    <div class="container-fluid vh-100 custom-bg text-shadow">
+      <a class="m-2 position-absolute end-0 top-0 btn border-0 link-body-emphasis text-shadow" href="#" data-bs-toggle="modal" data-bs-target="#settingModal"><i class="bi bi-gear-fill fs-5"></i></a>
+      <h3 class="text-start text-white text-shadow fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
+      <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
+        <?php
+          $sourceApiUrl = $websiteUrl . '/feeds/music/api_music.php'; // Construct API URL based on user input
+
+          try {
+            $json = @file_get_contents($sourceApiUrl);
+            if ($json === false) {
+              throw new Exception("<h5 class='text-center'>Error fetching data from API</h5>");
+            }
+
+            $data = json_decode($json, true);
+
+            if (!is_array($data) || empty($data)) {
+              throw new Exception("<h5 class='text-center'>No data found</h5>");
+            }
+          ?>
+            <div class="song-list">
+              <?php foreach ($data as $song): ?>
+                <div id="song_<?php echo $song['id']; ?>" class="link-body-emphasis d-flex justify-content-between align-items-center rounded-4 bg-dark bg-opacity-10 my-2 text-shadow <?php echo ($song['id'] == $selectedSong['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
+                  <div class="card-body p-1">
+                    <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="?id=<?php echo $song['id']; ?>">
+                      <?php echo $song['title']; ?><br>
+                      <small class="small"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small>
+                    </a>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php
+          } catch (Exception $e) {
+            echo "<h5 class='text-center mt-3 fw-bold'>Error or nothing found: </h5>" . $e->getMessage();
+          }
+        ?>
+        <br><br><br><br><br><br><br><br><br><br>
       </div>
     </div>
     <div class="modal fade" id="lyricsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -287,33 +316,22 @@ $nextRow = $data[$nextIndex];
       </div>
     </div>
     <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content bg-transparent border-0 rounded-0">
           <div class="modal-body position-relative">
             <img class="object-fit-contain h-100 w-100 rounded" src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>">
             <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
-            <a class="btn btn-primary fw-bold w-100 mt-2" href="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" download>Download Cover Image</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal fade" id="optionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-        <div class="modal-content bg-dark bg-opacity-50 text-shadow rounded-4 border-0 shadow">
-          <div class="modal-header border-0">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Options</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <a class="btn border-0 link-body-emphasis fw-bold w-100 mb-2" href="#" data-bs-toggle="modal" data-bs-target="#lyricsModal">
-              Lyrics
-            </a>
-            <a class="btn border-0 link-body-emphasis fw-bold w-100 mb-2" href="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['file']; ?>" download="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['file']; ?>">
-              Download
-            </a>
-            <a class="btn border-0 link-body-emphasis fw-bold w-100" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">
-              Share
-            </a>
+            <div class="btn-group w-100 gap-2 mt-2">
+              <a class="btn btn-primary w-50 border-0 fw-bold rounded" href="#" data-bs-toggle="modal" data-bs-target="#lyricsModal">
+                Lyrics
+              </a>
+              <a class="btn btn-primary w-50 border-0 fw-bold rounded" href="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['file']; ?>" download="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['file']; ?>">
+                Download
+              </a>
+              <a class="btn btn-primary w-50 border-0 fw-bold rounded" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">
+                Share
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -409,6 +427,46 @@ $nextRow = $data[$nextIndex];
         </div>
       </div>
     </div>
+    <script>
+      // Add this function to scroll to the current song and add active class
+      function scrollToCurrentSong() {
+        var currentSongId = "<?php echo $selectedSong['id']; ?>";
+        var element = document.getElementById("song_" + currentSongId);
+        var autoHeightDiv = document.getElementById('autoHeightDiv');
+
+        if (element && autoHeightDiv) {
+          // Remove the active class from all song elements
+          var allSongElements = autoHeightDiv.querySelectorAll('.rounded-4');
+          allSongElements.forEach(function(songElement) {
+            songElement.classList.remove('bg-body-tertiary', 'border', 'border-opacity-25', 'border-light');
+          });
+
+          // Add the active class to the current song element
+          element.classList.add('rounded-4', 'bg-body-tertiary', 'border', 'border-opacity-25', 'border-light');
+
+          // Calculate the scroll position based on the element's position within the container
+          var scrollTop = element.offsetTop - autoHeightDiv.offsetTop;
+
+          // Scroll only the container to the calculated position
+          autoHeightDiv.scrollTop = scrollTop;
+        }
+      }
+
+      // Call the function when the page is loaded
+      window.addEventListener('load', scrollToCurrentSong);
+    </script>
+    <script>
+      // Get a reference to the element
+      const autoHeightDiv = document.getElementById('autoHeightDiv');
+    
+      // Set the element's height to match the screen's height
+      autoHeightDiv.style.height = window.innerHeight + 'px';
+    
+      // Listen for window resize events to update the height dynamically
+      window.addEventListener('resize', () => {
+        autoHeightDiv.style.height = window.innerHeight + 'px';
+      });
+    </script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         const audioPlayer = document.getElementById('player');
