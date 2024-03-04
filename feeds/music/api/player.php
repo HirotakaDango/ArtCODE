@@ -213,7 +213,7 @@ $nextRow = $data[$nextIndex];
             <div class="col-2">
               <a class="shadow" data-bs-toggle="modal" data-bs-target="#originalImage"><img src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" alt="Song Image" height="50" width="50" class="object-fit-cover rounded-3 shadow"></a>
             </div>
-            <div class="col-6 col-md-8 container-fluid d-flex justify-content-center align-items-center" style="margin-bottom: -20px;">
+            <div class="col-6 col-md-8 container-fluid d-flex justify-content-center align-items-center" style="margin-bottom: -17px;">
               <div class="text-center overflow-auto text-nowrap">
                 <h6 class="text-white fw-bold overflow-auto text-nowrap small"><?php echo $selectedSong['title']; ?></h6>
                 <h6 class="text-white fw-bold overflow-auto text-nowrap small"><small><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></small></h6>
