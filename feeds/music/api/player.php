@@ -193,9 +193,9 @@ $nextRow = $data[$nextIndex];
     </style>
   </head>
   <body>
-    <nav class="bg-transparent text-shadow fixed-bottom shadow">
-      <div class="container-fluid p-3 bg-body-tertiary shadow border-0 position-relative rounded-top-4">
-        <div class="row g-2 d-flex justify-content-center align-items-center">
+    <nav class="bg-transparent text-shadow fixed-bottom align-items-center">
+      <div class="container-fluid p-3 shadow border-0 position-relative rounded-top-4 custom-bg"  style="max-width: 500px;">
+        <div class="row g-2 d-flex justify-content-center align-items-center px-1">
           <?php if (!empty($selectedSong)): ?>
             <div class="mt-2">
               <div id="music-player" class="w-100">
@@ -213,22 +213,22 @@ $nextRow = $data[$nextIndex];
             <div class="col-2">
               <a class="shadow" data-bs-toggle="modal" data-bs-target="#originalImage"><img src="<?php echo $websiteUrl . '/feeds/music/' . $selectedSong['cover']; ?>" alt="Song Image" height="50" width="50" class="object-fit-cover rounded-3 shadow"></a>
             </div>
-            <div class="col-6 col-md-8 container-fluid d-flex justify-content-center align-items-center" style="margin-bottom: -17px;">
+            <div class="col-6 d-flex justify-content-center align-items-center ps-2 ps-md-3" style="margin-bottom: -17px;">
               <div class="text-center overflow-auto text-nowrap">
                 <h6 class="text-white fw-bold overflow-auto text-nowrap small"><?php echo $selectedSong['title']; ?></h6>
                 <h6 class="text-white fw-bold overflow-auto text-nowrap small"><small><?php echo $selectedSong['artist']; ?> - <?php echo $selectedSong['album']; ?></small></h6>
               </div>
             </div>
-            <div class="col-4 col-md-2 d-flex justify-content-center align-items-center">
-              <div class="btn-group d-flex justify-content-center align-items-center gap-0">
+            <div class="col-4 d-flex justify-content-end align-items-center">
+              <div class="btn-group d-flex justify-content-end align-items-center gap-0">
                 <!-- (debugging) <?php echo $prevIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[1]['id']."-".$prevRow['id']; ?> -->
-                <a class="p-1 btn border-0 link-body-emphasis text-white text-shadow text-start me-auto" href="?id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>">
+                <a class="p-0 btn border-0 link-body-emphasis text-white text-shadow text-start me-auto" href="?id=<?php echo ($prevIndex == 0) && ($selectedSongIndex == 0) ? $data[count($data) - 1]['id'] : $prevRow['id']; ?>">
                   <i class="bi bi-skip-start-fill fs-custom"></i>
                 </a>
-                <button class="p-1 btn border-0 link-body-emphasis text-white text-shadow text-center mx-auto" id="playPauseButton" onclick="togglePlayPause()">
+                <button class="px-2 btn border-0 link-body-emphasis text-white text-shadow text-center mx-auto" id="playPauseButton" onclick="togglePlayPause()">
                   <i class="bi bi-play-circle-fill fs-custom"></i>
                 </button>
-                <a class="p-1 btn border-0 link-body-emphasis text-white text-shadow text-end ms-auto" href="?id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>">
+                <a class="p-0 btn border-0 link-body-emphasis text-white text-shadow text-end ms-auto" href="?id=<?php echo ($nextIndex == count($data)-1) && ($selectedSongIndex == count($data)-1) ? $data[0]['id'] : $nextRow['id']; ?>">
                   <i class="bi bi-skip-end-fill fs-custom"></i>
                 </a>
                 <!-- (debugging) <?php echo $nextIndex.'-'.count($data).'-'.$selectedSongIndex.'-'.$data[0]['id']."-".$nextRow['id']; ?> -->
@@ -254,43 +254,47 @@ $nextRow = $data[$nextIndex];
         </div>
       </div>
     </nav>
-    <div class="container-fluid vh-100 custom-bg text-shadow">
-      <a class="m-2 position-absolute end-0 top-0 btn border-0 link-body-emphasis text-shadow" href="#" data-bs-toggle="modal" data-bs-target="#settingModal"><i class="bi bi-gear-fill fs-5"></i></a>
-      <h3 class="text-start text-white text-shadow fw-bold pt-3 mb-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
-      <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
-        <?php
-          $sourceApiUrl = $websiteUrl . '/feeds/music/api_music.php'; // Construct API URL based on user input
-
-          try {
-            $json = @file_get_contents($sourceApiUrl);
-            if ($json === false) {
-              throw new Exception("<h5 class='text-center'>Error fetching data from API</h5>");
-            }
-
-            $data = json_decode($json, true);
-
-            if (!is_array($data) || empty($data)) {
-              throw new Exception("<h5 class='text-center'>No data found</h5>");
-            }
-          ?>
-            <div class="song-list">
-              <?php foreach ($data as $song): ?>
-                <div id="song_<?php echo $song['id']; ?>" class="link-body-emphasis d-flex justify-content-between align-items-center rounded-4 bg-dark bg-opacity-10 my-2 text-shadow <?php echo ($song['id'] == $selectedSong['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
-                  <div class="card-body p-1">
-                    <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="?id=<?php echo $song['id']; ?>">
-                      <?php echo $song['title']; ?><br>
-                      <small class="small"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small>
-                    </a>
-                  </div>
+    <div class="container-fluid vh-100 custom-bg text-shadow align-items-center" style="max-width: 500px;">
+      <div>
+        <div class="vh-100 w-100 overflow-y-auto">
+          <a class="m-2 position-absolute end-0 top-0 btn border-0 link-body-emphasis text-shadow" href="#" data-bs-toggle="modal" data-bs-target="#settingModal"><i class="bi bi-gear-fill fs-5"></i></a>
+          <h3 class="text-start text-white text-shadow fw-bold py-3"><i class="bi bi-music-note-list"></i> all song lists</h3>
+          <div class="overflow-y-auto" id="autoHeightDiv" style="max-height: 100%;">
+            <?php
+              $sourceApiUrl = $websiteUrl . '/feeds/music/api_music.php'; // Construct API URL based on user input
+    
+              try {
+                $json = @file_get_contents($sourceApiUrl);
+                if ($json === false) {
+                  throw new Exception("<h5 class='text-center'>Error fetching data from API</h5>");
+                }
+    
+                $data = json_decode($json, true);
+    
+                if (!is_array($data) || empty($data)) {
+                  throw new Exception("<h5 class='text-center'>No data found</h5>");
+                }
+              ?>
+                <div class="song-list">
+                  <?php foreach ($data as $song): ?>
+                    <div id="song_<?php echo $song['id']; ?>" class="link-body-emphasis d-flex justify-content-between align-items-center rounded-4 bg-dark bg-opacity-10 my-2 text-shadow <?php echo ($song['id'] == $selectedSong['id']) ? 'rounded-4 bg-body-tertiary border border-opacity-25 border-light' : ''; ?>">
+                      <div class="card-body p-1">
+                        <a class="link-body-emphasis text-decoration-none music text-start w-100 text-white btn fw-bold border-0" href="?id=<?php echo $song['id']; ?>">
+                          <?php echo $song['title']; ?><br>
+                          <small class="small"><?php echo $song['artist']; ?> - <?php echo $song['album']; ?></small>
+                        </a>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
                 </div>
-              <?php endforeach; ?>
-            </div>
-          <?php
-          } catch (Exception $e) {
-            echo "<h5 class='text-center mt-3 fw-bold'>Error or nothing found: </h5>" . $e->getMessage();
-          }
-        ?>
-        <br><br><br><br><br><br><br><br><br><br>
+              <?php
+              } catch (Exception $e) {
+                echo "<h5 class='text-center mt-3 fw-bold'>Error or nothing found: </h5>" . $e->getMessage();
+              }
+            ?>
+            <br><br><br><br><br><br><br><br><br><br>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal fade" id="lyricsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
