@@ -3,8 +3,17 @@ require_once('auth.php');
 $db = new PDO('sqlite:../../database.sqlite');
 $userEmail = $_SESSION['email'];
 
-// Get the album parameter from the URL
+// Get the album and userid parameters from the URL
 $album = isset($_GET['album']) ? $_GET['album'] : null;
+$userid = isset($_GET['userid']) ? $_GET['userid'] : null;
+
+// Fetch user email based on userid if provided
+if (!empty($userid)) {
+  $queryUserEmail = $db->prepare('SELECT email FROM users WHERE id = :userid');
+  $queryUserEmail->bindParam(':userid', $userid, PDO::PARAM_INT);
+  $queryUserEmail->execute();
+  $userEmail = $queryUserEmail->fetchColumn();
+}
 
 // Fetch music records with user information and filter by album if provided
 $query = "SELECT music.id, music.file, music.email as music_email, music.cover, music.album, music.title, users.id AS userid, users.artist 
@@ -16,6 +25,12 @@ if (!empty($album)) {
   $query .= " WHERE music.album = :album";
 }
 
+// If userid parameter is provided, filter by user email
+if (!empty($userid)) {
+  $query .= !empty($album) ? " AND" : " WHERE";
+  $query .= " music.email = :userEmail";
+}
+
 // Order the results by track ID in ascending order and then by title in ascending order
 $query .= " ORDER BY music.id ASC, music.title ASC";
 
@@ -24,6 +39,11 @@ $stmt = $db->prepare($query);
 // Bind album parameter if provided
 if (!empty($album)) {
   $stmt->bindValue(':album', $album, PDO::PARAM_STR);
+}
+
+// Bind user email if userid is provided
+if (!empty($userid)) {
+  $stmt->bindValue(':userEmail', $userEmail, PDO::PARAM_STR);
 }
 
 $result = $stmt->execute();
@@ -249,7 +269,7 @@ if (isset($_POST['follow'])) {
               <div class="col-md-3 order-md-1 mb-3 p-md-0 pe-md-4 p-4">
                 <div class="position-relative">
                   <div class="ratio ratio-1x1">
-                    <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover h-100 w-100 rounded shadow" alt="..."></a>
+                    <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover h-100 w-100 rounded-4 shadow" alt="..."></a>
                   </div>
                   <button type="button" class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-medium" data-bs-toggle="modal" data-bs-target="#shareLink"><small><i class="bi bi-share-fill"></i> share</small></button>
                 </div>

@@ -36,7 +36,7 @@ $nextPage = $page + 1;
       <div class="card bg-dark-subtle bg-opacity-10 link-body-emphasis rounded-4 border-0 shadow mt-2">
         <div class="card-body">
             <h6 class="card-text text-start fw-bold text-shadow">
-              <a class="text-decoration-none link-light link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>">
+              <a class="text-decoration-none link-light link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>&userid=<?php echo $row['userid']; ?>">
                 <?php echo $row['album']; ?>
               </a>
             </h6>

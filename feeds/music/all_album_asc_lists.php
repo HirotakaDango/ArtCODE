@@ -27,13 +27,13 @@ $nextPage = $page + 1;
       <div class="card bg-dark-subtle bg-opacity-10 link-body-emphasis rounded-4 border-0 shadow mt-2">
         <div class="card-body">
             <h6 class="card-text text-start fw-bold text-shadow">
-              <a class="text-decoration-none link-light link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>">
+              <a class="text-decoration-none link-light link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>&userid=<?php echo $row['userid']; ?>">
                 <?php echo $row['album']; ?>
               </a>
             </h6>
             <p class="card-text small fw-bold text-shadow text-shadow">
               <small>by
-                <a class="text-decoration-none link-light link-body-emphasis" href="mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&&id=<?php echo $row['userid']; ?>">
+                <a class="text-decoration-none link-light link-body-emphasis" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&&id=<?php echo $row['userid']; ?>">
                   <?php echo (!is_null($row['artist']) && strlen($row['artist']) > 25) ? mb_substr($row['artist'], 0, 25) . '...' : $row['artist']; ?>
                 </a>
               </small>
