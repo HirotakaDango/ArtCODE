@@ -228,7 +228,7 @@ if (isset($_POST['favorite'])) {
   </head>
   <body>
     <div class="container-fluid custom-bg">
-      <a class="z-3 text-shadow position-absolute top-0 start-0 ms-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>">
+      <a class="z-3 text-shadow position-absolute top-0 start-0 ms-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>&userid=<?php echo $row['userid']; ?>">
         <i class="bi bi-chevron-down fs-4" style="-webkit-text-stroke: 3px;"></i>
       </a>
       <a class="z-3 text-shadow position-absolute top-0 end-0 me-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">
@@ -267,9 +267,7 @@ if (isset($_POST['favorite'])) {
                 <?php } ?>
               </div>
               <h3 class="text-start text-white fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $row['title']; ?></h3>
-              <div class="d-flex gap-2" style="overflow-x: auto; white-space: nowrap;">
-                <a class="text-decoration-none text-white small fw-bold link-body-emphasis" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a> - <a class="text-decoration-none text-white small fw-bold link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a>
-              </div>
+              <?php include('play_info_desc_simple.php'); ?>
             </div>
             <div class="container-fluid px-2">
               <?php include('info_option_simple.php'); ?>

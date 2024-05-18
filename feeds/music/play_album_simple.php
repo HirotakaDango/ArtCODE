@@ -85,56 +85,60 @@ $allRows = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
 // Check if there is only one song for the artist and set a flag for looping
 $loopPlaylist = count($allRows) === 1;
 
-// Fetch next music record for the specified album
+// Fetch next music record for the specified artist and album
 $queryNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE music.album = :album AND music.id > :id
+              WHERE music.album = :album AND users.id = :artist_id AND music.id > :id
               ORDER BY music.id ASC
               LIMIT 1";
 $stmtNext = $db->prepare($queryNext);
 $stmtNext->bindParam(':album', $album, PDO::PARAM_STR);
+$stmtNext->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
 $stmtNext->bindParam(':id', $id, PDO::PARAM_INT);
 $stmtNext->execute();
 $nextRow = $stmtNext->fetch(PDO::FETCH_ASSOC);
 
 if (!$nextRow) {
-  // If no next row, fetch the first music record for the album
+  // If no next row, fetch the first music record for the artist and album
   $queryFirstNextAlbum = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
                           FROM music
                           JOIN users ON music.email = users.email
-                          WHERE music.album = :album
+                          WHERE music.album = :album AND users.id = :artist_id
                           ORDER BY music.id ASC
                           LIMIT 1";
   $stmtFirstNextAlbum = $db->prepare($queryFirstNextAlbum);
   $stmtFirstNextAlbum->bindParam(':album', $album, PDO::PARAM_STR);
+  $stmtFirstNextAlbum->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
   $stmtFirstNextAlbum->execute();
   $nextRow = $stmtFirstNextAlbum->fetch(PDO::FETCH_ASSOC);
 }
 
-// Fetch previous music record for the specified album
+// Fetch previous music record for the specified artist and album
 $queryPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
               FROM music
               JOIN users ON music.email = users.email
-              WHERE music.album = :album AND music.id < :id
+              WHERE music.album = :album AND users.id = :artist_id AND music.id < :id
               ORDER BY music.id DESC
               LIMIT 1";
 $stmtPrev = $db->prepare($queryPrev);
 $stmtPrev->bindParam(':album', $album, PDO::PARAM_STR);
+$stmtPrev->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
 $stmtPrev->bindParam(':id', $id, PDO::PARAM_INT);
 $stmtPrev->execute();
 $prevRow = $stmtPrev->fetch(PDO::FETCH_ASSOC);
 
 if (!$prevRow) {
-  // If no previous row, fetch the last music record for the album
+  // If no previous row, fetch the last music record for the artist and album
   $queryLastPrevAlbum = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
                          FROM music
                          JOIN users ON music.email = users.email
-                         WHERE music.album = :album
+                         WHERE music.album = :album AND users.id = :artist_id
                          ORDER BY music.id DESC
                          LIMIT 1";
   $stmtLastPrevAlbum = $db->prepare($queryLastPrevAlbum);
   $stmtLastPrevAlbum->bindParam(':album', $album, PDO::PARAM_STR);
+  $stmtLastPrevAlbum->bindParam(':artist_id', $artist_id, PDO::PARAM_INT);
   $stmtLastPrevAlbum->execute();
   $prevRow = $stmtLastPrevAlbum->fetch(PDO::FETCH_ASSOC);
 }
@@ -268,7 +272,7 @@ if (isset($_POST['favorite'])) {
   </head>
   <body>
     <div class="container-fluid custom-bg">
-      <a class="z-3 text-shadow position-absolute top-0 start-0 ms-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>">
+      <a class="z-3 text-shadow position-absolute top-0 start-0 ms-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>&userid=<?php echo $row['userid']; ?>">
         <i class="bi bi-chevron-down fs-4" style="-webkit-text-stroke: 3px;"></i>
       </a>
       <a class="z-3 text-shadow position-absolute top-0 end-0 me-3 mt-2 m-md-1 btn border-0 fw-bold text-start link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">
@@ -307,9 +311,7 @@ if (isset($_POST['favorite'])) {
                 <?php } ?>
               </div>
               <h3 class="text-start text-white fw-bold" style="overflow-x: auto; white-space: nowrap;"><?php echo $row['title']; ?></h3>
-              <div class="d-flex gap-2" style="overflow-x: auto; white-space: nowrap;">
-                <a class="text-decoration-none text-white small fw-bold link-body-emphasis" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $row['userid']; ?>"><?php echo $row['artist']; ?></a> - <a class="text-decoration-none text-white small fw-bold link-body-emphasis" href="album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&album=<?php echo $row['album']; ?>"><?php echo $row['album']; ?></a>
-              </div>
+              <?php include('play_info_desc_simple.php'); ?>
             </div>
             <div class="container-fluid px-2">
               <?php include('info_option_simple.php'); ?>

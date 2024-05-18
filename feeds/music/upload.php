@@ -1,3 +1,7 @@
+<?php
+require_once('auth.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
