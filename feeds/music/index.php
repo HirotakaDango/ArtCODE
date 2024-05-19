@@ -21,8 +21,13 @@ $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMEN
     <div class="container-fluid">
       <?php include('best_music_desktop.php'); ?>
       <?php include('best_album_desktop.php'); ?>
-      <?php include('best_music_mobile.php'); ?>
-      <?php include('best_album_mobile.php'); ?>
+      <button class="btn btn-outline-light rounded-5 d-md-none w-100 fw-bold mt-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePopularMobile" aria-expanded="false" aria-controls="collapseExample">
+        show current populars
+      </button>
+      <div class="collapse" id="collapsePopularMobile">
+        <?php include('best_music_mobile.php'); ?>
+        <?php include('best_album_mobile.php'); ?>
+      </div>
     </div>
     <div class="container-fluid d-flex">
       <!-- only visible for grid mode -->
