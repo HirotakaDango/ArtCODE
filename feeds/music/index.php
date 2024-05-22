@@ -3,8 +3,25 @@ require_once('auth.php');
 $db = new SQLite3('../../database.sqlite');
 $email = $_SESSION['email'];
 
+// Create tables if they don't exist
 $db->exec("CREATE TABLE IF NOT EXISTS favorites_music (id INTEGER PRIMARY KEY AUTOINCREMENT, music_id INTEGER, email TEXT)");
 $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMENT, file TEXT, email TEXT, cover TEXT, album TEXT, title TEXT, description TEXT, lyrics TEXT)");
+
+// Default values for mode and by
+$mode = isset($_GET['mode']) ? $_GET['mode'] : 'lists';
+$by = 'newest_lists';
+
+if ($mode === 'grid') {
+  $by = isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest';
+} else {
+  $by = isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists';
+}
+
+// Redirect to the same page with default query parameters if they are not set
+if (!isset($_GET['mode']) || !isset($_GET['by'])) {
+  header('Location: ' . $_SERVER['PHP_SELF'] . '?mode=' . $mode . '&by=' . $by);
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +39,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS music (id INTEGER PRIMARY KEY AUTOINCREMEN
       <?php include('best_music_desktop.php'); ?>
       <?php include('best_album_desktop.php'); ?>
       <button class="btn btn-outline-light rounded-5 d-md-none w-100 fw-bold mt-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePopularMobile" aria-expanded="false" aria-controls="collapseExample">
-        show current populars
+        show current popular songs and albums
       </button>
       <div class="collapse" id="collapsePopularMobile">
         <?php include('best_music_mobile.php'); ?>

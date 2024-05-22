@@ -29,7 +29,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Redirect to the home page if the record is not found
 if (!$row) {
-  header('Location: index.php');
+  header('Location: /feeds/music/?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists')));
   exit;
 }
 

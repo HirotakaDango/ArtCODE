@@ -29,7 +29,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Redirect to the home page if the record is not found
 if (!$row) {
-  header('Location: index.php');
+  header('Location: /feeds/music/?mode=' . (isset($_GET['mode']) ? $_GET['mode'] : 'grid') . '&by=' . (isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists')));
   exit;
 }
 
@@ -87,12 +87,13 @@ $loopPlaylist = count($allRows) === 1;
 $queryNext = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
      FROM music
      JOIN users ON music.email = users.email
-     WHERE music.email = :email AND music.id > :id
-     ORDER BY music.id ASC
+     WHERE music.email = :email AND ((music.album = :album AND music.id > :id) OR music.album > :album)
+     ORDER BY music.album ASC, music.id ASC
      LIMIT 1";
 $stmtNext = $db->prepare($queryNext);
 $stmtNext->bindParam(':id', $id, PDO::PARAM_INT);
 $stmtNext->bindParam(':email', $user_email, PDO::PARAM_STR);
+$stmtNext->bindParam(':album', $album, PDO::PARAM_STR);
 $stmtNext->execute();
 $nextRow = $stmtNext->fetch(PDO::FETCH_ASSOC);
 
@@ -102,7 +103,7 @@ if (!$nextRow) {
        FROM music
        JOIN users ON music.email = users.email
        WHERE music.email = :email
-       ORDER BY music.id ASC
+       ORDER BY music.album ASC, music.id ASC
        LIMIT 1";
   $stmtFirstNextArtist = $db->prepare($queryFirstNextArtist);
   $stmtFirstNextArtist->bindParam(':email', $user_email, PDO::PARAM_STR);
@@ -114,12 +115,13 @@ if (!$nextRow) {
 $queryPrev = "SELECT music.id, music.file, music.email, music.cover, music.album, music.title, users.id as userid, users.artist
      FROM music
      JOIN users ON music.email = users.email
-     WHERE music.email = :email AND music.id < :id
-     ORDER BY music.id DESC
+     WHERE music.email = :email AND ((music.album = :album AND music.id < :id) OR music.album < :album)
+     ORDER BY music.album DESC, music.id DESC
      LIMIT 1";
 $stmtPrev = $db->prepare($queryPrev);
 $stmtPrev->bindParam(':id', $id, PDO::PARAM_INT);
 $stmtPrev->bindParam(':email', $user_email, PDO::PARAM_STR);
+$stmtPrev->bindParam(':album', $album, PDO::PARAM_STR);
 $stmtPrev->execute();
 $prevRow = $stmtPrev->fetch(PDO::FETCH_ASSOC);
 
@@ -129,7 +131,7 @@ if (!$prevRow) {
        FROM music
        JOIN users ON music.email = users.email
        WHERE music.email = :email
-       ORDER BY music.id DESC
+       ORDER BY music.album DESC, music.id DESC
        LIMIT 1";
   $stmtLastPrevArtist = $db->prepare($queryLastPrevArtist);
   $stmtLastPrevArtist->bindParam(':email', $user_email, PDO::PARAM_STR);

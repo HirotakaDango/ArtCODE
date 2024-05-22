@@ -99,9 +99,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Redirect to the home page after the update
   $mode = isset($_GET['mode']) ? $_GET['mode'] : 'grid';
-  $by = isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists');
+  if ($mode === 'grid') {
+    $by = isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest';
+  } else {
+    $by = isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists';
+  }
 
-  header('Location: ../music/play.php?mode=' . $mode . '&by=' . $by . '&album=' . urlencode($row['album']) . '&id=' . $row['id']);
+  header('Location: ../music/profile.php?mode=' . $mode . '&by=' . $by);
 }
 ?>
 
@@ -111,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit <?php echo $row['title']; ?></title>
-    <link rel="icon" type="image/png" href="../../icon/favicon.png">
+    <link rel="icon" type="image/png" href="covers/<?php echo $row['cover']; ?>">
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
