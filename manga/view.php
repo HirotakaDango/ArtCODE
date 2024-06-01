@@ -1,108 +1,109 @@
-              <div class="modal fade" id="imageModal<?= $image['id']; ?>" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
-                  <div class="modal-content border-0">
-                    <div class="modal-body p-0">
-                      <button type="button" class="btn border-0 link-body-emphasis z-3 position-fixed top-0 end-0 text-shadow" data-bs-dismiss="modal"><i class="bi bi-chevron-down fs-3" style="-webkit-text-stroke: 3px;"></i></button>
-                      <div class="row g-0">
-                        <div id="div1_<?php echo $image['id']; ?>" class="col-md-7 h-100 overflow-auto">
-                          <div>
-                            <div class="position-relative">
-                              <img class="w-100 h-100 lazy-load" data-src="<?= $websiteUrl . '/' . $folderPath . '/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
-                              <a class="btn border-0 link-body-emphasis position-absolute bottom-0 end-0" href="<?= $websiteUrl . '/' . $folderPath . '/' . $image['filename']; ?>" download="<?= $image['filename']; ?>"><i class="bi bi-download text-white text-shadow fs-4"></i></a>
-                            </div>
-                            <?php
-                              foreach ($imageChildData as $childImage) {
-                                if ($childImage['image_id'] === $image['id']) {
-                                  echo '<div class="position-relative">';
-                                  echo '<img class="w-100 h-100 lazy-load mt-1" data-src="' . $websiteUrl . '/' . $folderPath . '/' . $childImage['filename'] . '" alt="Child Image">';
-                                  echo '<a class="btn border-0 link-body-emphasis position-absolute bottom-0 end-0" href="' . $websiteUrl . '/' . $folderPath . '/' . $childImage['filename'] . '" download="' . $childImage['filename'] . '"><i class="bi bi-download text-white text-shadow fs-4"></i></a>';
-                                  echo '</div>';
-                                }
-                              }
-                            ?>
-                          </div>
-                        </div>
-                        <div id="div2_<?php echo $image['id']; ?>" class="col-md-5 h-100 overflow-auto bg-body-tertiary">
-                          <div class="p-3">
-                            <p class="text-start fw-medium mt-3"><small><i>images uploaded by <a href="<?php echo $websiteUrl . '/artist.php?id=' . $image['userId']; ?>"><?= $image['artist']; ?></a></i></small></p>
-                            <h5 class="text-center fw-bold my-4"><?= $image['title']; ?></h5>
-                            <p class="text-start fw-medium" style="word-wrap: break-word;">
-                              <?php
-                                if (!empty($image['imgdesc'])) {
-                                  $messageText = $image['imgdesc'];
-                                  $messageTextWithoutTags = strip_tags($messageText);
-                                  $pattern = '/\bhttps?:\/\/\S+/i';
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $_GET['title']; ?></title>
+    <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
+    <?php include('bootstrap.php'); ?>
+    <?php include('connection.php'); ?>
+    <link rel="stylesheet" href="transitions.css" />
+    <script type="module" src="swup.js"></script>
+    <style>
+      .text-stroke {
+        -webkit-text-stroke: 1px;
+      }
 
-                                  $formattedText = preg_replace_callback($pattern, function ($matches) {
-                                    $url = htmlspecialchars($matches[0]);
-                                    return '<a href="' . $url . '">' . $url . '</a>';
-                                  }, $messageTextWithoutTags);
-
-                                  $formattedTextWithLineBreaks = nl2br($formattedText);
-                                  echo $formattedTextWithLineBreaks;
-                                } else {
-                                  echo "Image description is empty.";
-                                }
-                              ?>
-                            </p>
-                            <div class="w-100 mt-4">
-                              <?php
-                                if (!empty($image['tags'])) {
-                                  $tags = explode(',', $image['tags']);
-                                  foreach ($tags as $tag) {
-                                    $tag = trim($tag);
-                                    if (!empty($tag)) {
-                                  ?>
-                                    <a href="<?= $websiteUrl; ?>/tagged_images.php?tag=<?php echo urlencode($tag); ?>"
-                                      class="btn btn-sm border-0 link-body-emphasis fw-bold">
-                                      <i class="bi bi-tags-fill"></i> <?php echo $tag; ?>
-                                    </a>
-                                  <?php
-                                    }
-                                  }
-                                } else {
-                                  echo "No tags available.";
-                                }
-                              ?>
-                            </div>
-                            <div class="btn-group w-100 gap-1 mt-4">
-                              <a class="w-50 btn border-0 link-body-emphasis rounded-3 fw-bold" href="<?php echo $websiteUrl . '/artist.php?id=' . $image['userId']; ?>"><i class="bi bi-person-circle"></i> <?= $image['artist']; ?></a>
-                              <a class="w-50 btn border-0 link-body-emphasis rounded-3 fw-bold" href="<?= $websiteUrl; ?>/image.php?artworkid=<?= $image['id']; ?>" target="_blank"><i class="bi bi-box-arrow-up-right"></i> original source</a>
-                            </div>
-                            <div class="btn-group w-100 gap-1 mt-1 mb-3">
-                              <button class="w-50 btn border-0 link-body-emphasis rounded-3 fw-bold"><?= $image['view_count']; ?> views</button>
-                              <button class="w-50 btn border-0 link-body-emphasis rounded-3 fw-bold"><?= $image['favorites_count']; ?> favorites</button>
-                            </div>
-                            <script>
-                              window.addEventListener('DOMContentLoaded', (event) => {
-                                // Output PHP variable properly within JavaScript
-                                const imageId = <?= $image['id']; ?>;
-                            
-                                // Select div elements with appropriate IDs
-                                const div1 = document.getElementById('div1_' + imageId);
-                                const div2 = document.getElementById('div2_' + imageId);
-                        
-                                function addClassBasedOnViewport() {
-                                  if (window.innerWidth >= 768) {
-                                    div1.classList.add('vh-100');
-                                    div2.classList.add('vh-100');
-                                  } else {
-                                    div1.classList.remove('vh-100');
-                                    div2.classList.remove('vh-100');
-                                  }
-                                }
-                        
-                                // Call the function initially
-                                addClassBasedOnViewport();
-                        
-                                // Call the function whenever the window is resized
-                                window.addEventListener('resize', addClassBasedOnViewport);
-                              });
-                            </script>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      @media (max-width: 767px) {
+        .vh-100-sm {
+          height: 100vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <?php include('header.php'); ?>
+    <main id="swup" class="transition-main">
+      <div class="d-flex justify-content-center align-items-center vh-100-sm">
+        <div class="w-100">
+          <?php
+          // Check if title, uid, id, and page parameters are provided
+          if (isset($_GET['title']) && isset($_GET['uid']) && isset($_GET['id']) && isset($_GET['page'])) {
+            $episode_name = $_GET['title'];
+            $user_id = $_GET['uid'];
+            $image_id = $_GET['id'];
+            $page = $_GET['page'];
+            
+            // Fetch JSON data from api_manga_view.php with title, uid, id, and page parameters
+            $json = file_get_contents($web . '/api_manga_view.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $page);
+            $data = json_decode($json, true);
+    
+            // Check if the data is an array and not empty
+            if (is_array($data) && !empty($data)) {
+              $image_details = $data['image_details'];
+              $image_child = $data['image_child'];
+              
+              // Determine the image source based on the page number
+              $imageSource = ($page == 1) ? $web . '/images/' . $image_details['filename'] : $web . '/images/' . $image_child[$page - 2]['filename'];
+              ?>
+              <h2 class="text-center my-md-5 mb-4"><a class="text-decoration-none text-white fw-bold" href="title.php?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>"><?php echo $episode_name; ?></a></h2>
+              <div class="d-flex justify-content-center align-items-center bg-body-tertiary py-1">
+                <?php
+                  $totalPages = count($image_child) + 1;
+                  $currentPage = $page;
+                  
+                  // Previous page link
+                  if ($currentPage > 1) {
+                    $prevPage = $currentPage - 1;
+                    echo '<a class="btn bg-body-tertiary link-body-emphasis me-auto fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a>';
+                  } else {
+                    echo '<a class="btn bg-body-tertiary link-body-emphasis me-auto fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a>';
+                  }
+                  
+                  echo '<h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6>';
+                  
+                  // Next page link
+                  if ($currentPage < $totalPages) {
+                    $nextPage = $currentPage + 1;
+                    echo '<a class="btn bg-body-tertiary link-body-emphasis ms-auto fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a>';
+                  } else {
+                    echo '<a class="btn bg-body-tertiary link-body-emphasis ms-auto fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a>';
+                  }
+                ?>
               </div>
+              <img class="w-100 h-100 object-fit-contain" src="<?= $imageSource; ?>" alt="<?= $image_details['title']; ?>">
+              <div class="d-flex justify-content-center align-items-center bg-body-tertiary py-1">
+                <?php
+                  $totalPages = count($image_child) + 1;
+                  $currentPage = $page;
+                  
+                  // Previous page link
+                  if ($currentPage > 1) {
+                    $prevPage = $currentPage - 1;
+                    echo '<a class="btn bg-body-tertiary link-body-emphasis me-auto fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a>';
+                  } else {
+                    echo '<a class="btn bg-body-tertiary link-body-emphasis me-auto fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a>';
+                  }
+                  
+                  echo '<h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6>';
+                  
+                  // Next page link
+                  if ($currentPage < $totalPages) {
+                    $nextPage = $currentPage + 1;
+                    echo '<a class="btn bg-body-tertiary link-body-emphasis ms-auto fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a>';
+                  } else {
+                    echo '<a class="btn bg-body-tertiary link-body-emphasis ms-auto fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a>';
+                  }
+                ?>
+              </div>
+            <?php } else { ?>
+              <p>No data found.</p>
+            <?php }
+          } else { ?>
+            <p>Missing title, uid, id, or page parameter.</p>
+          <?php } ?>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

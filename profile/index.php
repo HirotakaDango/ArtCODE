@@ -292,8 +292,8 @@ $fav_count = $fav_row['num_favorites'];
               </div>
             </div>
             <div class="btn-group w-100 mt-2">
-              <a class="btn border-0 fw-medium text-center w-50" href="../../follower.php?id=<?php echo $userid; ?>"> <?php echo $num_followers ?> <small>Followers</small></a>
-              <a class="btn border-0 fw-medium text-center w-50" href="../../following.php?id=<?php echo $userid; ?>"> <?php echo $num_following ?> <small>Following</small></a>
+              <a class="btn border-0 fw-medium text-center w-50" href="../../follower.php?id=<?php echo $user_id; ?>"> <?php echo $num_followers ?> <small>Followers</small></a>
+              <a class="btn border-0 fw-medium text-center w-50" href="../../following.php?id=<?php echo $user_id; ?>"> <?php echo $num_following ?> <small>Following</small></a>
               <a class="btn border-0 fw-medium text-center w-50" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $count; ?> <small> Images</small></a>
             </div>
             <div class="btn-group w-100 mt-2">
