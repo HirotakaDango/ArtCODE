@@ -97,10 +97,10 @@ require_once('../auth.php');
                   </div>
                   <div class="row">
                     <div class="col-md-6 pe-md-1">
-                      <div class="form-floating mb-2">
-                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
-                        <label for="link" class="fw-bold">Enter link for your image</label>
-                      </div>
+                      <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="artwork_type" aria-label="Large select example" required>
+                        <option value="illustration" selected>Illustration</option>
+                        <option value="manga">Manga</option>
+                      </select>
                     </div>
                     <div class="col-md-6 ps-md-1">
                       <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="type" aria-label="Large select example" required>
@@ -108,6 +108,10 @@ require_once('../auth.php');
                         <option value="nsfw">NSFW/R-18</option>
                       </select>
                     </div>
+                  </div>
+                  <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
+                    <label for="link" class="fw-bold">Enter link for your image</label>
                   </div>
                   <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit">UPLOAD</button>
                 </form>

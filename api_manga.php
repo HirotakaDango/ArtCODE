@@ -60,7 +60,7 @@ try {
       WHERE artwork_type = 'manga'
       GROUP BY episode_name, users.id
     )
-    ORDER BY episode_name DESC, users.id ASC
+    ORDER BY images.id DESC, users.id DESC
   ";
   
   // Prepare and execute the query

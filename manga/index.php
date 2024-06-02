@@ -41,43 +41,46 @@
   <body>
     <?php include('header.php'); ?>
     <div class="container-fluid mb-5 mt-3">
+      <?php
+      // Build the API URL with query parameters
+      $apiUrl = $web . '/api_manga.php';
+      $queryString = http_build_query(array_filter([
+        'search' => $_GET['search'] ?? null,
+        'artist' => $_GET['artist'] ?? null,
+        'uid' => $_GET['uid'] ?? null,
+        'tag' => $_GET['tag'] ?? null
+      ]));
+      if ($queryString) {
+        $apiUrl .= '?' . $queryString;
+      }
+      
+      // Fetch JSON data from api_manga.php
+      $json = file_get_contents($apiUrl);
+      $images = json_decode($json, true);
+      $totalImages = count($images);
+      $limit = 20;
+      $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+      $offset = ($page - 1) * $limit;
+      $totalPages = ceil($totalImages / $limit);
+      $displayImages = array_slice($images, $offset, $limit);
+      ?>
+      
       <h6 class="fw-bold mb-4">
         <?php
           if (isset($_GET['search'])) {
-            echo 'Search: "' . $_GET['search'] . '"';
+            echo 'Search: "' . $_GET['search'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['artist'])) {
-            echo 'Artist: "' . $_GET['artist'] . '"';
+            echo 'Artist: "' . $_GET['artist'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['tag'])) {
-            echo 'Tag: "' . $_GET['tag'] . '"';
+            echo 'Tag: "' . $_GET['tag'] . '" (' . $totalImages . ')';
           } else {
-            echo 'All';
+            echo 'All (' . $totalImages . ')';
           }
         ?>
       </h6>
+      
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-1">
         <?php
-        // Build the API URL with query parameters
-        $apiUrl = $web . '/api_manga.php';
-        $queryString = http_build_query(array_filter([
-          'search' => $_GET['search'] ?? null,
-          'artist' => $_GET['artist'] ?? null,
-          'uid' => $_GET['uid'] ?? null,
-          'tag' => $_GET['tag'] ?? null
-        ]));
-        if ($queryString) {
-          $apiUrl .= '?' . $queryString;
-        }
-        
-        // Fetch JSON data from api_manga.php
-        $json = file_get_contents($apiUrl);
-        $images = json_decode($json, true);
-        $limit = 20;
-        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-        $offset = ($page - 1) * $limit;
-        $totalImages = count($images);
-        $totalPages = ceil($totalImages / $limit);
-        $displayImages = array_slice($images, $offset, $limit);
-        
         // Check if the images data is an array and not empty
         if (is_array($displayImages) && !empty($displayImages)) {
           foreach ($displayImages as $image) : ?>

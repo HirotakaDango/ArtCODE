@@ -19,7 +19,7 @@ if (!empty($userid)) {
 $query = "SELECT music.id, music.file, music.email as music_email, music.cover, music.album, music.title, users.id AS userid, users.artist 
           FROM music 
           LEFT JOIN users ON music.email = users.email";
-
+          
 // If album parameter is provided, filter by album
 if (!empty($album)) {
   $query .= " WHERE music.album = :album";
@@ -33,7 +33,6 @@ if (!empty($userid)) {
 
 // Order the results by track ID in ascending order and then by title in ascending order
 $query .= " ORDER BY music.id ASC, music.title ASC";
-
 $stmt = $db->prepare($query);
 
 // Bind album parameter if provided
@@ -45,14 +44,32 @@ if (!empty($album)) {
 if (!empty($userid)) {
   $stmt->bindValue(':userEmail', $userEmail, PDO::PARAM_STR);
 }
-
 $result = $stmt->execute();
 
 // Fetch all rows for displaying in the album
 $rows = [];
+$totalCountDuration = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  // Use getID3 to analyze the music file
+  require_once 'getID3/getid3/getid3.php';
+  $getID3 = new getID3();
+  $fileInfo = $getID3->analyze($row['file']);
+  getid3_lib::CopyTagsToComments($fileInfo);
+
+  // Extract information
+  $duration = !empty($fileInfo['playtime_string']) ? $fileInfo['playtime_string'] : 'Unknown';
+
+  // Convert duration to seconds and accumulate it
+  if ($duration !== 'Unknown') {
+    $durationParts = explode(':', $duration);
+    $durationSeconds = ($durationParts[0] * 60) + $durationParts[1];
+    $totalCountDuration += $durationSeconds;
+  }
+
   $rows[] = $row;
 }
+
+$totalCountDurationFormatted = sprintf('%02d:%02d', floor($totalCountDuration / 60), $totalCountDuration % 60);
 
 // Fetch all rows for shuffling
 $stmt->execute();
@@ -71,19 +88,14 @@ $shuffledId = isset($rowsForShuffle[1]['id']) ? $rowsForShuffle[1]['id'] : '';
 if (!empty($rows)) {
   // Get the first row
   $firstRow = $rows[0];
-
   // Extract the user's email from the music record
   $userEmail = $firstRow['music_email'];
-
   // Extract the image file path from the first row
   $imagePath = $firstRow['cover'];
-
   // Extract the user ID from the first row
   $userid = $firstRow['userid'];
-
   // Extract the album from the first row
   $album = $firstRow['album'];
-
   // Extract the id from the first row
   $id = $firstRow['id'];
 }
@@ -278,7 +290,8 @@ if (isset($_POST['follow'])) {
                 <h2 class="featurette-heading fw-normal fw-bold"><?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></span></h2>
                 <p class="fw-medium mt-3 d-none d-md-block d-lg-block">Artist: <a class="text-decoration-none text-white" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
                 <p class="fw-medium mt-3 d-md-none d-lg-none">Artist: <a class="text-decoration-none text-white" data-bs-toggle="modal" data-bs-target="#profileModal"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
-                <p class="fw-medium mt-3">Total Tracks in Album: <?php echo $albumTrackCount; ?> songs</p>
+                <p class="fw-medium mt-3">Total Tracks: <?php echo $albumTrackCount; ?></p>
+                <p class="fw-medium mt-3 mb-4">Duration: <?php echo $totalCountDurationFormatted; ?></p>
                 <div class="btn-group gap-2 mb-2">
                   <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
                   <a class="btn btn-outline-light fw-medium rounded-pill" href="play.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $shuffledId; ?>"><i class="bi bi-shuffle"></i> shuffle</a>

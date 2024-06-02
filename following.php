@@ -135,6 +135,5 @@ if(isset($_GET['id'])){
       });
     </script>
     <?php include('bootstrapjs.php'); ?>
-    <?php include('bootstrapjs.php'); ?>
   </body>
 </html>
