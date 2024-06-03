@@ -103,7 +103,7 @@ $nextRow = $data[$nextIndex];
     <meta property="og:title" content="<?php echo $selectedSong['title']; ?>"/>
     <meta property="og:description" content="<?php echo $selectedSong['album']; ?>"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/users/?id=<?php echo $user['id']; ?>">
+    <meta property="og:url" content="<?php echo urlencode('http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>">
     <script>
       const player = document.getElementById('player');
       let currentTrackId = <?= $songId ?>;

@@ -18,12 +18,24 @@
         .vh-100-sm {
           height: 100vh;
         }
+
+        .mangaImage {
+          height: 100%;
+          width: 100%;
+          object-fit: contain;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .mangaImage {
+          height: 100vh;
+        }
       }
     </style>
   </head>
   <body>
     <?php include('header.php'); ?>
-    <main id="swup" class="transition-main">
+    <div class="">
       <div class="d-flex justify-content-center align-items-center vh-100-sm">
         <div class="w-100">
           <?php
@@ -46,64 +58,104 @@
               // Determine the image source based on the page number
               $imageSource = ($page == 1) ? $web . '/images/' . $image_details['filename'] : $web . '/images/' . $image_child[$page - 2]['filename'];
               ?>
-              <h2 class="text-center my-md-5 mb-4"><a class="text-decoration-none text-white fw-bold" href="title.php?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>"><?php echo $episode_name; ?></a></h2>
-              <div class="d-flex justify-content-center align-items-center bg-body-tertiary py-1">
-                <?php
-                  $totalPages = count($image_child) + 1;
-                  $currentPage = $page;
+              <div class="bg-body-tertiary py-1">
+                <div class="d-flex justify-content-center align-items-center container">
+                  <?php
+                    $totalPages = count($image_child) + 1;
+                    $currentPage = $page;
                   
-                  // Previous page link
-                  if ($currentPage > 1) {
-                    $prevPage = $currentPage - 1;
-                    echo '<a class="btn bg-body-tertiary link-body-emphasis me-auto fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a>';
-                  } else {
-                    echo '<a class="btn bg-body-tertiary link-body-emphasis me-auto fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a>';
-                  }
+                    echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=1"><i class="bi bi-chevron-double-left text-stroke"></i></a></main>';
                   
-                  echo '<h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6>';
+                    // Previous page link
+                    if ($currentPage > 1) {
+                      $prevPage = $currentPage - 1;
+                      echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a></main>';
+                    } else {
+                      echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                    }
                   
-                  // Next page link
-                  if ($currentPage < $totalPages) {
-                    $nextPage = $currentPage + 1;
-                    echo '<a class="btn bg-body-tertiary link-body-emphasis ms-auto fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a>';
-                  } else {
-                    echo '<a class="btn bg-body-tertiary link-body-emphasis ms-auto fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a>';
-                  }
-                ?>
+                    echo '<main id="swup" class="transition-main"><h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6></main>';
+                  
+                    // Next page link
+                    if ($currentPage < $totalPages) {
+                      $nextPage = $currentPage + 1;
+                      echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a></main>';
+                    } else {
+                      echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                    }
+                  
+                    echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $totalPages . '"><i class="bi bi-chevron-double-right text-stroke"></i></a></main>';
+                  ?>
+                </div>
               </div>
-              <img class="w-100 h-100 object-fit-contain" src="<?= $imageSource; ?>" alt="<?= $image_details['title']; ?>">
-              <div class="d-flex justify-content-center align-items-center bg-body-tertiary py-1">
-                <?php
-                  $totalPages = count($image_child) + 1;
-                  $currentPage = $page;
+              <main id="swup" class="transition-main ">
+                <div class="position-relative d-flex justify-content-center w-100">
+                  <?php
+                    $totalPages = count($image_child) + 1;
+                    $currentPage = $page;
                   
-                  // Previous page link
-                  if ($currentPage > 1) {
-                    $prevPage = $currentPage - 1;
-                    echo '<a class="btn bg-body-tertiary link-body-emphasis me-auto fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a>';
-                  } else {
-                    echo '<a class="btn bg-body-tertiary link-body-emphasis me-auto fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a>';
-                  }
+                    // Previous page link
+                    if ($currentPage > 1) {
+                      $prevPage = $currentPage - 1;
+                      echo '<a class="position-absolute top-0 start-0 w-25 h-100 text-decoration-none" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"></a>';
+                    } else {
+                      echo '<a class="position-absolute top-0 start-0 w-25 h-100 text-decoration-none" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"></a>';
+                    }
+                  ?>
+                  <img class="mangaImage" src="<?= $imageSource; ?>" alt="<?= $image_details['title']; ?>">
+                  <?php
+                    $totalPages = count($image_child) + 1;
+                    $currentPage = $page;
                   
-                  echo '<h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6>';
+                    // Next page link
+                    if ($currentPage < $totalPages) {
+                      $nextPage = $currentPage + 1;
+                      echo '<a class="position-absolute top-0 end-0 w-25 h-100 text-decoration-none" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"></a>';
+                    } else {
+                      echo '<a class="position-absolute top-0 end-0 w-25 h-100 text-decoration-none" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"></a>';
+                    }
+                  ?>
+                </div>
+              </main>
+              <div class="bg-body-tertiary py-1">
+                <div class="d-flex justify-content-center align-items-center container">
+                  <?php
+                    $totalPages = count($image_child) + 1;
+                    $currentPage = $page;
                   
-                  // Next page link
-                  if ($currentPage < $totalPages) {
-                    $nextPage = $currentPage + 1;
-                    echo '<a class="btn bg-body-tertiary link-body-emphasis ms-auto fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a>';
-                  } else {
-                    echo '<a class="btn bg-body-tertiary link-body-emphasis ms-auto fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a>';
-                  }
-                ?>
+                    echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=1"><i class="bi bi-chevron-double-left text-stroke"></i></a></main>';
+                  
+                    // Previous page link
+                    if ($currentPage > 1) {
+                      $prevPage = $currentPage - 1;
+                      echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a></main>';
+                    } else {
+                      echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                    }
+                  
+                    echo '<main id="swup" class="transition-main"><h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6></main>';
+                  
+                    // Next page link
+                    if ($currentPage < $totalPages) {
+                      $nextPage = $currentPage + 1;
+                      echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a></main>';
+                    } else {
+                      echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                    }
+                  
+                    echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $totalPages . '"><i class="bi bi-chevron-double-right text-stroke"></i></a></main>';
+                  ?>
+                </div>
               </div>
             <?php } else { ?>
-              <p>No data found.</p>
+              <p class="position-absolute top-50 start-50">No data found.</p>
             <?php }
           } else { ?>
             <p>Missing title, uid, id, or page parameter.</p>
           <?php } ?>
         </div>
       </div>
-    </main>
+      <h2 class="text-center mt-md-5 mb-5"><a class="btn bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>">back to title</a></h2>
+    </div>
   </body>
 </html>
