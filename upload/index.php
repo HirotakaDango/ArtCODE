@@ -14,6 +14,7 @@ require_once('../auth.php');
   </head>
   <body>
     <?php include('../contents/header.php'); ?>
+    <?php include('sections.php'); ?>
     <div class="mt-2">
       <div id="preview-container" class="mb-2"></div>
       <div class="caard container">
@@ -59,41 +60,31 @@ require_once('../auth.php');
                     <textarea class="form-control border rounded-3 fw-bold border-4" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="2000" style="height: 200px;" required></textarea>
                     <label for="imgdesc" class="fw-bold">Enter description for your image</label>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6 pe-md-1">
-                      <div class="form-floating mb-2">
-                        <select class="form-select border rounded-3 fw-bold border-4 py-0 text-start" name="selected_episode_name">
-                          <option class="form-control" value="">Add episode:</option>
-                          <?php
-                            // Connect to the SQLite database
-                            $db = new SQLite3('../database.sqlite');
+                  <div class="form-floating mb-2">
+                    <select class="form-select border rounded-3 fw-bold border-4 py-0 text-start" name="episode_name">
+                      <option class="form-control" value="">Add episode:</option>
+                      <?php
+                        // Connect to the SQLite database
+                        $db = new SQLite3('../database.sqlite');
 
-                            // Get the email of the current user
-                            $email = $_SESSION['email'];
+                        // Get the email of the current user
+                        $email = $_SESSION['email'];
 
-                            // Retrieve the list of albums created by the current user
-                            $stmt = $db->prepare('SELECT * FROM episode WHERE email = :email ORDER BY id DESC');
-                            $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-                            $results = $stmt->execute();
+                        // Retrieve the list of albums created by the current user
+                        $stmt = $db->prepare('SELECT * FROM episode WHERE email = :email ORDER BY id DESC');
+                        $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+                        $results = $stmt->execute();
 
-                            // Loop through each album and create an option in the dropdown list
-                            while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
-                              $episode_name = $row['episode_name'];
-                              $id = $row['id'];
-                              echo '<option value="' . htmlspecialchars($episode_name). '">' . htmlspecialchars($episode_name). '</option>';
-                            }
+                        // Loop through each album and create an option in the dropdown list
+                        while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+                          $episode_name = $row['episode_name'];
+                          $id = $row['id'];
+                          echo '<option value="' . htmlspecialchars($episode_name). '">' . htmlspecialchars($episode_name). '</option>';
+                        }
 
-                            $db->close();
-                          ?>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-md-6 ps-md-1">
-                      <div class="form-floating mb-2">
-                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="new_episode_name" id="new_episode_name" placeholder="Add episode name" maxlength="500">  
-                        <label for="episode_name" class="fw-bold">Add episode name</label>
-                      </div>
-                    </div>
+                        $db->close();
+                      ?>
+                    </select>
                   </div>
                   <div class="row">
                     <div class="col-md-6 pe-md-1">

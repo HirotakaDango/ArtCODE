@@ -117,29 +117,6 @@ if (isset($_FILES['image'])) {
   $tags = implode(",", $tags); // Join tags by comma
   $date = date('Y-m-d'); // Get the current date in YYYY-MM-DD format
 
-  // Determine the episode_name based on whether it was selected or entered manually
-  if (!empty($_POST['selected_episode_name'])) {
-    // Use the selected episode_name from the dropdown
-    $episodeName = filter_var($_POST['selected_episode_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  } else {
-    // Use the manually entered episode_name
-    $episodeName = filter_var($_POST['new_episode_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-
-    // Check if the episode_name already exists for the current user
-    $checkStmt = $db->prepare('SELECT COUNT(*) FROM episode WHERE email = :email AND episode_name = :episode_name');
-    $checkStmt->bindValue(':email', $email, SQLITE3_TEXT);
-    $checkStmt->bindValue(':episode_name', $episodeName, SQLITE3_TEXT);
-    $existingCount = $checkStmt->execute()->fetchArray()[0];
-
-    if ($existingCount == 0 && !empty(trim($episodeName))) {
-      // If episode_name doesn't exist, insert it into the "episode" table
-      $insertStmt = $db->prepare('INSERT INTO episode (email, episode_name) VALUES (:email, :episode_name)');
-      $insertStmt->bindValue(':email', $email, SQLITE3_TEXT);
-      $insertStmt->bindValue(':episode_name', $episodeName, SQLITE3_TEXT);
-      $insertStmt->execute();
-    }
-  }
-
   $stmt = $db->prepare("INSERT INTO images (email, filename, tags, title, imgdesc, link, date, type, episode_name, artwork_type) VALUES (:email, :filename, :tags, :title, :imgdesc, :link, :date, :type, :episode_name, :artwork_type)");
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':filename', $filename);
@@ -149,7 +126,7 @@ if (isset($_FILES['image'])) {
   $stmt->bindValue(':link', filter_var($_POST['link'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->bindValue(':date', $date);
   $stmt->bindValue(':type', filter_var($_POST['type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
-  $stmt->bindValue(':episode_name', $episodeName);
+  $stmt->bindValue(':episode_name', filter_var($_POST['episode_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->bindValue(':artwork_type', filter_var($_POST['artwork_type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->execute();
 

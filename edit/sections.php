@@ -1,0 +1,4 @@
+    <div class="btn-group w-100 gap-2 mt-5 pt-3 mb-3 container d-flex justify-content-center">
+      <a class="btn bg-body-tertiary p-4 fw-bold w-50 rounded-4 shadow <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') echo 'opacity-75' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>">Edit <?php echo $image['title']; ?></a>
+      <a class="btn bg-body-tertiary p-4 fw-bold w-50 rounded-4 shadow <?php if(basename($_SERVER['PHP_SELF']) == 'episode.php') echo 'opacity-75' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/episode.php?id=<?php echo $image['id']; ?>">Episode Name</a>
+    </div> 

@@ -80,7 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </head>
   <body>
     <?php include('backheader.php'); ?>
-    <div class="container-fluid mt-5">
+    <?php include('sections.php'); ?>
+    <div class="container">
       <?php include('nav.php'); ?>
       <div class="mt-3">
         <div class="row">

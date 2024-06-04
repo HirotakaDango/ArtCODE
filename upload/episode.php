@@ -14,37 +14,6 @@ if (!isset($_SESSION['email'])) {
 // Get the email of the logged-in user
 $email = $_SESSION['email'];
 
-// Get the current image ID from the URL parameter
-$currentImageId = $_GET['id'] ?? '';
-
-// Retrieve image details
-if (isset($_GET['id'])) {
-  $id = $_GET['id'];
-
-  // Retrieve the email of the logged-in user
-  $email = $_SESSION['email'];
-
-  // Select the image details using the image ID and the email of the logged-in user
-  $stmt = $db->prepare('SELECT * FROM images WHERE id = :id AND email = :email');
-  $stmt->bindParam(':id', $id);
-  $stmt->bindParam(':email', $email);
-  $result = $stmt->execute();
-  $image = $result->fetchArray(SQLITE3_ASSOC); // Retrieve result as an associative array
-
-  // Check if the image exists and belongs to the logged-in user
-  if (!$image) {
-    echo '<meta charset="UTF-8"> 
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">
-         ';
-    exit();
-  }
-} else {
-  // Redirect to the error page if the image ID is not specified
-  header('Location: ?id=' . $id);
-  exit();
-}
-
 // Handle add new episode
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_episode_name'])) {
   $new_episode_name = trim($_POST['new_episode_name']);
@@ -65,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_episode_name'])) 
   }
 
   // Redirect to the current episode.php page with the image ID
-  header("Location: episode.php?id=" . $currentImageId);
+  header("Location: episode.php");
   exit;
 }
 
@@ -78,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_episode_id']))
   $stmt->execute();
 
   // Redirect to the current episode.php page with the image ID
-  header("Location: episode.php?id=" . $currentImageId);
+  header("Location: episode.php");
   exit;
 }
 
@@ -95,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_episode_id']) &&
   }
 
   // Redirect to the current episode.php page with the image ID
-  header("Location: episode.php?id=" . $currentImageId);
+  header("Location: episode.php");
   exit;
 }
 
@@ -112,13 +81,12 @@ $results = $stmt->execute();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Edit Episode</title>
     <link rel="icon" type="image/png" href="../icon/favicon.png">
-    <?php include('bootstrapcss.php'); ?>
+    <?php include('../bootstrapcss.php'); ?>
   </head>
   <body>
-    <?php include('backheader.php'); ?>
+    <?php include('../contents/header.php'); ?>
     <?php include('sections.php'); ?>
-    <div class="container">
-      <?php include('nav.php'); ?>
+    <div class="container mt-5">
       <form method="POST" class="mt-4">
         <div class="form-floating mb-2">
           <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" name="new_episode_name" id="new_episode_name" placeholder="Add episode name" maxlength="500" required>  
@@ -172,7 +140,7 @@ $results = $stmt->execute();
     </div>
 
     <div class="mt-5"></div>
-    <?php include('bootstrapjs.php'); ?>
+    <?php include('../bootstrapjs.php'); ?>
 
     <script>
       // Populate the edit episode modal with episode data
