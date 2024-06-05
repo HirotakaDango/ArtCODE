@@ -81,7 +81,7 @@
           }
         ?>
       </h6>
-      <div class="dropdown mb-2">
+      <div class="dropdown mb-4">
         <button class="btn btn-outline-light rounded-5 dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           sort by
         </button>
