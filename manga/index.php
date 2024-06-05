@@ -43,16 +43,6 @@
   <body>
     <?php include('header.php'); ?>
     <div class="container-fluid mb-5 mt-3">
-     <div class="dropdown">
-      <button class="btn btn-outline-light rounded-5 dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        sort by
-      </button>
-      <ul class="dropdown-menu rounded-4">
-        <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'popular'])); ?>">Popular</a></li>
-        <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a></li>
-        <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'oldest'])); ?>">Oldest</a></li>
-      </ul>
-    </div>
       <?php
       // Build the API URL with query parameters
       $apiUrl = $web . '/api_manga.php';
@@ -91,10 +81,15 @@
           }
         ?>
       </h6>
-      <div class="mb-4 btn-group gap-2 w-100">
-        <a class="btn bg-secondary-subtle fw-bold link-body-emphasis rounded w-50" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'popular'])); ?>">Popular</a>
-        <a class="btn bg-secondary-subtle fw-bold link-body-emphasis rounded w-50" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a>
-        <a class="btn bg-secondary-subtle fw-bold link-body-emphasis rounded w-50" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'oldest'])); ?>">Oldest</a>
+      <div class="dropdown mb-2">
+        <button class="btn btn-outline-light rounded-5 dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          sort by
+        </button>
+        <ul class="dropdown-menu rounded-4">
+          <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'popular'])); ?>">Popular</a></li>
+          <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a></li>
+          <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'oldest'])); ?>">Oldest</a></li>
+        </ul>
       </div>
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-1">
         <?php
