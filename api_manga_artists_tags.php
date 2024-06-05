@@ -6,14 +6,33 @@ $db = new SQLite3('database.sqlite', SQLITE3_OPEN_READONLY);
 function getCounts($db, $column) {
   if (isset($_GET[$column]) && $_GET[$column] == 'all') {
     if ($column == 'tag') {
-      // Retrieve the count of images for each tag
-      $query = "SELECT tags, COUNT(*) as count FROM images WHERE artwork_type = 'manga' GROUP BY tags";
+      // Retrieve the count of latest images for each tag
+      $query = "SELECT tags, COUNT(*) as count FROM (
+                  SELECT tags, episode_name, MAX(id) as latest_image_id
+                  FROM images
+                  WHERE artwork_type = 'manga'
+                  GROUP BY tags, episode_name
+                ) GROUP BY tags";
     } elseif ($column == 'artist') {
-      // Retrieve the count of images for each artist along with user id
-      $query = "SELECT users.artist, users.id as userid, COUNT(images.id) as count FROM images JOIN users ON images.email = users.email WHERE artwork_type = 'manga' GROUP BY users.artist, users.id";
+      // Retrieve the count of latest images for each artist along with user id
+      $query = "SELECT users.artist, users.id as userid, COUNT(latest_images.latest_image_id) as count FROM (
+                  SELECT email, episode_name, MAX(id) as latest_image_id
+                  FROM images
+                  WHERE artwork_type = 'manga'
+                  GROUP BY email, episode_name
+                ) latest_images
+                JOIN users ON latest_images.email = users.email
+                GROUP BY users.artist, users.id";
     }
 
+    // Log the query for debugging
+    error_log("SQL Query: " . $query);
+
     $result = $db->query($query);
+
+    if (!$result) {
+      return ['error' => 'Query failed: ' . $db->lastErrorMsg()];
+    }
 
     // Store the counts as an associative array
     $counts = [];

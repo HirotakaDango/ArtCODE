@@ -6,11 +6,11 @@
     <title>
       <?php
       if (isset($_GET['search'])) {
-        echo 'Search "' . $_GET['search'] . '"';
+        echo 'Search: "' . $_GET['search'] . '"';
       } elseif (isset($_GET['artist'])) {
-        echo 'Artist "' . $_GET['artist'] . '"';
+        echo 'Artist: "' . $_GET['artist'] . '"';
       } elseif (isset($_GET['tag'])) {
-        echo 'Tag "' . $_GET['tag'] . '"';
+        echo 'Tag: "' . $_GET['tag'] . '"';
       } else {
         echo 'ArtCODE - Manga';
       }
@@ -25,6 +25,7 @@
         width: 100%;
         padding-bottom: 130%;
       }
+
       .ratio-cover img {
         position: absolute;
         top: 0;
@@ -33,6 +34,7 @@
         height: 100%;
         object-fit: cover;
       }
+
       .text-stroke {
         -webkit-text-stroke: 1px;
       }
@@ -41,6 +43,16 @@
   <body>
     <?php include('header.php'); ?>
     <div class="container-fluid mb-5 mt-3">
+     <div class="dropdown">
+      <button class="btn btn-outline-light rounded-5 dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        sort by
+      </button>
+      <ul class="dropdown-menu rounded-4">
+        <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'popular'])); ?>">Popular</a></li>
+        <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a></li>
+        <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'oldest'])); ?>">Oldest</a></li>
+      </ul>
+    </div>
       <?php
       // Build the API URL with query parameters
       $apiUrl = $web . '/api_manga.php';
@@ -48,7 +60,8 @@
         'search' => $_GET['search'] ?? null,
         'artist' => $_GET['artist'] ?? null,
         'uid' => $_GET['uid'] ?? null,
-        'tag' => $_GET['tag'] ?? null
+        'tag' => $_GET['tag'] ?? null,
+        'by' => $_GET['by'] ?? null
       ]));
       if ($queryString) {
         $apiUrl .= '?' . $queryString;
@@ -78,7 +91,11 @@
           }
         ?>
       </h6>
-      
+      <div class="mb-4 btn-group gap-2 w-100">
+        <a class="btn bg-secondary-subtle fw-bold link-body-emphasis rounded w-50" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'popular'])); ?>">Popular</a>
+        <a class="btn bg-secondary-subtle fw-bold link-body-emphasis rounded w-50" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a>
+        <a class="btn bg-secondary-subtle fw-bold link-body-emphasis rounded w-50" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'oldest'])); ?>">Oldest</a>
+      </div>
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-1">
         <?php
         // Check if the images data is an array and not empty

@@ -897,7 +897,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </div>
                 <div class="dropdown-center">
                   <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-eye-fill"></i> <small><?php echo $viewCount; ?> </small>
+                    <i class="bi bi-eye-fill"></i> <small><?php echo $viewCount; ?></small>
                   </button>
                   <ul class="dropdown-menu">
                     <li>
@@ -909,9 +909,17 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </div>
               </div>
               <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
-                <a class="btn btn-primary fw-bold rounded-4 mb-2 w-100" href="episode/?episode=<?php echo urlencode($image['episode_name']); ?>">
+                <a class="btn btn-primary fw-bold rounded-4 mb-2 w-100" href="episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
                   <small>all episodes from <?php echo $image['episode_name']; ?></small>
                 </a>
+                <div class="btn-group gap-2 w-100 mb-2">
+                  <a class="btn btn-primary fw-bold rounded-4 w-50" target="_blank" href="manga/title.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
+                    <small>go to manga</small>
+                  </a>
+                  <a class="btn btn-primary fw-bold rounded-4 w-50" target="_blank" href="manga/view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>&id=<?php echo $image['id']; ?>&page=1">
+                    <small>read in manga mode</small>
+                  </a>
+                </div>
               <?php endif; ?>
               <div class="btn-group w-100" role="group" aria-label="Basic example">
                 <button class="btn btn-primary fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">

@@ -21,7 +21,6 @@ try {
   // Add conditions based on the provided parameters
   $conditions = [];
   $params = [];
-
   if (isset($_GET['artist'])) {
     $conditions[] = 'users.artist LIKE :artist';
     $params[':artist'] = '%' . $_GET['artist'] . '%';
@@ -31,7 +30,6 @@ try {
     $conditions[] = 'users.id = :user_id';
     $params[':user_id'] = $_GET['uid'];
   }
-
   if (isset($_GET['tag'])) {
     $conditions[] = "(',' || images.tags || ',' LIKE :tag)";
     $params[':tag'] = '%,' . $_GET['tag'] . ',%';
@@ -51,7 +49,7 @@ try {
     $query .= ' AND ' . implode(' AND ', $conditions);
   }
   
-  // Add the grouping and ordering
+  // Add the grouping
   $query .= "
     AND images.id IN (
       SELECT MAX(images.id)
@@ -60,8 +58,21 @@ try {
       WHERE artwork_type = 'manga'
       GROUP BY episode_name, users.id
     )
-    ORDER BY images.id DESC, users.id DESC
   ";
+  
+  // Add sorting based on the 'by' parameter
+  $orderBy = 'images.id DESC'; // Default sorting by newest
+  if (isset($_GET['by'])) {
+    switch ($_GET['by']) {
+      case 'popular':
+        $orderBy = 'images.view_count DESC';
+        break;
+      case 'oldest':
+        $orderBy = 'images.id ASC';
+        break;
+    }
+  }
+  $query .= " ORDER BY $orderBy, users.id DESC";
   
   // Prepare and execute the query
   $stmt = $db->prepare($query);
@@ -72,17 +83,14 @@ try {
   
   // Fetch all results
   $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
   // Check if there are results, if not set to empty array
   if (!$results) {
     $results = [];
   }
-
   // Remove email field from results
   foreach ($results as &$result) {
     unset($result['email']);
   }
-
   // Output results as JSON
   echo json_encode($results, JSON_PRETTY_PRINT);
 } catch (PDOException $e) {

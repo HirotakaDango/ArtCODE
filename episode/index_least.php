@@ -1,14 +1,15 @@
 <?php
-// Get the images for the current page and specified episode with non-empty episode names
+// Get the images for the current page, specified episode, and user ID with non-empty episode names
 $stmt = $db->prepare("
     SELECT images.*, users.artist, users.id AS userid, users.pic
     FROM images
     JOIN users ON images.email = users.email
-    WHERE images.episode_name = :episodeName AND images.episode_name != ''
+    WHERE images.episode_name = :episodeName AND images.episode_name != '' AND images.email = (SELECT email FROM users WHERE id = :userId)
     ORDER BY images.view_count ASC
     LIMIT :offset, :limit
 ");
 $stmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
+$stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $result = $stmt->execute();

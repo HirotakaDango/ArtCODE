@@ -3,7 +3,7 @@
 $stmt = $db->prepare("
     SELECT images.*, users.artist, users.id AS userid, users.pic, COUNT(favorites.id) AS favorite_count
     FROM images
-    JOIN users ON images.email = users.email
+    JOIN users ON images.email = users.email AND users.id = :userId
     LEFT JOIN favorites ON images.id = favorites.image_id
     WHERE images.episode_name = :episodeName AND images.episode_name != ''
     GROUP BY images.id
@@ -11,6 +11,7 @@ $stmt = $db->prepare("
     LIMIT :offset, :limit
 ");
 $stmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
+$stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $result = $stmt->execute();

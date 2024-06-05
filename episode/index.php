@@ -6,8 +6,9 @@ $email = $_SESSION['email'];
 // Connect to the SQLite database using parameterized query
 $db = new SQLite3('../database.sqlite');
 
-// Retrieve episode name from the URL
-$episodeName = isset($_GET['episode']) ? $_GET['episode'] : '';
+// Retrieve episode name and user ID from the URL
+$episodeName = isset($_GET['title']) ? $_GET['title'] : '';
+$userId = isset($_GET['uid']) ? $_GET['uid'] : '';
 
 // Process any favorite/unfavorite requests
 if (isset($_POST['favorite'])) {
@@ -41,7 +42,7 @@ if (isset($_POST['favorite'])) {
 
 // Prepare the query to get the user's numpage
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
-$queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
+$queryNum->bindValue(':email', $email, SQLITE3_TEXT);
 $resultNum = $queryNum->execute();
 $user = $resultNum->fetchArray(SQLITE3_ASSOC);
 
@@ -56,63 +57,67 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 // Calculate the offset based on the current page number and limit
 $offset = ($page - 1) * $limit;
 
-// Get the total number of images for the specified episode
-$total = $db->querySingle("SELECT COUNT(*) FROM images WHERE episode_name = '$episodeName'");
+// Get the total number of images for the specified episode and user ID
+$total = $db->querySingle("SELECT COUNT(*) FROM images WHERE episode_name = '$episodeName' AND email = (SELECT email FROM users WHERE id = $userId)");
 
-// Count the total number of images for the specified episode with non-empty episode names
+// Count the total number of images for the specified episode and user ID with non-empty episode names
 $countStmt = $db->prepare("
     SELECT COUNT(*) as count
     FROM images
-    WHERE episode_name = :episodeName AND episode_name != ''
+    WHERE episode_name = :episodeName AND episode_name != '' AND email = (SELECT email FROM users WHERE id = :userId)
 ");
 $countStmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
+$countStmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
 $totalCount = $countStmt->execute()->fetchArray(SQLITE3_ASSOC)['count'];
 
-// Prepare SQL query to count views for each image in the current episode
+// Prepare SQL query to count views for each image in the current episode and user ID
 $countViewsStmt = $db->prepare("
     SELECT SUM(view_count) as total_views
     FROM images
-    WHERE episode_name = :episodeName
+    WHERE episode_name = :episodeName AND email = (SELECT email FROM users WHERE id = :userId)
 ");
 
 $countViewsStmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
+$countViewsStmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
 $totalViewsResult = $countViewsStmt->execute();
 $totalViews = $totalViewsResult->fetchArray(SQLITE3_ASSOC)['total_views'];
 
-// Prepare SQL query to count favorites for images in the current episode
+// Prepare SQL query to count favorites for images in the current episode and user ID
 $countFavoritesStmt = $db->prepare("
     SELECT COUNT(DISTINCT email) as total_favorites
     FROM favorites
     WHERE image_id IN (
         SELECT id
         FROM images
-        WHERE episode_name = :episodeName
+        WHERE episode_name = :episodeName AND email = (SELECT email FROM users WHERE id = :userId)
     )
 ");
 
 $countFavoritesStmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
+$countFavoritesStmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
 $totalFavoritesResult = $countFavoritesStmt->execute();
 $totalFavorites = $totalFavoritesResult->fetchArray(SQLITE3_ASSOC)['total_favorites'];
 
-// Query to get the first image based on episode_name
+// Query to get the first image based on episode_name and user ID
 $firstImageStmt = $db->prepare("
     SELECT id, filename
     FROM images
-    WHERE episode_name = :episodeName AND episode_name != ''
+    WHERE episode_name = :episodeName AND episode_name != '' AND email = (SELECT email FROM users WHERE id = :userId)
     ORDER BY id ASC
     LIMIT 1
 ");
 
 $firstImageStmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
+$firstImageStmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
 $firstImageResult = $firstImageStmt->execute();
 $firstImage = $firstImageResult->fetchArray(SQLITE3_ASSOC);
 
-// Check if there is a first image for the specified episode
+// Check if there is a first image for the specified episode and user ID
 if ($firstImage) {
-    $firstEpisode = $firstImage['id'];
-    $firstEpisode = $firstImage['filename'];
+  $firstEpisodeId = $firstImage['id'];
+  $firstEpisode = $firstImage['filename'];
 } else {
-    $firstEpisode = null;  // or handle accordingly based on your requirements
+  $firstEpisode = null;  // or handle accordingly based on your requirements
 }
 ?>
 
@@ -134,12 +139,12 @@ if ($firstImage) {
           <i class="bi bi-images"></i> sort by
         </button>
         <ul class="dropdown-menu">
-          <li><a href="?by=newest&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-          <li><a href="?by=oldest&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-          <li><a href="?by=popular&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
-          <li><a href="?by=view&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
-          <li><a href="?by=least&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
-          <li><a href="?by=liked&episode=<?php echo $episodeName; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
+          <li><a href="?by=newest&title=<?php echo $episodeName; ?>&uid=<?php echo $userId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+          <li><a href="?by=oldest&title=<?php echo $episodeName; ?>&uid=<?php echo $userId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+          <li><a href="?by=popular&title=<?php echo $episodeName; ?>&uid=<?php echo $userId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+          <li><a href="?by=view&title=<?php echo $episodeName; ?>&uid=<?php echo $userId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+          <li><a href="?by=least&title=<?php echo $episodeName; ?>&uid=<?php echo $userId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
+          <li><a href="?by=liked&title=<?php echo $episodeName; ?>&uid=<?php echo $userId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
         </ul> 
       </div> 
         <?php 
@@ -179,65 +184,71 @@ if ($firstImage) {
             <p class="text-start fw-bold">share to:</p>
             <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- Twitter -->
-              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-twitter"></i>
               </a>
                                 
               <!-- Line -->
-              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-line"></i>
               </a>
                                 
               <!-- Email -->
-              <a class="btn" href="mailto:?body=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>">
+              <a class="btn" href="mailto:?body=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
                 <i class="bi bi-envelope-fill"></i>
               </a>
                                 
               <!-- Reddit -->
-              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-reddit"></i>
               </a>
                                 
               <!-- Instagram -->
-              <a class="btn" href="https://www.instagram.com/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.instagram.com/?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-instagram"></i>
               </a>
                                 
               <!-- Facebook -->
-              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-facebook"></i>
               </a>
             </div>
-            <div class="btn-group w-100" role="group" aria-label="Share Buttons">
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- WhatsApp -->
-              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-whatsapp"></i>
               </a>
     
               <!-- Pinterest -->
-              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-pinterest"></i>
               </a>
     
               <!-- LinkedIn -->
-              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-linkedin"></i>
               </a>
     
               <!-- Messenger -->
-              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-messenger"></i>
               </a>
     
               <!-- Telegram -->
-              <a class="btn" href="https://telegram.me/share/url?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn" href="https://telegram.me/share/url?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-telegram"></i>
               </a>
     
               <!-- Snapchat -->
-              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo urlencode((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/episode/?episode=' . urlencode($episodeName)); ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-snapchat"></i>
               </a>
+            </div>
+            <div class="input-group">
+              <input type="text" id="urlInput1" value="<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" class="form-control border-2 fw-bold" readonly>
+              <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard1()">
+                <i class="bi bi-clipboard-fill"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -254,6 +265,15 @@ if ($firstImage) {
         </div>
       </div>
     </div>
+    <script>
+      function copyToClipboard1() {
+        var urlInput1 = document.getElementById('urlInput1');
+        urlInput1.select();
+        urlInput1.setSelectionRange(0, 99999); // For mobile devices
+
+        document.execCommand('copy');
+      }
+    </script>
     <style>
       .ratio-cover {
         position: relative;
@@ -270,22 +290,6 @@ if ($firstImage) {
         left: 0;
       }
     </style>
-    <script>
-      function sharePage() {
-        if (navigator.share) {
-          navigator.share({
-            title: document.title,
-            url: window.location.href
-          }).then(() => {
-            console.log('Page shared successfully.');
-          }).catch((error) => {
-            console.error('Error sharing page:', error);
-          });
-        } else {
-          console.log('Web Share API not supported.');
-        }
-      }
-    </script>
     <?php include('../bootstrapjs.php'); ?>
   </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-// Get the images for the current page and specified episode with non-empty episode names
+// Get the images for the current page and specified episode with non-empty episode names, filtered by user ID and favorited by the current user
 $stmt = $db->prepare("
     SELECT images.*, users.artist, users.id AS userid, users.pic
     FROM images
@@ -7,11 +7,13 @@ $stmt = $db->prepare("
     LEFT JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
     WHERE images.episode_name = :episodeName 
       AND images.episode_name != ''
+      AND users.id = :userId
       AND favorites.email = :email
     ORDER BY images.id DESC
     LIMIT :offset, :limit
 ");
 $stmt->bindValue(':episodeName', $episodeName, SQLITE3_TEXT);
+$stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
 $stmt->bindValue(':email', $email, SQLITE3_TEXT);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);

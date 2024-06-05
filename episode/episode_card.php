@@ -11,7 +11,7 @@
                     <div class="card-body d-flex align-items-center justify-content-start h-100">
                       <div>
                         <h6 class="card-title fw-bold"><?php echo (!is_null($image['title']) && mb_strlen($image['title'], 'UTF-8') > 20) ? mb_substr($image['title'], 0, 20, 'UTF-8') . '...' : $image['title']; ?></h6>
-                        <h6 class="small fw-medium">image by <?php echo (!is_null($image['artist']) && mb_strlen($image['artist'], 'UTF-8') > 20) ? mb_substr($image['title'], 0, 20, 'UTF-8') . '...' : $image['artist']; ?></h6>
+                        <h6 class="card-title fw-bold small"><?php echo $image['view_count']; ?> views</h6>
                       </div>
                     </div>
                   </div>
