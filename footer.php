@@ -7,6 +7,6 @@
         <li class="nav-item fw-bold ms-3 me-3"><a href="https://github.com/HirotakaDango/ArtCODE" target="_blank" class="nav-link px-2 text-muted"><i class="fa fa-github" style="font-size: 18px;"></i> GitHub</a></li>
         <li class="nav-item fw-bold"><a href="https://gitlab.com/HirotakaDango/ArtCODE" target="_blank" class="nav-link px-2 text-muted"><i class="fa fa-gitlab" style="font-size: 18px;"></i> GitLab</a></li>
       </ul>
-      <p class="text-center text-muted fw-bold">© 2022 - 2023, ArtCODE Japan</p>
+      <p class="text-center text-muted fw-bold">© 2022 - <?php echo date('Y'); ?>, ArtCODE Japan</p>
     </footer>
   </div> 
