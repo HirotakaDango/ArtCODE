@@ -18,7 +18,7 @@
           </ul>
           <form class="d-flex" role="search" action="index.php">
             <input class="form-control me-2 fw-medium" type="search" placeholder="Search" aria-label="Search" name="search">
-            <button class="btn btn-outline-light fw-medium" type="submit">Search</button>
+            <button class="btn btn-outline-light fw-medium" type="submit"><i class="bi bi-search"></i></button>
           </form>
         </div>
       </div>

@@ -82,13 +82,13 @@
         ?>
       </h6>
       <div class="dropdown mb-4">
-        <button class="btn btn-outline-light rounded-5 dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-sm btn-outline-light rounded-5 dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           sort by
         </button>
         <ul class="dropdown-menu rounded-4">
-          <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'popular'])); ?>">Popular</a></li>
-          <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a></li>
-          <li><a class="dropdown-item fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'oldest'])); ?>">Oldest</a></li>
+          <li><a class="dropdown-item fw-bold <?php echo (!isset($_GET['by']) || $_GET['by'] == 'newest') ? 'active' : ''; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a></li>
+          <li><a class="dropdown-item fw-bold <?php echo ($_GET['by'] ?? '') == 'oldest' ? 'active' : ''; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'oldest'])); ?>">Oldest</a></li>
+          <li><a class="dropdown-item fw-bold <?php echo ($_GET['by'] ?? '') == 'popular' ? 'active' : ''; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'popular'])); ?>">Popular</a></li>
         </ul>
       </div>
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-1">
@@ -108,41 +108,41 @@
             </div>
           <?php endforeach;
         } else { ?>
-          <p>No images found.</p>
+          <p class="fw-bold">No data found.</p>
         <?php } ?>
       </div>
       <div class="pagination d-flex gap-1 justify-content-center mt-3">
         <?php if (isset($page) && isset($totalPages)): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold <?php if($startPage <= 1) echo 'd-none'; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['page' => 1])); ?>"><i class="bi text-stroke bi-chevron-double-left"></i></a>
         <?php endif; ?>
-
+    
         <?php if (isset($page) && $page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
         <?php endif; ?>
-
+    
         <?php
         if (isset($page) && isset($totalPages)) {
           // Calculate the range of page numbers to display
           $startPage = max($page - 2, 1);
           $endPage = min($page + 2, $totalPages);
-
+    
           // Display page numbers within the range
           for ($i = $startPage; $i <= $endPage; $i++) {
             if ($i === $page) {
               echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
             } else {
-              echo '<a class="btn btn-sm btn-primary fw-bold" href="?page=' . $i . '">' . $i . '</a>';
+              echo '<a class="btn btn-sm btn-primary fw-bold" href="?' . http_build_query(array_merge($_GET, ['page' => $i])) . '">' . $i . '</a>';
             }
           }
         }
         ?>
-
+    
         <?php if (isset($page) && isset($totalPages) && $page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
         <?php endif; ?>
-
+    
         <?php if (isset($page) && isset($totalPages)): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold <?php if($totalPages <= 1) echo 'd-none'; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['page' => $totalPages])); ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
         <?php endif; ?>
       </div>
     </div>

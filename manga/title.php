@@ -51,11 +51,58 @@
           <div class="row">
             <div class="col-md-3">
               <div class="ratio ratio-cover">
-                <img class="rounded object-fit-cover" src="<?= $web . '/thumbnails/' . $latest_cover['filename']; ?>" alt="<?= $latest_cover['title']; ?>">
+                <a data-bs-toggle="modal" data-bs-target="#originalImage"><img class="rounded object-fit-cover" src="<?= $web . '/thumbnails/' . $latest_cover['filename']; ?>" alt="<?= $latest_cover['title']; ?>"></a>
               </div>
             </div>
             <div class="col-md-9">
               <h1 class="mb-4 fw-bold mt-4 mt-md-0"><?php echo $episode_name; ?></h1>
+              <div class="mb-4">
+                <p class="text-white shadowed-text small fw-medium" style="word-break: break-word;">
+                  <?php
+                    if (!empty($first_cover['imgdesc'])) {
+                      $messageText = $first_cover['imgdesc'];
+                      $messageTextWithoutTags = strip_tags($messageText);
+                      $pattern = '/\bhttps?:\/\/\S+/i';
+
+                      $formattedText = preg_replace_callback($pattern, function ($matches) {
+                        $url = htmlspecialchars($matches[0]);
+                        return '<a href="' . $url . '">' . $url . '</a>';
+                      }, $messageTextWithoutTags);
+
+                      $charLimit = 400; // Set your character limit
+
+                      if (strlen($formattedText) > $charLimit) {
+                        $limitedText = substr($formattedText, 0, $charLimit);
+                        echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                        echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                        echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0 text-white" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
+                      } else {
+                        // If the text is within the character limit, just display it with line breaks.
+                        echo nl2br($formattedText);
+                      }
+                    } else {
+                      echo "User description is empty.";
+                    }
+                  ?>
+                  <script>
+                    function myFunction() {
+                      var dots = document.getElementById("limitedText");
+                      var moreText = document.getElementById("more");
+                      var btnText = document.getElementById("myBtn");
+
+                      if (moreText.style.display === "none") {
+                        dots.style.display = "none";
+                        moreText.style.display = "inline";
+                        btnText.innerHTML = "read less";
+                      } else {
+                        dots.style.display = "inline";
+                        moreText.style.display = "none";
+                        btnText.innerHTML = "read more";
+                      }
+                    }
+                  </script>
+                </p>
+              </div>
               <div class="mb-2 row">
                 <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Artist</label>
                 <div class="col-10">
@@ -98,11 +145,11 @@
       </div>
     </div>
     <div class="container mb-5">
-      <h5 class="my-3 fw-bold">All Manga by <?php echo $artist_name; ?> (<?php echo count($images); ?>)</h5>
+      <h5 class="my-3 fw-bold">All chapters in <?php echo $episode_name; ?> by <?php echo $artist_name; ?> (<?php echo count($images); ?>)</h5>
       <div class="btn-group mb-2 w-100 gap-2">
-        <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="view.php?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>&id=<?php echo $first_cover['id']; ?>&page=1"><i class="bi bi-eye-fill"></i> read first</a>
+        <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="view.php?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>&id=<?php echo $first_cover['id']; ?>&page=1">read first</a>
         <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50 d-none d-md-block" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">share</button>
-        <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="<?php echo $web; ?>/episode/?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>" target="_blank">original <i class="bi bi-box-arrow-up-right"></i></a>
+        <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="<?php echo $web; ?>/episode/?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>" target="_blank">original</a>
       </div>
       <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-100 mb-2 d-md-none" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">share</button>
       <div>
@@ -223,6 +270,17 @@
                 <i class="bi bi-clipboard-fill"></i>
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img class="object-fit-contain h-100 w-100 rounded" src="<?= $web . '/images/' . $latest_cover['filename']; ?>">
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+            <a class="btn btn-primary fw-bold w-100 mt-2" href="<?= $web . '/images/' . $latest_cover['filename']; ?>" download>Download Cover Image</a>
           </div>
         </div>
       </div>
