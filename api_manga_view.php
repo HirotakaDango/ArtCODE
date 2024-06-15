@@ -1,8 +1,6 @@
 <?php
 // api_manga_view.php
-
 header('Content-Type: application/json');
-
 try {
   // Check if title, uid, and id parameters are provided
   if (isset($_GET['title']) && isset($_GET['uid']) && isset($_GET['id']) && isset($_GET['page'])) {
@@ -50,10 +48,32 @@ try {
     // Fetch all image_child results
     $results_child = $stmt_child->fetchAll(PDO::FETCH_ASSOC);
     
+    // New section: Query to get all images from the images table for the current episode_name
+    $query_all_episodes = "
+      SELECT
+        images.*,
+        users.id AS userid,
+        users.artist
+      FROM images
+      JOIN users ON images.email = users.email
+      WHERE artwork_type = 'manga'
+      AND episode_name = :episode_name
+      AND users.id = :user_id
+      ORDER BY images.id DESC
+    ";
+    $stmt_all_episodes = $db->prepare($query_all_episodes);
+    $stmt_all_episodes->bindParam(':episode_name', $episode_name);
+    $stmt_all_episodes->bindParam(':user_id', $user_id);
+    $stmt_all_episodes->execute();
+    
+    // Fetch all results for the "all episodes" section
+    $results_all_episodes = $stmt_all_episodes->fetchAll(PDO::FETCH_ASSOC);
+    
     // Prepare the response data
     $response = [
       'image_details' => $result,
-      'image_child' => $results_child
+      'image_child' => $results_child,
+      'all_episodes' => $results_all_episodes
     ];
     
     // Output response as JSON
