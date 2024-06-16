@@ -15,19 +15,19 @@ $userid = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 // Retrieve the user ID from the database if it's not set in the session
 if ($userid === null) {
-    // Replace 'your_username' with the actual username of the logged-in user
-    $loggedInUsername = isset($_SESSION['username']) ? $_SESSION['username'] : null;
+  // Replace 'your_username' with the actual username of the logged-in user
+  $loggedInUsername = isset($_SESSION['username']) ? $_SESSION['username'] : null;
     
-    // Fetch the user ID from the database based on the username
-    $userQuery = $db->prepare("SELECT id FROM users WHERE username = :username");
-    $userQuery->bindParam(':username', $loggedInUsername, PDO::PARAM_STR);
-    $userQuery->execute();
-    $userData = $userQuery->fetch(PDO::FETCH_ASSOC);
+  // Fetch the user ID from the database based on the username
+  $userQuery = $db->prepare("SELECT id FROM users WHERE username = :username");
+  $userQuery->bindParam(':username', $loggedInUsername, PDO::PARAM_STR);
+  $userQuery->execute();
+  $userData = $userQuery->fetch(PDO::FETCH_ASSOC);
 
-    if ($userData) {
-        $userid = $userData['id'];
-        $_SESSION['user_id'] = $userid; // Update the session with the retrieved user ID
-    }
+  if ($userData) {
+    $userid = $userData['id'];
+    $_SESSION['user_id'] = $userid; // Update the session with the retrieved user ID
+  }
 }
 
 // Get the user ID from the URL parameter 'id'
@@ -89,13 +89,13 @@ $categories = $db->query($category_query)->fetchAll();
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
-    <title>Profile</title>
+    <title><?php echo $userName; ?>'s Profile</title>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include('../bootstrap.php'); ?>
     <?php include('../connection.php'); ?>
     <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
-	<meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Forum">
     <meta property="og:description" content="This is just a simple forum.">

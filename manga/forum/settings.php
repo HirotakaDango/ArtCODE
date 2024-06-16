@@ -66,14 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include('../bootstrap.php'); ?>
     <?php include('../connection.php'); ?>
     <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
-	<meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Forum">
     <meta property="og:description" content="This is just a simple forum.">
     <meta property="og:image" content="<?php echo $web; ?>/icon/favicon.png">
   </head>
   <body>
-    <main id="swup" class="transition-main">
     <?php include('../header.php'); ?>
     <div class="container mt-3">
       <?php if (isset($success_message)): ?>
@@ -104,6 +103,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div> 
       </form>
     </div>
-    </main>
   </body>
 </html>

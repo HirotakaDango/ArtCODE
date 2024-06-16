@@ -66,7 +66,7 @@ if (isset($_POST['login'])) {
     <?php include('../bootstrap.php'); ?>
     <?php include('../connection.php'); ?>
     <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
-	<meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Forum">
     <meta property="og:description" content="This is just a simple forum.">
