@@ -108,15 +108,17 @@
                   </div>
                 </div>
               </div>
-              <div class="mb-2 row">
-                <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Group</label>
-                <div class="col-10">
-                  <div class="btn-group">
-                    <a href="index.php?group=<?php echo urlencode($groupName); ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $groupName; ?></a>
-                    <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $groupCount; ?></a>
+              <?php if (isset($groupCounts) && !empty($groupCounts)): ?>
+                <div class="mb-2 row">
+                  <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Group</label>
+                  <div class="col-10">
+                    <div class="btn-group">
+                      <a href="index.php?group=<?php echo urlencode($groupName); ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $groupName; ?></a>
+                      <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $groupCount; ?></a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              <?php endif; ?>
               <div class="mt-3 row">
                 <label for="tags" class="col-2 col-form-label text-nowrap fw-medium">Tags</label>
                 <div class="col-10">
