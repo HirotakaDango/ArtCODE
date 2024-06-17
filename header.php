@@ -135,7 +135,11 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </div>
                 <div id="suggestions1"></div>
               </form>
-              <div class="btn-group gap-2 w-100">
+              <a class="mt-2 btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-100 d-flex justify-content-center align-items-center text-center flex-column" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
+                <i class="bi bi-journals fs-5"></i>
+                <span class="d-lg-inline">Manga</span>
+              </a>
+              <div class="btn-group gap-2 w-100 mt-2">
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
                   <i class="bi bi-house-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none">Home</span>
@@ -288,8 +292,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <a class="nav-link nav-center py-1 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false">
                     More
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 500px;">
+                  <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 300px;">
                     <div class="container-fluid px-3 overflow-auto">
+                      <a class="mt-2 btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-100 d-flex justify-content-center align-items-center text-center flex-column" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
+                        <i class="bi bi-journals fs-5"></i>
+                        <span class="d-lg-inline">Manga</span>
+                      </a>
                       <div class="btn-group gap-2 w-100 mt-2">
                         <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notes/') !== false) echo 'opacity-75 shadow'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseNotes">
                           <i class="bi bi-journal-text fs-5"></i>
