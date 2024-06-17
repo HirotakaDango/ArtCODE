@@ -42,11 +42,15 @@ require_once('../auth.php');
               </div>
               <div class="modal-body scrollable-div">
                 <form id="upload-form" enctype="multipart/form-data">
+                  <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
+                    <label for="title" class="fw-bold">Enter title for your image</label>
+                  </div>
                   <div class="row">
                     <div class="col-md-6 pe-md-1">
                       <div class="form-floating mb-2">
-                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
-                        <label for="title" class="fw-bold">Enter title for your image</label>
+                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="group" id="group" placeholder="Enter group for your image" maxlength="500">  
+                        <label for="group" class="fw-bold">Enter group for your image</label>
                       </div>
                     </div>
                     <div class="col-md-6 ps-md-1">

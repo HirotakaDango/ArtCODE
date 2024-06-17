@@ -11,7 +11,6 @@ try {
     SELECT 
       images.*, 
       users.id as userid, 
-      users.email, 
       users.artist
     FROM images
     JOIN users ON images.email = users.email
@@ -30,10 +29,16 @@ try {
     $conditions[] = 'users.id = :user_id';
     $params[':user_id'] = $_GET['uid'];
   }
+  
   if (isset($_GET['tag'])) {
     $conditions[] = "(',' || images.tags || ',' LIKE :tag)";
     $params[':tag'] = '%,' . $_GET['tag'] . ',%';
-  } 
+  }
+  
+  if (isset($_GET['group'])) {
+    $conditions[] = 'images.`group` = :group'; // Fix for group parameter
+    $params[':group'] = $_GET['group'];
+  }
   
   if (isset($_GET['search'])) {
     $searchTerms = explode(',', $_GET['search']);
@@ -83,14 +88,12 @@ try {
   
   // Fetch all results
   $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  // Check if there are results, if not set to empty array
-  if (!$results) {
-    $results = [];
-  }
+  
   // Remove email field from results
   foreach ($results as &$result) {
     unset($result['email']);
   }
+  
   // Output results as JSON
   echo json_encode($results, JSON_PRETTY_PRINT);
 } catch (PDOException $e) {

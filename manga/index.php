@@ -11,6 +11,8 @@
         echo 'Artist: "' . $_GET['artist'] . '"';
       } elseif (isset($_GET['tag'])) {
         echo 'Tag: "' . $_GET['tag'] . '"';
+      } elseif (isset($_GET['group'])) {
+        echo 'Group: "' . $_GET['group'] . '"';
       } else {
         echo 'ArtCODE - Manga';
       }
@@ -19,11 +21,15 @@
     <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
     <?php include('bootstrap.php'); ?>
     <?php include('connection.php'); ?>
+    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?php echo $_GET['title']; ?>">
+    <meta property="og:image" content="<?php echo $web; ?>/icon/favicon.png">
     <style>
       .ratio-cover {
         position: relative;
         width: 100%;
-        padding-bottom: 130%;
+        padding-bottom: 140%;
       }
 
       .ratio-cover img {
@@ -51,24 +57,25 @@
         'artist' => $_GET['artist'] ?? null,
         'uid' => $_GET['uid'] ?? null,
         'tag' => $_GET['tag'] ?? null,
-        'by' => $_GET['by'] ?? null
+        'by' => $_GET['by'] ?? null,
+        'group' => $_GET['group'] ?? null
       ]));
       if ($queryString) {
         $apiUrl .= '?' . $queryString;
       }
-      
+
       // Fetch JSON data from api_manga.php
       $json = file_get_contents($apiUrl);
       $images = json_decode($json, true);
       $totalImages = count($images);
-      $limit = 20;
+      $limit = 24;
       $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
       $offset = ($page - 1) * $limit;
       $totalPages = ceil($totalImages / $limit);
       $displayImages = array_slice($images, $offset, $limit);
       ?>
       
-      <h6 class="fw-bold mb-4">
+      <h6 class="fw-bold mb-3">
         <?php
           if (isset($_GET['search'])) {
             echo 'Search: "' . $_GET['search'] . '" (' . $totalImages . ')';
@@ -76,14 +83,27 @@
             echo 'Artist: "' . $_GET['artist'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['tag'])) {
             echo 'Tag: "' . $_GET['tag'] . '" (' . $totalImages . ')';
+          } elseif (isset($_GET['group'])) {
+            echo 'Group: "' . $_GET['group'] . '" (' . $totalImages . ')';
           } else {
             echo 'All (' . $totalImages . ')';
           }
         ?>
       </h6>
-      <div class="dropdown mb-4">
+      <div class="dropdown mb-3">
         <button class="btn btn-sm btn-outline-light rounded-5 dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          sort by
+          <?php
+          $sortingLabel = '';
+          if (!isset($_GET['by']) || $_GET['by'] == 'newest') {
+            $sortingLabel = 'Sorted by newest';
+          } elseif ($_GET['by'] == 'oldest') {
+            $sortingLabel = 'Sorted by oldest';
+          } elseif ($_GET['by'] == 'popular') {
+            $sortingLabel = 'Sorted by popular';
+          }
+          
+          echo $sortingLabel;
+          ?>
         </button>
         <ul class="dropdown-menu rounded-4">
           <li><a class="dropdown-item fw-bold <?php echo (!isset($_GET['by']) || $_GET['by'] == 'newest') ? 'active' : ''; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a></li>
@@ -98,14 +118,60 @@
           foreach ($displayImages as $image) : ?>
             <div class="col">
               <div class="card border-0 rounded-4">
-                <a href="title.php?title=<?php echo $image['episode_name']; ?>&uid=<?php echo $image['userid']; ?>" class="text-decoration-none">
+                <a href="title.php?title=<?= $image['episode_name']; ?>&uid=<?= $image['userid']; ?>" class="text-decoration-none">
                   <div class="ratio ratio-cover">
                     <img class="rounded rounded-bottom-0 object-fit-cover lazy-load" data-src="<?= $web . '/thumbnails/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
                   </div>
-                  <h6 class="text-center fw-bold text-white text-decoration-none bg-dark-subtle p-2 rounded rounded-top-0">「<?php echo $image['artist']; ?>」<?php echo $image['episode_name']; ?></h6>
+                  <h6 class="text-center fw-bold text-white text-decoration-none bg-dark-subtle p-2 rounded rounded-top-0" id="episode-name_img<?= $image['id']; ?>_<?= $image['userid']; ?>">「<?= $image['artist']; ?>」<?= $image['episode_name']; ?></h6>
                 </a>
               </div>
             </div>
+            <style>
+              #episode-name_img<?php echo $image['id']; ?>_<?php echo $image['userid']; ?> {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                max-width: 24ch; /* Limit to 20 characters */
+                transition: max-width 0.3s ease;
+              }
+            
+              #episode-name_img<?php echo $image['id']; ?>_<?php echo $image['userid']; ?>.expand {
+                max-width: none; /* Expand to full width */
+                white-space: normal;
+              }
+            </style>
+            <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                const episodeName = document.getElementById('episode-name_img<?php echo $image['id']; ?>_<?php echo $image['userid']; ?>');
+                const image = episodeName.closest('.card').querySelector('img');
+            
+                let timeout; // Variable to store timeout ID for delaying collapse
+            
+                const expandText = () => {
+                  clearTimeout(timeout); // Clear any existing timeout
+                  episodeName.classList.add('expand');
+                };
+            
+                const collapseText = () => {
+                  // Delay collapsing text to make it sensitive to slight touch
+                  timeout = setTimeout(() => {
+                    episodeName.classList.remove('expand');
+                  }, 200); // Adjust delay time as needed (200ms here)
+                };
+            
+                // Use mouseover and mouseleave for desktop hover sensitivity
+                episodeName.addEventListener('mouseover', expandText);
+                episodeName.addEventListener('mouseleave', collapseText);
+                image.addEventListener('mouseover', expandText);
+                image.addEventListener('mouseleave', collapseText);
+            
+                // Use touchstart and touchend for touch sensitivity
+                episodeName.addEventListener('touchstart', expandText);
+                episodeName.addEventListener('touchend', collapseText);
+                image.addEventListener('touchstart', expandText);
+                image.addEventListener('touchend', collapseText);
+              });
+            </script>
           <?php endforeach;
         } else { ?>
           <p class="fw-bold">No data found.</p>

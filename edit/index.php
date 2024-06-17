@@ -50,16 +50,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $type = filter_var($_POST['type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the type input
   $episode_name = filter_var($_POST['episode_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $artwork_type = filter_var($_POST['artwork_type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
+  $group = filter_var($_POST['group'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
 
   // Update the images table with the selected or new episode_name
-  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name, artwork_type = :artwork_type WHERE id = :id');
+  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name, artwork_type = :artwork_type, `group` = :group WHERE id = :id');
   $stmt->bindParam(':title', $title);
   $stmt->bindParam(':imgdesc', $imgdesc);
   $stmt->bindParam(':link', $link);
   $stmt->bindParam(':tags', $tags);
   $stmt->bindParam(':type', $type); // Bind the type parameter
   $stmt->bindParam(':episode_name', $episode_name);
-  $stmt->bindParam(':artwork_type', $artwork_type); // Bind the artwork_type parameter
+  $stmt->bindParam(':artwork_type', $artwork_type);
+  $stmt->bindParam(':group', $group);
   $stmt->bindParam(':id', $id);
   $stmt->execute();
 
@@ -174,11 +176,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-md-8 ps-md-1">
           <div class="">
             <form method="POST">
+              <div class="form-floating mb-2">
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo $image['title']; ?>" name="title" placeholder="Image title" maxlength="500" required>  
+                <label for="floatingInput" class="text-dark fw-bold">Enter title for your image</label>
+              </div>
               <div class="row">
                 <div class="col-md-6 pe-md-1">
                   <div class="form-floating mb-2">
-                    <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo $image['title']; ?>" name="title" placeholder="Image title" maxlength="500" required>  
-                    <label for="floatingInput" class="text-dark fw-bold">Enter title for your image</label>
+                    <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo $image['group']; ?>" name="group" placeholder="Image group" maxlength="500">  
+                    <label for="floatingInput" class="text-dark fw-bold">Enter group for your image</label>
                   </div>
                 </div>
                 <div class="col-md-6 ps-md-1">

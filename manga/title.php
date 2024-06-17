@@ -7,22 +7,10 @@
     <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
     <?php include('bootstrap.php'); ?>
     <?php include('connection.php'); ?>
-    <style>
-      .ratio-cover {
-        position: relative;
-        width: 100%;
-        padding-bottom: 130%;
-      }
-
-      .ratio-cover img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    </style>
+    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?php echo $_GET['title']; ?>">
+    <meta property="og:image" content="<?php echo $web; ?>/icon/favicon.png">
   </head>
   <body>
     <?php include('header.php'); ?>
@@ -46,12 +34,20 @@
           $artist_name = $latest_cover['artist'];
           $artistImageCount = $data['artist_image_count'];
           $tags = $data['tags'];
+          $groupCounts = $data['group_counts'];
           $tagString = implode(', ', array_keys($tags));
+          $groupName = '';
+          $groupCount = 0;
+          if (!empty($groupCounts)) {
+            $firstGroup = reset($groupCounts); // Get the first group from the $groupCounts array
+            $groupName = $firstGroup['group']; // Get the group name
+            $groupCount = $firstGroup['count']; // Get the group count
+          }
           ?>
           <div class="row">
             <div class="col-md-3">
-              <div class="ratio ratio-cover">
-                <a data-bs-toggle="modal" data-bs-target="#originalImage"><img class="rounded object-fit-cover" src="<?= $web . '/thumbnails/' . $latest_cover['filename']; ?>" alt="<?= $latest_cover['title']; ?>"></a>
+              <div class="cover-image">
+                <a data-bs-toggle="modal" data-bs-target="#originalImage"><img class="rounded w-100 h-100" src="<?= $web . '/thumbnails/' . $latest_cover['filename']; ?>" alt="<?= $latest_cover['title']; ?>"></a>
               </div>
             </div>
             <div class="col-md-9">
@@ -107,8 +103,17 @@
                 <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Artist</label>
                 <div class="col-10">
                   <div class="btn-group">
-                    <a href="index.php?artist=<?php echo $artist_name; ?>&uid=<?php echo $user_id; ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $artist_name; ?></a>
+                    <a href="index.php?artist=<?php echo urlencode($artist_name); ?>&uid=<?php echo $user_id; ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $artist_name; ?></a>
                     <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $artistImageCount; ?></a>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-2 row">
+                <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Group</label>
+                <div class="col-10">
+                  <div class="btn-group">
+                    <a href="index.php?group=<?php echo urlencode($groupName); ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $groupName; ?></a>
+                    <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $groupCount; ?></a>
                   </div>
                 </div>
               </div>

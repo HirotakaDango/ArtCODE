@@ -117,6 +117,28 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       }
     }
 
+    // Get the count of all images grouped by the "group" column based on all episode_name
+    $query = "
+      SELECT images.`group`, COUNT(*) as count
+      FROM images
+      JOIN users ON images.email = users.email
+      WHERE images.artwork_type = 'manga'
+      AND users.id = :user_id
+      AND images.`group` IN (
+        SELECT DISTINCT images.`group`
+        FROM images
+        WHERE artwork_type = 'manga'
+        AND episode_name = :episode_name
+        AND email = (SELECT email FROM users WHERE id = :user_id)
+      )
+      GROUP BY images.`group`
+    ";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->bindParam(':episode_name', $episode_name);
+    $stmt->execute();
+    $groupCounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     // Get the number of latest images by the current artist grouped by episode_name
     $query = "
       SELECT COUNT(*) AS count
@@ -144,7 +166,8 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       'images' => $results,
       'tags' => $tags,
       'artist_image_count' => $artistImageCount,
-      'total_view_count' => $total_view_count
+      'total_view_count' => $total_view_count,
+      'group_counts' => $groupCounts
     ];
 
     // Output response as JSON
