@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $_GET['title']; ?></title>
-    <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
     <?php include('bootstrap.php'); ?>
     <?php include('connection.php'); ?>
+    <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
+    <meta property="og:url" content="<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?php echo $_GET['title']; ?>">
+    <meta property="og:image" content="<?php echo $web; ?>/icon/favicon.png">
     <link rel="stylesheet" href="transitions.css" />
     <script type="module" src="swup.js"></script>
     <style>

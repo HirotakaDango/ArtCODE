@@ -22,10 +22,10 @@
       }
       ?>
     </title>
-    <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
     <?php include('bootstrap.php'); ?>
     <?php include('connection.php'); ?>
-    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+    <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
+    <meta property="og:url" content="<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Manga-API">
     <meta property="og:image" content="<?php echo $web; ?>/icon/favicon.png">
