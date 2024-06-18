@@ -27,7 +27,7 @@
     <?php include('connection.php'); ?>
     <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="<?php echo $_GET['title']; ?>">
+    <meta property="og:title" content="Manga-API">
     <meta property="og:image" content="<?php echo $web; ?>/icon/favicon.png">
     <style>
       .ratio-cover {
