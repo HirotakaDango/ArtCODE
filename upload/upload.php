@@ -117,7 +117,7 @@ if (isset($_FILES['image'])) {
   $tags = implode(",", $tags); // Join tags by comma
   $date = date('Y-m-d'); // Get the current date in YYYY-MM-DD format
 
-  $stmt = $db->prepare("INSERT INTO images (email, filename, tags, title, imgdesc, link, date, type, episode_name, artwork_type, `group`) VALUES (:email, :filename, :tags, :title, :imgdesc, :link, :date, :type, :episode_name, :artwork_type, :group)");
+  $stmt = $db->prepare("INSERT INTO images (email, filename, tags, title, imgdesc, link, date, type, episode_name, artwork_type, `group`, categories, language) VALUES (:email, :filename, :tags, :title, :imgdesc, :link, :date, :type, :episode_name, :artwork_type, :group, :categories, :language)");
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':filename', $filename);
   $stmt->bindValue(':tags', $tags);
@@ -129,6 +129,8 @@ if (isset($_FILES['image'])) {
   $stmt->bindValue(':episode_name', filter_var($_POST['episode_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->bindValue(':artwork_type', filter_var($_POST['artwork_type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->bindValue(':group', filter_var($_POST['group'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
+  $stmt->bindValue(':categories', filter_var($_POST['categories'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
+  $stmt->bindValue(':language', filter_var($_POST['language'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->execute();
 
   // Retrieve the ID of the inserted image

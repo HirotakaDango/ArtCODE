@@ -104,6 +104,35 @@ require_once('../auth.php');
                       </select>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col-md-6 pe-md-1">
+                      <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="categories" aria-label="Large select example" required>
+                        <option value="artworks/illustrations" selected>artworks/illustrations</option>
+                        <option value="3DCG">3DCG</option>
+                        <option value="real">real</option>
+                        <option value="MMD">MMD</option>
+                        <option value="multi-work series">multi-work series</option>
+                        <option value="manga series">manga series</option>
+                        <option value="doujinshi series">doujinshi series</option>
+                        <option value="oneshot manga">oneshot manga</option>
+                        <option value="oneshot doujinshi">oneshot doujinshi</option>
+                        <option value="doujinshi">doujinshi</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 ps-md-1">
+                      <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="language" aria-label="Large select example" required>
+                        <option value="English" selected>English</option>
+                        <option value="Japanese">Japanese</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="Korean">Korean</option>
+                        <option value="Russian">Russian</option>
+                        <option value="Indonesian">Indonesian</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Other">Other</option>
+                        <option value="None">None</option>
+                      </select>
+                    </div>
+                  </div>
                   <div class="form-floating mb-2">
                     <input class="form-control border rounded-3 fw-bold border-4" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
                     <label for="link" class="fw-bold">Enter link for your image</label>

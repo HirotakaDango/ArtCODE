@@ -40,6 +40,16 @@ try {
     $params[':group'] = $_GET['group'];
   }
   
+  if (isset($_GET['categories'])) {
+    $conditions[] = 'images.categories = :categories'; // Fix for group parameter
+    $params[':categories'] = $_GET['categories'];
+  }
+  
+  if (isset($_GET['language'])) {
+    $conditions[] = 'images.language = :language'; // Fix for group parameter
+    $params[':language'] = $_GET['language'];
+  }
+  
   if (isset($_GET['search'])) {
     $searchTerms = explode(',', $_GET['search']);
     foreach ($searchTerms as $index => $term) {

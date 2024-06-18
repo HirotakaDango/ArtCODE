@@ -13,6 +13,10 @@
         echo 'Tag: "' . $_GET['tag'] . '"';
       } elseif (isset($_GET['group'])) {
         echo 'Group: "' . $_GET['group'] . '"';
+      } elseif (isset($_GET['categories'])) {
+        echo 'Categories: "' . $_GET['categories'] . '"';
+      } elseif (isset($_GET['language'])) {
+        echo 'Language: "' . $_GET['language'] . '"';
       } else {
         echo 'ArtCODE - Manga';
       }
@@ -58,7 +62,9 @@
         'uid' => $_GET['uid'] ?? null,
         'tag' => $_GET['tag'] ?? null,
         'by' => $_GET['by'] ?? null,
-        'group' => $_GET['group'] ?? null
+        'group' => $_GET['group'] ?? null,
+        'categories' => $_GET['categories'] ?? null,
+        'language' => $_GET['language'] ?? null
       ]));
       if ($queryString) {
         $apiUrl .= '?' . $queryString;
@@ -85,6 +91,10 @@
             echo 'Tag: "' . $_GET['tag'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['group'])) {
             echo 'Group: "' . $_GET['group'] . '" (' . $totalImages . ')';
+          } elseif (isset($_GET['categories'])) {
+            echo 'Categories: "' . $_GET['categories'] . '" (' . $totalImages . ')';
+          } elseif (isset($_GET['language'])) {
+            echo 'Language: "' . $_GET['language'] . '" (' . $totalImages . ')';
           } else {
             echo 'All (' . $totalImages . ')';
           }
@@ -217,7 +227,7 @@
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "<?php echo $websiteUrl; ?>/icon/bg.png";
+      const defaultPlaceholder = "<?php echo $web; ?>/icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {

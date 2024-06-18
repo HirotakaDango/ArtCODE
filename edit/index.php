@@ -51,9 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $episode_name = filter_var($_POST['episode_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $artwork_type = filter_var($_POST['artwork_type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
   $group = filter_var($_POST['group'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
+  $categories = filter_var($_POST['categories'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
+  $language = filter_var($_POST['language'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
 
   // Update the images table with the selected or new episode_name
-  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name, artwork_type = :artwork_type, `group` = :group WHERE id = :id');
+  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name, artwork_type = :artwork_type, `group` = :group, categories = :categories, language = :language WHERE id = :id');
   $stmt->bindParam(':title', $title);
   $stmt->bindParam(':imgdesc', $imgdesc);
   $stmt->bindParam(':link', $link);
@@ -62,6 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt->bindParam(':episode_name', $episode_name);
   $stmt->bindParam(':artwork_type', $artwork_type);
   $stmt->bindParam(':group', $group);
+  $stmt->bindParam(':categories', $categories);
+  $stmt->bindParam(':language', $language);
   $stmt->bindParam(':id', $id);
   $stmt->execute();
 
@@ -236,6 +240,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <select class="form-select rounded-3 text-dark fw-bold mb-2 border-4" style="height: 58px;" name="type" aria-label="Large select example" required>
                     <option value="safe" <?php echo ($image['type'] === 'safe') ? 'selected' : ''; ?>>Safe For Works</option>
                     <option value="nsfw" <?php echo ($image['type'] === 'nsfw') ? 'selected' : ''; ?>>NSFW/R-18</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 pe-md-1">
+                  <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="categories" aria-label="Large select example" required>
+                    <option value="artworks/illustrations" <?php echo ($image['categories'] === 'artworks/illustrations') ? 'selected' : ''; ?>>artworks/illustrations</option>
+                    <option value="3DCG" <?php echo ($image['categories'] === '3DCG') ? 'selected' : ''; ?>>3DCG</option>
+                    <option value="real" <?php echo ($image['categories'] === 'real') ? 'selected' : ''; ?>>real</option>
+                    <option value="MMD" <?php echo ($image['categories'] === 'MMD') ? 'selected' : ''; ?>>MMD</option>
+                    <option value="multi-work series" <?php echo ($image['categories'] === 'multi-work series') ? 'selected' : ''; ?>>multi-work series</option>
+                    <option value="manga series" <?php echo ($image['categories'] === 'manga series') ? 'selected' : ''; ?>>manga series</option>
+                    <option value="doujinshi series" <?php echo ($image['categories'] === 'doujinshi series') ? 'selected' : ''; ?>>doujinshi series</option>
+                    <option value="oneshot manga" <?php echo ($image['categories'] === 'oneshot manga') ? 'selected' : ''; ?>>oneshot manga</option>
+                    <option value="oneshot doujinshi" <?php echo ($image['categories'] === 'oneshot doujinshi') ? 'selected' : ''; ?>>oneshot doujinshi</option>
+                    <option value="doujinshi" <?php echo ($image['categories'] === 'doujinshi') ? 'selected' : ''; ?>>doujinshi</option>
+                  </select>
+                </div>
+                <div class="col-md-6 ps-md-1">
+                  <select class="form-select rounded-3 fw-bold border-4 mb-2" style="height: 58px;" name="language" aria-label="Large select example" required>
+                    <option value="English" <?php echo ($image['language'] === 'English') ? 'selected' : ''; ?>>English</option>
+                    <option value="Japanese" <?php echo ($image['language'] === 'Japanese') ? 'selected' : ''; ?>>Japanese</option>
+                    <option value="Chinese" <?php echo ($image['language'] === 'Chinese') ? 'selected' : ''; ?>>Chinese</option>
+                    <option value="Korean" <?php echo ($image['language'] === 'Korean') ? 'selected' : ''; ?>>Korean</option>
+                    <option value="Russian" <?php echo ($image['language'] === 'Russian') ? 'selected' : ''; ?>>Russian</option>
+                    <option value="Indonesian" <?php echo ($image['language'] === 'Indonesian') ? 'selected' : ''; ?>>Indonesian</option>
+                    <option value="Spanish" <?php echo ($image['language'] === 'Spanish') ? 'selected' : ''; ?>>Spanish</option>
+                    <option value="Other" <?php echo ($image['language'] === 'Other') ? 'selected' : ''; ?>>Other</option>
+                    <option value="None" <?php echo ($image['language'] === 'None') ? 'selected' : ''; ?>>None</option>
                   </select>
                 </div>
               </div>
