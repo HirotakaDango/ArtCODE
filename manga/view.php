@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+$db = new PDO('sqlite:forum/database.db');
+$db->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL)");
+$db->exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL, user_id INTEGER NOT NULL, date DATETIME, category TEXT, FOREIGN KEY (user_id) REFERENCES users(id))");
+$db->exec("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, comment TEXT, date DATETIME, post_id TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, category_name TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, link TEXT, image_cover TEXT, episode_name TEXT)");
+?>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
@@ -60,8 +71,8 @@
       </div>
     </div>
     <div class="">
-      <div class="position-absolute top-0 end-0 z-2 pt-3 d-none d-md-block">
-        <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold me-2 mt-5" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
+      <div class="position-fixed bottom-0 end-0 z-2 d-none d-md-block">
+        <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
           <i class="bi bi-list text-stroke"></i> Menu
         </a>
       </div>
@@ -83,11 +94,15 @@
             if (is_array($data) && !empty($data)) {
               $image_details = $data['image_details'];
               $image_child = $data['image_child'];
-              
+
+              // Determine the previous and next image sources
+              $prevRender = ($page > 1) ? $web . '/images/' . ($page == 2 ? $image_details['filename'] : $image_child[$page - 3]['filename']) : '';
+              $nextRender = ($page < count($image_child) + 1) ? $web . '/images/' . $image_child[$page - 1]['filename'] : '';
+
               // Determine the image source based on the page number
               $imageSource = ($page == 1) ? $web . '/images/' . $image_details['filename'] : $web . '/images/' . $image_child[$page - 2]['filename'];
               ?>
-              <div class="bg-body-tertiary py-1 d-md-none">
+              <div class="bg-body-tertiary py-1">
                 <div class="d-flex justify-content-center align-items-center container">
                   <?php
                     $totalPages = count($image_child) + 1;
@@ -131,7 +146,9 @@
                       echo '<a class="position-absolute top-0 start-0 w-25 h-100 text-decoration-none" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"></a>';
                     }
                   ?>
+                  <img class="d-none" src="<?= $prevRender; ?>" alt="<?= $image_details['title']; ?>">
                   <img class="mangaImage" src="<?= $imageSource; ?>" alt="<?= $image_details['title']; ?>">
+                  <img class="d-none" src="<?= $nextRender; ?>" alt="<?= $image_details['title']; ?>">
                   <?php
                     $totalPages = count($image_child) + 1;
                     $currentPage = $page;

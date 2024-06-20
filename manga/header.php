@@ -13,8 +13,21 @@
               <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="/manga/tags.php"><i class="bi bi-tags-fill"></i> Tags</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'active' ?>" href="/manga/artists.php"><i class="bi bi-people-fill"></i> Artist</a>
+              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'active' ?>" href="/manga/artists.php"><i class="bi bi-people-fill"></i> Artists</a>
             </li>
+            <?php
+              // Check if the user is logged in
+              $loggedInUserId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+                
+              if (isset($loggedInUserId)) {
+                // If the user is logged in, show the profile button
+                $isProfileActive = (basename($_SERVER['PHP_SELF']) == 'favorites.php' && isset($_GET['uid']) && $_GET['uid'] == $loggedInUserId);
+                echo '<li class="nav-item"><a class="nav-link' . ($isProfileActive ? ' active' : '') . '" href="/manga/favorites.php?uid=' . $loggedInUserId . '"><i class="bi bi-heart-fill"></i> Favorites</a></li>';
+              } else {
+                // If the user is not logged in, show a login button
+                echo '<li class="nav-item"><a class="nav-link" href="/manga/session.php"><i class="bi bi-box-arrow-in-right"></i> Login/Register</a></li>';
+              }
+            ?>
             <li class="nav-item">
               <div class="dropdown">
                 <a class="nav-link <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'forum/') !== false) echo 'active'; ?> dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-chat-left-text"></i> Forum</a>
@@ -35,12 +48,12 @@
                     }
                   ?>
                   <li><a class="dropdown-item fw-medium <?php if (basename($_SERVER['PHP_SELF']) == 'settings.php' && strpos($_SERVER['PHP_SELF'], 'forum/settings.php') !== false) echo 'active'; ?>" href="/manga/forum/settings.php">Settings</a></li>
-                  <li><a class="dropdown-item fw-medium <?php if (basename($_SERVER['PHP_SELF']) == 'search.php' && strpos($_SERVER['PHP_SELF'], 'forum/search.php') !== false) echo 'active'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a></li>
+                  <?php if (strpos($_SERVER['PHP_SELF'], '/forum/') !== false) echo '<li><a class="dropdown-item fw-medium ' . (basename($_SERVER['PHP_SELF']) == 'search.php' ? 'active' : '') . '" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a></li>'; ?>
                 </ul>
               </div>
             </li>
           </ul>
-          <form class="d-flex" role="search" action="index.php">
+          <form class="d-flex" role="search" action="/manga/index.php">
             <input class="form-control me-2 fw-medium" type="search" placeholder="Search" aria-label="Search" name="search">
             <button class="btn btn-outline-light fw-medium" type="submit"><i class="bi bi-search"></i></button>
           </form>

@@ -2,11 +2,47 @@
 session_start();
 
 $db = new PDO('sqlite:forum/database.db');
-$db->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL)");
-$db->exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL, user_id INTEGER NOT NULL, date DATETIME, category TEXT, FOREIGN KEY (user_id) REFERENCES users(id))");
-$db->exec("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, comment TEXT, date DATETIME, post_id TEXT)");
-$db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, category_name TEXT)");
-$db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, link)");
+
+// Get user_id from URL parameter
+$user_id = isset($_GET['uid']) ? intval($_GET['uid']) : null;
+
+// Validate user_id or fallback to session
+if (!$user_id && isset($_SESSION['user_id'])) {
+  $user_id = $_SESSION['user_id'];
+}
+
+// Fetch username associated with user_id
+$user_stmt = $db->prepare('SELECT username FROM users WHERE id = :user_id');
+$user_stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$user_stmt->execute();
+$user_result = $user_stmt->fetch(PDO::FETCH_ASSOC);
+$username = $user_result ? $user_result['username'] : 'Unknown User';
+
+// Prepare SQL query to fetch favorites
+$stmt = $db->prepare('SELECT * FROM favorites WHERE user_id = :user_id ORDER BY id DESC');
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+$favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Pagination setup
+$itemsPerPage = 24; // Number of items per page
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $itemsPerPage;
+
+// Prepare SQL query to fetch favorites with pagination
+$stmt = $db->prepare('SELECT * FROM favorites WHERE user_id = :user_id ORDER BY id DESC LIMIT :limit OFFSET :offset');
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->bindParam(':limit', $itemsPerPage, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Count total number of favorites for pagination
+$countStmt = $db->prepare('SELECT COUNT(*) AS total FROM favorites WHERE user_id = :user_id');
+$countStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$countStmt->execute();
+$totalCount = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+$totalPages = ceil($totalCount / $itemsPerPage);
 ?>
 
 <!DOCTYPE html>
@@ -14,25 +50,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-      <?php
-      if (isset($_GET['search'])) {
-        echo 'Search: "' . $_GET['search'] . '"';
-      } elseif (isset($_GET['artist'])) {
-        echo 'Artist: "' . $_GET['artist'] . '"';
-      } elseif (isset($_GET['tag'])) {
-        echo 'Tag: "' . $_GET['tag'] . '"';
-      } elseif (isset($_GET['group'])) {
-        echo 'Group: "' . $_GET['group'] . '"';
-      } elseif (isset($_GET['categories'])) {
-        echo 'Categories: "' . $_GET['categories'] . '"';
-      } elseif (isset($_GET['language'])) {
-        echo 'Language: "' . $_GET['language'] . '"';
-      } else {
-        echo 'ArtCODE - Manga';
-      }
-      ?>
-    </title>
+    <title><?php echo $username; ?>'s Favorites</title>
     <?php include('bootstrap.php'); ?>
     <?php include('connection.php'); ?>
     <link rel="icon" type="image/png" href="<?php echo $web; ?>/icon/favicon.png">
@@ -64,91 +82,24 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
   <body>
     <?php include('header.php'); ?>
     <div class="container-fluid mb-5 mt-3">
-      <?php
-      // Build the API URL with query parameters
-      $apiUrl = $web . '/api_manga.php';
-      $queryString = http_build_query(array_filter([
-        'search' => $_GET['search'] ?? null,
-        'artist' => $_GET['artist'] ?? null,
-        'uid' => $_GET['uid'] ?? null,
-        'tag' => $_GET['tag'] ?? null,
-        'by' => $_GET['by'] ?? null,
-        'group' => $_GET['group'] ?? null,
-        'categories' => $_GET['categories'] ?? null,
-        'language' => $_GET['language'] ?? null
-      ]));
-      if ($queryString) {
-        $apiUrl .= '?' . $queryString;
-      }
-
-      // Fetch JSON data from api_manga.php
-      $json = file_get_contents($apiUrl);
-      $images = json_decode($json, true);
-      $totalImages = count($images);
-      $limit = 24;
-      $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-      $offset = ($page - 1) * $limit;
-      $totalPages = ceil($totalImages / $limit);
-      $displayImages = array_slice($images, $offset, $limit);
-      ?>
-      
-      <h6 class="fw-bold mb-3">
-        <?php
-          if (isset($_GET['search'])) {
-            echo 'Search: "' . $_GET['search'] . '" (' . $totalImages . ')';
-          } elseif (isset($_GET['artist'])) {
-            echo 'Artist: "' . $_GET['artist'] . '" (' . $totalImages . ')';
-          } elseif (isset($_GET['tag'])) {
-            echo 'Tag: "' . $_GET['tag'] . '" (' . $totalImages . ')';
-          } elseif (isset($_GET['group'])) {
-            echo 'Group: "' . $_GET['group'] . '" (' . $totalImages . ')';
-          } elseif (isset($_GET['categories'])) {
-            echo 'Categories: "' . $_GET['categories'] . '" (' . $totalImages . ')';
-          } elseif (isset($_GET['language'])) {
-            echo 'Language: "' . $_GET['language'] . '" (' . $totalImages . ')';
-          } else {
-            echo 'All (' . $totalImages . ')';
-          }
-        ?>
-      </h6>
-      <div class="dropdown mb-3">
-        <button class="btn btn-sm btn-outline-light rounded-5 dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <?php
-          $sortingLabel = '';
-          if (!isset($_GET['by']) || $_GET['by'] == 'newest') {
-            $sortingLabel = 'Sorted by newest';
-          } elseif ($_GET['by'] == 'oldest') {
-            $sortingLabel = 'Sorted by oldest';
-          } elseif ($_GET['by'] == 'popular') {
-            $sortingLabel = 'Sorted by popular';
-          }
-          
-          echo $sortingLabel;
-          ?>
-        </button>
-        <ul class="dropdown-menu rounded-4">
-          <li><a class="dropdown-item fw-bold <?php echo (!isset($_GET['by']) || $_GET['by'] == 'newest') ? 'active' : ''; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'newest'])); ?>">Newest</a></li>
-          <li><a class="dropdown-item fw-bold <?php echo ($_GET['by'] ?? '') == 'oldest' ? 'active' : ''; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'oldest'])); ?>">Oldest</a></li>
-          <li><a class="dropdown-item fw-bold <?php echo ($_GET['by'] ?? '') == 'popular' ? 'active' : ''; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['by' => 'popular'])); ?>">Popular</a></li>
-        </ul>
-      </div>
-      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-1">
-        <?php
-        // Check if the images data is an array and not empty
-        if (is_array($displayImages) && !empty($displayImages)) {
-          foreach ($displayImages as $image) : ?>
+      <h6 class="fw-bold mb-3"><?php echo $username; ?>'s Favorites (<?php echo count($favorites); ?>)</h6>
+      <?php if ($favorites): ?>
+        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-1">
+          <?php foreach ($favorites as $favorite): ?>
             <div class="col">
               <div class="card border-0 rounded-4">
-                <a href="title.php?title=<?= $image['episode_name']; ?>&uid=<?= $image['userid']; ?>" class="text-decoration-none">
+                <a href="<?php echo $favorite['link']; ?>" class="text-decoration-none">
                   <div class="ratio ratio-cover">
-                    <img class="rounded rounded-bottom-0 object-fit-cover lazy-load" data-src="<?= $web . '/thumbnails/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
+                    <?php if (!empty($favorite['image_cover'])): ?>
+                      <img data-src="<?php echo $favorite['image_cover']; ?>" class="rounded rounded-bottom-0 object-fit-cover lazy-load" alt="Cover Image">
+                    <?php endif; ?>
                   </div>
-                  <h6 class="text-center fw-bold text-white text-decoration-none bg-dark-subtle p-2 rounded rounded-top-0" id="episode-name_img<?= $image['id']; ?>_<?= $image['userid']; ?>">「<?= $image['artist']; ?>」<?= $image['episode_name']; ?></h6>
+                  <h6 class="text-center fw-bold text-white text-decoration-none bg-dark-subtle p-2 rounded rounded-top-0" id="episode-name_img<?= $favorite['id']; ?>"><?php echo $favorite['episode_name']; ?></h6>
                 </a>
               </div>
             </div>
             <style>
-              #episode-name_img<?php echo $image['id']; ?>_<?php echo $image['userid']; ?> {
+              #episode-name_img<?php echo $favorite['id']; ?> {
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -156,14 +107,14 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
                 transition: max-width 0.3s ease;
               }
             
-              #episode-name_img<?php echo $image['id']; ?>_<?php echo $image['userid']; ?>.expand {
+              #episode-name_img<?php echo $favorite['id']; ?>.expand {
                 max-width: none; /* Expand to full width */
                 white-space: normal;
               }
             </style>
             <script>
               document.addEventListener("DOMContentLoaded", function() {
-                const episodeName = document.getElementById('episode-name_img<?php echo $image['id']; ?>_<?php echo $image['userid']; ?>');
+                const episodeName = document.getElementById('episode-name_img<?php echo $favorite['id']; ?>');
                 const image = episodeName.closest('.card').querySelector('img');
             
                 let timeout; // Variable to store timeout ID for delaying collapse
@@ -193,11 +144,11 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
                 image.addEventListener('touchend', collapseText);
               });
             </script>
-          <?php endforeach;
-        } else { ?>
-          <p class="fw-bold">No data found.</p>
-        <?php } ?>
-      </div>
+          <?php endforeach; ?>
+        </div>
+      <?php else: ?>
+        <p>No favorites found for this user.</p>
+      <?php endif; ?>
       <div class="pagination d-flex gap-1 justify-content-center mt-3">
         <?php if (isset($page) && isset($totalPages)): ?>
           <a class="btn btn-sm btn-primary fw-bold <?php if($startPage <= 1) echo 'd-none'; ?>" href="?<?php echo http_build_query(array_merge($_GET, ['page' => 1])); ?>"><i class="bi text-stroke bi-chevron-double-left"></i></a>

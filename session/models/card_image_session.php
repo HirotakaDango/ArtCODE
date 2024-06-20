@@ -13,7 +13,7 @@
                           <div class="row g-0">
                             <div id="div1_<?php echo $image['id']; ?>" class="overflow-auto col-md-7 h-100 scrollable-div">
                               <div>
-                                <a href="/image.php?artworkid=<?php echo $image['id']; ?>">
+                                <a href="image.php?artworkid=<?php echo $image['id']; ?>">
                                   <img class="object-fit-cover shadow lazy-load h-100 w-100" data-src="/thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
                                 </a>
                               </div>

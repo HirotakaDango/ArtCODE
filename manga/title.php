@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+$db = new PDO('sqlite:forum/database.db');
+$db->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL)");
+$db->exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL, user_id INTEGER NOT NULL, date DATETIME, category TEXT, FOREIGN KEY (user_id) REFERENCES users(id))");
+$db->exec("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, comment TEXT, date DATETIME, post_id TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, category_name TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, link TEXT, image_cover TEXT, episode_name TEXT)");
+?>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
@@ -215,6 +226,58 @@
                   <p class="form-control-plaintext fw-bold" id="date"><?php echo date('Y/m/d', strtotime($latest_cover['date'])); ?></p>
                 </div>
               </div>
+              <?php
+              // Function to check if a link is already favorited by the user
+              function isFavorited($userId, $link, $db) {
+                $stmt = $db->prepare("SELECT COUNT(*) as count FROM favorites WHERE user_id = ? AND link = ?");
+                $stmt->execute([$userId, $link]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $result['count'] > 0;
+              }
+            
+              // Favorite/unfavorite logic
+              if (isset($_POST['action']) && isset($_POST['link']) && isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id'];
+                $link = $_POST['link'];
+                $imageCover = $_POST['image_cover'];
+                $episodeName = $_POST['episode_name'];
+            
+                if ($_POST['action'] === 'favorite') {
+                  // Check if already favorited
+                  if (!isFavorited($userId, $link, $db)) {
+                    // Insert into favorites table
+                    $stmt = $db->prepare("INSERT INTO favorites (user_id, link, image_cover, episode_name) VALUES (?, ?, ?, ?)");
+                    $stmt->execute([$userId, $link, $imageCover, $episodeName]);
+                  }
+                } elseif ($_POST['action'] === 'unfavorite') {
+                    // Delete from favorites table
+                  $stmt = $db->prepare("DELETE FROM favorites WHERE user_id = ? AND link = ?");
+                  $stmt->execute([$userId, $link]);
+                }
+              }
+            
+              // Fetch user's favorites
+              if (isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id'];
+                $stmt = $db->prepare("SELECT * FROM favorites WHERE user_id = ?");
+                $stmt->execute([$userId]);
+                $favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+              } else {
+                $favorites = [];
+              }
+              ?>
+              <form id="favoriteForm" method="post" action="">
+                <input type="hidden" name="link" value="<?php echo htmlspecialchars('http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>">
+                <input type="hidden" name="image_cover" value="<?= $web . '/thumbnails/' . $latest_cover['filename']; ?>">
+                <input type="hidden" name="episode_name" value="「<?php echo $artist_name; ?>」<?php echo $episode_name; ?>">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                  <?php if (isFavorited($_SESSION['user_id'], 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], $db)): ?>
+                     <button type="submit" name="action" value="unfavorite" class="btn bg-body-tertiary link-body-emphasis rounded fw-bold">Unfavorite</button>
+                  <?php else: ?>
+                     <button type="submit" name="action" value="favorite" class="btn bg-body-tertiary link-body-emphasis rounded fw-bold">Favorite</button>
+                  <?php endif; ?>
+                <?php endif; ?>
+              </form>
             </div>
           </div>
         </div>

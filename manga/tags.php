@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+$db = new PDO('sqlite:forum/database.db');
+$db->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL)");
+$db->exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL, user_id INTEGER NOT NULL, date DATETIME, category TEXT, FOREIGN KEY (user_id) REFERENCES users(id))");
+$db->exec("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, comment TEXT, date DATETIME, post_id TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, category_name TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, link TEXT, image_cover TEXT, episode_name TEXT)");
+?>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
@@ -14,26 +25,56 @@
   </head>
   <body>
     <?php include('header.php'); ?>
-    <div class="container-fluid my-3">
-        <h1 class="mb-4 fw-bold">Tags</h1>
-        <?php
+    <div class="container my-3">
+      <h1 class="mb-4 fw-bold">Tags</h1>
+      <?php
         // Fetch JSON data from api_manga_tags.php
         $json = file_get_contents($web . '/api_manga_artists_tags.php?tag=all');
         $data = json_decode($json, true);
-
+    
         // Check if the data is an array and not empty
         if (is_array($data) && !empty($data)) {
           $tags = $data['tags'];
+    
+          // Group tags by their starting character or letter
+          $groupedTags = [];
+          foreach ($tags as $tag => $count) {
+            // Get the first character (or substring) as the key for grouping
+            $firstChar = mb_substr($tag, 0, 1, 'UTF-8');
+    
+            // Ensure the starting character is uppercase
+            $firstCharUpper = mb_strtoupper($firstChar, 'UTF-8');
+    
+            if (!isset($groupedTags[$firstCharUpper])) {
+              $groupedTags[$firstCharUpper] = [];
+            }
+            $groupedTags[$firstCharUpper][$tag] = $count;
+          }
+    
+          // Sort groups alphabetically by their keys (characters or letters)
+          ksort($groupedTags, SORT_STRING);
         ?>
-          <?php foreach ($tags as $tag => $count): ?>
-            <div class="btn-group mb-2 me-1">
-              <a href="index.php?tag=<?php echo urlencode($tag); ?>" class="btn bg-secondary-subtle fw-bold">
-                <?php echo htmlspecialchars($tag, ENT_QUOTES, 'UTF-8'); ?>
-              </a>
-              <a href="#" class="btn bg-body-tertiary fw-bold">
-                <?php echo $count; ?>
-              </a>
+          <div class="row justify-content-center">
+            <?php foreach ($groupedTags as $group => $tags): ?>
+              <div class="col-4 col-md-2 col-sm-5 px-0">
+                <a class="btn btn-outline-light border-0 fw-medium d-flex flex-column align-items-center" href="#category-<?php echo $group; ?>"><h6 class="fw-medium">Category</h6> <h6 class="fw-bold"><?php echo $group; ?></h6></a>
               </div>
+            <?php endforeach; ?>
+          </div>
+          <?php foreach ($groupedTags as $group => $tags): ?>
+            <div id="category-<?php echo $group; ?>" class="category-section pt-5">
+              <h5 class="fw-bold text-start">Category <?php echo mb_strtoupper($group); ?></h5>
+              <?php foreach ($tags as $tag => $count): ?>
+                <div class="btn-group my-1 w-100">
+                  <a href="index.php?tag=<?php echo urlencode($tag); ?>" class="btn bg-secondary-subtle fw-bold text-start">
+                    <?php echo htmlspecialchars($tag, ENT_QUOTES, 'UTF-8'); ?>
+                  </a>
+                  <a href="#" class="btn bg-body-tertiary fw-bold text-wrap" style="width: 50px; max-width: 50px;">
+                    <?php echo $count; ?>
+                  </a>
+                </div>
+              <?php endforeach; ?>
+            </div>
           <?php endforeach; ?>
         <?php 
         } else { 
@@ -41,7 +82,7 @@
           <p>No data found.</p>
         <?php 
         } 
-        ?>
+      ?>
     </div>
   </body>
 </html>

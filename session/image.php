@@ -712,6 +712,16 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                   </div>
                 </div>
               </div>
+              <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
+                <div class="btn-group gap-2 w-100 my-2">
+                  <a class="btn btn-primary fw-bold rounded-4 w-50" target="_blank" href="/manga/title.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
+                    <small>go to manga</small>
+                  </a>
+                  <a class="btn btn-primary fw-bold rounded-4 w-50" target="_blank" href="/manga/view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>&id=<?php echo $image['id']; ?>&page=1">
+                    <small>read in manga mode</small>
+                  </a>
+                </div>
+              <?php endif; ?>
               <div class="d-none d-md-flex d-lg-flex mt-2 gap-2">
                 <?php if ($next_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">

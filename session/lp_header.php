@@ -21,9 +21,10 @@
                 <li>
                   <div class="dropdown">
                     <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link px-2 link-body-emphasis <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'text-white' : 'text-dark'; ?> rounded-pill">Explores</a>
-                    <ul class="dropdown-menu rounded-4 border-0 bg-dark bg-opacity-50">
+                    <ul class="dropdown-menu rounded-4 border-0">
                       <li><a class="dropdown-item fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/preview_guest.php">Explore Images</a></li>
                       <li><a class="dropdown-item fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/music/">Explore Music</a></li>
+                      <li><a class="dropdown-item fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/manga/">Explore Manga</a></li>
                     </ul>
                   </div>
                 </li>
