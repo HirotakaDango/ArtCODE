@@ -14,7 +14,7 @@ $searchTerm = $_GET['q'];
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo $searchTerm; ?></title>
+    <title><?php echo $_GET['q']; ?></title>
     <link rel="manifest" href="../manifest.json">
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
@@ -26,12 +26,12 @@ $searchTerm = $_GET['q'];
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=newest&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=popular&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
-        <li><a href="?by=view&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
-        <li><a href="?by=least&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
-        <li><a href="?by=liked&year=all&q=<?php echo $searchTerm; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
+        <li><a href="?by=newest&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=popular&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?by=view&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+        <li><a href="?by=least&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
+        <li><a href="?by=liked&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
       </ul> 
     </div> 
         <?php 

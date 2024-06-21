@@ -78,7 +78,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
           <div class="row">
             <div class="col-md-4">
               <div class="cover-image">
-                <a data-bs-toggle="modal" data-bs-target="#originalImage"><img class="rounded w-100 h-100" src="<?= $web . '/thumbnails/' . $latest_cover['filename']; ?>" alt="<?= $latest_cover['title']; ?>"></a>
+                <a data-bs-toggle="modal" data-bs-target="#originalImage"><img class="rounded w-100 h-100 rounded-4" src="<?= $web . '/thumbnails/' . $latest_cover['filename']; ?>" alt="<?= $latest_cover['title']; ?>"></a>
               </div>
             </div>
             <div class="col-md-8">
@@ -133,7 +133,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               <div class="mb-3">
                 <div class="input-group">
                   <input type="text" id="urlInput2" value="<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" class="form-control border-2 fw-bold" readonly style="display: none;">
-                  <button class="btn btn-sm bg-transparent border-0 rounded fw-bold p-0 link-body-emphasis text-muted" onclick="copyUrlToClipboard()">
+                  <button class="btn btn-sm bg-transparent border-0 rounded fw-bold p-0 link-body-emphasis text-muted text-start" onclick="copyUrlToClipboard()">
                     <small>?title=<?php echo $_GET['title']; ?>&uid=<?php echo $_GET['uid']; ?> <i class="bi bi-copy"></i></small>
                   </button>
                 </div>
@@ -152,8 +152,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                 </script>
               </div>
               <div class="mb-2 row">
-                <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Artist</label>
-                <div class="col-10">
+                <label for="artist" class="col-md-2 col-form-label text-nowrap fw-medium">Artist</label>
+                <div class="col-md-10">
                   <div class="btn-group">
                     <a href="index.php?artist=<?php echo urlencode($artist_name); ?>&uid=<?php echo $user_id; ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $artist_name; ?></a>
                     <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $artistImageCount; ?></a>
@@ -162,8 +162,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               </div>
               <?php if (isset($groupCounts) && !empty($groupCounts)): ?>
                 <div class="mb-2 row">
-                  <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Group</label>
-                  <div class="col-10">
+                  <label for="artist" class="col-md-2 col-form-label text-nowrap fw-medium">Group</label>
+                  <div class="col-md-10">
                     <div class="btn-group">
                       <a href="index.php?group=<?php echo urlencode($groupName); ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $groupName; ?></a>
                       <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $groupCount; ?></a>
@@ -172,8 +172,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                 </div>
               <?php endif; ?>
               <div class="row">
-                <label for="tags" class="col-2 col-form-label text-nowrap fw-medium">Tags</label>
-                <div class="col-10">
+                <label for="tags" class="col-md-2 col-form-label text-nowrap fw-medium">Tags</label>
+                <div class="col-md-10">
                   <?php foreach($tags as $tag => $count): ?>
                     <div class="btn-group mb-2 me-1">
                       <a href="index.php?tag=<?php echo urlencode($tag); ?>" class="btn bg-secondary-subtle fw-bold">
@@ -188,8 +188,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               </div>
               <?php if (isset($categoriesCount) && !empty($categoriesCount)): ?>
                 <div class="mb-2 row">
-                  <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Categories</label>
-                  <div class="col-10">
+                  <label for="artist" class="col-md-2 col-form-label text-nowrap fw-medium">Category</label>
+                  <div class="col-md-10">
                     <div class="btn-group">
                       <a href="index.php?categories=<?php echo urlencode($categoriesName); ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $categoriesName; ?></a>
                       <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $categoriesCount; ?></a>
@@ -199,8 +199,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               <?php endif; ?>
               <?php if (isset($languageCount) && !empty($languageCount)): ?>
                 <div class="mb-2 row">
-                  <label for="artist" class="col-2 col-form-label text-nowrap fw-medium">Language</label>
-                  <div class="col-10">
+                  <label for="artist" class="col-md-2 col-form-label text-nowrap fw-medium">Language</label>
+                  <div class="col-md-10">
                     <div class="btn-group">
                       <a href="index.php?language=<?php echo urlencode($languageName); ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $languageName; ?></a>
                       <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $languageCount; ?></a>
@@ -209,20 +209,26 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                 </div>
               <?php endif; ?>
               <div class="mb-2 row">
-                <label for="pages" class="col-2 col-form-label text-nowrap fw-medium">Pages</label>
-                <div class="col-10">
+                <label for="pages" class="col-md-2 col-form-label text-nowrap fw-medium">Works</label>
+                <div class="col-md-10">
+                  <p class="form-control-plaintext fw-bold" id="pages"><?php echo count($images); ?></p>
+                </div>
+              </div>
+              <div class="mb-2 row">
+                <label for="pages" class="col-md-2 col-form-label text-nowrap fw-medium">Pages</label>
+                <div class="col-md-10">
                   <p class="form-control-plaintext fw-bold" id="pages"><?php echo $total_count; ?></p>
                 </div>
               </div>
               <div class="mb-2 row">
-                <label for="views" class="col-2 col-form-label text-nowrap fw-medium">Views</label>
-                <div class="col-10">
+                <label for="views" class="col-md-2 col-form-label text-nowrap fw-medium">Views</label>
+                <div class="col-md-10">
                   <p class="form-control-plaintext fw-bold" id="views"><?php echo $total_view_count; ?></p>
                 </div>
               </div>
               <div class="mb-2 row">
-                <label for="date" class="col-2 col-form-label text-nowrap fw-medium">Date</label>
-                <div class="col-10">
+                <label for="date" class="col-md-2 col-form-label text-nowrap fw-medium">Date</label>
+                <div class="col-md-10">
                   <p class="form-control-plaintext fw-bold" id="date"><?php echo date('Y/m/d', strtotime($latest_cover['date'])); ?></p>
                 </div>
               </div>
@@ -284,7 +290,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
       </div>
     </div>
     <div class="container mb-5">
-      <h5 class="my-3 fw-bold">All chapters in <?php echo $episode_name; ?> by <?php echo $artist_name; ?> (<?php echo count($images); ?>)</h5>
+      <h5 class="my-3 fw-bold">All works in <?php echo $episode_name; ?> by <?php echo $artist_name; ?></h5>
       <div class="btn-group mb-2 w-100 gap-2">
         <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="view.php?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>&id=<?php echo $first_cover['id']; ?>&page=1">read first</a>
         <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50 d-none d-md-block" href="#" data-bs-toggle="modal" data-bs-target="#shareLink">share</button>
@@ -297,7 +303,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
             <?php foreach ($images as $image) : ?>
               <div class="col">
                 <div class="card border-0 bg-body-tertiary shadow h-100 rounded-4">
-                  <a class="text-decoration-none link-body-emphasis" href="view.php?title=<?php echo $image['episode_name']; ?>&uid=<?php echo $image['userid']; ?>&id=<?php echo $image['id']; ?>&page=1">
+                  <a class="text-decoration-none link-body-emphasis" href="view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $image['userid']; ?>&id=<?php echo $image['id']; ?>&page=1">
                     <div class="row g-0">
                       <div class="col-4">
                         <div class="ratio ratio-1x1 rounded-4">
@@ -313,17 +319,6 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                         </div>
                       </div>
                     </div>
-                  </a>
-                </div>
-              </div>
-
-              <div class="col d-none">
-                <div class="card border-0 rounded-4">
-                  <a href="view.php?title=<?php echo $image['episode_name']; ?>&uid=<?php echo $image['userid']; ?>&id=<?php echo $image['id']; ?>&page=1" class="text-decoration-none">
-                    <div class="ratio ratio-cover">
-                      <img class="rounded rounded-bottom-0 object-fit-cover lazy-load" data-src="<?= $web . '/thumbnails/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
-                    </div>
-                    <h6 class="text-center fw-bold text-white text-decoration-none bg-dark-subtle p-2 rounded rounded-top-0"><?php echo $image['title']; ?></h6>
                   </a>
                 </div>
               </div>

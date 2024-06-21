@@ -1,78 +1,84 @@
 <?php
-// Handle the search form submission
-if (isset($_GET['q'])) {
-  $searchTerm = $_GET['q'];
+// Prepare the query to get the user's numpage
+$queryNum = $database->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
+$resultNum = $queryNum->execute();
+$user = $resultNum->fetchArray(SQLITE3_ASSOC);
 
-  // Check if the "year" parameter is set
-  $yearFilter = isset($_GET['year']) ? $_GET['year'] : 'all';
+$numpage = isset($user['numpage']) ? $user['numpage'] : 50;
 
-  // Prepare the search term by removing leading/trailing spaces and converting to lowercase
-  $searchTerm = trim(strtolower($searchTerm));
+// Determine the number of items per page
+$itemsPerPage = empty($numpage) ? PHP_INT_MAX : $numpage;
 
-  // Split the search term by comma to handle multiple tags or titles
-  $terms = array_map('trim', explode(',', $searchTerm));
+$yearFilter = isset($_GET['year']) ? $_GET['year'] : 'all';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $itemsPerPage;
 
-  // Prepare the search query with placeholders for terms
-  $query = "SELECT * FROM images WHERE ";
+// Prepare the search term by removing leading/trailing spaces and converting to lowercase
+$searchTerm = trim(strtolower($searchTerm));
 
-  // Create an array to hold the conditions for partial word matches
-  $conditions = array();
+// Split the search term by comma to handle multiple tags or titles
+$terms = array_map('trim', explode(',', $searchTerm));
 
-  // Add conditions for tags and titles
-  foreach ($terms as $index => $term) {
+// Prepare the search query with placeholders for terms
+$query = "SELECT * FROM images WHERE 1=1";
+
+// Create an array to hold the conditions for partial word matches
+$conditions = array();
+
+// Add conditions for tags and titles
+foreach ($terms as $index => $term) {
+  if (!empty($term)) {
     $conditions[] = "(LOWER(tags) LIKE ? OR LOWER(title) LIKE ?)";
   }
+}
 
-  // Combine all conditions using OR
-  $query .= implode(' OR ', $conditions);
+if (!empty($conditions)) {
+  $query .= " AND (" . implode(' OR ', $conditions) . ")";
+}
 
-  // Add the ORDER BY clause to order by ID in descending order
+// Check if q (search term) is empty
+if (empty($searchTerm)) {
+  // If q is empty, order by view_count DESC
   $query .= " ORDER BY id DESC";
+} else {
+  // Otherwise, order by id DESC
+  $query .= " ORDER BY id DESC";
+}
 
-  // Prepare the SQL statement
-  $statement = $database->prepare($query);
+// Prepare the SQL statement
+$statement = $database->prepare($query);
 
-  // Bind the terms as parameters with wildcard matching for tags and titles
-  $paramIndex = 1;
-  foreach ($terms as $term) {
+// Bind the terms as parameters with wildcard matching for tags and titles
+$paramIndex = 1;
+foreach ($terms as $term) {
+  if (!empty($term)) {
     $wildcardTerm = "%$term%";
     $statement->bindValue($paramIndex++, $wildcardTerm, SQLITE3_TEXT);
     $statement->bindValue($paramIndex++, $wildcardTerm, SQLITE3_TEXT);
   }
+}
 
-  // Execute the query
-  $result = $statement->execute();
+// Execute the query
+$result = $statement->execute();
 
-  // Filter the images by year if a year value is provided
-  if (!empty($yearFilter) && $yearFilter !== 'all') {
-    $filteredImages = array();
-    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-      $imageYear = date('Y', strtotime($row['date']));
-      if (strtolower($imageYear) === $yearFilter) {
-        $filteredImages[] = $row;
-      }
-    }
-    $resultArray = $filteredImages;
-  } else {
-    // Retrieve all images
-    $resultArray = array();
-    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-      $resultArray[] = $row;
-    }
-  }
-
-  // Count the number of images found
-  $numImages = count($resultArray);
-} else {
-  // Retrieve all images if no search term is provided
-  $query = "SELECT * FROM images ORDER BY id DESC";
-  $result = $database->query($query);
-  $resultArray = array();
-  while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+// Retrieve all images and filter by year if necessary
+$resultArray = array();
+while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+  $imageYear = date('Y', strtotime($row['date']));
+  if ($yearFilter === 'all' || strtolower($imageYear) === $yearFilter) {
     $resultArray[] = $row;
   }
-  $numImages = count($resultArray);
 }
+
+// Count the number of images found
+$numImages = count($resultArray);
+
+// Calculate total pages
+$totalPages = ceil($numImages / $itemsPerPage);
+
+// Slice the array to get the items for the current page
+$resultArray = array_slice($resultArray, $offset, $itemsPerPage);
 ?>
 
     <div class="container-fluid">
@@ -91,14 +97,14 @@ if (isset($_GET['q'])) {
             <select name="year" class="form-control fw-bold" onchange="this.form.submit()">
               <option value="all" <?php echo ($yearFilter === 'all') ? 'selected' : ''; ?>>All Years</option>
               <?php
-                // Fetch distinct years from the "date" column in the images table
-                $yearsQuery = "SELECT DISTINCT strftime('%Y', date) AS year FROM images";
-                $yearsResult = $database->query($yearsQuery);
-                while ($yearRow = $yearsResult->fetchArray(SQLITE3_ASSOC)) {
-                  $year = $yearRow['year'];
-                  $selected = ($year == $yearFilter) ? 'selected' : '';
-                  echo '<option value="' . $year . '"' . $selected . '>' . $year . '</option>';
-                }
+              // Fetch distinct years from the "date" column in the images table
+              $yearsQuery = "SELECT DISTINCT strftime('%Y', date) AS year FROM images";
+              $yearsResult = $database->query($yearsQuery);
+              while ($yearRow = $yearsResult->fetchArray(SQLITE3_ASSOC)) {
+                $year = $yearRow['year'];
+                $selected = ($year == $yearFilter) ? 'selected' : '';
+                echo '<option value="' . $year . '"' . $selected . '>' . $year . '</option>';
+              }
               ?>
             </select>
             <input type="hidden" name="q" value="<?php echo isset($searchTerm) ? $searchTerm : ''; ?>">
@@ -135,19 +141,51 @@ if (isset($_GET['q'])) {
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-1">
         <?php foreach ($resultArray as $row): ?>
           <?php
-            $title = $row['title'];
-            $filename = $row['filename'];
-            $artist = '';
-            $stmt = $database->prepare("SELECT id, artist FROM users WHERE email = ?");
-            $stmt->bindValue(1, $email, SQLITE3_TEXT);
-            $result2 = $stmt->execute();
-            if ($user = $result2->fetchArray()) {
-              $artist = $user['artist'];
-              $id = $user['id'];
-            }
+          $title = $row['title'];
+          $filename = $row['filename'];
+          $artist = '';
+          $stmt = $database->prepare("SELECT id, artist FROM users WHERE email = ?");
+          $stmt->bindValue(1, $email, SQLITE3_TEXT);
+          $result2 = $stmt->execute();
+          if ($user = $result2->fetchArray()) {
+            $artist = $user['artist'];
+            $id = $user['id'];
+          }
           ?>
           <?php include($_SERVER['DOCUMENT_ROOT'] . '/search/card_search.php'); ?>
         <?php endforeach; ?>
+      </div>
+      <div class="pagination d-flex gap-1 justify-content-center mt-3">
+        <?php if ($page > 1): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <?php endif; ?>
+    
+        <?php if ($page > 1): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <?php endif; ?>
+    
+        <?php
+        // Calculate the range of page numbers to display
+        $startPage = max($page - 2, 1);
+        $endPage = min($page + 2, $totalPages);
+    
+        // Display page numbers within the range
+        for ($i = $startPage; $i <= $endPage; $i++) {
+          if ($i === $page) {
+            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+          } else {
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?q=' . $searchTerm . '&year=' . $yearFilter . '&page=' . $i . '">' . $i . '</a>';
+          }
+        }
+        ?>
+    
+        <?php if ($page < $totalPages): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <?php endif; ?>
+    
+        <?php if ($page < $totalPages): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="?q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <?php endif; ?>
       </div>
     </div>
     <div class="mt-5"></div>

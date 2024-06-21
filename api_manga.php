@@ -54,7 +54,7 @@ try {
     $searchTerms = explode(',', $_GET['search']);
     foreach ($searchTerms as $index => $term) {
       $paramName = ":term$index";
-      $conditions[] = "(images.title LIKE $paramName OR images.tags LIKE $paramName OR images.episode_name LIKE $paramName)";
+      $conditions[] = "(images.title LIKE $paramName OR images.tags LIKE $paramName OR images.episode_name LIKE $paramName OR users.artist LIKE $paramName)";
       $params[$paramName] = '%' . trim($term) . '%';
     }
   }

@@ -22,7 +22,7 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       WHERE artwork_type = 'manga'
       AND episode_name = :episode_name
       AND users.id = :user_id
-      ORDER BY images.id ASC
+      ORDER BY images.id DESC
       LIMIT 1
     ";
     $stmtLatest = $db->prepare($queryLatest);
@@ -150,8 +150,8 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       }
     }
 
-    // Get the count of all images grouped by the "group" column based on all episode_name
-    $query = "
+    // Get the count of all non-empty "group" images grouped by the "group" column based on all episode_name
+    $queryGroupCounts = "
       SELECT images.`group`, COUNT(*) as count
       FROM (
         SELECT DISTINCT episode_name, MAX(id) as latest_image_id
@@ -164,6 +164,7 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       JOIN users ON images.email = users.email
       WHERE images.artwork_type = 'manga'
       AND users.id = :user_id
+      AND images.`group` IS NOT NULL AND images.`group` <> ''
       AND images.`group` IN (
         SELECT DISTINCT images.`group`
         FROM images
@@ -173,11 +174,12 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       )
       GROUP BY images.`group`
     ";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->bindParam(':episode_name', $episode_name);
-    $stmt->execute();
-    $groupCounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $stmtGroupCounts = $db->prepare($queryGroupCounts);
+    $stmtGroupCounts->bindParam(':user_id', $user_id);
+    $stmtGroupCounts->bindParam(':episode_name', $episode_name);
+    $stmtGroupCounts->execute();
+    $groupCounts = $stmtGroupCounts->fetchAll(PDO::FETCH_ASSOC);
 
     // Get the count of all images grouped by the "categories" column based on all episode_name
     $query = "
@@ -193,6 +195,7 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       JOIN users ON images.email = users.email
       WHERE images.artwork_type = 'manga'
       AND users.id = :user_id
+      AND images.categories IS NOT NULL AND images.categories <> ''
       AND images.categories IN (
         SELECT DISTINCT images.categories
         FROM images
@@ -222,6 +225,7 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       JOIN users ON images.email = users.email
       WHERE images.artwork_type = 'manga'
       AND users.id = :user_id
+      AND images.language IS NOT NULL AND images.language <> ''
       AND images.language IN (
         SELECT DISTINCT images.language
         FROM images

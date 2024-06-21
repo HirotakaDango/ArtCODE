@@ -102,7 +102,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               // Determine the image source based on the page number
               $imageSource = ($page == 1) ? $web . '/images/' . $image_details['filename'] : $web . '/images/' . $image_child[$page - 2]['filename'];
               ?>
-              <div class="bg-body-tertiary py-1">
+              <div class="bg-body-tertiary py-1 d-md-none">
                 <div class="d-flex justify-content-center align-items-center container">
                   <?php
                     $totalPages = count($image_child) + 1;
@@ -115,7 +115,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       $prevPage = $currentPage - 1;
                       echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a></main>';
                     } else {
-                      echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                      echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
                     }
                   
                     echo '<main id="swup" class="transition-main"><h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6></main>';
@@ -125,14 +125,14 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       $nextPage = $currentPage + 1;
                       echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a></main>';
                     } else {
-                      echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                      echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
                     }
                   
                     echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $totalPages . '"><i class="bi bi-chevron-double-right text-stroke"></i></a></main>';
                   ?>
                 </div>
               </div>
-              <main id="swup" class="transition-main ">
+              <main id="swup" class="transition-main">
                 <div class="position-relative d-flex justify-content-center w-100">
                   <?php
                     $totalPages = count($image_child) + 1;
@@ -143,7 +143,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       $prevPage = $currentPage - 1;
                       echo '<a class="position-absolute top-0 start-0 w-25 h-100 text-decoration-none" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"></a>';
                     } else {
-                      echo '<a class="position-absolute top-0 start-0 w-25 h-100 text-decoration-none" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"></a>';
+                      echo '<a class="position-absolute top-0 start-0 w-25 h-100 text-decoration-none" href="title.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '"></a>';
                     }
                   ?>
                   <img class="d-none" src="<?= $prevRender; ?>" alt="<?= $image_details['title']; ?>">
@@ -158,7 +158,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       $nextPage = $currentPage + 1;
                       echo '<a class="position-absolute top-0 end-0 w-25 h-100 text-decoration-none" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"></a>';
                     } else {
-                      echo '<a class="position-absolute top-0 end-0 w-25 h-100 text-decoration-none" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"></a>';
+                      echo '<a class="position-absolute top-0 end-0 w-25 h-100 text-decoration-none" href="title.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '"></a>';
                     }
                   ?>
                 </div>
@@ -176,7 +176,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       $prevPage = $currentPage - 1;
                       echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a></main>';
                     } else {
-                      echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                      echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
                     }
                   
                     echo '<main id="swup" class="transition-main"><h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6></main>';
@@ -186,7 +186,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       $nextPage = $currentPage + 1;
                       echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a></main>';
                     } else {
-                      echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                      echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
                     }
                   
                     echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $totalPages . '"><i class="bi bi-chevron-double-right text-stroke"></i></a></main>';
@@ -201,12 +201,18 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
           <?php } ?>
         </div>
       </div>
-      <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>">Back To Title</a></h2>
+      <div class="position-fixed bottom-0 start-0 z-2 d-none d-md-block">
+        <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" href="#">
+          <main id="swup" class="transition-main"><h6 class="pt-1 small"><?php echo $currentPage . ' / ' . $totalPages; ?></h6></main>
+        </a>
+      </div>
+      <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>">Back to Title</a></h2>
     </div>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
       <div class="container">
         <div class="d-flex justify-content-center align-items-center vh-100">
           <div class="w-100">
+            <h5 class="fw-bold mb-5 px-3 pb-3"><?= $image_details['title']; ?></h5>
             <div class="d-flex justify-content-center align-items-center container my-3">
               <?php
                 $totalPages = count($image_child) + 1;
@@ -219,7 +225,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                   $prevPage = $currentPage - 1;
                   echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $prevPage . '"><i class="bi bi-chevron-left text-stroke"></i></a></main>';
                 } else {
-                  echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                  echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
                 }
               
                 echo '<main id="swup" class="transition-main"><h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6></main>';
@@ -229,7 +235,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                   $nextPage = $currentPage + 1;
                   echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $nextPage . '"><i class="bi bi-chevron-right text-stroke"></i></a></main>';
                 } else {
-                  echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . $episode_name . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
+                  echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="title.php?title=' . urlencode($episode_name) . '&uid=' . $user_id . '"><i class="bi bi-reply-fill"></i></a></main>';
                 }
               
                 echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?title=' . urlencode($episode_name) . '&uid=' . $user_id . '&id=' . $image_id . '&page=' . $totalPages . '"><i class="bi bi-chevron-double-right text-stroke"></i></a></main>';
@@ -245,8 +251,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                 </div>
               </button>
             </div>
-            <div class="container my-3">
-              <button type="button" class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium d-flex justify-content-between align-items-center w-100" data-bs-toggle="modal" data-bs-target="#allEpisodesModal">
+            <div class="container mt-3">
+              <button type="button" class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium d-flex justify-content-between align-items-center w-100 rounded-bottom-0" data-bs-toggle="modal" data-bs-target="#allEpisodesModal">
                 <div class="text-start d-flex justify-content-center gap-1">
                   Chapters
                 </div>
@@ -255,11 +261,16 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                 </div>
               </button>
             </div>
+            <div class="container mb-3">
+              <div class="bg-body-tertiary p-2 text-white border-0 fw-medium text-start w-100 rounded-3 rounded-top-0" data-bs-toggle="modal" data-bs-target="#allEpisodesModal">
+                <h6 class="p-1"><?= $image_details['title']; ?></h6>
+              </div>
+            </div>
             <div class="container my-3">
               <button type="button" class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" data-bs-dismiss="offcanvas">Close Menu</button>
             </div>
             <div class="container my-3">
-              <a class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo $episode_name; ?>&uid=<?php echo $user_id; ?>">Back To Title</a>
+              <a class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>">Back to Title</a>
             </div>
           </div>
         </div>
