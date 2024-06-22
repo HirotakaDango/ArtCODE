@@ -47,15 +47,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $imgdesc = nl2br(filter_var($_POST['imgdesc'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $link = filter_var($_POST['link'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $tags = filter_var($_POST['tags'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  $type = filter_var($_POST['type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the type input
+  $type = filter_var($_POST['type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $episode_name = filter_var($_POST['episode_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  $artwork_type = filter_var($_POST['artwork_type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
-  $group = filter_var($_POST['group'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
-  $categories = filter_var($_POST['categories'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
-  $language = filter_var($_POST['language'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW); // Sanitize the artwork_type input
+  $artwork_type = filter_var($_POST['artwork_type'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $group = filter_var($_POST['group'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $categories = filter_var($_POST['categories'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $language = filter_var($_POST['language'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $parodies = filter_var($_POST['parodies'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
 
   // Update the images table with the selected or new episode_name
-  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name, artwork_type = :artwork_type, `group` = :group, categories = :categories, language = :language WHERE id = :id');
+  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name, artwork_type = :artwork_type, `group` = :group, categories = :categories, language = :language, parodies = :parodies WHERE id = :id');
   $stmt->bindParam(':title', $title);
   $stmt->bindParam(':imgdesc', $imgdesc);
   $stmt->bindParam(':link', $link);
@@ -66,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt->bindParam(':group', $group);
   $stmt->bindParam(':categories', $categories);
   $stmt->bindParam(':language', $language);
+  $stmt->bindParam(':parodies', $parodies);
   $stmt->bindParam(':id', $id);
   $stmt->execute();
 
@@ -201,6 +203,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <div class="form-floating mb-2">
                 <textarea class="form-control border rounded-3 text-dark fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="2000" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
                 <label for="floatingInput" class="text-dark fw-bold">Enter description for your image</label>
+              </div>
+              <div class="form-floating mb-2">
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['parodies']); ?>" name="parodies" placeholder="Image parodies" maxlength="500">
+                <label for="floatingInput" class="text-dark fw-bold">Enter parodies for your image</label>
               </div>
               <div class="form-floating mb-2">
                 <select class="form-select border rounded-3 fw-bold border-4 py-0 text-start" name="episode_name">
