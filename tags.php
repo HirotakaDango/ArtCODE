@@ -4,7 +4,8 @@ require_once('auth.php');
 // Connect to the SQLite database
 $db = new SQLite3('database.sqlite');
 
-$searchQuery = isset($_GET['q']) ? $_GET['q'] : ''; // Capture the search query
+// Get user's email from session or wherever it's stored
+$email = $_SESSION['email'];
 ?>
 
 <!DOCTYPE html>
@@ -19,21 +20,17 @@ $searchQuery = isset($_GET['q']) ? $_GET['q'] : ''; // Capture the search query
   <body>
     <?php include('header.php'); ?>
     <?php include('taguserheader.php'); ?>
-    <form action="tags.php" method="GET">
-      <div class="input-group my-3 px-2 w-100">
-        <input type="hidden" name="by" value="<?php echo isset($_GET['by']) ? $_GET['by'] : 'ascending'; ?>">
-        <input type="text" class="form-control rounded-4 rounded-end-0 border border-3 fw-bold" placeholder="Search user" name="q" value="<?php echo $searchQuery = isset($_GET['q']) ? $_GET['q'] : ''; ?>">
-        <button class="btn btn-outline-secondary rounded-4 rounded-start-0 border border-start-0 border-3 fw-bold" type="submit">Search</button>
-      </div>
-    </form>
     <div class="dropdown">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=ascending&q=<?php echo htmlspecialchars($searchQuery); ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'ascending') echo 'active'; ?>">ascending</a></li>
-        <li><a href="?by=descending&q=<?php echo htmlspecialchars($searchQuery); ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'descending') echo 'active'; ?>">descending</a></li>
-        <li><a href="?by=popular&q=<?php echo htmlspecialchars($searchQuery); ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?by=ascending&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'ascending') echo 'active'; ?>">ascending</a></li>
+        <li><a href="?by=descending&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'descending') echo 'active'; ?>">descending</a></li>
+        <li><a href="?by=popular&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+        <li><a href="?by=view&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+        <li><a href="?by=least&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
+        <li><a href="?by=liked&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
       </ul> 
     </div> 
     <?php 
@@ -49,6 +46,15 @@ $searchQuery = isset($_GET['q']) ? $_GET['q'] : ''; // Capture the search query
           break;
         case 'popular':
           include "tags_pop.php";
+          break;
+        case 'view':
+          include "tags_view.php";
+          break;
+        case 'least':
+          include "tags_least.php";
+          break;
+        case 'liked':
+          include "tags_like.php";
           break;
       }
     }

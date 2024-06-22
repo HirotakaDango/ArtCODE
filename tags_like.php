@@ -6,14 +6,17 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $limit = 20; // Limit to 20 tags per page
 $offset = ($page - 1) * $limit;
 
-// Retrieve the count of images for each tag matching the search condition
-$query = "SELECT tags, COUNT(*) as count FROM images";
-if (!empty($searchCondition)) {
-  $query .= " WHERE $searchCondition";
-}
-$query .= " GROUP BY tags";
-
-$result = $db->query($query);
+// Retrieve the count of images for each tag favorited by the user
+$query = "
+    SELECT tags, COUNT(*) as count
+    FROM images
+    LEFT JOIN favorites ON images.id = favorites.image_id
+    WHERE favorites.email = :email
+    GROUP BY tags
+";
+$result = $db->prepare($query);
+$result->bindValue(':email', $email, SQLITE3_TEXT);
+$result = $result->execute();
 
 // Store the tag counts as an associative array
 $tagCounts = [];
@@ -28,18 +31,18 @@ while ($row = $result->fetchArray()) {
   }
 }
 
-// Group the tags by the last character and sort them in descending order
+// Group the tags by the first character and sort them
 $groupedTags = [];
 foreach ($tagCounts as $tag => $count) {
-  $lastChar = strtoupper(mb_substr($tag, -1, 1));
-  $groupedTags[$lastChar][$tag] = $count;
+  $firstChar = strtoupper(mb_substr($tag, 0, 1));
+  $groupedTags[$firstChar][$tag] = $count;
 }
 
-krsort($groupedTags); // Sort groups by last character in descending order
+ksort($groupedTags); // Sort groups by first character
 
-// Get tags for the current category and sort them in descending order
+// Get tags for the current category and sort them
 $currentTags = isset($groupedTags[$category]) ? $groupedTags[$category] : [];
-arsort($currentTags); // Sort tags within the category in descending order
+asort($currentTags); // Sort tags within the category
 $totalTags = count($currentTags);
 $totalPages = ceil($totalTags / $limit);
 $currentTags = array_slice($currentTags, $offset, $limit, true);

@@ -7,6 +7,7 @@ $email = $_SESSION['email'];
 $database = new SQLite3('../database.sqlite');
 
 $searchTerm = $_GET['q'];
+$by = isset($_GET['by']) ? $_GET['by'] : 'newest';
 ?>
 
 <!DOCTYPE html>

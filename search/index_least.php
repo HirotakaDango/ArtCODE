@@ -157,11 +157,11 @@ $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
       </div>
       <div class="pagination d-flex gap-1 justify-content-center mt-3">
         <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
         <?php endif; ?>
     
         <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
         <?php endif; ?>
     
         <?php
@@ -174,17 +174,17 @@ $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?q=' . $searchTerm . '&year=' . $yearFilter . '&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=' . $by . '&q=' . $searchTerm . '&year=' . $yearFilter . '&page=' . $i . '">' . $i . '</a>';
           }
         }
         ?>
     
         <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
         <?php endif; ?>
     
         <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+          <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
         <?php endif; ?>
       </div>
     </div>

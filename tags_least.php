@@ -28,18 +28,30 @@ while ($row = $result->fetchArray()) {
   }
 }
 
-// Group the tags by the last character and sort them in descending order
+// Group the tags by the first character and sort them
 $groupedTags = [];
 foreach ($tagCounts as $tag => $count) {
-  $lastChar = strtoupper(mb_substr($tag, -1, 1));
-  $groupedTags[$lastChar][$tag] = $count;
+  $firstChar = strtoupper(mb_substr($tag, 0, 1));
+  $groupedTags[$firstChar][$tag] = $count;
 }
 
-krsort($groupedTags); // Sort groups by last character in descending order
+ksort($groupedTags); // Sort groups by first character
 
-// Get tags for the current category and sort them in descending order
+// Get tags for the current category and sort them by view_count of images
 $currentTags = isset($groupedTags[$category]) ? $groupedTags[$category] : [];
-arsort($currentTags); // Sort tags within the category in descending order
+
+// Fetch view_count for each tag
+$viewCounts = [];
+foreach ($currentTags as $tag => $count) {
+  $stmt = $db->prepare("SELECT SUM(view_count) as total_views FROM images WHERE tags LIKE ?");
+  $stmt->bindValue(1, '%' . $tag . '%');
+  $result = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+  $viewCounts[$tag] = $result['total_views'] ?? 0;
+}
+
+// Sort tags by view_count in ascending order (least viewed first)
+array_multisort($viewCounts, SORT_ASC, $currentTags);
+
 $totalTags = count($currentTags);
 $totalPages = ceil($totalTags / $limit);
 $currentTags = array_slice($currentTags, $offset, $limit, true);
