@@ -35,6 +35,11 @@ try {
     $params[':tag'] = '%,' . $_GET['tag'] . ',%';
   }
   
+  if (isset($_GET['parody'])) {
+    $conditions[] = "(',' || images.parodies || ',' LIKE :parody)";
+    $params[':parody'] = '%,' . $_GET['parody'] . ',%';
+  }
+  
   if (isset($_GET['group'])) {
     $conditions[] = 'images.`group` = :group'; // Fix for group parameter
     $params[':group'] = $_GET['group'];

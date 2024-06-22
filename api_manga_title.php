@@ -150,6 +150,40 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       }
     }
 
+    // Get the parodies from the current title
+    $parodies = [];
+    foreach ($results as $image) {
+      $imageParodies = explode(',', $image['parodies']);
+      foreach ($imageParodies as $parody) {
+        $parody = trim($parody);
+        if (!empty($parody)) {
+          if (!isset($parodies[$parody])) {
+            $parodies[$parody] = 0;
+          }
+        }
+      }
+    }
+
+    // Get the count of latest images by episode_name for each parody
+    $query = "
+      SELECT parodies, COUNT(*) as count FROM (
+        SELECT parodies, episode_name, MAX(id) as latest_image_id
+        FROM images
+        WHERE artwork_type = 'manga'
+        GROUP BY parodies, episode_name
+      ) GROUP BY parodies
+    ";
+    $stmt = $db->query($query);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $parodyList = explode(',', $row['parodies']);
+      foreach ($parodyList as $parody) {
+        $parody = trim($parody); // Fix variable name here
+        if (isset($parodies[$parody])) {
+          $parodies[$parody] += $row['count'];
+        }
+      }
+    }
+
     // Get the count of all non-empty "group" images grouped by the "group" column based on all episode_name
     $queryGroupCounts = "
       SELECT images.`group`, COUNT(*) as count
@@ -267,6 +301,7 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       'first_cover' => $first_cover,
       'images' => $results,
       'tags' => $tags,
+      'parodies' => $parodies,
       'artist_image_count' => $artistImageCount,
       'total_count' => $total_count,
       'total_view_count' => $total_view_count,

@@ -8,7 +8,7 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'ascending';
 $limit = 20;
 $offset = ($page - 1) * $limit;
 
-// Retrieve users from the database based on the search query and sorted by follower count
+// Retrieve users from the database based on the search query and sorted by follower count in ascending order
 $query = "SELECT users.*, SUBSTR(users.artist, 1, 1) AS first_letter, COUNT(following.follower_email) AS follower_count 
           FROM users 
           LEFT JOIN following ON users.email = following.following_email";
@@ -16,7 +16,7 @@ if (!empty($searchQuery)) {
   $query .= " WHERE users.artist LIKE '%$searchQuery%'";
 }
 $query .= " GROUP BY users.email 
-            ORDER BY first_letter COLLATE NOCASE ASC, follower_count DESC, users.artist COLLATE NOCASE ASC";
+            ORDER BY first_letter COLLATE NOCASE ASC, follower_count DESC, users.artist COLLATE NOCASE DESC";
 
 $users = $db->query($query);
 
