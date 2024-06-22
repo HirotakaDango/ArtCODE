@@ -124,8 +124,8 @@ $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
       </div>
       <h6 class="badge bg-primary"><?php echo $numImages; ?> images found</h6>
       <div class="modal fade" id="infoSearchA" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header">
               <h1 class="modal-title fs-5 fw-semibold" id="exampleModalLabel"><i class="bi bi-info-circle-fill"></i> Search Tips</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

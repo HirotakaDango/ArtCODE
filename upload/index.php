@@ -65,6 +65,10 @@ require_once('../auth.php');
                     <label for="imgdesc" class="fw-bold">Enter description for your image</label>
                   </div>
                   <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 fw-bold border-4" type="text" name="parodies" id="parodies" placeholder="Enter parodies for your image" maxlength="500">  
+                    <label for="tags" class="fw-bold">Enter parodies for your image</label>
+                  </div>
+                  <div class="form-floating mb-2">
                     <select class="form-select border rounded-3 fw-bold border-4 py-0 text-start" name="episode_name">
                       <option class="form-control" value="">Add episode:</option>
                       <?php

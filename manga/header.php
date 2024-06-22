@@ -10,6 +10,9 @@
               <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'forum/') === false) echo 'active' ?>" href="/manga/index.php"><i class="bi bi-house-fill"></i> Home</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="/manga/parodies.php"><i class="bi bi-book-half"></i> Parodies</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="/manga/tags.php"><i class="bi bi-tags-fill"></i> Tags</a>
             </li>
             <li class="nav-item">

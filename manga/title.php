@@ -46,6 +46,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
           $artist_name = $latest_cover['artist'];
           $artistImageCount = $data['artist_image_count'];
           $tags = $data['tags'];
+          $parodies = $data['parodies'];
           $groupCounts = $data['group_counts'];
           $categoriesCounts = $data['categories_counts'];
           $languageCounts = $data['language_counts'];
@@ -168,6 +169,23 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       <a href="index.php?group=<?php echo urlencode($groupName); ?>" class="btn bg-secondary-subtle fw-bold"><?php echo $groupName; ?></a>
                       <a href="#" class="btn bg-body-tertiary fw-bold" disabled><?php echo $groupCount; ?></a>
                     </div>
+                  </div>
+                </div>
+              <?php endif; ?>
+              <?php if (isset($parodies) && !empty($parodies)): ?>
+                <div class="row">
+                  <label for="parodies" class="col-md-2 col-form-label text-nowrap fw-medium">Parodies</label>
+                  <div class="col-md-10">
+                    <?php foreach($parodies as $parody => $count): ?>
+                      <div class="btn-group mb-2 me-1">
+                        <a href="index.php?parody=<?php echo urlencode($parody); ?>" class="btn bg-secondary-subtle fw-bold">
+                          <?php echo $parody; ?>
+                        </a>
+                        <a href="#" class="btn bg-body-tertiary fw-bold">
+                          <?php echo $count; ?>
+                        </a>
+                      </div>
+                    <?php endforeach; ?>
                   </div>
                 </div>
               <?php endif; ?>

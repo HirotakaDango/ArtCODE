@@ -70,46 +70,7 @@ $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
-    <h5 class="text-secondary ms-2 mt-2 fw-bold"><i class="bi bi-tags-fill"></i> <?php echo $tag; ?> (<?php echo $count; ?>)</h5>
-    <div class="images">
-      <?php while ($image = $result->fetchArray()): ?>
-        <div class="image-container">
-          <div class="position-relative">
-            <a class="shadow rounded imagesA" href="../image.php?artworkid=<?php echo $image['id']; ?>">
-              <img class="lazy-load imagesImg  <?php echo ($image['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
-            </a> 
-            <div class="position-absolute top-0 start-0">
-              <div class="dropdown">
-                <button class="btn btn-sm btn-dark ms-1 mt-1 rounded-1 opacity-50" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <?php
-                    $is_favorited = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$image['id']}");
-                    if ($is_favorited) {
-                  ?>
-                    <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
-                      <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
-                    </form>
-                  <?php } else { ?>
-                    <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
-                      <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
-                    </form>
-                  <?php } ?>
-                  <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $image['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
-                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
-                </ul>
-
-                <?php include('components/card_image_tag.php'); ?>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      <?php endwhile; ?>
-    </div> 
+    <?php include('image_card_tag.php')?>
     <?php
       $totalPages = ceil($total / $limit);
       $prevPage = $page - 1;

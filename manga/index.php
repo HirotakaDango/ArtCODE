@@ -22,6 +22,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
         echo 'Artist: "' . $_GET['artist'] . '"';
       } elseif (isset($_GET['tag'])) {
         echo 'Tag: "' . $_GET['tag'] . '"';
+      } elseif (isset($_GET['parody'])) {
+        echo 'Parody: "' . $_GET['parody'] . '"';
       } elseif (isset($_GET['group'])) {
         echo 'Group: "' . $_GET['group'] . '"';
       } elseif (isset($_GET['categories'])) {
@@ -72,6 +74,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
         'artist' => $_GET['artist'] ?? null,
         'uid' => $_GET['uid'] ?? null,
         'tag' => $_GET['tag'] ?? null,
+        'parody' => $_GET['parody'] ?? null,
         'by' => $_GET['by'] ?? null,
         'group' => $_GET['group'] ?? null,
         'categories' => $_GET['categories'] ?? null,
@@ -100,6 +103,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
             echo 'Artist: "' . $_GET['artist'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['tag'])) {
             echo 'Tag: "' . $_GET['tag'] . '" (' . $totalImages . ')';
+          } elseif (isset($_GET['parody'])) {
+            echo 'Parody: "' . $_GET['parody'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['group'])) {
             echo 'Group: "' . $_GET['group'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['categories'])) {
@@ -139,7 +144,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
           foreach ($displayImages as $image) : ?>
             <div class="col">
               <div class="card border-0 rounded-4">
-                <a href="title.php?title=<?= $image['episode_name']; ?>&uid=<?= $image['userid']; ?>" class="text-decoration-none">
+                <a href="title.php?title=<?= urlencode($image['episode_name']); ?>&uid=<?= $image['userid']; ?>" class="text-decoration-none">
                   <div class="ratio ratio-cover">
                     <img class="rounded rounded-bottom-0 object-fit-cover lazy-load" data-src="<?= $web . '/thumbnails/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
                   </div>
