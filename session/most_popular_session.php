@@ -1,9 +1,10 @@
 <?php
+
 // Connect to the SQLite database using a parameterized query
 $dbP = new SQLite3('../database.sqlite');
 
 // Get all of the images from the database using a parameterized query
-$stmtP = $dbP->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY favorite_count DESC LIMIT 70");
+$stmtP = $dbP->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY favorite_count DESC");
 $resultP = $stmtP->execute();
 
 $images = array();
@@ -18,102 +19,88 @@ while ($imageP = $resultP->fetchArray()) {
 }
 ?>
 
-    <div class="imagesC mb-2 mt-2">
-      <?php $count = 0; ?>
-      <?php while ($imageP = $resultP->fetchArray()): ?>
-        <?php
-          $image_idP = $imageP['id'];
-          $image_urlP = $imageP['filename'];
-          $image_titleP = $imageP['title'];
-          $current_image_idP = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
+    <div class="imagesMP w-100 px-1 my-2">
+      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-5 g-1">
+        <?php 
+        $count = 0; 
+        $images = [];
+        while ($imageP = $resultP->fetchArray()) {
+          $images[] = $imageP;
+          if ($count < 10) {
+            $image_idP = $imageP['id'];
+            $image_urlP = $imageP['filename'];
+            $image_titleP = $imageP['title'];
+            $current_image_idP = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
         ?>
-        <div class="image-container">
+        <div class="col">
           <div class="position-relative">
-            <a class="shadow rounded imageA" href="image.php?artworkid=<?php echo $image_idP; ?>">
-              <img class="imageI <?php echo ($imageP['type'] === 'nsfw') ? 'nsfw' : ''; ?> <?php echo ($image_idP == $current_image_idP) ? 'opacity-50' : ''; ?>" src="../thumbnails/<?php echo $image_urlP; ?>" alt="<?php echo $image_titleP; ?>">
+            <a class="rounded ratio ratio-1x1 imageMPA" href="image.php?artworkid=<?php echo $image_idP; ?>">
+              <img class="rounded shadow object-fit-cover imageMPIP <?php echo ($imageP['type'] === 'nsfw') ? 'nsfw' : ''; ?> <?php echo ($image_idP == $current_image_idP) ? 'opacity-50' : ''; ?>" src="/thumbnails/<?php echo $image_urlP; ?>" alt="<?php echo $image_titleP; ?>">
             </a>
           </div>
         </div>
-        <?php $count++; ?>
-        <?php if ($count >= 10) break; ?>
-      <?php endwhile; ?>
+        <?php 
+            $count++;
+          }
+        } 
+        ?>
+      </div>
     </div>
-    <div class="container-fluid mt-4"><button id="loadMoreBtnP" class="btn btn-outline-dark rounded-pill fw-bold w-100">load more</button></div>
+    <div class="container-fluid mt-4">
+      <button id="loadMoreBtnP" class="btn btn-outline-dark rounded-pill fw-bold w-100">Load more</button>
+    </div>
+    
     <script>
-      var currentIndexP = <?php echo $count; ?>;
+      var currentIndexP = 10;
       var imagesP = <?php echo json_encode($images); ?>;
-      var containerP = $('.imagesC');
-      var loadMoreBtnP = $('#loadMoreBtnP');
-
-      loadMoreBtnP.click(function () {
+      var containerP = document.querySelector('.imagesMP .row');
+      var loadMoreBtnP = document.getElementById('loadMoreBtnP');
+    
+      loadMoreBtnP.addEventListener('click', function() {
         var fragment = document.createDocumentFragment();
-
+    
         for (var i = currentIndexP; i < currentIndexP + 10 && i < imagesP.length; i++) {
           var imageUP = imagesP[i];
           var image_idP = imageUP['id'];
           var image_urlP = imageUP['filename'];
           var image_titleP = imageUP['title'];
-          var current_image_idP = '<?php echo $current_image_idD; ?>';
-
-          var mediaElementP = document.createElement('div');
-          mediaElementP.classList.add('image-container');
-
+          var current_image_idP = '<?php echo $current_image_idP; ?>';
+    
+          var colDiv = document.createElement('div');
+          colDiv.classList.add('col');
+    
+          var posRelDiv = document.createElement('div');
+          posRelDiv.classList.add('position-relative');
+    
           var linkP = document.createElement('a');
           linkP.href = 'image.php?artworkid=' + image_idP;
-          linkP.classList.add('imageAD', 'rounded', 'shadow');
-
+          linkP.classList.add('rounded', 'ratio', 'ratio-1x1', 'imageMPA');
+    
           var imageP = document.createElement('img');
-          imageP.classList.add('imageI');
+          imageP.classList.add('rounded', 'shadow', 'object-fit-cover', 'imageMPIP');
+          if (imageUP['type'] === 'nsfw') {
+            imageP.classList.add('nsfw');
+          }
           if (image_idP == current_image_idP) {
             imageP.classList.add('opacity-50');
           }
-          imageP.src = '../thumbnails/' + image_urlP; // Corrected variable name
-          imageP.alt = image_titleP; // Corrected variable name
-
+          imageP.src = '/thumbnails/' + image_urlP;
+          imageP.alt = image_titleP;
+    
           linkP.appendChild(imageP);
-          mediaElementP.appendChild(linkP);
-          fragment.appendChild(mediaElementP);
+          posRelDiv.appendChild(linkP);
+          colDiv.appendChild(posRelDiv);
+          fragment.appendChild(colDiv);
         }
-
-        containerP.append(fragment);
-
+    
+        containerP.appendChild(fragment);
+    
         currentIndexP += 10;
         if (currentIndexP >= imagesP.length) {
-          loadMoreBtnP.hide();
+          loadMoreBtnP.style.display = 'none';
         }
       });
     </script>
-    <style>
-      .imagesC {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Two columns in mobile view */
-        grid-gap: 3px;
-        justify-content: center;
-        margin-right: 3px;
-        margin-left: 3px;
-      }
-
-      .imageA  {
-        display: block;
-        border-radius: 4px;
-        overflow: hidden;
-      }
-
-      .imageI {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        height: 200px;
-        transition: transform 0.5s ease-in-out;
-      }
-
-      @media (min-width: 768px) {
-        /* For desktop view, change the grid layout */
-        .imagesC {
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        }
-      }
-    </style>
     <script>
       function shareImageP(userId) {
         // Compose the share URL
