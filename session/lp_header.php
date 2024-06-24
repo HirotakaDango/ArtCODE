@@ -15,23 +15,23 @@
                 </div>
               </div>
               <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 fw-bold gap-2">
-                <li><a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/" class="nav-link px-2 link-body-emphasis <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'text-white' : 'text-dark'; ?> rounded-pill">Home</a></li>
-                <li><a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/#features" class="nav-link px-2 link-body-emphasis <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'text-white' : 'text-dark'; ?> rounded-pill">Features</a></li>
+                <li><a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/?tourl=<?php echo urlencode(isset($_GET['tourl']) ? $_GET['tourl'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/home/'); ?>" class="nav-link px-2 link-body-emphasis <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'text-white' : 'text-dark'; ?> rounded-pill">Home</a></li>
+                <li><a href="#features" class="nav-link px-2 link-body-emphasis <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'text-white' : 'text-dark'; ?> rounded-pill">Features</a></li>
                 <li><a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/newspage.php" class="nav-link px-2 link-body-emphasis <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'text-white' : 'text-dark'; ?> rounded-pill">News</a></li>
                 <li>
                   <div class="dropdown">
                     <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link px-2 link-body-emphasis <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'text-white' : 'text-dark'; ?> rounded-pill">Explores</a>
                     <ul class="dropdown-menu rounded-4 border-0">
-                      <li><a class="dropdown-item fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/preview_guest.php">Explore Images</a></li>
-                      <li><a class="dropdown-item fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/music/">Explore Music</a></li>
+                      <li><a class="dropdown-item fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/preview_guest.php?tourl=<?php echo urlencode(isset($_GET['tourl']) ? $_GET['tourl'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/home/'); ?>">Explore Images</a></li>
+                      <li><a class="dropdown-item fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/music/?tourl=<?php echo urlencode(isset($_GET['tourl']) ? $_GET['tourl'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/home/'); ?>">Explore Music</a></li>
                       <li><a class="dropdown-item fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/manga/">Explore Manga</a></li>
                     </ul>
                   </div>
                 </li>
               </ul>
               <div class="col-md-3 text-end d-none d-md-block d-lg-block">
-                <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/login.php" class="btn text-light-subtle border-0 link-body-emphasis fw-bold me-2"><i class="bi bi-person-fill-up"></i> sign in</a>
-                <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/register.php" class="btn rounded-pill <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'btn-outline-light' : 'btn-outline-dark'; ?> fw-bold"><i class="bi bi-person-plus-fill"></i> sign up for free</a>
+                <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/login.php?tourl=<?php echo urlencode(isset($_GET['tourl']) ? $_GET['tourl'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/home/'); ?>" class="btn text-light-subtle border-0 link-body-emphasis fw-bold me-2"><i class="bi bi-person-fill-up"></i> sign in</a>
+                <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/register.php?tourl=<?php echo urlencode(isset($_GET['tourl']) ? $_GET['tourl'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/home/'); ?>" class="btn rounded-pill <?= (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'btn-outline-light' : 'btn-outline-dark'; ?> fw-bold"><i class="bi bi-person-plus-fill"></i> sign up for free</a>
               </div>
             </header>
           </div>

@@ -5,12 +5,13 @@ session_start();
 $db = new SQLite3('../database.sqlite');
 
 // Create the users table if it doesn't exist
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other, region TEXT, joined DATETIME, born DATETIME, numpage TEXT, display TEXT, message_1 TEXT, message_2 TEXT, message_3 TEXT, message_4 TEXT)");
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other TEXT, region TEXT, joined DATETIME, born DATETIME, numpage TEXT, display TEXT, message_1 TEXT, message_2 TEXT, message_3 TEXT, message_4 TEXT)");
 $stmt->execute();
- 
+
 if (isset($_POST['login'])) {
   $email = filter_var($_POST['email'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $password = filter_var($_POST['password'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $toUrl = filter_var($_POST['tourl'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
 
   // Check if the email and password fields are not empty
   if (empty($email) || empty($password)) {
@@ -39,8 +40,8 @@ if (isset($_POST['login'])) {
       $stmt->bindValue(':email', $email, SQLITE3_TEXT);
       $stmt->execute();
     
-      // Redirect the user to the homepage
-      header("Location: ../?by=newest");
+      // Redirect the user to the URL from `tourl`
+      header("Location: " . urldecode($toUrl));
       exit;
     } else {
       echo '

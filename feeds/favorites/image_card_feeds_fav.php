@@ -34,7 +34,7 @@
                 // Total count of main images and associated images
                 $totalImagesCount = $imageCount + $childImageCount;
               ?>
-              <?php include('../rows_columns/image_counts.php'); ?>
+              <?php include('../../rows_columns/image_counts.php'); ?>
               <div class="position-absolute top-0 start-0">
                 <div class="dropdown">
                   <button class="btn border-0 p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+$toUrl = 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
 if (!isset($_SESSION['email'])) {
   // Check if the "remember me" cookie exists
   if (isset($_COOKIE['remember'])) {
@@ -37,7 +39,7 @@ if (!isset($_SESSION['email'])) {
 
   // If the user is still not authenticated, redirect to the login page
   if (!isset($_SESSION['email'])) {
-    $url = "http://" . $_SERVER['HTTP_HOST'] . "/session.php"; // Construct the absolute URL
+    $url = "http://" . $_SERVER['HTTP_HOST'] . "/session.php?tourl=" . urlencode($toUrl); // Construct the absolute URL
     header("Location: $url");
     exit;
   }
