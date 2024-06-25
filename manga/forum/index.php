@@ -7,6 +7,67 @@ $db->exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMEN
 $db->exec("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, comment TEXT, date DATETIME, post_id TEXT)");
 $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, category_name TEXT)");
 
+// Define categories
+$categories = [
+  // Additional Japanese culture categories
+  'Anime_&_Japan',
+  'Japanese_Language',
+  'Traditional_Arts',
+  'Japanese_Festivals',
+  'Japanese_Food',
+  'Japanese_Fashion',
+  'Japanese_History',
+  'Anime_Cosplay',
+  'Japanese_Music',
+  'Manga',
+  'Japanese_Traditions',
+  'Samurai_Culture',
+  'Geisha_Culture',
+  'Japanese_Architecture',
+  'Tea_Ceremony',
+  'Kabuki_Theater',
+  'Japanese_Gardens',
+  'Sumo_Wrestling',
+  'Sushi',
+  'Karaoke',
+  'Hanami_Festivals',
+  
+  // Additional anime, manga, light novel, video games, doujinshi categories
+  'Anime_Reviews',
+  'Manga_Reviews',
+  'Light_Novels',
+  'Video_Game_Reviews',
+  'Anime_Recommendations',
+  'Manga_Recommendations',
+  'Video_Game_Recommendations',
+  'Anime_Merchandise',
+  'Manga_Merchandise',
+  'Video_Game_Merchandise',
+  'Cosplay',
+  'Anime_Conventions',
+  'Video_Game_Development',
+  'Doujinshi_Creation',
+  'Anime_Streaming_Services',
+  'Manga_Artists',
+  'Anime_Studio_News',
+  'Visual_Novels',
+  'Anime_Culture',
+  'Otaku_Lifestyle',
+];
+// Insert categories into the database if they don't exist
+$stmt = $db->prepare("INSERT OR IGNORE INTO category (category_name) VALUES (:category_name)");
+foreach ($categories as $category) {
+  if (!$stmt->execute([':category_name' => $category])) {
+    die("Error inserting category: $category");
+  }
+}
+
+// Check if all categories were inserted correctly
+$result = $db->query("SELECT * FROM category");
+if ($result === false) {
+  die("Error fetching categories.");
+}
+
 $posts_per_page = 20;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $start_index = ($page - 1) * $posts_per_page;
