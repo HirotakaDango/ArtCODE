@@ -42,14 +42,27 @@ $database->close();
         <div class="form-group">
           <label class="fw-semibold mb-3" for="page">Select page:</label>
           <select class="form-select" id="page" name="page">
-            <option value="250" <?php if ($currentpage == '250') echo 'selected'; ?>>250</option>
-            <option value="200" <?php if ($currentpage == '200') echo 'selected'; ?>>200</option>
-            <option value="150" <?php if ($currentpage == '150') echo 'selected'; ?>>150</option>
-            <option value="100" <?php if ($currentpage == '100') echo 'selected'; ?>>100</option>
-            <option value="50" <?php if ($currentpage == '50') echo 'selected'; ?>>50</option>
-            <option value="30" <?php if ($currentpage == '30') echo 'selected'; ?>>30</option>
-            <option value="20" <?php if ($currentpage == '20') echo 'selected'; ?>>20</option>
-            <option value="10" <?php if ($currentpage == '10') echo 'selected'; ?>>10</option>
+            <option value="480" <?php if ($currentpage == '480') echo 'selected'; ?>>480</option>
+            <option value="240" <?php if ($currentpage == '240') echo 'selected'; ?>>240</option>
+            <option value="228" <?php if ($currentpage == '228') echo 'selected'; ?>>228</option>
+            <option value="216" <?php if ($currentpage == '216') echo 'selected'; ?>>216</option>
+            <option value="204" <?php if ($currentpage == '204') echo 'selected'; ?>>204</option>
+            <option value="192" <?php if ($currentpage == '192') echo 'selected'; ?>>192</option>
+            <option value="180" <?php if ($currentpage == '180') echo 'selected'; ?>>180</option>
+            <option value="168" <?php if ($currentpage == '168') echo 'selected'; ?>>168</option>
+            <option value="156" <?php if ($currentpage == '156') echo 'selected'; ?>>156</option>
+            <option value="144" <?php if ($currentpage == '144') echo 'selected'; ?>>144</option>
+            <option value="132" <?php if ($currentpage == '132') echo 'selected'; ?>>132</option>
+            <option value="120" <?php if ($currentpage == '120') echo 'selected'; ?>>120</option>
+            <option value="108" <?php if ($currentpage == '108') echo 'selected'; ?>>108</option>
+            <option value="96" <?php if ($currentpage == '96') echo 'selected'; ?>>96</option>
+            <option value="84" <?php if ($currentpage == '84') echo 'selected'; ?>>84</option>
+            <option value="72" <?php if ($currentpage == '72') echo 'selected'; ?>>72</option>
+            <option value="60" <?php if ($currentpage == '60') echo 'selected'; ?>>60</option>
+            <option value="48" <?php if ($currentpage == '48') echo 'selected'; ?>>48</option>
+            <option value="36" <?php if ($currentpage == '36') echo 'selected'; ?>>36</option>
+            <option value="24" <?php if ($currentpage == '20') echo 'selected'; ?>>24</option>
+            <option value="12" <?php if ($currentpage == '10') echo 'selected'; ?>>12</option>
           </select>
         </div>
         <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
