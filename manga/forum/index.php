@@ -54,18 +54,20 @@ $categories = [
   'Anime_Culture',
   'Otaku_Lifestyle',
 ];
-// Insert categories into the database if they don't exist
-$stmt = $db->prepare("INSERT OR IGNORE INTO category (category_name) VALUES (:category_name)");
-foreach ($categories as $category) {
-  if (!$stmt->execute([':category_name' => $category])) {
-    die("Error inserting category: $category");
-  }
-}
 
-// Check if all categories were inserted correctly
-$result = $db->query("SELECT * FROM category");
-if ($result === false) {
-  die("Error fetching categories.");
+// Insert categories if they don't already exist
+foreach ($categories as $category) {
+  $stmt = $db->prepare("SELECT category_name FROM category WHERE category_name = :category");
+  $stmt->bindValue(':category', $category, PDO::PARAM_STR);
+  $stmt->execute();
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  // Check if category exists
+  if (!$result) {
+    $stmt = $db->prepare("INSERT INTO category (category_name) VALUES (:category)");
+    $stmt->bindValue(':category', $category, PDO::PARAM_STR);
+    $stmt->execute();
+  }
 }
 
 $posts_per_page = 20;
