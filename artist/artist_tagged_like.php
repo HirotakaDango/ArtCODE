@@ -88,7 +88,7 @@ if (isset($_GET['tag'])) {
 
 if ($stmt->execute()) {
   // Fetch the results as an associative array
-  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
   // Handle the query execution error
   echo "Error executing the query.";

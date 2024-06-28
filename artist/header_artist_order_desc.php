@@ -1,5 +1,5 @@
     <div class="overflow-x-auto container-fluid p-1 mb-2 hide-scrollbar" style="white-space: nowrap;">
-      <a href="?id=<?php echo $id; ?>&by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="fw-medium btn btn-sm btn-dark rounded-pill">all images</a>
+      <a href="?id=<?php echo $id; ?>&by=order_desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="fw-medium btn btn-sm btn-dark rounded-pill">all images</a>
         <?php
           try {
             // SQL query to get the most popular tags and their counts based on the user's email using a JOIN
@@ -21,7 +21,7 @@
               $tagCount = $row['tag_count'];
 
               // Display each first tag as an <a> tag with the total count
-              echo "<a class='fw-medium btn btn-sm btn-dark rounded-pill' style='margin-right: 2px;' href='?id=$id&by=tagged_oldest&tag=$firstTag'><i class='bi bi-tags-fill'></i> $firstTag</a>";
+              echo "<a class='fw-medium btn btn-sm btn-dark rounded-pill' style='margin-right: 2px;' href='?id=$id&by=tagged_order_desc&tag=$firstTag'><i class='bi bi-tags-fill'></i> $firstTag</a>";
             }
           } catch (PDOException $e) {
             // Handle any database connection or query errors
@@ -38,4 +38,4 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
       }
-    </style>
+    </style> 
