@@ -33,6 +33,8 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
         <li><a href="?by=view&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
         <li><a href="?by=least&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
         <li><a href="?by=liked&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
+        <li><a href="?by=order_asc&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
+        <li><a href="?by=order_desc&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
       </ul> 
     </div> 
         <?php 
@@ -57,6 +59,12 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
             break;
             case 'liked':
             include "index_liked.php";
+            break;
+            case 'order_asc':
+            include "index_order_asc.php";
+            break;
+            case 'order_desc':
+            include "index_order_desc.php";
             break;
           }
         }

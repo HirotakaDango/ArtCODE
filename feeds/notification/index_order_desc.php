@@ -1,26 +1,32 @@
 <?php
-// Prepare the query to get the user's numpage
-$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
-$queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
-$resultNum = $queryNum->execute();
-$user = $resultNum->fetchArray(SQLITE3_ASSOC);
-
-$numpage = $user['numpage'];
-
-// Set the limit of images per page
-$limit = empty($numpage) ? 50 : $numpage;
-$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-$offset = ($page - 1) * $limit;
-
-// Get all of the favorite images for the current user with pagination
-$query = ("SELECT images.* FROM images INNER JOIN favorites ON images.id = favorites.image_id WHERE favorites.email = '$email' ORDER BY favorites.id ASC LIMIT $limit OFFSET $offset");
-$result = $db->query($query);
-
-// Get the total count of favorite images for the current user
-$total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON images.id = favorites.image_id WHERE favorites.email = '$email'");
+// Get images from the database uploaded by users that the current user follows
+$stmt = $db->prepare("SELECT images.* FROM images INNER JOIN following ON images.email = following.following_email WHERE following.follower_email = :email ORDER BY images.title DESC LIMIT :limit OFFSET :offset");
+$stmt->bindValue(':email', $email, SQLITE3_TEXT);
+$stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
+$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+$result = $stmt->execute();
 ?>
 
-    <?php include('image_card_feeds_fav.php'); ?>
+    <div class="container-fluid">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-1">
+        <?php while ($image = $result->fetchArray()): ?>
+          <?php
+            $title = $image['title'];
+            $filename = $image['filename'];
+            $email = $image['email'];
+            $artist = '';
+            $stmt = $db->prepare("SELECT id, artist FROM users WHERE email = ?");
+            $stmt->bindValue(1, $email, SQLITE3_TEXT);
+            $result2 = $stmt->execute();
+            if ($user = $result2->fetchArray()) {
+              $artist = $user['artist'];
+              $id = $user['id'];
+            }
+          ?>
+          <?php include($_SERVER['DOCUMENT_ROOT'] . '/feeds/notification/card_notification.php'); ?>
+        <?php endwhile; ?>
+      </div>
+    </div>
     <?php
       $totalPages = ceil($total / $limit);
       $prevPage = $page - 1;
@@ -28,11 +34,11 @@ $total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON i
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -45,17 +51,17 @@ $total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON i
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>

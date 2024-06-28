@@ -52,7 +52,7 @@ $_SESSION['success_message'] = 'Image successfully added to the album';
 $db->close();
 
 // Redirect the user to the album_images.php page for the specified album
-header('Location: album_images.php?album_id=' . urlencode($album_id));
+header('Location: album_images.php?id=' . urlencode($album_id));
 exit();
 
 ?>

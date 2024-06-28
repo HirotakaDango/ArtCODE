@@ -9,18 +9,24 @@ $numpage = $user['numpage'];
 
 // Set the limit of images per page
 $limit = empty($numpage) ? 50 : $numpage;
+
+// Get the current page number, default to 1
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+// Calculate the offset based on the current page number and limit
 $offset = ($page - 1) * $limit;
 
-// Get all of the favorite images for the current user with pagination
-$query = ("SELECT images.* FROM images INNER JOIN favorites ON images.id = favorites.image_id WHERE favorites.email = '$email' ORDER BY favorites.id ASC LIMIT $limit OFFSET $offset");
-$result = $db->query($query);
+// Get the total number of images
+$total = $db->querySingle("SELECT COUNT(*) FROM images");
 
-// Get the total count of favorite images for the current user
-$total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON images.id = favorites.image_id WHERE favorites.email = '$email'");
+// Get the images for the current page
+$stmt = $db->prepare("SELECT * FROM images ORDER BY title DESC LIMIT ?, ?");
+$stmt->bindValue(1, $offset, SQLITE3_INTEGER);
+$stmt->bindValue(2, $limit, SQLITE3_INTEGER);
+$result = $stmt->execute();
 ?>
 
-    <?php include('image_card_feeds_fav.php'); ?>
+    <?php include('image_card_home.php')?>
     <?php
       $totalPages = ceil($total / $limit);
       $prevPage = $page - 1;
@@ -28,11 +34,11 @@ $total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON i
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
@@ -45,17 +51,17 @@ $total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON i
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=oldest&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=order_desc&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>
@@ -64,7 +70,7 @@ $total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON i
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "../../icon/bg.png";
+      const defaultPlaceholder = "../icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {
@@ -81,8 +87,25 @@ $total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON i
           image.src = defaultPlaceholder; // Apply default placeholder
           imageObserver.observe(image);
           image.style.filter = "blur(5px)"; // Apply initial blur to all images
+
+          // Remove blur and apply custom blur to NSFW images after they load
           image.addEventListener("load", function() {
-            image.style.filter = "none"; // Remove blur after image loads
+            image.style.filter = ""; // Remove initial blur
+            if (image.classList.contains("nsfw")) {
+              image.style.filter = "blur(4px)"; // Apply blur to NSFW images
+          
+              // Add overlay with icon and text
+              let overlay = document.createElement("div");
+              overlay.classList.add("overlay", "rounded");
+              let icon = document.createElement("i");
+              icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
+              overlay.appendChild(icon);
+              let text = document.createElement("span");
+              text.textContent = "R-18";
+              text.classList.add("shadowed-text", "fw-bold", "text-white");
+              overlay.appendChild(text);
+              image.parentNode.appendChild(overlay);
+            }
           });
         });
       } else {
@@ -145,4 +168,15 @@ $total = $db->querySingle("SELECT COUNT(*) FROM images INNER JOIN favorites ON i
 
       // Initial loading
       loadMoreImages();
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('../sw.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
     </script>
