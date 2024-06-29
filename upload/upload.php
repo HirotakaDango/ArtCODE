@@ -115,9 +115,24 @@ if (isset($_FILES['image'])) {
   $tags = array_filter($tags); // Remove any empty tags
   $tags = array_values($tags); // Reset array indexes
   $tags = implode(",", $tags); // Join tags by comma
+
+  $parodies = filter_var($_POST['parodies'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $parodies = explode(",", $parodies);
+  $parodies = array_map('trim', $parodies); // Remove extra white space from each tag
+  $parodies = array_filter($parodies); // Remove any empty parodies
+  $parodies = array_values($parodies); // Reset array indexes
+  $parodies = implode(",", $parodies); // Join parodies by comma
+
+  $characters = filter_var($_POST['characters'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $characters = explode(",", $characters);
+  $characters = array_map('trim', $characters); // Remove extra white space from each tag
+  $characters = array_filter($characters); // Remove any empty characters
+  $characters = array_values($characters); // Reset array indexes
+  $characters = implode(",", $characters); // Join characters by comma
+
   $date = date('Y-m-d'); // Get the current date in YYYY-MM-DD format
 
-  $stmt = $db->prepare("INSERT INTO images (email, filename, tags, title, imgdesc, link, date, type, episode_name, artwork_type, `group`, categories, language, parodies) VALUES (:email, :filename, :tags, :title, :imgdesc, :link, :date, :type, :episode_name, :artwork_type, :group, :categories, :language, :parodies)");
+  $stmt = $db->prepare("INSERT INTO images (email, filename, tags, title, imgdesc, link, date, type, episode_name, artwork_type, `group`, categories, language, parodies, characters) VALUES (:email, :filename, :tags, :title, :imgdesc, :link, :date, :type, :episode_name, :artwork_type, :group, :categories, :language, :parodies, :characters)");
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':filename', $filename);
   $stmt->bindValue(':tags', $tags);
@@ -132,6 +147,7 @@ if (isset($_FILES['image'])) {
   $stmt->bindValue(':categories', filter_var($_POST['categories'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->bindValue(':language', filter_var($_POST['language'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->bindValue(':parodies', filter_var($_POST['parodies'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
+  $stmt->bindValue(':characters', filter_var($_POST['characters'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW));
   $stmt->execute();
 
   // Retrieve the ID of the inserted image

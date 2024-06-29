@@ -1,17 +1,5 @@
-<?php
-// Get the value of the 'by' parameter from the URL
-$by = isset($_GET['by']) ? $_GET['by'] : 'newest';
-
-// Check if $tag is set and we are in one of the tagged views
-if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view', 'tagged_least', 'tagged_liked'])) {
-  $url = "../../profile/delete.php?by=$by&tag=$tag&page=$page";
-} else {
-  $url = "../../profile/delete.php?by=$by&page=$page";
-}
-?>
-
             <div>
-              <form action="../../profile/delete.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $page; ?>" method="post">
+              <form action="../../profile/delete_tagged.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $page; ?>" method="post">
                 <!-- Modal -->
                 <div class="modal fade" id="deleteImage_<?php echo $imageA['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-fullscreen modal-dialog-centered" role="document">
@@ -22,7 +10,7 @@ if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popu
                             .icon-stroke-1 { -webkit-text-stroke: 1px; }
                             .icon-stroke-2 { -webkit-text-stroke: 2px; }
                             .icon-stroke-3 { -webkit-text-stroke: 3px; }
-                          </style>
+                          </style>a
                           <div class="position-absolute top-0 start-100 translate-middle">
                             <button type="button" class="btn btn-sm rounded-circle btn-light shadow" data-bs-dismiss="modal"><i class="bi bi-x icon-stroke-1"></i></button>
                           </div>

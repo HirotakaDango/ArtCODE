@@ -361,7 +361,7 @@ $fav_count = $fav_row['num_favorites'];
     <?php include('most_popular_profile.php'); ?>
 
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
-    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'tagged_oldest' || $_GET['by'] === 'tagged_newest' || $_GET['by'] === 'tagged_popular' || $_GET['by'] === 'tagged_view' || $_GET['by'] === 'tagged_least' || $_GET['by'] === 'tagged_liked')) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_view.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_least.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_like.php') !== false)) ? 'd-none' : ''; ?>">
+    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'tagged_oldest' || $_GET['by'] === 'tagged_newest' || $_GET['by'] === 'tagged_popular' || $_GET['by'] === 'tagged_view' || $_GET['by'] === 'tagged_least' || $_GET['by'] === 'tagged_liked' || $_GET['by'] === 'tagged_order_asc' || $_GET['by'] === 'tagged_order_desc')) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_view.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_least.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_like.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_order_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_profile_order_desc.php') !== false)) ? 'd-none' : ''; ?>">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
@@ -372,9 +372,11 @@ $fav_count = $fav_row['num_favorites'];
         <li><a href="?by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
         <li><a href="?by=least&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
         <li><a href="?by=liked&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
+        <li><a href="?by=order_asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
+        <li><a href="?by=order_desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
       </ul>
     </div> 
-    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest' || $_GET['by'] === 'popular' || $_GET['by'] === 'view' || $_GET['by'] === 'least' || $_GET['by'] === 'liked')) || (strpos($_SERVER['REQUEST_URI'], 'profile_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_view.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_least.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_like.php') !== false)) ? 'd-none' : ''; ?>">
+    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest' || $_GET['by'] === 'popular' || $_GET['by'] === 'view' || $_GET['by'] === 'least' || $_GET['by'] === 'liked' || $_GET['by'] === 'order_asc' || $_GET['by'] === 'order_desc')) || (strpos($_SERVER['REQUEST_URI'], 'profile_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_view.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_least.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_like.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_order_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'profile_order_desc.php') !== false)) ? 'd-none' : ''; ?>">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
@@ -385,6 +387,8 @@ $fav_count = $fav_row['num_favorites'];
         <li><a href="?by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_view') echo 'active'; ?>">most viewed</a></li>
         <li><a href="?by=tagged_least&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_least') echo 'active'; ?>">least viewed</a></li>
         <li><a href="?by=tagged_liked&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_liked') echo 'active'; ?>">liked</a></li>
+        <li><a href="?by=tagged_order_asc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_order_asc') echo 'active'; ?>">from A to Z</a></li>
+        <li><a href="?by=tagged_order_desc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_order_desc') echo 'active'; ?>">from Z to A</a></li>
       </ul>
     </div> 
         <?php 
@@ -410,6 +414,13 @@ $fav_count = $fav_row['num_favorites'];
             case 'liked':
             include "profile_like.php";
             break;
+            case 'order_asc':
+            include "profile_order_asc.php";
+            break;
+            case 'order_desc':
+            include "profile_order_desc.php";
+            break;
+
             case 'tagged_newest':
             include "profile_tagged_desc.php";
             break;
@@ -427,6 +438,12 @@ $fav_count = $fav_row['num_favorites'];
             break;
             case 'tagged_liked':
             include "profile_tagged_like.php";
+            break;
+            case 'tagged_order_asc':
+            include "profile_tagged_order_asc.php";
+            break;
+            case 'tagged_order_desc':
+            include "profile_tagged_order_desc.php";
             break;
           }
         }

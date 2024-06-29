@@ -1,6 +1,6 @@
 <?php
 // Get the value of the 'by' parameter from the URL
-$by = isset($_GET['by']) ? $_GET['by'] : 'like';
+$by = isset($_GET['by']) ? $_GET['by'] : 'newest';
 
 // Check if $tag is set and we are in one of the tagged views
 if (isset($tag) && in_array($by, ['tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view', 'tagged_least', 'tagged_liked'])) {

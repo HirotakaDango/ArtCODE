@@ -46,27 +46,28 @@ require_once('../auth.php');
                     <input class="form-control border rounded-3 fw-bold border-4" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
                     <label for="title" class="fw-bold">Enter title for your image</label>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6 pe-md-1">
-                      <div class="form-floating mb-2">
-                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="group" id="group" placeholder="Enter group for your image" maxlength="500">  
-                        <label for="group" class="fw-bold">Enter group for your image</label>
-                      </div>
-                    </div>
-                    <div class="col-md-6 ps-md-1">
-                      <div class="form-floating mb-2">
-                        <input class="form-control border rounded-3 fw-bold border-4" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="500" required>  
-                        <label for="tags" class="fw-bold">Enter tags for your image</label>
-                      </div>
-                    </div>
+                  <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 fw-bold border-4" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="500" required>  
+                    <label for="tags" class="fw-bold">Enter tags for your image</label>
                   </div>
                   <div class="form-floating mb-2">
-                    <textarea class="form-control border rounded-3 fw-bold border-4" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="2000" style="height: 200px;" required></textarea>
+                    <textarea class="form-control border rounded-3 fw-bold border-4" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="5000" style="height: 200px;" required></textarea>
                     <label for="imgdesc" class="fw-bold">Enter description for your image</label>
                   </div>
+                  <h6 class="fw-medium mb-2 mt-4">Group is optional, to displaying group names for <a class="text-decoration-none fw-medium" href="/manga/?group=">manga section only!</a></h6>
                   <div class="form-floating mb-2">
-                    <input class="form-control border rounded-3 fw-bold border-4" type="text" name="parodies" id="parodies" placeholder="Enter parodies for your image" maxlength="500">  
-                    <label for="tags" class="fw-bold">Enter parodies for your image</label>
+                    <input class="form-control border rounded-3 fw-bold border-4" type="text" name="group" id="group" placeholder="Enter group for your image" maxlength="4500">  
+                    <label for="group" class="fw-bold">Enter group for your image</label>
+                  </div>
+                  <h6 class="fw-medium mb-2 mt-4">Characters is optional, to displaying character names for <a class="text-decoration-none fw-medium" href="/manga/?character=">manga section only!</a></h6>
+                  <div class="form-floating mb-2">
+                    <input class="form-control border rounded-3 fw-bold border-4" type="text" name="characters" id="characters" placeholder="Enter characters for your image" maxlength="4500">  
+                    <label for="characters" class="fw-bold">Enter characters for your image</label>
+                  </div>
+                  <h6 class="fw-medium mb-2 mt-4">Parodies is optional, to displaying fiction names for <a class="text-decoration-none fw-medium" href="/manga/?parody=">manga section only!</a></h6>
+                  <div class="form-floating mb-4">
+                    <input class="form-control border rounded-3 fw-bold border-4" type="text" name="parodies" id="parodies" placeholder="Enter parodies for your image" maxlength="4500">  
+                    <label for="parodies" class="fw-bold">Enter parodies for your image</label>
                   </div>
                   <div class="form-floating mb-2">
                     <select class="form-select border rounded-3 fw-bold border-4 py-0 text-start" name="episode_name">

@@ -24,6 +24,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
         echo 'Tag: "' . $_GET['tag'] . '"';
       } elseif (isset($_GET['parody'])) {
         echo 'Parody: "' . $_GET['parody'] . '"';
+      } elseif (isset($_GET['character'])) {
+        echo 'Character: "' . $_GET['character'] . '"';
       } elseif (isset($_GET['group'])) {
         echo 'Group: "' . $_GET['group'] . '"';
       } elseif (isset($_GET['categories'])) {
@@ -75,6 +77,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
         'uid' => $_GET['uid'] ?? null,
         'tag' => $_GET['tag'] ?? null,
         'parody' => $_GET['parody'] ?? null,
+        'character' => $_GET['character'] ?? null,
         'by' => $_GET['by'] ?? null,
         'group' => $_GET['group'] ?? null,
         'categories' => $_GET['categories'] ?? null,
@@ -105,6 +108,8 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
             echo 'Tag: "' . $_GET['tag'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['parody'])) {
             echo 'Parody: "' . $_GET['parody'] . '" (' . $totalImages . ')';
+          } elseif (isset($_GET['character'])) {
+            echo 'Character: "' . $_GET['character'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['group'])) {
             echo 'Group: "' . $_GET['group'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['categories'])) {

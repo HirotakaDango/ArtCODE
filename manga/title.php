@@ -47,6 +47,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
           $artistImageCount = $data['artist_image_count'];
           $tags = $data['tags'];
           $parodies = $data['parodies'];
+          $characters = $data['characters'];
           $groupCounts = $data['group_counts'];
           $categoriesCounts = $data['categories_counts'];
           $languageCounts = $data['language_counts'];
@@ -180,6 +181,23 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       <div class="btn-group mb-2 me-1">
                         <a href="index.php?parody=<?php echo urlencode($parody); ?>" class="btn btn-sm small bg-secondary-subtle fw-bold">
                           <?php echo $parody; ?>
+                        </a>
+                        <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold">
+                          <?php echo $count; ?>
+                        </a>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              <?php endif; ?>
+              <?php if (isset($characters) && !empty($characters)): ?>
+                <div class="mb-2 row">
+                  <label for="characters" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">characters</h6></label>
+                  <div class="col-9">
+                    <?php foreach($characters as $character => $count): ?>
+                      <div class="btn-group mb-2 me-1">
+                        <a href="index.php?character=<?php echo urlencode($character); ?>" class="btn btn-sm small bg-secondary-subtle fw-bold">
+                          <?php echo $character; ?>
                         </a>
                         <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold">
                           <?php echo $count; ?>

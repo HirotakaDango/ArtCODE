@@ -13,10 +13,13 @@
               <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="/manga/parodies.php"><i class="bi bi-book-half"></i> Parodies</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="/manga/characters.php"><i class="bi bi-people-fill"></i> Characters</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="/manga/tags.php"><i class="bi bi-tags-fill"></i> Tags</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'active' ?>" href="/manga/artists.php"><i class="bi bi-people-fill"></i> Artists</a>
+              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'active' ?>" href="/manga/artists.php"><i class="bi bi-person-fill"></i> Artists</a>
             </li>
             <?php
               // Check if the user is logged in

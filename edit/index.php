@@ -54,9 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $categories = filter_var($_POST['categories'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $language = filter_var($_POST['language'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $parodies = filter_var($_POST['parodies'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $characters = filter_var($_POST['characters'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
 
   // Update the images table with the selected or new episode_name
-  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name, artwork_type = :artwork_type, `group` = :group, categories = :categories, language = :language, parodies = :parodies WHERE id = :id');
+  $stmt = $db->prepare('UPDATE images SET title = :title, imgdesc = :imgdesc, link = :link, tags = :tags, type = :type, episode_name = :episode_name, artwork_type = :artwork_type, `group` = :group, categories = :categories, language = :language, parodies = :parodies, characters = :characters WHERE id = :id');
   $stmt->bindParam(':title', $title);
   $stmt->bindParam(':imgdesc', $imgdesc);
   $stmt->bindParam(':link', $link);
@@ -68,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt->bindParam(':categories', $categories);
   $stmt->bindParam(':language', $language);
   $stmt->bindParam(':parodies', $parodies);
+  $stmt->bindParam(':characters', $characters);
   $stmt->bindParam(':id', $id);
   $stmt->execute();
 
@@ -186,26 +188,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo $image['title']; ?>" name="title" placeholder="Image title" maxlength="500" required>  
                 <label for="floatingInput" class="text-dark fw-bold">Enter title for your image</label>
               </div>
-              <div class="row">
-                <div class="col-md-6 pe-md-1">
-                  <div class="form-floating mb-2">
-                    <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo $image['group']; ?>" name="group" placeholder="Image group" maxlength="500">  
-                    <label for="floatingInput" class="text-dark fw-bold">Enter group for your image</label>
-                  </div>
-                </div>
-                <div class="col-md-6 ps-md-1">
-                  <div class="form-floating mb-2">
-                    <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="500" required>
-                    <label for="floatingInput" class="text-dark fw-bold">Enter tag for your image</label>
-                  </div>
-                </div>
+              <div class="form-floating mb-2">
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['tags']); ?>" name="tags" placeholder="Image tag" maxlength="500" required>
+                <label for="floatingInput" class="text-dark fw-bold">Enter tag for your image</label>
               </div>
               <div class="form-floating mb-2">
-                <textarea class="form-control border rounded-3 text-dark fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="2000" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
+                <textarea class="form-control border rounded-3 text-dark fw-bold border-4" oninput="stripHtmlTags(this)" type="text" value="<?php echo htmlspecialchars($image['imgdesc']); ?>" name="imgdesc" placeholder="Image description" maxlength="5000" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
                 <label for="floatingInput" class="text-dark fw-bold">Enter description for your image</label>
               </div>
+              <h6 class="fw-medium mb-2 mt-4">Group is optional, to displaying group names for <a class="text-decoration-none fw-medium" href="/manga/?group=">manga section only!</a></h6>
               <div class="form-floating mb-2">
-                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['parodies']); ?>" name="parodies" placeholder="Image parodies" maxlength="500">
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo $image['group']; ?>" name="group" placeholder="Image group" maxlength="4500">  
+                <label for="floatingInput" class="text-dark fw-bold">Enter group for your image</label>
+              </div>
+              <h6 class="fw-medium mb-2 mt-4">Characters is optional, to displaying character names for <a class="text-decoration-none fw-medium" href="/manga/?character=">manga section only!</a></h6>
+              <div class="form-floating mb-2">
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['characters']); ?>" name="characters" placeholder="Image characters" maxlength="4500">
+                <label for="floatingInput" class="text-dark fw-bold">Enter characters for your image</label>
+              </div>
+              <h6 class="fw-medium mb-2 mt-4">Parodies is optional, to displaying fiction names for <a class="text-decoration-none fw-medium" href="/manga/?parody=">manga section only!</a></h6>
+              <div class="form-floating mb-4">
+                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" value="<?php echo htmlspecialchars($image['parodies']); ?>" name="parodies" placeholder="Image parodies" maxlength="4500">
                 <label for="floatingInput" class="text-dark fw-bold">Enter parodies for your image</label>
               </div>
               <div class="form-floating mb-2">
