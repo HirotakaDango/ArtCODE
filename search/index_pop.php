@@ -34,7 +34,7 @@ if (isset($_GET['q'])) {
 
   // Add conditions for tags and titles
   foreach ($terms as $index => $term) {
-    $conditions[] = "(LOWER(images.tags) LIKE ? OR LOWER(images.title) LIKE ?)";
+    $conditions[] = "(LOWER(tags) LIKE ? OR LOWER(title) LIKE ? OR LOWER(characters) LIKE ? OR LOWER(parodies) LIKE ?)";
   }
 
   // Combine all conditions using OR

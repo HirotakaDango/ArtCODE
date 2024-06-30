@@ -384,7 +384,31 @@ $fav_count = $fav_count->fetchColumn();
     <?php include('most_popular_artist.php'); ?>
     
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
-    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'tagged_oldest' || $_GET['by'] === 'tagged_newest' || $_GET['by'] === 'tagged_popular' || $_GET['by'] === 'tagged_view' || $_GET['by'] === 'tagged_least' || $_GET['by'] === 'tagged_liked' || $_GET['by'] === 'tagged_order_asc' || $_GET['by'] === 'tagged_order_desc')) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_view.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_least.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_like.php') !== false)  || (strpos($_SERVER['REQUEST_URI'], 'header_artist_order_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'header_artist_order_desc.php') !== false)) ? 'd-none' : ''; ?>">
+    <?php
+    $validTaggedFilters = [
+      'tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view',
+      'tagged_least', 'tagged_liked', 'tagged_order_asc', 'tagged_order_desc'
+    ];
+    $validHeaderPages = [
+      'header_artist_asc.php', 'header_artist_desc.php', 'header_artist_pop.php',
+      'header_artist_view.php', 'header_artist_least.php', 'header_artist_like.php',
+      'header_artist_order_asc.php', 'header_artist_order_desc.php'
+    ];
+    
+    $isTagHidden = false;
+    
+    if (isset($_GET['by']) && in_array($_GET['by'], $validTaggedFilters)) {
+      $isTagHidden = true;
+    } else {
+      foreach ($validHeaderPages as $page) {
+        if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
+          $isTagHidden = true;
+          break;
+        }
+      }
+    }
+    ?>
+    <div class="dropdown <?php echo $isTagHidden ? 'd-none' : ''; ?>">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
@@ -399,7 +423,25 @@ $fav_count = $fav_count->fetchColumn();
         <li><a href="?id=<?php echo $id; ?>&by=order_desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
       </ul>
     </div> 
-    <div class="dropdown <?php echo ((isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest' || $_GET['by'] === 'popular' || $_GET['by'] === 'view' || $_GET['by'] === 'least' || $_GET['by'] === 'liked' || $_GET['by'] === 'order_asc') || $_GET['by'] === 'order_desc') || (strpos($_SERVER['REQUEST_URI'], 'artist_asc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_desc.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_pop.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_view.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_least.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_like.php') !== false) || (strpos($_SERVER['REQUEST_URI'], 'artist_order_asc.php') !== false)|| (strpos($_SERVER['REQUEST_URI'], 'artist_order_desc.php') !== false)) ? 'd-none' : ''; ?>">
+
+    <?php
+    $validFilters = ['oldest', 'newest', 'popular', 'view', 'least', 'liked', 'order_asc', 'order_desc'];
+    $validPages = ['artist_asc.php', 'artist_desc.php', 'artist_pop.php', 'artist_view.php', 'artist_least.php', 'artist_like.php', 'artist_order_asc.php', 'artist_order_desc.php'];
+    
+    $isHidden = false;
+    
+    if (isset($_GET['by']) && in_array($_GET['by'], $validFilters)) {
+      $isHidden = true;
+    } else {
+      foreach ($validPages as $page) {
+        if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
+          $isHidden = true;
+          break;
+        }
+      }
+    }
+    ?>
+    <div class="dropdown <?php echo $isHidden ? 'd-none' : ''; ?>">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-3 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>

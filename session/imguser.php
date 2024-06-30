@@ -38,7 +38,7 @@
       $stmt->execute();
       $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
-    <p class="ms-2 mt-3 text-secondary fw-bold">
+    <p class="ms-2 mt-3 fw-bold">
       <i class="bi bi-images"></i> Latest images by <?php echo $user['artist']; ?>
     </p>
     <div class="mb-3 media-scroller snaps-inline overflow-auto">

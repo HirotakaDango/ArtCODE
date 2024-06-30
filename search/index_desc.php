@@ -29,7 +29,7 @@ $conditions = array();
 // Add conditions for tags and titles
 foreach ($terms as $index => $term) {
   if (!empty($term)) {
-    $conditions[] = "(LOWER(tags) LIKE ? OR LOWER(title) LIKE ?)";
+    $conditions[] = "(LOWER(tags) LIKE ? OR LOWER(title) LIKE ? OR LOWER(characters) LIKE ? OR LOWER(parodies) LIKE ?)";
   }
 }
 

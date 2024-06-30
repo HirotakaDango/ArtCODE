@@ -20,13 +20,13 @@ while ($imageP = $resultP->fetchArray()) {
 ?>
 
     <div class="imagesMP w-100 px-1 my-2">
-      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-5 g-1">
+      <div class="<?php include('rows_columns/row-cols.php'); echo $rows_columns; ?>">
         <?php 
         $count = 0; 
         $images = [];
         while ($imageP = $resultP->fetchArray()) {
           $images[] = $imageP;
-          if ($count < 10) {
+          if ($count < 12) {
             $image_idP = $imageP['id'];
             $image_urlP = $imageP['filename'];
             $image_titleP = $imageP['title'];
@@ -51,7 +51,7 @@ while ($imageP = $resultP->fetchArray()) {
     </div>
     
     <script>
-      var currentIndexP = 10;
+      var currentIndexP = 12;
       var imagesP = <?php echo json_encode($images); ?>;
       var containerP = document.querySelector('.imagesMP .row');
       var loadMoreBtnP = document.getElementById('loadMoreBtnP');
@@ -59,7 +59,7 @@ while ($imageP = $resultP->fetchArray()) {
       loadMoreBtnP.addEventListener('click', function() {
         var fragment = document.createDocumentFragment();
     
-        for (var i = currentIndexP; i < currentIndexP + 10 && i < imagesP.length; i++) {
+        for (var i = currentIndexP; i < currentIndexP + 12 && i < imagesP.length; i++) {
           var imageUP = imagesP[i];
           var image_idP = imageUP['id'];
           var image_urlP = imageUP['filename'];
@@ -95,29 +95,9 @@ while ($imageP = $resultP->fetchArray()) {
     
         containerP.appendChild(fragment);
     
-        currentIndexP += 10;
+        currentIndexP += 12;
         if (currentIndexP >= imagesP.length) {
           loadMoreBtnP.style.display = 'none';
         }
       });
-    </script>
-    <script>
-      function shareImageP(userId) {
-        // Compose the share URL
-        var shareUrl = '?artworkid=' + userId;
-
-        // Check if the Share API is supported by the browser
-        if (navigator.share) {
-          navigator.share({
-          url: shareUrl
-        })
-          .then(() => console.log('Shared successfully.'))
-          .catch((error) => console.error('Error sharing:', error));
-        } else {
-          console.log('Share API is not supported in this browser.');
-          // Provide an alternative action for browsers that do not support the Share API
-          // For example, you can open a new window with the share URL
-          window.open(shareUrl, '_blank');
-        }
-      }
     </script>

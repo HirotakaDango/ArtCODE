@@ -228,7 +228,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
             <?php else: ?>
               <img class="object-fit-cover border border-1 rounded-circle" src="icon/profile.svg" style="width: 32px; height: 32px;">
             <?php endif; ?>
-            <?php echo (mb_strlen($user['artist']) > 10) ? mb_substr($user['artist'], 0, 10) . '...' : $user['artist']; ?> <small class="badge rounded-pill bg-primary"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
+            <?php echo (mb_strlen($user['artist']) > 10) ? mb_substr($user['artist'], 0, 10) . '...' : $user['artist']; ?> <small class="badge rounded-pill bg-dark"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
           </a>
         </div>
         <div class="ms-auto">
@@ -245,13 +245,13 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header border-bottom-0">
-              <h5 class="modal-title fw-bold fs-5" id="exampleModalLabel"><?php echo $user['artist']; ?> <small class="badge rounded-pill bg-primary"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small></h5>
+              <h5 class="modal-title fw-bold fs-5" id="exampleModalLabel"><?php echo $user['artist']; ?> <small class="badge rounded-pill bg-dark"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small></h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <div class="row featurette">
                 <div class="col-5 order-1">
-                  <a class="text-decoration-none d-flex justify-content-center text-dark fw-bold rounded-pill" href="artist.php?id=<?= $user['id'] ?>">
+                  <a class="text-decoration-none d-flex justify-content-center text-dark fw-bold rounded-pill" href="artist.php?by=newest&id=<?= $user['id'] ?>">
                     <?php if (!empty($user['pic'])): ?>
                       <img class="object-fit-cover border border-3 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 103px; height: 103px;">
                     <?php else: ?>
@@ -265,17 +265,17 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                     <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="following.php?id=<?php echo $user['id']; ?>"><small>following</small></a>
                   </div>
                   <div class="btn-group w-100 mb-1 gap-1" role="group" aria-label="Basic example">
-                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="artist.php?id=<?php echo $user['id']; ?>"><small>images</small></a>
+                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="artist.php?by=newest&id=<?php echo $user['id']; ?>"><small>images</small></a>
                     <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="list_favorite.php?id=<?php echo $user['id']; ?>"><small>favorites</small></a> 
                   </div>
-                  <a class="btn btn-sm btn-outline-dark w-100 rounded fw-bold" href="artist.php?id=<?php echo $user['id']; ?>"><small>view profile</small></a>
+                  <a class="btn btn-sm btn-outline-dark w-100 rounded fw-bold" href="artist.php?by=newest&id=<?php echo $user['id']; ?>"><small>view profile</small></a>
                 </div>
               </div>
               <div class="input-group my-1">
                 <?php
                   $domain = $_SERVER['HTTP_HOST'];
                   $user_id_url = $user['id'];
-                  $url = "http://$domain/artist.php?id=$user_id_url";
+                  $url = "http://$domain/artist.php?by=newest&id=$user_id_url";
                 ?>
                 <input type="text" id="urlInput" value="<?php echo $url; ?>" class="form-control border-2 fw-bold" readonly>
                 <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard()">
@@ -285,7 +285,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <i class="bi bi-share-fill"></i> <small>share</small>
                 </button>
               </div>
-              <a class="btn btn-primary w-100 fw-bold mt-1" data-bs-toggle="collapse" href="#collapseBio" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <a class="btn btn-dark w-100 fw-bold mt-1" data-bs-toggle="collapse" href="#collapseBio" role="button" aria-expanded="false" aria-controls="collapseExample">
                 <small>view description</small>
               </a>
               <div class="collapse mt-1" id="collapseBio">
@@ -319,7 +319,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <i class="bi bi-chevron-left text-stroke-2"></i>
               </button>
             <?php else: ?>
-              <button class="img-pointer btn me-auto border-0" onclick="location.href='artist.php?id=<?php echo $user['id']; ?>'">
+              <button class="img-pointer btn me-auto border-0" onclick="location.href='artist.php?by=newest&id=<?php echo $user['id']; ?>'">
                 <i class="bi bi-box-arrow-in-up-left text-stroke"></i>
               </button>
             <?php endif; ?>
@@ -331,7 +331,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <i class="bi bi-chevron-right text-stroke-2"></i>
               </button>
             <?php else: ?>
-              <button class="img-pointer btn ms-auto border-0" onclick="location.href='artist.php?id=<?php echo $user['id']; ?>'">
+              <button class="img-pointer btn ms-auto border-0" onclick="location.href='artist.php?by=newest&id=<?php echo $user['id']; ?>'">
                 <i class="bi bi-box-arrow-in-up-right text-stroke"></i>
               </button>
             <?php endif; ?>
@@ -391,7 +391,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                         <div class="p-3 container-fluid text-white">
                           <div class="mb-3">
                             <h6 class="card-title text-white fw-bold shadowed-text">all images by           
-                              <a class="text-decoration-none text-white shadowed-text fw-bold rounded-pill" href="artist.php?id=<?= $user['id'] ?>">
+                              <a class="text-decoration-none text-white shadowed-text fw-bold rounded-pill" href="artist.php?by=newest&id=<?= $user['id'] ?>">
                                 <?php if (!empty($user['pic'])): ?>
                                   <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 24px; height: 24px;">
                                 <?php else: ?>
@@ -414,7 +414,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                 </div>
                               </a>
                             <?php else: ?>
-                              <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
+                              <a class="image-containerA shadow rounded" href="artist.php?by=newest&id=<?php echo $user['id']; ?>">
                                 <div class="position-relative">
                                   <?php if (!empty($user['pic'])): ?>
                                     <div class="ratio ratio-1x1">
@@ -448,7 +448,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                 </div>
                               </a>
                             <?php else: ?>
-                              <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
+                              <a class="image-containerA shadow rounded" href="artist.php?by=newest&id=<?php echo $user['id']; ?>">
                                 <div class="position-relative">
                                   <?php if (!empty($user['pic'])): ?>
                                     <div class="ratio ratio-1x1">
@@ -651,28 +651,101 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                       </script>
                                     </p>
                                   </div>
-                                  <div class="my-4">
-                                    <?php
-                                      if (!empty($image['tags'])) {
-                                        $tags = explode(',', $image['tags']);
-                                        foreach ($tags as $tag) {
-                                          $tag = trim($tag);
+                                  <div class="card shadow border-0 rounded-4 bg-body-tertiary my-3">
+                                    <div class="card-body">
+                                      <!-- Tags -->
+                                      <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-tags-fill"></i> Tags</h6>
+                                      <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <?php
+                                        $tagCount = 0;
+                                        
+                                        if (!empty($image['tags'])) {
+                                          $tags = explode(',', $image['tags']);
+                                          foreach ($tags as $tag) {
+                                            $tag = trim($tag);
                                             if (!empty($tag)) {
-                                          ?>
-                                            <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>"
-                                              class="btn btn-sm border-0 link-body-emphasis fw-bold">
-                                              <i class="bi bi-tags-fill"></i> <?php echo $tag; ?>
-                                            </a>
-                                          <?php
+                                              $query = "SELECT COUNT(*) FROM images WHERE tags LIKE :tag";
+                                              $tagParam = '%' . $tag . '%';
+                                              $stmt = $db->prepare($query);
+                                              $stmt->bindParam(':tag', $tagParam);
+                                              $stmt->execute();
+                                              
+                                              $tagCount = $stmt->fetchColumn();
+                                              ?>
+                                              <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                                <i class="bi bi-tag-fill"></i> <?php echo $tag; ?> <span class="badge bg-light text-dark"><?php echo $tagCount; ?></span>
+                                              </a>
+                                              <?php
+                                            }
                                           }
+                                        } else {
+                                          echo "<p class='text-muted'>No tags available.</p>";
                                         }
-                                      } else {
-                                        echo "No tags available.";
-                                      }
-                                    ?>
-                                    <a class="btn btn-sm border-0 link-body-emphasis fw-bold" href="tags.php">
-                                      <i class="bi bi-tags-fill"></i> all tags
-                                    </a>
+                                        ?>
+                                      </div>
+                                
+                                      <!-- Characters -->
+                                      <?php if (isset($image['characters']) && !empty($image['characters'])): ?>
+                                        <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-people-fill"></i> Characters</h6>
+                                        <div class="d-flex flex-wrap gap-2 mb-3">
+                                          <?php
+                                          if (!empty($image['characters'])) {
+                                            $characters = explode(',', $image['characters']);
+                                            foreach ($characters as $character) {
+                                              $character = trim($character);
+                                              if (!empty($character)) {
+                                                $query = "SELECT COUNT(*) FROM images WHERE characters LIKE :character";
+                                                $characterParam = '%' . $character . '%';
+                                                $stmt = $db->prepare($query);
+                                                $stmt->bindParam(':character', $characterParam);
+                                                $stmt->execute();
+                                                
+                                                $characterCount = $stmt->fetchColumn();
+                                                ?>
+                                                <a href="character/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                                  <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($character); ?> <span class="badge bg-light text-dark"><?php echo $characterCount; ?></span>
+                                                </a>
+                                                <?php
+                                              }
+                                            }
+                                          } else {
+                                            echo "<p class='text-muted'>No characters available.</p>";
+                                          }
+                                          ?>
+                                        </div>
+                                      <?php endif; ?>
+                                
+                                      <!-- Parodies -->
+                                      <?php if (isset($image['parodies']) && !empty($image['parodies'])): ?>
+                                        <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-journals"></i> Parodies</h6>
+                                        <div class="d-flex flex-wrap gap-2">
+                                          <?php
+                                          if (!empty($image['parodies'])) {
+                                            $parodies = explode(',', $image['parodies']);
+                                            foreach ($parodies as $parody) {
+                                              $parody = trim($parody);
+                                              if (!empty($parody)) {
+                                                $query = "SELECT COUNT(*) FROM images WHERE parodies LIKE :parody";
+                                                $parodyParam = '%' . $parody . '%';
+                                                $stmt = $db->prepare($query);
+                                                $stmt->bindParam(':parody', $parodyParam);
+                                                $stmt->execute();
+                                                
+                                                $parodyCount = $stmt->fetchColumn();
+                                                ?>
+                                                <a href="parody/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                                  <i class="bi bi-journal"></i> <?php echo htmlspecialchars($parody); ?> <span class="badge bg-light text-dark"><?php echo $parodyCount; ?></span>
+                                                </a>
+                                                <?php
+                                              }
+                                            }
+                                          } else {
+                                            echo "<p class='text-muted'>No parodies available.</p>";
+                                          }
+                                          ?>
+                                        </div>
+                                      <?php endif; ?>
+                                    </div>
                                   </div>
                                   <div class="mb-5 w-100">
                                     <button class="btn bg-body-tertiary border-0 rounded-0 link-body-emphasis fw-bold w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage" aria-expanded="false" id="toggleButton2" aria-controls="collapseExample">
@@ -735,12 +808,12 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>">
+                                            <a class="text-decoration-none text-dark" href="images/<?php echo $image['filename']; ?>">
                                               <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
                                             </a>
                                           </div>
                                           <div>
-                                            <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>" download>
+                                            <a class="text-decoration-none text-dark" href="images/<?php echo $image['filename']; ?>" download>
                                               <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
                                             </a>
                                           </div>
@@ -779,12 +852,12 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>">
+                                            <a class="text-decoration-none text-dark" href="images/<?php echo $image_child['filename']; ?>">
                                               <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
                                             </a>
                                           </div>
                                           <div>
-                                            <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>" download>
+                                            <a class="text-decoration-none text-dark" href="images/<?php echo $image_child['filename']; ?>" download>
                                               <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
                                             </a>
                                           </div>
@@ -1190,7 +1263,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <?php else: ?>
                     <img class="object-fit-cover border border-1 rounded-circle" src="icon/profile.svg" style="width: 32px; height: 32px;">
                   <?php endif; ?>
-                  <?php echo (mb_strlen($user['artist']) > 20) ? mb_substr($user['artist'], 0, 20) . '...' : $user['artist']; ?> <small class="badge rounded-pill bg-primary"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
+                  <?php echo (mb_strlen($user['artist']) > 20) ? mb_substr($user['artist'], 0, 20) . '...' : $user['artist']; ?> <small class="badge rounded-pill bg-dark"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
                 </a>
               </div>
               <div class="ms-auto">
@@ -1217,7 +1290,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                     </div>
                   </a>
                 <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
+                  <a class="image-containerA shadow rounded" href="artist.php?by=newest&id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
                         <div class="ratio ratio-1x1">
@@ -1251,7 +1324,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                     </div>
                   </a>
                 <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
+                  <a class="image-containerA shadow rounded" href="artist.php?by=newest&id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
                         <div class="ratio ratio-1x1">
@@ -1318,7 +1391,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </p>
               </div>
               <p class="text-secondary" style="word-wrap: break-word;">
-                <a class="text-primary" href="<?php echo $image['link']; ?>">
+                <a class="text-dark" href="<?php echo $image['link']; ?>">
                   <small>
                     <?php echo (strlen($image['link']) > 40) ? substr($image['link'], 0, 40) . '...' : $image['link']; ?>
                   </small>
@@ -1365,37 +1438,38 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </div>
               </div>
               <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
-                <a class="btn btn-primary fw-bold rounded-4 mb-2 w-100" href="episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
+                <a class="btn btn-dark fw-bold rounded-4 mb-2 w-100" href="episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
                   <small>all episodes from <?php echo $image['episode_name']; ?></small>
                 </a>
                 <div class="btn-group gap-2 w-100 mb-2">
-                  <a class="btn btn-primary fw-bold rounded-4 w-50" target="_blank" href="manga/title.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
+                  <a class="btn btn-dark fw-bold rounded-4 w-50" target="_blank" href="manga/title.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
                     <small>go to manga</small>
                   </a>
-                  <a class="btn btn-primary fw-bold rounded-4 w-50" target="_blank" href="manga/view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>&id=<?php echo $image['id']; ?>&page=1">
+                  <a class="btn btn-dark fw-bold rounded-4 w-50" target="_blank" href="manga/view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>&id=<?php echo $image['id']; ?>&page=1">
                     <small>read in manga mode</small>
                   </a>
                 </div>
               <?php endif; ?>
               <div class="btn-group w-100" role="group" aria-label="Basic example">
-                <button class="btn btn-primary fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
+                <button class="btn btn-dark fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
                   <i class="bi bi-share-fill"></i> <small>share</small>
                 </button>
-                <a class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#downloadOption">
+                <a class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#downloadOption">
                   <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
                 </a>
-                <button class="btn btn-primary dropdown-toggle fw-bold rounded-end-4" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal">
+                <button class="btn btn-dark dropdown-toggle fw-bold rounded-end-4" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#dataModal">
                   <i class="bi bi-info-circle-fill"></i> <small>info</small>
                 </button>
+
                 <!-- Data Modal -->
                 <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                     <div class="modal-content rounded-4 border-0">
                       <div class="modal-header border-0">
                         <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">All Data from <?php echo $image['title']; ?></h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      <div class="modal-body scrollable-div">
+                      <div class="modal-body">
                         <div>
                           <div class="text-dark text-center mt-2 mb-4">
                             <h6 class="fw-bold"><i class="bi bi-file-earmark-plus"></i> Total size of all images: <?php echo $total_size; ?> MB</h6>
@@ -1405,7 +1479,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                           </button>
                           <div class="collapse mt-2" id="collapseDataImage1">
                             <?php foreach ($images as $index => $image) { ?>
-                              <div class="mb-3 img-thumbnail border-dark p-3">
+                              <div class="mb-3 img-thumbnail bg-body-tertiary shadow border-0 p-3">
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
                                   <div class="col-sm-8">
@@ -1437,19 +1511,19 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
-                                  <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>">
+                                  <a class="text-decoration-none text-dark" href="images/<?php echo $image['filename']; ?>">
                                     <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
                                   </a>
                                 </div>
                                 <div>
-                                  <a class="text-decoration-none text-primary" href="images/<?php echo $image['filename']; ?>" download>
+                                  <a class="text-decoration-none text-dark" href="images/<?php echo $image['filename']; ?>" download>
                                     <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
                                   </a>
                                 </div>
                               </div>
                             <?php } ?>
                             <?php foreach ($image_childs as $index => $image_child) { ?>
-                              <div class="mt-3 mb-3 img-thumbnail border-dark p-3">
+                              <div class="mt-3 mb-3 img-thumbnail bg-body-tertiary shadow border-0 p-3">
                                 <div class="mb-3 row">
                                   <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
                                   <div class="col-sm-8">
@@ -1481,12 +1555,12 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
-                                  <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>">
+                                  <a class="text-decoration-none text-dark" href="images/<?php echo $image_child['filename']; ?>">
                                     <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
                                   </a>
                                 </div>
                                 <div>
-                                  <a class="text-decoration-none text-primary" href="images/<?php echo $image_child['filename']; ?>" download>
+                                  <a class="text-decoration-none text-dark" href="images/<?php echo $image_child['filename']; ?>" download>
                                     <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
                                   </a>
                                 </div>
@@ -1509,54 +1583,13 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                               $total_size = $images_total_size + $image_child_total_size;
                             ?>
                           </div>
-                          <div class="mt-2"i
-                            <?php
-                              // Retrieve tags for the current image
-                              $currentImageTags = explode(',', $image['tags']);
-                              $currentImageTags = array_map('trim', $currentImageTags);
-
-                              // Check if there are no tags available
-                              if (empty($currentImageTags)) {
-                                echo "No tags available";
-                              } else {
-                                foreach ($currentImageTags as $tag) : 
-                              ?>
-                              <?php
-                                // Initialize tag count
-                                $tagCount = 0;
-
-                                // Retrieve all images that contain this tag
-                                $query = "SELECT * FROM images WHERE tags LIKE :tag";
-                                $tagParam = '%' . $tag . '%';
-                                $stmt = $db->prepare($query);
-                                $stmt->bindParam(':tag', $tagParam);
-                                $stmt->execute();
-
-                                // Count the number of images with this tag
-                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $tagCount++;
-                                }
-                              ?>
-                                <small>
-                                  <a href='tagged_images.php?tag=<?php echo urlencode($tag); ?>'
-                                  class="btn btn-sm btn-dark mb-1 rounded-3 fw-bold">
-                                    <i class="bi bi-tags-fill"></i> <?php echo $tag; ?> (<?php echo $tagCount; ?>)
-                                  </a>
-                                </small>
-                              <?php endforeach; 
-                            } ?>
-                            <a href="tags.php" class="btn btn-sm btn-dark mb-1 rounded-3 fw-bold">
-                              <i class="bi bi-tags-fill"></i> all tags
-                            </a>
-                          </div>
                         </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-dark w-100 fw-bold" data-bs-dismiss="modal">close</button>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- End of Data Modal -->
+
               </div>
               <div class="d-none d-md-flex d-lg-flex mt-2 gap-2">
                 <?php if ($next_image): ?>
@@ -1571,7 +1604,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                     </div>
                   </a>
                 <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
+                  <a class="image-containerA shadow rounded" href="artist.php?by=newest&id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
                         <div class="ratio ratio-1x1">
@@ -1605,7 +1638,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                     </div>
                   </a>
                 <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="artist.php?id=<?php echo $user['id']; ?>">
+                  <a class="image-containerA shadow rounded" href="artist.php?by=newest&id=<?php echo $user['id']; ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
                         <div class="ratio ratio-1x1">
@@ -1624,18 +1657,114 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <?php endif; ?>
               </div>
               <div class="btn-group w-100">
-                <a class="btn btn-primary rounded-4 mt-2 fw-bold rounded-end-0" style="word-wrap: break-word;" data-bs-toggle="modal" href="#imgcarousel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <a class="btn btn-dark rounded-4 mt-2 fw-bold rounded-end-0" style="word-wrap: break-word;" data-bs-toggle="modal" href="#imgcarousel" role="button" aria-expanded="false" aria-controls="collapseExample">
                   <small>
                     <i class="bi bi-images"></i> view all <?php echo $user['artist']; ?>'s images
                   </small>
                 </a>
-                <a class="btn btn-primary rounded-4 mt-2 fw-bold rounded-start-0" style="max-width: 50px;" href="artist.php?id=<?= $user['id'] ?>">
+                <a class="btn btn-dark rounded-4 mt-2 fw-bold rounded-start-0" style="max-width: 50px;" href="artist.php?by=newest&id=<?= $user['id'] ?>">
                   <small>
                     <i class="bi bi-box-arrow-up-right text-stroke"></i>
                   </small>
                 </a>
               </div>
               <?php include 'imguser.php'; ?>
+              <div class="card shadow border-0 rounded-4 bg-body-tertiary mt-3">
+                <div class="card-body">
+                  <!-- Tags -->
+                  <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-tags-fill"></i> Tags</h6>
+                  <div class="d-flex flex-wrap gap-2 mb-3">
+                    <?php
+                    $tagCount = 0;
+                    
+                    if (!empty($image['tags'])) {
+                      $tags = explode(',', $image['tags']);
+                      foreach ($tags as $tag) {
+                        $tag = trim($tag);
+                        if (!empty($tag)) {
+                          $query = "SELECT COUNT(*) FROM images WHERE tags LIKE :tag";
+                          $tagParam = '%' . $tag . '%';
+                          $stmt = $db->prepare($query);
+                          $stmt->bindParam(':tag', $tagParam);
+                          $stmt->execute();
+                          
+                          $tagCount = $stmt->fetchColumn();
+                          ?>
+                          <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                            <i class="bi bi-tag-fill"></i> <?php echo $tag; ?> <span class="badge bg-light text-dark"><?php echo $tagCount; ?></span>
+                          </a>
+                          <?php
+                        }
+                      }
+                    } else {
+                      echo "<p class='text-muted'>No tags available.</p>";
+                    }
+                    ?>
+                  </div>
+            
+                  <!-- Characters -->
+                  <?php if (isset($image['characters']) && !empty($image['characters'])): ?>
+                    <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-people-fill"></i> Characters</h6>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                      <?php
+                      if (!empty($image['characters'])) {
+                        $characters = explode(',', $image['characters']);
+                        foreach ($characters as $character) {
+                          $character = trim($character);
+                          if (!empty($character)) {
+                            $query = "SELECT COUNT(*) FROM images WHERE characters LIKE :character";
+                            $characterParam = '%' . $character . '%';
+                            $stmt = $db->prepare($query);
+                            $stmt->bindParam(':character', $characterParam);
+                            $stmt->execute();
+                            
+                            $characterCount = $stmt->fetchColumn();
+                            ?>
+                            <a href="character/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                              <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($character); ?> <span class="badge bg-light text-dark"><?php echo $characterCount; ?></span>
+                            </a>
+                            <?php
+                          }
+                        }
+                      } else {
+                        echo "<p class='text-muted'>No characters available.</p>";
+                      }
+                      ?>
+                    </div>
+                  <?php endif; ?>
+            
+                  <!-- Parodies -->
+                  <?php if (isset($image['parodies']) && !empty($image['parodies'])): ?>
+                    <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-journals"></i> Parodies</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                      <?php
+                      if (!empty($image['parodies'])) {
+                        $parodies = explode(',', $image['parodies']);
+                        foreach ($parodies as $parody) {
+                          $parody = trim($parody);
+                          if (!empty($parody)) {
+                            $query = "SELECT COUNT(*) FROM images WHERE parodies LIKE :parody";
+                            $parodyParam = '%' . $parody . '%';
+                            $stmt = $db->prepare($query);
+                            $stmt->bindParam(':parody', $parodyParam);
+                            $stmt->execute();
+                            
+                            $parodyCount = $stmt->fetchColumn();
+                            ?>
+                            <a href="parody/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                              <i class="bi bi-journal"></i> <?php echo htmlspecialchars($parody); ?> <span class="badge bg-light text-dark"><?php echo $parodyCount; ?></span>
+                            </a>
+                            <?php
+                          }
+                        }
+                      } else {
+                        echo "<p class='text-muted'>No parodies available.</p>";
+                      }
+                      ?>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              </div>
               <div class="collapse" id="collapseExample">
                 <form class="mt-2" action="add_to_album.php" method="post">
                   <input class="form-control" type="hidden" name="image_id" value="<?= $image['id']; ?>">
@@ -1663,38 +1792,13 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       $db->close();
                     ?>
                   </select>
-                  <button class="form-control bg-primary text-white fw-bold rounded-4" type="submit"><small>add to album</small></button>
+                  <button class="form-control bg-dark text-white fw-bold rounded-4" type="submit"><small>add to album</small></button>
                 </form>
                 <iframe class="mt-2 rounded" style="width: 100%; height: 300px;" src="<?php echo $url_comment; ?>"></iframe>
-                <a class="btn btn-primary w-100 rounded-4 fw-bold mt-2 mb-2" href="comments.php?imageid=<?php echo $image['id']; ?>"><i class="bi bi-chat-left-text-fill"></i> <small>view all comments</small></a>
               </div>
-              <a class="btn btn-primary rounded-4 w-100 fw-bold text-center" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleButton">
+              <a class="btn btn-dark rounded-4 w-100 fw-bold text-center mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleButton">
                 <i class="bi bi-caret-down-fill"></i> <small id="toggleText">show more</small>
               </a>
-              <p class="text-dark mt-3"><i class="bi bi-tags-fill"></i> tags</p>
-              <div class="overflow-x-auto text-nowrap hide-scrollbar">
-                <?php
-                  if (!empty($image['tags'])) {
-                    $tags = explode(',', $image['tags']);
-                    foreach ($tags as $tag) {
-                      $tag = trim($tag);
-                      if (!empty($tag)) {
-                    ?>
-                      <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>"
-                        class="btn btn-sm btn-outline-dark mb-1 rounded-pill fw-bold">
-                        <i class="bi bi-tags-fill"></i> <?php echo $tag; ?>
-                      </a>
-                    <?php
-                      }
-                    }
-                  } else {
-                    echo "No tags available.";
-                  }
-                ?>
-                <a href="tags.php" class="btn btn-sm btn-outline-dark mb-1 rounded-pill fw-bold">
-                  <i class="bi bi-tags-fill"></i> all tags
-                </a>
-              </div>
             </div>
           </div> 
         </div>
@@ -2183,7 +2287,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
     <script>
       function shareArtist(userId) {
         // Compose the share URL
-        var shareUrl = 'artist.php?id=' + userId;
+        var shareUrl = 'artist.php?by=newest&id=' + userId;
 
         // Check if the Share API is supported by the browser
         if (navigator.share) {

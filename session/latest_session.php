@@ -1,6 +1,4 @@
 <?php
-$email = $_SESSION['email'];
-
 // Connect to the SQLite database using parameterized query
 $db = new SQLite3('../database.sqlite');
 
@@ -21,13 +19,13 @@ while ($imageD = $resultD->fetchArray()) {
 ?>
   
     <div class="imagesLT w-100 px-1 my-2">
-      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-5 g-1">
+      <div class="<?php include('../rows_columns/row-cols.php'); echo $rows_columns; ?>">
         <?php 
         $count = 0; 
         $images = [];
         while ($imageD = $resultD->fetchArray()) {
           $images[] = $imageD;
-          if ($count < 10) {
+          if ($count < 12) {
             $image_idD = $imageD['id'];
             $image_urlD = $imageD['filename'];
             $image_titleD = $imageD['title'];
@@ -51,7 +49,7 @@ while ($imageD = $resultD->fetchArray()) {
       <button id="loadMoreBtnD" class="btn btn-outline-dark rounded-pill fw-bold w-100">Load more</button>
     </div>
     <script>
-      var currentIndexD = 10;
+      var currentIndexD = 12;
       var imagesD = <?php echo json_encode($images); ?>;
       var containerD = document.querySelector('.imagesLT .row');
       var loadMoreBtnD = document.getElementById('loadMoreBtnD');
@@ -59,7 +57,7 @@ while ($imageD = $resultD->fetchArray()) {
       loadMoreBtnD.addEventListener('click', function() {
         var fragment = document.createDocumentFragment();
     
-        for (var i = currentIndexD; i < currentIndexD + 10 && i < imagesD.length; i++) {
+        for (var i = currentIndexD; i < currentIndexD + 12 && i < imagesD.length; i++) {
           var imageUD = imagesD[i];
           var image_idD = imageUD['id'];
           var image_urlD = imageUD['filename'];
@@ -95,7 +93,7 @@ while ($imageD = $resultD->fetchArray()) {
     
         containerD.appendChild(fragment);
     
-        currentIndexD += 10;
+        currentIndexD += 12;
         if (currentIndexD >= imagesD.length) {
           loadMoreBtnD.style.display = 'none';
         }
@@ -106,23 +104,3 @@ while ($imageD = $resultD->fetchArray()) {
         -webkit-text-stroke: 1px;
       }
     </style>
-    <script>
-      function shareImageL(userId) {
-        // Compose the share URL
-        var shareUrl = '?artworkid=' + userId;
-
-        // Check if the Share API is supported by the browser
-        if (navigator.share) {
-          navigator.share({
-          url: shareUrl
-        })
-          .then(() => console.log('Shared successfully.'))
-          .catch((error) => console.error('Error sharing:', error));
-        } else {
-          console.log('Share API is not supported in this browser.');
-          // Provide an alternative action for browsers that do not support the Share API
-          // For example, you can open a new window with the share URL
-          window.open(shareUrl, '_blank');
-        }
-      }
-    </script> 

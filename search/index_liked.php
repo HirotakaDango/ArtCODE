@@ -36,7 +36,7 @@ if (isset($_GET['q'])) {
   // Add conditions for tags and titles
   foreach ($terms as $index => $term) {
     if (!empty($term)) {
-      $conditions[] = "(LOWER(tags) LIKE :tag$index OR LOWER(title) LIKE :title$index)";
+      $conditions[] = "(LOWER(tags) LIKE :tag$index OR LOWER(title) LIKE :title$index OR LOWER(characters) LIKE :characters$index OR LOWER(parodies) LIKE :parodies$index)";
     }
   }
 
