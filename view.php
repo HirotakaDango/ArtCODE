@@ -718,7 +718,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                       <!-- Parodies -->
                                       <?php if (isset($image['parodies']) && !empty($image['parodies'])): ?>
                                         <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-journals"></i> Parodies</h6>
-                                        <div class="d-flex flex-wrap gap-2">
+                                        <div class="d-flex flex-wrap gap-2 mb-3">
                                           <?php
                                           if (!empty($image['parodies'])) {
                                             $parodies = explode(',', $image['parodies']);
@@ -741,6 +741,37 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                             }
                                           } else {
                                             echo "<p class='text-muted'>No parodies available.</p>";
+                                          }
+                                          ?>
+                                        </div>
+                                      <?php endif; ?>
+                                
+                                      <!-- Group -->
+                                      <?php if (isset($image['group']) && !empty($image['group'])): ?>
+                                        <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-person-fill"></i> group</h6>
+                                        <div class="d-flex flex-wrap gap-2">
+                                          <?php
+                                          if (!empty($image['group'])) {
+                                            $group = explode(',', $image['group']);
+                                            foreach ($group as $group) {
+                                              $group = trim($group);
+                                              if (!empty($group)) {
+                                                $query = "SELECT COUNT(*) FROM images WHERE `group` LIKE :group";
+                                                $groupParam = '%' . $group . '%';
+                                                $stmt = $db->prepare($query);
+                                                $stmt->bindParam(':group', $groupParam);
+                                                $stmt->execute();
+                                                
+                                                $groupCount = $stmt->fetchColumn();
+                                                ?>
+                                                <a href="group/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                                  <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($group); ?> <span class="badge bg-light text-dark"><?php echo $groupCount; ?></span>
+                                                </a>
+                                                <?php
+                                              }
+                                            }
+                                          } else {
+                                            echo "<p class='text-muted'>No group available.</p>";
                                           }
                                           ?>
                                         </div>
@@ -1736,7 +1767,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <!-- Parodies -->
                   <?php if (isset($image['parodies']) && !empty($image['parodies'])): ?>
                     <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-journals"></i> Parodies</h6>
-                    <div class="d-flex flex-wrap gap-2">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
                       <?php
                       if (!empty($image['parodies'])) {
                         $parodies = explode(',', $image['parodies']);
@@ -1759,6 +1790,37 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                         }
                       } else {
                         echo "<p class='text-muted'>No parodies available.</p>";
+                      }
+                      ?>
+                    </div>
+                  <?php endif; ?>
+            
+                  <!-- Group -->
+                  <?php if (isset($image['group']) && !empty($image['group'])): ?>
+                    <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-person-fill"></i> group</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                      <?php
+                      if (!empty($image['group'])) {
+                        $group = explode(',', $image['group']);
+                        foreach ($group as $group) {
+                          $group = trim($group);
+                          if (!empty($group)) {
+                            $query = "SELECT COUNT(*) FROM images WHERE `group` LIKE :group";
+                            $groupParam = '%' . $group . '%';
+                            $stmt = $db->prepare($query);
+                            $stmt->bindParam(':group', $groupParam);
+                            $stmt->execute();
+                            
+                            $groupCount = $stmt->fetchColumn();
+                            ?>
+                            <a href="group/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                              <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($group); ?> <span class="badge bg-light text-dark"><?php echo $groupCount; ?></span>
+                            </a>
+                            <?php
+                          }
+                        }
+                      } else {
+                        echo "<p class='text-muted'>No group available.</p>";
                       }
                       ?>
                     </div>
