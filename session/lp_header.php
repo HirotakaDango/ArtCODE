@@ -76,6 +76,7 @@
                             <h6 class="fw-bold text-start">Explores</h6>
                             <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/preview_guest.php">Explore Images</a></li>
                             <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/session/music/">Explore Music</a>
+                            <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/manga/">Explore Manga</a>
                           </div>
                         </div>
                       </div>

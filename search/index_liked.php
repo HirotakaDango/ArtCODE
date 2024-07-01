@@ -1,6 +1,6 @@
 <?php
 // Prepare the query to get the user's numpage
-$queryNum = $database->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
 $resultNum = $queryNum->execute();
 $user = $resultNum->fetchArray(SQLITE3_ASSOC);
@@ -36,7 +36,7 @@ if (isset($_GET['q'])) {
   // Add conditions for tags and titles
   foreach ($terms as $index => $term) {
     if (!empty($term)) {
-      $conditions[] = "(LOWER(tags) LIKE :tag$index OR LOWER(title) LIKE :title$index OR LOWER(characters) LIKE :characters$index OR LOWER(parodies) LIKE :parodies$index)";
+      $conditions[] = "(LOWER(tags) LIKE :tag$index OR LOWER(title) LIKE :title$index OR LOWER(characters) LIKE :characters$index OR LOWER(parodies) LIKE :parodies$index or LOWER(`group`) LIKE :group$index)";
     }
   }
 
@@ -52,14 +52,16 @@ if (isset($_GET['q'])) {
   $query .= " ORDER BY images.id DESC";
 
   // Prepare the SQL statement
-  $statement = $database->prepare($query);
+  $statement = $db->prepare($query);
 
   // Bind the terms as parameters with wildcard matching for tags and titles
-  foreach ($terms as $index => $term) {
+  $paramIndex = 1;
+  foreach ($terms as $term) {
     if (!empty($term)) {
       $wildcardTerm = "%$term%";
-      $statement->bindValue(":tag$index", $wildcardTerm, SQLITE3_TEXT);
-      $statement->bindValue(":title$index", $wildcardTerm, SQLITE3_TEXT);
+      for ($i = 0; $i < 5; $i++) {
+        $statement->bindValue($paramIndex++, $wildcardTerm, SQLITE3_TEXT);
+      }
     }
   }
 
@@ -96,7 +98,7 @@ if (isset($_GET['q'])) {
             LEFT JOIN favorites ON images.id = favorites.image_id 
             GROUP BY images.id 
             ORDER BY favorite_count DESC";
-  $result = $database->query($query);
+  $result = $db->query($query);
   $resultArray = array();
   while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
     $resultArray[] = $row;
@@ -129,7 +131,7 @@ $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
               <?php
                 // Fetch distinct years from the "date" column in the images table
                 $yearsQuery = "SELECT DISTINCT strftime('%Y', date) AS year FROM images";
-                $yearsResult = $database->query($yearsQuery);
+                $yearsResult = $db->query($yearsQuery);
                 while ($yearRow = $yearsResult->fetchArray(SQLITE3_ASSOC)) {
                   $year = $yearRow['year'];
                   $selected = ($year == $yearFilter) ? 'selected' : '';
@@ -168,55 +170,39 @@ $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
           </div>
         </div>
       </div>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-1">
-        <?php foreach ($resultArray as $row): ?>
-          <?php
-            $title = $row['title'];
-            $filename = $row['filename'];
-            $artist = '';
-            $stmt = $database->prepare("SELECT id, artist FROM users WHERE email = ?");
-            $stmt->bindValue(1, $email, SQLITE3_TEXT);
-            $result2 = $stmt->execute();
-            if ($user = $result2->fetchArray()) {
-              $artist = $user['artist'];
-              $id = $user['id'];
-            }
-          ?>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/search/card_search.php'); ?>
-        <?php endforeach; ?>
-      </div>
-      <div class="pagination d-flex gap-1 justify-content-center mt-3">
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-        <?php endif; ?>
-    
-        <?php if ($page > 1): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-        <?php endif; ?>
-    
-        <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-    
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=' . $by . '&q=' . $searchTerm . '&year=' . $yearFilter . '&page=' . $i . '">' . $i . '</a>';
-          }
+    </div>
+    <?php include('image_card_search.php'); ?>
+    <div class="pagination d-flex gap-1 justify-content-center mt-3">
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+      <?php endif; ?>
+
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+      <?php endif; ?>
+
+      <?php
+      // Calculate the range of page numbers to display
+      $startPage = max($page - 2, 1);
+      $endPage = min($page + 2, $totalPages);
+
+      // Display page numbers within the range
+      for ($i = $startPage; $i <= $endPage; $i++) {
+        if ($i === $page) {
+          echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+        } else {
+          echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=' . $by . '&q=' . $searchTerm . '&year=' . $yearFilter . '&page=' . $i . '">' . $i . '</a>';
         }
-        ?>
-    
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-        <?php endif; ?>
-    
-        <?php if ($page < $totalPages): ?>
-          <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-        <?php endif; ?>
-      </div>
+      }
+      ?>
+
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+      <?php endif; ?>
+
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+      <?php endif; ?>
     </div>
     <div class="mt-5"></div>
     <script>

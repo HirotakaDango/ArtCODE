@@ -4,10 +4,38 @@ require_once('../auth.php');
 $email = $_SESSION['email'];
 
 // Establish a connection to the SQLite database
-$database = new SQLite3('../database.sqlite');
+$db = new SQLite3('../database.sqlite');
 
 $searchTerm = $_GET['q'];
 $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
+
+// Process any favorite/unfavorite requests
+if (isset($_POST['favorite'])) {
+  $image_id = $_POST['image_id'];
+
+  // Check if the image has already been favorited by the current user
+  $existing_fav = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = $image_id");
+
+  if ($existing_fav == 0) {
+    $db->exec("INSERT INTO favorites (email, image_id) VALUES ('$email', $image_id)");
+  }
+  
+  // Redirect to the same page with the appropriate sorting parameter
+  $page = isset($_GET['page']) ? $_GET['page'] : 1; // check if page is set, default to 1
+  $by = isset($_GET['by']) ? $_GET['by'] : 'newest'; // check if by is set, default to newest
+  header("Location: {$_SERVER['REQUEST_URI']}");
+  exit(); 
+  
+} elseif (isset($_POST['unfavorite'])) {
+  $image_id = $_POST['image_id'];
+  $db->exec("DELETE FROM favorites WHERE email = '$email' AND image_id = $image_id");
+
+  // Redirect to the same page with the appropriate sorting parameter
+  $page = isset($_GET['page']) ? $_GET['page'] : 1; // check if page is set, default to 1
+  $by = isset($_GET['by']) ? $_GET['by'] : 'newest'; // check if by is set, default to newest
+  header("Location: {$_SERVER['REQUEST_URI']}");
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -74,28 +102,12 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
         
         ?>
     <style>
-      @media (min-width: 768px) {
-        .width-btn {
-          width: 200px;
-        }
-      }
-      
-      @media (max-width: 767px) {
-        .width-btn {
-          width: 100px;
-        } 
-      }
-      
       .text-stroke {
         -webkit-text-stroke: 1px;
       }
 
       .text-shadow {
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
-      }
-      
-      .card-round {
-        1rem;
       }
       
       .overlay {
@@ -111,7 +123,7 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: 1rem;
+        border-radius: 0.5rem;
       }
 
       .overlay i {
@@ -126,7 +138,7 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
       }
       
       .rounded-custom {
-        border-radius: 1rem;
+        border-radius: 0.5rem;
       }
     </style>
     <script>
