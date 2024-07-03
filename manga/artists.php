@@ -9,7 +9,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
 $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, link TEXT, image_cover TEXT, episode_name TEXT)");
 ?>
 
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8">

@@ -249,65 +249,55 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
     $stmtGroupCounts->execute();
     $groupCounts = $stmtGroupCounts->fetchAll(PDO::FETCH_ASSOC);
 
-    // Get the count of all images grouped by the "categories" column based on all episode_name
-    $query = "
+    // Get the count of all images grouped by the "categories" column based on the latest image in current tags for the current episode_name
+    $queryCategoriesCounts = "
       SELECT images.categories, COUNT(*) as count
       FROM (
         SELECT DISTINCT episode_name, MAX(id) as latest_image_id
         FROM images
         WHERE artwork_type = 'manga'
-        AND email = (SELECT email FROM users WHERE id = :user_id)
         GROUP BY episode_name
       ) AS latest_images
       JOIN images ON latest_images.latest_image_id = images.id
-      JOIN users ON images.email = users.email
       WHERE images.artwork_type = 'manga'
-      AND users.id = :user_id
       AND images.categories IS NOT NULL AND images.categories <> ''
       AND images.categories IN (
         SELECT DISTINCT images.categories
         FROM images
         WHERE artwork_type = 'manga'
         AND episode_name = :episode_name
-        AND email = (SELECT email FROM users WHERE id = :user_id)
       )
       GROUP BY images.categories
     ";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->bindParam(':episode_name', $episode_name);
-    $stmt->execute();
-    $categoriesCounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmtCategoriesCounts = $db->prepare($queryCategoriesCounts);
+    $stmtCategoriesCounts->bindParam(':episode_name', $episode_name);
+    $stmtCategoriesCounts->execute();
+    $categoriesCounts = $stmtCategoriesCounts->fetchAll(PDO::FETCH_ASSOC);
 
-    // Get the count of all images grouped by the "language" column based on all episode_name
-    $query = "
+    // Get the count of all images grouped by the "language" column based on the latest image in current tags for the current episode_name
+    $queryLanguageCounts = "
       SELECT images.language, COUNT(*) as count
       FROM (
         SELECT DISTINCT episode_name, MAX(id) as latest_image_id
         FROM images
         WHERE artwork_type = 'manga'
-        AND email = (SELECT email FROM users WHERE id = :user_id)
         GROUP BY episode_name
       ) AS latest_images
       JOIN images ON latest_images.latest_image_id = images.id
-      JOIN users ON images.email = users.email
       WHERE images.artwork_type = 'manga'
-      AND users.id = :user_id
       AND images.language IS NOT NULL AND images.language <> ''
       AND images.language IN (
         SELECT DISTINCT images.language
         FROM images
         WHERE artwork_type = 'manga'
         AND episode_name = :episode_name
-        AND email = (SELECT email FROM users WHERE id = :user_id)
       )
       GROUP BY images.language
     ";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->bindParam(':episode_name', $episode_name);
-    $stmt->execute();
-    $languageCounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmtLanguageCounts = $db->prepare($queryLanguageCounts);
+    $stmtLanguageCounts->bindParam(':episode_name', $episode_name);
+    $stmtLanguageCounts->execute();
+    $languageCounts = $stmtLanguageCounts->fetchAll(PDO::FETCH_ASSOC);
 
     // Get the number of latest images by the current artist grouped by episode_name
     $query = "

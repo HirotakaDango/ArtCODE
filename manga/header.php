@@ -19,7 +19,38 @@
               <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="/manga/tags.php"><i class="bi bi-tags-fill"></i> Tags</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'active' ?>" href="/manga/artists.php"><i class="bi bi-person-fill"></i> Artists</a>
+              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'active' ?>" href="/manga/artists.php"><i class="bi bi-person-circle"></i> Artists</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'groups.php') echo 'active' ?>" href="/manga/groups.php"><i class="bi bi-person-fill"></i> Groups</a>
+            </li>
+            <li class="nav-item">
+              <div class="dropdown">
+                <a class="nav-link <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'forum/') !== false) echo 'active'; ?> dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-chat-left-text"></i> Forum</a>
+                <ul class="dropdown-menu rounded-4 shadow border-0">
+                  <li><a class="dropdown-item fw-medium <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'forum/') !== false) echo 'active'; ?>" href="/manga/forum/">Boards</a></li>
+                  <li><a class="dropdown-item fw-medium <?php if (basename($_SERVER['PHP_SELF']) == 'upload.php' && strpos($_SERVER['PHP_SELF'], 'forum/') !== false) echo 'active'; ?>" href="/manga/forum/upload.php">Upload</a></li>
+                  <?php
+                    // Check if the user is logged in
+                    $loggedInUserId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+                
+                    if (isset($loggedInUserId)) {
+                      // If the user is logged in, show the profile and settings links
+                      $isProfileActive = (basename($_SERVER['PHP_SELF']) == 'user.php' && isset($_GET['id']) && $_GET['id'] == $loggedInUserId);
+                      ?>
+                        <li><a class="dropdown-item fw-medium<?php echo ($isProfileActive ? ' active' : ''); ?>" href="/manga/forum/user.php?id=<?php echo $loggedInUserId; ?>">Profile</a></li>
+                        <li><a class="dropdown-item fw-medium<?php echo (basename($_SERVER['PHP_SELF']) == 'settings.php' ? ' active' : ''); ?>" href="/manga/forum/settings.php">Settings</a></li>
+                      <?php
+                    } else {
+                      // If the user is not logged in, show a login button
+                      ?>
+                        <li><a class="dropdown-item fw-medium" href="/manga/forum/session.php">Login</a></li>
+                      <?php
+                    }
+                  ?>
+                  <?php if (strpos($_SERVER['PHP_SELF'], '/forum/') !== false) echo '<li><a class="dropdown-item fw-medium ' . (basename($_SERVER['PHP_SELF']) == 'search.php' ? 'active' : '') . '" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a></li>'; ?>
+                </ul>
+              </div>
             </li>
             <?php
               // Check if the user is logged in
@@ -34,30 +65,6 @@
                 echo '<li class="nav-item"><a class="nav-link" href="/manga/session.php"><i class="bi bi-box-arrow-in-right"></i> Login/Register</a></li>';
               }
             ?>
-            <li class="nav-item">
-              <div class="dropdown">
-                <a class="nav-link <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'forum/') !== false) echo 'active'; ?> dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-chat-left-text"></i> Forum</a>
-                <ul class="dropdown-menu rounded-4 shadow border-0">
-                  <li><a class="dropdown-item fw-medium <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'forum/') !== false) echo 'active'; ?>" href="/manga/forum/">Boards</a></li>
-                  <li><a class="dropdown-item fw-medium <?php if (basename($_SERVER['PHP_SELF']) == 'upload.php' && strpos($_SERVER['PHP_SELF'], 'forum/') !== false) echo 'active'; ?>" href="/manga/forum/upload.php">Upload</a></li>
-                  <?php
-                    // Check if the user is logged in
-                    $loggedInUserId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
-                
-                    if (isset($loggedInUserId)) {
-                      // If the user is logged in, show the profile button
-                      $isProfileActive = (basename($_SERVER['PHP_SELF']) == 'user.php' && isset($_GET['id']) && $_GET['id'] == $loggedInUserId);
-                      echo '<li><a class="dropdown-item fw-medium' . ($isProfileActive ? ' active' : '') . '" href="/manga/forum/user.php?id=' . $loggedInUserId . '">Profile</a></li>';
-                    } else {
-                      // If the user is not logged in, show a login button
-                      echo '<li><a class="dropdown-item fw-medium" href="/manga/forum/session.php">Login</a></li>';
-                    }
-                  ?>
-                  <li><a class="dropdown-item fw-medium <?php if (basename($_SERVER['PHP_SELF']) == 'settings.php' && strpos($_SERVER['PHP_SELF'], 'forum/settings.php') !== false) echo 'active'; ?>" href="/manga/forum/settings.php">Settings</a></li>
-                  <?php if (strpos($_SERVER['PHP_SELF'], '/forum/') !== false) echo '<li><a class="dropdown-item fw-medium ' . (basename($_SERVER['PHP_SELF']) == 'search.php' ? 'active' : '') . '" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a></li>'; ?>
-                </ul>
-              </div>
-            </li>
           </ul>
           <form class="d-flex" role="search" action="/manga/index.php">
             <input class="form-control me-2 fw-medium" type="search" placeholder="Search" aria-label="Search" name="search">
