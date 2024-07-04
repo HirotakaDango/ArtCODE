@@ -34,7 +34,7 @@ while ($imageD = $resultD->fetchArray()) {
         <div class="col">
           <div class="position-relative">
             <a class="rounded ratio ratio-1x1 imageLTA" href="image.php?artworkid=<?php echo $image_idD; ?>">
-              <img class="rounded shadow object-fit-cover imageLTID <?php echo ($imageD['type'] === 'nsfw') ? 'nsfw' : ''; ?> <?php echo ($image_idD == $current_image_idD) ? 'opacity-50' : ''; ?>" src="/thumbnails/<?php echo $image_urlD; ?>" alt="<?php echo $image_titleD; ?>">
+              <img class="rounded shadow object-fit-cover imageLTID <?php echo ($imageD['type'] === 'nsfw') ? 'nsfw' : ''; ?>" src="/thumbnails/<?php echo $image_urlD; ?>" alt="<?php echo $image_titleD; ?>">
             </a>
           </div>
         </div>
@@ -45,8 +45,10 @@ while ($imageD = $resultD->fetchArray()) {
         ?>
       </div>
     </div>
-    <div class="container-fluid mt-4">
-      <button id="loadMoreBtnD" class="btn btn-outline-dark rounded-pill fw-bold w-100">Load more</button>
+    <div id="load-more-btn-container">
+      <div class="w-100 px-1 mt-2">
+        <button id="loadMoreBtnD" class="btn btn-outline-dark rounded-pill fw-bold w-100">Load More</button>
+      </div>
     </div>
     <script>
       var currentIndexD = 12;

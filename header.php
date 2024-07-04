@@ -84,7 +84,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </a>
               </div>
               <div class="btn-group w-100 gap-2 mb-1">
-                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/favorites/') !== false) || (strpos($_SERVER['PHP_SELF'], '/albums/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'albums') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php">
+                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'albums/') !== false) || (strpos($_SERVER['PHP_SELF'], '/albums/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'albums') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php">
                   My Albums
                 </a>
                 <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'myworks.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php">
@@ -135,14 +135,20 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </div>
                 <div id="suggestions1"></div>
               </form>
-              <a class="mt-2 btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-100 d-flex justify-content-center align-items-center text-center flex-column" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
-                <i class="bi bi-journals fs-5"></i>
-                <span class="d-lg-inline">Manga</span>
-              </a>
               <div class="btn-group gap-2 w-100 mt-2">
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
                   <i class="bi bi-house-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none">Home</span>
+                </a>
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/scrolls/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/scrolls/">
+                  <i class="bi bi-distribute-vertical fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none">Scrolls</span>
+                </a>
+              </div>
+              <div class="btn-group gap-2 w-100 mt-2">
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
+                  <i class="bi bi-journals fs-5"></i>
+                  <span class="d-lg-inline">Manga</span>
                 </a>
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if(basename($_SERVER['PHP_SELF']) == 'forum.php') echo 'opacity-75 shadow' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/forum.php">
                   <i class="bi bi-chat-left-dots-fill fs-5"></i>
@@ -265,6 +271,11 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               <li class="nav-item">
                 <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'btn rounded-pill border-0 bg-dark-subtle link-body-emphasis'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
                   Home
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/scrolls/') !== false) echo 'btn rounded-pill border-0 bg-dark-subtle link-body-emphasis'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/scrolls/">
+                  Scrolls
                 </a>
               </li>
               <li class="nav-item">

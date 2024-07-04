@@ -35,7 +35,7 @@ while ($imageP = $resultP->fetchArray()) {
         <div class="col">
           <div class="position-relative">
             <a class="rounded ratio ratio-1x1 imageMPA" href="image.php?artworkid=<?php echo $image_idP; ?>">
-              <img class="rounded shadow object-fit-cover imageMPIP <?php echo ($imageP['type'] === 'nsfw') ? 'nsfw' : ''; ?> <?php echo ($image_idP == $current_image_idP) ? 'opacity-50' : ''; ?>" src="/thumbnails/<?php echo $image_urlP; ?>" alt="<?php echo $image_titleP; ?>">
+              <img class="rounded shadow object-fit-cover imageMPIP <?php echo ($imageP['type'] === 'nsfw') ? 'nsfw' : ''; ?>" src="/thumbnails/<?php echo $image_urlP; ?>" alt="<?php echo $image_titleP; ?>">
             </a>
           </div>
         </div>
@@ -46,10 +46,11 @@ while ($imageP = $resultP->fetchArray()) {
         ?>
       </div>
     </div>
-    <div class="container-fluid mt-4">
-      <button id="loadMoreBtnP" class="btn btn-outline-dark rounded-pill fw-bold w-100">Load more</button>
+    <div id="load-more-btn-container">
+      <div class="w-100 px-1 mt-2">
+        <button id="loadMoreBtnP" class="btn btn-outline-dark rounded-pill fw-bold w-100">Load more</button>
+      </div>
     </div>
-    
     <script>
       var currentIndexP = 12;
       var imagesP = <?php echo json_encode($images); ?>;
