@@ -94,29 +94,28 @@ $result = $stmt->execute();
                 </button>
                 <ul class="dropdown-menu">
                   <?php
-                $is_favorited = $dbL->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$imageL['id']}");
-                if ($is_favorited) {
-              ?>
-                  <form class="favoriteForm">
-                    <input type="hidden" name="image_id" value="<?= $imageL['id']; ?>">
-                    <input type="hidden" name="action" value="unfavorite">
-                    <li><button type="submit" class="dropdown-item fw-bold unfavoriteBtn"><i
-                          class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
-                  </form>
-                  <?php } else { ?>
-                  <form class="favoriteForm">
-                    <input type="hidden" name="image_id" value="<?= $imageL['id']; ?>">
-                    <input type="hidden" name="action" value="favorite">
-                    <li><button type="submit" class="dropdown-item fw-bold favoriteBtn"><i
-                          class="bi bi-heart"></i> <small>favorite</small></button></li>
-                  </form>
+                    $is_favorited = $dbL->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$imageL['id']}");
+                    if ($is_favorited) {
+                  ?>
+                    <form class="favoriteForm">
+                      <input type="hidden" name="image_id" value="<?= $imageL['id']; ?>">
+                      <input type="hidden" name="action" value="unfavorite">
+                      <li><button type="submit" class="dropdown-item fw-bold unfavoriteBtn"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
+                    </form>
+                    <?php } else { ?>
+                    <form class="favoriteForm">
+                      <input type="hidden" name="image_id" value="<?= $imageL['id']; ?>">
+                      <input type="hidden" name="action" value="favorite">
+                      <li><button type="submit" class="dropdown-item fw-bold favoriteBtn"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
+                    </form>
                   <?php } ?>
-                  <li><button class="dropdown-item fw-bold" onclick="shareImageL(<?php echo $imageL['id']; ?>)"><i
-                        class="bi bi-share-fill"></i> <small>share</small></button></li>
-                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal"
-                      data-bs-target="#infoImage_<?php echo $imageL['id']; ?>"><i
-                        class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
+                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageL['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageL['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                 </ul>
+                <?php include('share_latest.php'); ?>
+
+                <?php include('card_image_latest.php'); ?>
+
               </div>
             </div>
           </div>

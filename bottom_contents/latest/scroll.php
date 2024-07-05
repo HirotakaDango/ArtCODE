@@ -91,9 +91,13 @@ while ($imageL = $result->fetchArray()) {
                   <li><button type="submit" class="dropdown-item fw-bold favoriteBtn"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
                 </form>
               <?php } ?>
-              <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $imageL['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+              <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageL['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
               <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageL['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
             </ul>
+            <?php include('share_latest.php'); ?>
+
+            <?php include('card_image_latest.php'); ?>
+
           </div>
         </div>
       </div>

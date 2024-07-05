@@ -105,9 +105,13 @@ $resultP = $stmtP->execute();
                     <li><button type="button" class="dropdown-item fw-bold favoriteBtnP"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
                   </form>
                   <?php } ?>
-                  <li><button class="dropdown-item fw-bold" onclick="shareImageP(<?php echo $imageP['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                  <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageP['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
                   <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageP['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                 </ul>
+                <?php include('share_most_popular.php'); ?>
+                
+                <?php include('card_image_most_popular.php'); ?>
+
               </div>
             </div>
           </div>

@@ -45,8 +45,13 @@
                       <input type="hidden" name="image_album_id" value="<?php echo htmlspecialchars($image['image_album_id']); ?>">
                       <li><button type="submit" name="delete_image" class="dropdown-item fw-bold"><i class="bi bi-trash-fill"></i> delete</button></li>
                     </form> 
-                    <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $image['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $image['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                   </ul>
+                  <?php include('share_album.php'); ?>
+                  
+                  <?php include('../card_image.php'); ?>
+                  
                 </div>
               </div>
             </div>
