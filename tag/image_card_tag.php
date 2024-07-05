@@ -1,4 +1,4 @@
-    <h5 class="ms-2 fw-bold"><i class="bi bi-tags-fill"></i> <?php echo $tag; ?> (<?php echo $count; ?>)</h5>
+    <h5 class="ms-2 fw-bold"><i class="bi bi-tag-fill"></i> <?php echo $tag; ?> (<?php echo $count; ?>)</h5>
     <div class="w-100 px-1 my-2">
       <div class="<?php include('../rows_columns/row-cols.php'); echo $rows_columns; ?>">
         <?php while ($image = $result->fetchArray()): ?>
@@ -56,9 +56,10 @@
                         <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
                       </form>
                     <?php } ?>
-                    <li><button class="dropdown-item fw-bold" onclick="shareImage(<?php echo $image['id']; ?>)"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $image['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
                     <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                   </ul>
+                  <?php include('share_tag.php'); ?>
 
                   <?php include('../contents/card_image_3.php'); ?>
                 
