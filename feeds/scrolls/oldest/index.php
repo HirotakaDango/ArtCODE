@@ -122,14 +122,14 @@ $result = $stmt->execute();
                   }
                 ?>
               </p>
-              <a class="rounded mt-2" href="/image.php?artworkid=<?= $image['id']; ?>">
+              <a class="rounded mt-2" data-bs-toggle="modal" data-bs-target="#viewPost<?php echo $image['id']; ?>">
                 <img class="rounded w-100" src="/thumbnails/<?= $image['filename']; ?>" alt="<?= $image['title']; ?>">
               </a>
               <!-- Favorite/unfavorite button -->
               <div class="d-flex justify-content-center w-100 mt-3">
                 <div class="row g-5">
                   <div class="col-3 d-flex justify-content-between">
-                    <button class="btn border-0" onclick="shareImage(<?php echo $image['id']; ?>)"><i class="bi bi-share-fill"></i></button>
+                    <button type="button" class="btn border-0" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $image['id']; ?>"><i class="bi bi-share-fill"></i></button>
                   </div>
                   <div class="col-3 d-flex justify-content-between">
                     <?php
@@ -156,6 +156,8 @@ $result = $stmt->execute();
                     <a href="/image.php?artworkid=<?= $image['id']; ?>" class="btn border-0"><i class="bi bi-box-arrow-up-right"></i></a>
                   </div>
                 </div>
+                <?php include('../view_post.php'); ?>
+                <?php include('../share_post.php'); ?>
               </div>
             </div>
           <?php endwhile; ?>

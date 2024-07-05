@@ -90,14 +90,14 @@ while ($image = $result->fetchArray()) {
           }
         ?>
       </p>
-      <a class="rounded mt-2" href="/image.php?artworkid=<?= $image['id']; ?>">
+      <a class="rounded mt-2" data-bs-toggle="modal" data-bs-target="#viewPost<?php echo $image['id']; ?>">
         <img class="rounded w-100" src="/thumbnails/<?= $image['filename']; ?>" alt="<?= $image['title']; ?>">
       </a>
       <!-- Favorite/unfavorite button -->
       <div class="d-flex justify-content-center w-100 mt-3">
         <div class="row g-5">
           <div class="col-3 d-flex justify-content-between">
-            <a class="btn border-0" data-bs-toggle="collapse" href="#shareSection<?= $image['id']; ?>" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-share-fill icon-stroke-1"></i></a>
+            <button type="button" class="btn border-0" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $image['id']; ?>"><i class="bi bi-share-fill"></i></button>
           </div>
           <div class="col-3 d-flex justify-content-between">
             <?php
@@ -124,6 +124,8 @@ while ($image = $result->fetchArray()) {
             <a href="/image.php?artworkid=<?= $image['id']; ?>" class="btn border-0"><i class="bi bi-box-arrow-up-right"></i></a>
           </div>
         </div>
+        <?php include('../view_post.php'); ?>
+        <?php include('../share_post.php'); ?>
       </div>
     </div>
     <?php
