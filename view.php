@@ -203,7 +203,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
 ?> 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -222,21 +222,21 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
           $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
         <div class="d-flex">
-          <a class="text-decoration-none text-dark fw-bold rounded-pill" href="#" data-bs-toggle="modal" data-bs-target="#userModal">
+          <a class="text-decoration-none fw-bold rounded-pill text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="#" data-bs-toggle="modal" data-bs-target="#userModal">
             <?php if (!empty($user['pic'])): ?>
               <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 32px; height: 32px;">
             <?php else: ?>
               <img class="object-fit-cover border border-1 rounded-circle" src="icon/profile.svg" style="width: 32px; height: 32px;">
             <?php endif; ?>
-            <?php echo (mb_strlen($user['artist']) > 10) ? mb_substr($user['artist'], 0, 10) . '...' : $user['artist']; ?> <small class="badge rounded-pill bg-dark"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
+            <?php echo (mb_strlen($user['artist']) > 10) ? mb_substr($user['artist'], 0, 10) . '...' : $user['artist']; ?> <small class="badge rounded-pill text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
           </a>
         </div>
         <div class="ms-auto">
           <form method="post">
             <?php if ($is_following): ?>
-              <button class="btn btn-sm btn-outline-dark rounded-pill fw-bold opacity-75" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> unfollow</button>
+              <button class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-bold opacity-75" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> unfollow</button>
             <?php else: ?>
-              <button class="btn btn-sm btn-outline-dark rounded-pill fw-bold opacity-75" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> follow</button>
+              <button class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-bold opacity-75" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> follow</button>
             <?php endif; ?>
           </form>
         </div>
@@ -245,13 +245,13 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header border-bottom-0">
-              <h5 class="modal-title fw-bold fs-5" id="exampleModalLabel"><?php echo $user['artist']; ?> <small class="badge rounded-pill bg-dark"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small></h5>
+              <h5 class="modal-title fw-bold fs-5" id="exampleModalLabel"><?php echo $user['artist']; ?> <small class="badge rounded-pill text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small></h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <div class="row featurette">
                 <div class="col-5 order-1">
-                  <a class="text-decoration-none d-flex justify-content-center text-dark fw-bold rounded-pill" href="artist.php?by=newest&id=<?= $user['id'] ?>">
+                  <a class="text-decoration-none d-flex justify-content-center fw-bold rounded-pill text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="artist.php?by=newest&id=<?= $user['id'] ?>">
                     <?php if (!empty($user['pic'])): ?>
                       <img class="object-fit-cover border border-3 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 103px; height: 103px;">
                     <?php else: ?>
@@ -261,14 +261,14 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </div>
                 <div class="col-7 order-2">
                   <div class="btn-group w-100 mb-1 gap-1" role="group" aria-label="Basic example">
-                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="follower.php?id=<?php echo $user['id']; ?>"><small>followers</small></a>
-                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="following.php?id=<?php echo $user['id']; ?>"><small>following</small></a>
+                    <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-50 rounded fw-bold" href="follower.php?id=<?php echo $user['id']; ?>"><small>followers</small></a>
+                    <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-50 rounded fw-bold" href="following.php?id=<?php echo $user['id']; ?>"><small>following</small></a>
                   </div>
                   <div class="btn-group w-100 mb-1 gap-1" role="group" aria-label="Basic example">
-                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="artist.php?by=newest&id=<?php echo $user['id']; ?>"><small>images</small></a>
-                    <a class="btn btn-sm btn-outline-dark w-50 rounded fw-bold" href="list_favorite.php?id=<?php echo $user['id']; ?>"><small>favorites</small></a> 
+                    <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-50 rounded fw-bold" href="artist.php?by=newest&id=<?php echo $user['id']; ?>"><small>images</small></a>
+                    <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-50 rounded fw-bold" href="list_favorite.php?id=<?php echo $user['id']; ?>"><small>favorites</small></a> 
                   </div>
-                  <a class="btn btn-sm btn-outline-dark w-100 rounded fw-bold" href="artist.php?by=newest&id=<?php echo $user['id']; ?>"><small>view profile</small></a>
+                  <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-100 rounded fw-bold" href="artist.php?by=newest&id=<?php echo $user['id']; ?>"><small>view profile</small></a>
                 </div>
               </div>
               <div class="input-group my-1">
@@ -285,7 +285,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   <i class="bi bi-share-fill"></i> <small>share</small>
                 </button>
               </div>
-              <a class="btn btn-dark w-100 fw-bold mt-1" data-bs-toggle="collapse" href="#collapseBio" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-100 fw-bold mt-1" data-bs-toggle="collapse" href="#collapseBio" role="button" aria-expanded="false" aria-controls="collapseExample">
                 <small>view description</small>
               </a>
               <div class="collapse mt-1" id="collapseBio">
@@ -357,10 +357,10 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                           </div>
                           <div class="image-container position-relative">
                             <div class="btn-group position-absolute bottom-0 end-0 m-3">
-                              <a href="images/<?php echo $image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-end-0 opacity-75 fw-bold" download>
+                              <a href="images/<?php echo $image['filename']; ?>" class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-3 rounded-end-0 opacity-75 fw-bold" download>
                                 <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
                               </a>
-                              <a href="images/<?php echo $image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-start-0 opacity-75 fw-bold">
+                              <a href="images/<?php echo $image['filename']; ?>" class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-3 rounded-start-0 opacity-75 fw-bold">
                                 <i class="bi bi-arrows-fullscreen text-stroke"></i>
                               </a>
                             </div>
@@ -370,10 +370,10 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                               <div class="image-container position-relative">
                                 <img data-src="images/<?php echo $child_image['filename']; ?>" class="w-100 h-100 mt-1 lazy-load" alt="<?php echo $image['title']; ?>">
                                 <div class="btn-group position-absolute bottom-0 end-0 m-3">
-                                  <a href="images/<?php echo $child_image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-end-0 opacity-75 fw-bold" download>
+                                  <a href="images/<?php echo $child_image['filename']; ?>" class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-3 rounded-end-0 opacity-75 fw-bold" download>
                                     <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
                                   </a>
-                                  <a href="images/<?php echo $child_image['filename']; ?>" class="btn btn-sm btn-dark rounded-3 rounded-start-0 opacity-75 fw-bold">
+                                  <a href="images/<?php echo $child_image['filename']; ?>" class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-3 rounded-start-0 opacity-75 fw-bold">
                                     <i class="bi bi-arrows-fullscreen text-stroke"></i>
                                   </a>
                                 </div>
@@ -388,10 +388,10 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                         </div>
                       </div>
                       <div id="div2" class="col-md-5 h-100 overflow-auto bg-body-tertiary hide-scrollbar">
-                        <div class="p-3 container-fluid text-white">
+                        <div class="p-3 container-fluid text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
                           <div class="mb-3">
-                            <h6 class="card-title text-white fw-bold shadowed-text">all images by           
-                              <a class="text-decoration-none text-white shadowed-text fw-bold rounded-pill" href="artist.php?by=newest&id=<?= $user['id'] ?>">
+                            <h6 class="card-title fw-bold shadowed-text text-white">all images by           
+                              <a class="text-decoration-none shadowed-text fw-bold rounded-pill text-white" href="artist.php?by=newest&id=<?= $user['id'] ?>">
                                 <?php if (!empty($user['pic'])): ?>
                                   <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 24px; height: 24px;">
                                 <?php else: ?>
@@ -408,7 +408,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                   <div class="ratio ratio-1x1">
                                     <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
                                   </div>
-                                  <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                                  <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle text-nowrap">
                                     <i class="bi bi-arrow-left-circle text-stroke"></i> Next
                                   </h6>
                                 </div>
@@ -442,7 +442,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                   <div class="ratio ratio-1x1">
                                     <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
                                   </div>
-                                  <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                                  <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle text-nowrap">
                                     Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
                                   </h6>
                                 </div>
@@ -603,9 +603,9 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                       </ul>
                                     </div>
                                   </div>
-                                  <h5 class="text-white text-center shadowed-text fw-bold"><?php echo $image['title']; ?></h5>
+                                  <h5 class="text-center shadowed-text fw-bold text-white"><?php echo $image['title']; ?></h5>
                                   <div class="my-4" style="word-break: break-word;">
-                                    <p class="text-white shadowed-text small fw-medium" style="word-break: break-word;">
+                                    <p class="shadowed-text small fw-medium text-white" style="word-break: break-word;">
                                       <?php
                                         if (!empty($image['imgdesc'])) {
                                           $messageText = $image['imgdesc'];
@@ -623,7 +623,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                             $limitedText = substr($formattedText, 0, $charLimit);
                                             echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
                                             echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
-                                            echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0 text-white" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
+                                            echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
                                           } else {
                                             // If the text is within the character limit, just display it with line breaks.
                                             echo nl2br($formattedText);
@@ -782,7 +782,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                     <button class="btn bg-body-tertiary border-0 rounded-0 link-body-emphasis fw-bold w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage" aria-expanded="false" id="toggleButton2" aria-controls="collapseExample">
                                       <i class="bi bi-caret-down-fill"></i> show more
                                     </button> 
-                                    <div class="collapse" id="collapseDataImage">
+                                    <div class="collapse mt-4" id="collapseDataImage">
                                       <?php
                                         // Function to calculate the size of an image in MB
                                         function getImageSizeInMB($filename) {
@@ -807,88 +807,88 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                         }
                                       ?>
                                       <?php foreach ($images as $index => $image) { ?>
-                                        <div class="mb-3 img-thumbnail border-dark p-3">
+                                        <div class="mb-3 rounded-4 shadow bg-dark p-3">
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">Filename</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image['filename']; ?>" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php echo $image['filename']; ?>" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">Image data size</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image['filename']); ?> MB" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php echo getImageSizeInMB($image['filename']); ?> MB" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">Image dimensions</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?>" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?>" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">MIME type</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image['filename']); ?>" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php echo mime_content_type('images/' . $image['filename']); ?>" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">Image date</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <a class="text-decoration-none text-dark" href="images/<?php echo $image['filename']; ?>">
+                                            <a class="text-decoration-none text-white" href="images/<?php echo $image['filename']; ?>">
                                               <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
                                             </a>
                                           </div>
                                           <div>
-                                            <a class="text-decoration-none text-dark" href="images/<?php echo $image['filename']; ?>" download>
+                                            <a class="text-decoration-none text-white" href="images/<?php echo $image['filename']; ?>" download>
                                               <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
                                             </a>
                                           </div>
                                         </div>
                                       <?php } ?>
                                       <?php foreach ($image_childs as $index => $image_child) { ?>
-                                        <div class="mt-3 mb-3 img-thumbnail border-dark p-3">
+                                        <div class="mt-3 mb-3 rounded-4 shadow bg-dark p-3">
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">Filename</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image_child['filename']; ?>" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php echo $image_child['filename']; ?>" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">Image data size</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image_child['filename']); ?> MB" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php echo getImageSizeInMB($image_child['filename']); ?> MB" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">Image dimensions</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?>" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?>" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">MIME type</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image_child['filename']); ?>" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php echo mime_content_type('images/' . $image_child['filename']); ?>" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
+                                            <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium text-white">Image date</label>
                                             <div class="col-sm-8">
-                                              <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
+                                              <input type="text" class="form-control-plaintext fw-bold text-white" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
                                             </div>
                                           </div>
                                           <div class="mb-3 row">
-                                            <a class="text-decoration-none text-dark" href="images/<?php echo $image_child['filename']; ?>">
+                                            <a class="text-decoration-none text-white" href="images/<?php echo $image_child['filename']; ?>">
                                               <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
                                             </a>
                                           </div>
                                           <div>
-                                            <a class="text-decoration-none text-dark" href="images/<?php echo $image_child['filename']; ?>" download>
+                                            <a class="text-decoration-none text-white" href="images/<?php echo $image_child['filename']; ?>" download>
                                               <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
                                             </a>
                                           </div>
@@ -907,8 +907,8 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                     
                                         $total_size = $images_total_size + $image_child_total_size;
                                       ?>
-                                      <div class="text-white mt-3 mb-3">
-                                        <ul class="list-unstyled m-0">
+                                      <div class="mt-3 mb-3">
+                                        <ul class="list-unstyled m-0 text-white">
                                           <li class="mb-2"><i class="bi bi-file-earmark-plus"></i> Total size of all images: <?php echo $total_size; ?> MB</li>
                                         </ul>
                                       </div>
@@ -934,12 +934,12 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               <div class="btn-group">
                 <?php if ($user_email === $email): ?>
                   <!-- Display the edit button only if the current user is the owner of the image -->
-                  <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded-end-0" href="edit_image.php?id=<?php echo $image['id']; ?>">
+                  <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded-end-0" href="edit_image.php?id=<?php echo $image['id']; ?>">
                     <i class="bi bi-pencil-fill"></i> Edit Image
                   </a>
                 <?php endif; ?>
                 <div class="dropdown">
-                  <button class="btn btn-sm btn-dark fw-bold opacity-75 <?php echo ($user_email === $email) ? 'rounded-start-0 rounded-3' : 'rounded-3'; ?> text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 <?php echo ($user_email === $email) ? 'rounded-start-0 rounded-3' : 'rounded-3'; ?>" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-images"></i> <?php echo $total_all_images; ?>
                   </button>
                   <ul class="dropdown-menu">
@@ -959,14 +959,14 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               </div>
             </div>
             <div class="position-absolute top-0 start-0 ms-2 mt-2">
-              <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded text-white" href="simple_view.php?artworkid=<?php echo $image['id']; ?>">
+              <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded" href="simple_view.php?artworkid=<?php echo $image['id']; ?>">
                 simple view
               </a>
             </div>
             <div class="position-absolute bottom-0 end-0 me-2 mb-2">
               <div class="btn-group">
                 <div class="dropdown">
-                  <button class="btn btn-sm btn-dark opacity-75 rounded-3 rounded-end-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> opacity-75 rounded-3 rounded-end-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-eye-fill"></i>
                   </button>
                   <ul class="dropdown-menu">
@@ -976,19 +976,19 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item fw-bold" href="view/gallery/?artworkid=<?php echo $image['id']; ?>">
+                      <a class="dropdown-item fw-bold" href="simple_view/gallery/?artworkid=<?php echo $image['id']; ?>">
                         <i class="bi bi-distribute-vertical"></i> full gallery view
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item fw-bold" href="view/carousel/?artworkid=<?php echo $image['id']; ?>">
+                      <a class="dropdown-item fw-bold" href="simple_view/carousel/?artworkid=<?php echo $image['id']; ?>">
                         <i class="bi bi-distribute-horizontal"></i> full carousel view
                       </a>
                     </li>
                   </ul>
                 </div>
-                <button class="btn btn-sm btn-dark fw-bold opacity-75 rounded-0 text-white" id="loadOriginalBtn">Load Original Image</button>
-                <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded-start-0 text-white" data-bs-toggle="modal" data-bs-target="#downloadOption">
+                <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-0" id="loadOriginalBtn">Load Original Image</button>
+                <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded-start-0" data-bs-toggle="modal" data-bs-target="#downloadOption">
                   <i class="bi bi-cloud-arrow-down-fill"></i>
                 </a>
               </div>
@@ -1001,16 +1001,16 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body scrollable-div">
-                      <a class="btn btn-outline-dark fw-bold w-100 mb-2 text-center rounded-3" href="images/<?php echo $image['filename']; ?>" download>
+                      <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="images/<?php echo $image['filename']; ?>" download>
                         <i class="bi bi-cloud-arrow-down-fill"></i> Download first image (<?php echo getImageSizeInMB($image['filename']); ?> MB)
                       </a>
                       <?php if ($total_size > 10): ?>
-                        <a class="btn btn-outline-dark fw-bold w-100 mb-2 text-center rounded-3" href="#" data-bs-target="#rusModal" data-bs-toggle="modal">
+                        <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="#" data-bs-target="#rusModal" data-bs-toggle="modal">
                           <p><i class="bi bi-file-earmark-zip-fill"></i> Download all images (<?php echo $total_size; ?> MB)</p>
                           <p><small>This file is too big. The total size is <?php echo $total_size; ?> MB.</small></p>
                         </a>
                       <?php else: ?>
-                        <a class="btn btn-outline-dark fw-bold w-100 mb-2 text-center rounded-3" href="#" id="downloadAllImages">
+                        <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="#" id="downloadAllImages">
                           <i class="bi bi-file-earmark-zip-fill"></i> Download all images (<?php echo $total_size; ?> MB)
                         </a>
                       <?php endif; ?>
@@ -1032,7 +1032,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       </p>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-dark fw-bold w-100 text-center rounded-3" data-bs-dismiss="modal">cancel</button>
+                      <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 text-center rounded-3" data-bs-dismiss="modal">cancel</button>
                     </div>
                   </div>
                 </div>
@@ -1045,10 +1045,10 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body scrollable-div">
-                      <a class="btn btn-outline-dark fw-bold w-100 mb-2 text-center rounded-3" href="#" id="downloadAllImages">
+                      <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="#" id="downloadAllImages">
                         <i class="bi bi-file-earmark-zip-fill"></i> Download all images (<?php echo $total_size; ?> MB)
                       </a>
-                      <button type="button" class="btn btn-outline-dark mb-2 fw-bold w-100 text-center rounded-3" data-bs-target="#downloadOption" data-bs-toggle="modal"><i class="bi bi-arrow-left-circle-fill"></i> back to previous</button>
+                      <button type="button" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> mb-2 fw-bold w-100 text-center rounded-3" data-bs-target="#downloadOption" data-bs-toggle="modal"><i class="bi bi-arrow-left-circle-fill"></i> back to previous</button>
                       <div class="progress fw-bold" style="height: 30px; display: none;">
                         <div class="progress-bar progress-bar progress-bar-animated fw-bold" style="width: 0; height: 30px;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progress-bar2">0%</div>
                       </div>
@@ -1067,7 +1067,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       </p>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-dark fw-bold w-100 text-center rounded-3" data-bs-dismiss="modal">cancel</button>
+                      <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 text-center rounded-3" data-bs-dismiss="modal">cancel</button>
                     </div>
                   </div>
                 </div>
@@ -1220,7 +1220,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </button>
               </div>
             <?php endif; ?> 
-            <button id="showProgressBtn" class="fw-bold btn btn-sm btn-dark position-absolute top-50 start-50 translate-middle text-nowrap rounded-pill opacity-75" style="display: none;">
+            <button id="showProgressBtn" class="fw-bold btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> position-absolute top-50 start-50 translate-middle text-nowrap rounded-pill opacity-75" style="display: none;">
               progress
             </button>
             <div class="position-absolute bottom-0 start-0 ms-2 mb-2">
@@ -1245,18 +1245,18 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 ?>
                   <form action="?artworkid=<?php echo $image['id']; ?>" method="POST">
                     <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
-                    <button type="submit" class="btn btn-sm btn-dark opacity-75 rounded-3 rounded-end-0" name="unfavorite"><i class="bi bi-heart-fill"></i></button>
+                    <button type="submit" class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> opacity-75 rounded-3 rounded-end-0" name="unfavorite"><i class="bi bi-heart-fill"></i></button>
                   </form>
                 <?php } else { ?>
                   <form action="?artworkid=<?php echo $image['id']; ?>" method="POST">
                     <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
-                    <button type="submit" class="btn btn-sm btn-dark opacity-75 rounded-3 rounded-end-0" name="favorite"><i class="bi bi-heart"></i></button>
+                    <button type="submit" class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> opacity-75 rounded-3 rounded-end-0" name="favorite"><i class="bi bi-heart"></i></button>
                   </form>
                 <?php } ?>
-                <button class="btn btn-sm btn-dark opacity-75 rounded-0" data-bs-toggle="modal" data-bs-target="#shareLink">
+                <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> opacity-75 rounded-0" data-bs-toggle="modal" data-bs-target="#shareLink">
                   <i class="bi bi-share-fill"></i>
                 </button>
-                <button class="btn btn-sm btn-dark opacity-75 rounded-3 rounded-start-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompression1" aria-expanded="false" aria-controls="collapseExample1" id="toggleButton1">
+                <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> opacity-75 rounded-3 rounded-start-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompression1" aria-expanded="false" aria-controls="collapseExample1" id="toggleButton1">
                   <i class="bi bi-caret-down-fill"></i>
                 </button>
               </div>
@@ -1288,21 +1288,21 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
               ?>
               <div class="d-flex">
-                <a class="text-decoration-none text-dark fw-bold rounded-pill" href="#" data-bs-toggle="modal" data-bs-target="#userModal">
+                <a class="text-decoration-none fw-bold rounded-pill text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="#" data-bs-toggle="modal" data-bs-target="#userModal">
                  <?php if (!empty($user['pic'])): ?>
                    <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 32px; height: 32px;">
                   <?php else: ?>
                     <img class="object-fit-cover border border-1 rounded-circle" src="icon/profile.svg" style="width: 32px; height: 32px;">
                   <?php endif; ?>
-                  <?php echo (mb_strlen($user['artist']) > 20) ? mb_substr($user['artist'], 0, 20) . '...' : $user['artist']; ?> <small class="badge rounded-pill bg-dark"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
+                  <?php echo (mb_strlen($user['artist']) > 20) ? mb_substr($user['artist'], 0, 20) . '...' : $user['artist']; ?> <small class="badge rounded-pill text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
                 </a>
               </div>
               <div class="ms-auto">
                 <form method="post">
                   <?php if ($is_following): ?>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill fw-bold opacity-75" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> unfollow</button>
+                    <button class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-bold opacity-75" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> unfollow</button>
                   <?php else: ?>
-                    <button class="btn btn-sm btn-outline-dark rounded-pill fw-bold opacity-75" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> follow</button>
+                    <button class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-bold opacity-75" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> follow</button>
                   <?php endif; ?>
                 </form>
               </div>
@@ -1373,9 +1373,9 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   </a>
                 <?php endif; ?>
               </div>
-              <h5 class="text-dark fw-bold text-center mt-3"><?php echo $image['title']; ?></h5>
+              <h5 class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold text-center mt-3"><?php echo $image['title']; ?></h5>
               <div style="word-break: break-word;" data-lazyload>
-                <p class="text-dark small fw-medium" style="word-break: break-word;">
+                <p class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> small fw-medium my-4" style="word-break: break-word;">
                   <?php
                     if (!empty($image['imgdesc'])) {
                       $messageText = $image['imgdesc'];
@@ -1422,7 +1422,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </p>
               </div>
               <p class="text-secondary" style="word-wrap: break-word;">
-                <a class="text-dark" href="<?php echo $image['link']; ?>">
+                <a class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="<?php echo $image['link']; ?>">
                   <small>
                     <?php echo (strlen($image['link']) > 40) ? substr($image['link'], 0, 40) . '...' : $image['link']; ?>
                   </small>
@@ -1469,26 +1469,26 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 </div>
               </div>
               <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
-                <a class="btn btn-dark fw-bold rounded-4 mb-2 w-100" href="episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 mb-2 w-100" href="episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
                   <small>all episodes from <?php echo $image['episode_name']; ?></small>
                 </a>
                 <div class="btn-group gap-2 w-100 mb-2">
-                  <a class="btn btn-dark fw-bold rounded-4 w-50" target="_blank" href="manga/title.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
+                  <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" target="_blank" href="manga/title.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
                     <small>go to manga</small>
                   </a>
-                  <a class="btn btn-dark fw-bold rounded-4 w-50" target="_blank" href="manga/view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>&id=<?php echo $image['id']; ?>&page=1">
+                  <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" target="_blank" href="manga/view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>&id=<?php echo $image['id']; ?>&page=1">
                     <small>read in manga mode</small>
                   </a>
                 </div>
               <?php endif; ?>
               <div class="btn-group w-100" role="group" aria-label="Basic example">
-                <button class="btn btn-dark fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
+                <button class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
                   <i class="bi bi-share-fill"></i> <small>share</small>
                 </button>
-                <a class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#downloadOption">
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold" data-bs-toggle="modal" data-bs-target="#downloadOption">
                   <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
                 </a>
-                <button class="btn btn-dark dropdown-toggle fw-bold rounded-end-4" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#dataModal">
+                <button class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle fw-bold rounded-end-4" type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" data-bs-toggle="modal" data-bs-target="#dataModal">
                   <i class="bi bi-info-circle-fill"></i> <small>info</small>
                 </button>
 
@@ -1502,10 +1502,10 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       </div>
                       <div class="modal-body">
                         <div>
-                          <div class="text-dark text-center mt-2 mb-4">
+                          <div class="text-center mt-2 mb-4">
                             <h6 class="fw-bold"><i class="bi bi-file-earmark-plus"></i> Total size of all images: <?php echo $total_size; ?> MB</h6>
                           </div>
-                          <button class="btn btn-outline-dark fw-bold w-100 mb-2" id="toggleButton3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage1" aria-expanded="false" aria-controls="collapseExample">
+                          <button class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2" id="toggleButton3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage1" aria-expanded="false" aria-controls="collapseExample">
                             <i class="bi bi-caret-down-fill"></i> <small>show more</small>
                           </button>
                           <div class="collapse mt-2" id="collapseDataImage1">
@@ -1542,12 +1542,12 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
-                                  <a class="text-decoration-none text-dark" href="images/<?php echo $image['filename']; ?>">
+                                  <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="images/<?php echo $image['filename']; ?>">
                                     <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
                                   </a>
                                 </div>
                                 <div>
-                                  <a class="text-decoration-none text-dark" href="images/<?php echo $image['filename']; ?>" download>
+                                  <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="images/<?php echo $image['filename']; ?>" download>
                                     <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
                                   </a>
                                 </div>
@@ -1586,18 +1586,18 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                   </div>
                                 </div>
                                 <div class="mb-3 row">
-                                  <a class="text-decoration-none text-dark" href="images/<?php echo $image_child['filename']; ?>">
+                                  <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="images/<?php echo $image_child['filename']; ?>">
                                     <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
                                   </a>
                                 </div>
                                 <div>
-                                  <a class="text-decoration-none text-dark" href="images/<?php echo $image_child['filename']; ?>" download>
+                                  <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="images/<?php echo $image_child['filename']; ?>" download>
                                     <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
                                   </a>
                                 </div>
                               </div>
                             <?php } ?>
-                            <a class="btn btn-outline-dark fw-bold w-100" href="#downloadOption" data-bs-toggle="modal">
+                            <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100" href="#downloadOption" data-bs-toggle="modal">
                               <i class="bi bi-cloud-arrow-down-fill"></i> download all
                             </a>
                             <?php
@@ -1688,12 +1688,12 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <?php endif; ?>
               </div>
               <div class="btn-group w-100">
-                <a class="btn btn-dark rounded-4 mt-2 fw-bold rounded-end-0" style="word-wrap: break-word;" data-bs-toggle="modal" href="#imgcarousel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 mt-2 fw-bold rounded-end-0" style="word-wrap: break-word;" data-bs-toggle="modal" href="#imgcarousel" role="button" aria-expanded="false" aria-controls="collapseExample">
                   <small>
                     <i class="bi bi-images"></i> view all <?php echo $user['artist']; ?>'s images
                   </small>
                 </a>
-                <a class="btn btn-dark rounded-4 mt-2 fw-bold rounded-start-0" style="max-width: 50px;" href="artist.php?by=newest&id=<?= $user['id'] ?>">
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 mt-2 fw-bold rounded-start-0" style="max-width: 50px;" href="artist.php?by=newest&id=<?= $user['id'] ?>">
                   <small>
                     <i class="bi bi-box-arrow-up-right text-stroke"></i>
                   </small>
@@ -1854,11 +1854,11 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       $db->close();
                     ?>
                   </select>
-                  <button class="form-control bg-dark text-white fw-bold rounded-4" type="submit"><small>add to album</small></button>
+                  <button class="form-control bg-dark fw-bold rounded-4" type="submit"><small>add to album</small></button>
                 </form>
                 <iframe class="mt-2 rounded" style="width: 100%; height: 300px;" src="<?php echo $url_comment; ?>"></iframe>
               </div>
-              <a class="btn btn-dark rounded-4 w-100 fw-bold text-center mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleButton">
+              <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 w-100 fw-bold text-center mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleButton">
                 <i class="bi bi-caret-down-fill"></i> <small id="toggleText">show more</small>
               </a>
             </div>
@@ -1868,74 +1868,70 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
     </div>
     <!-- Share Modal -->
     <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0">
-          <div class="modal-header border-0">
-            <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel">share to:</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- First Social Media Section -->
+          <div class="card rounded-4 p-4">
+            <p class="text-start fw-bold">share to:</p>
             <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- Twitter -->
-              <a class="btn btn-outline-dark" href="https://twitter.com/intent/tweet?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>">
+              <a class="btn border-0" href="https://twitter.com/intent/tweet?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>">
                 <i class="bi bi-twitter"></i>
               </a>
                 
               <!-- Line -->
-              <a class="btn btn-outline-dark" href="https://social-plugins.line.me/lineit/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://social-plugins.line.me/lineit/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-line"></i>
               </a>
                 
               <!-- Email -->
-              <a class="btn btn-outline-dark" href="mailto:?body=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>">
+              <a class="btn border-0" href="mailto:?body=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>">
                 <i class="bi bi-envelope-fill"></i>
               </a>
                 
               <!-- Reddit -->
-              <a class="btn btn-outline-dark" href="https://www.reddit.com/submit?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://www.reddit.com/submit?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-reddit"></i>
               </a>
                 
               <!-- Instagram -->
-              <a class="btn btn-outline-dark" href="https://www.instagram.com/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://www.instagram.com/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-instagram"></i>
               </a>
                 
               <!-- Facebook -->
-              <a class="btn btn-outline-dark" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-facebook"></i>
               </a>
             </div>
             <!-- Second Social Media Section -->
             <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
               <!-- WhatsApp -->
-              <a class="btn btn-outline-dark" href="https://wa.me/?text=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://wa.me/?text=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-whatsapp"></i>
               </a>
   
               <!-- Pinterest -->
-              <a class="btn btn-outline-dark" href="https://pinterest.com/pin/create/button/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://pinterest.com/pin/create/button/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-pinterest"></i>
               </a>
   
               <!-- LinkedIn -->
-              <a class="btn btn-outline-dark" href="https://www.linkedin.com/shareArticle?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://www.linkedin.com/shareArticle?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-linkedin"></i>
               </a>
   
               <!-- Messenger -->
-              <a class="btn btn-outline-dark" href="https://www.facebook.com/dialog/send?link=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://www.facebook.com/dialog/send?link=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-messenger"></i>
               </a>
   
               <!-- Telegram -->
-              <a class="btn btn-outline-dark" href="https://telegram.me/share/url?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://telegram.me/share/url?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-telegram"></i>
               </a>
   
               <!-- Snapchat -->
-              <a class="btn btn-outline-dark" href="https://www.snapchat.com/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+              <a class="btn border-0" href="https://www.snapchat.com/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-snapchat"></i>
               </a>
             </div>
@@ -1946,7 +1942,6 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                 <i class="bi bi-clipboard-fill"></i>
               </button>
             </div>
-            <button class="btn btn-secondary opacity-50 fw-bold w-100" onclick="sharePage()"><i class="bi bi-share-fill"></i> <small>share</small></button>
           </div>
         </div>
       </div>
@@ -2118,11 +2113,11 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
     </style>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
-    <p class="text-dark fw-bold ms-2 mt-2">Latest Images</p>
+    <p class="fw-bold ms-2 mt-2">Latest Images</p>
     <?php
       include 'latest.php';
     ?>
-    <p class="text-dark fw-bold ms-2 mt-5">Popular Images</p>
+    <p class="fw-bold ms-2 mt-5">Popular Images</p>
     <?php
       include 'most_popular.php';
     ?>
@@ -2399,11 +2394,11 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               let overlay = document.createElement("div");
               overlay.classList.add("overlay", "rounded");
               let icon = document.createElement("i");
-              icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
+              icon.classList.add("bi", "bi-eye-slash-fill", "text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>");
               overlay.appendChild(icon);
               let text = document.createElement("span");
               text.textContent = "R-18";
-              text.classList.add("shadowed-text", "fw-bold", "text-white");
+              text.classList.add("shadowed-text", "fw-bold", "text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>");
               overlay.appendChild(text);
               image.parentNode.appendChild(overlay);
             }

@@ -38,7 +38,7 @@
       $stmt->execute();
       $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
-    <p class="ms-2 mt-3 text-dark fw-bold">
+    <p class="ms-2 mt-3 fw-bold">
       <i class="bi bi-images"></i> Latest images by <?php echo $user['artist']; ?>
     </p>
     <div class="modal fade" id="imgcarousel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
