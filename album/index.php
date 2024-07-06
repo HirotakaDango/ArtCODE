@@ -7,6 +7,30 @@ $db = new SQLite3('../database.sqlite');
 $album_id = $_GET['id'];
 $email = $_SESSION['email'];
 
+// Process any favorite/unfavorite requests
+if (isset($_POST['favorite'])) {
+  $image_id = $_POST['image_id'];
+
+  // Check if the image has already been favorited by the current user
+  $existing_fav = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = $image_id");
+
+  if ($existing_fav == 0) {
+    $db->exec("INSERT INTO favorites (email, image_id) VALUES ('$email', $image_id)");
+  }
+  
+  // Redirect to the same page with the appropriate sorting parameter
+  header("Location: {$_SERVER['REQUEST_URI']}");
+  exit(); 
+  
+} elseif (isset($_POST['unfavorite'])) {
+  $image_id = $_POST['image_id'];
+  $db->exec("DELETE FROM favorites WHERE email = '$email' AND image_id = $image_id");
+
+  // Redirect to the same page with the appropriate sorting parameter
+  header("Location: {$_SERVER['REQUEST_URI']}");
+  exit();
+}
+
 // Handle deleting an image from the album if the delete button was clicked
 if (isset($_POST['delete_image'])) {
   $image_album_id = $_POST['image_album_id'];
@@ -60,7 +84,7 @@ $album_name = $result['album_name'];
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <title>
       <?php if ($total == 0): ?>
@@ -83,7 +107,7 @@ $album_name = $result['album_name'];
       <h5 class="fw-bold ms-2"><i class="bi bi-journal-album"></i> <?php echo $album_name; ?></h5>
     <?php endif; ?>
     <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">

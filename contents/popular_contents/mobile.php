@@ -17,7 +17,7 @@
                       <img class="d-block rounded w-100 h-custom <?php echo ($image_type === 'nsfw') ? 'blurred' : ''; ?>" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $filename; ?>" alt="<?php echo $title; ?>">
                     </div>
                     <div class="carousel-caption">
-                      <h5 class="fw-bold"><?php echo $title; ?></h5>
+                      <h5 class="fw-bold text-white"><?php echo $title; ?></h5>
                     </div>
                   </a>
                 </div>

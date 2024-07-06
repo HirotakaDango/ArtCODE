@@ -42,7 +42,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </head>
   <body>
     <?php include('backheader.php'); ?>
-    <div class="container-fluid my-5">
+    <div class="container my-5">
       <?php include('nav.php'); ?>
       <?php
       // Function to calculate the size of an image in MB

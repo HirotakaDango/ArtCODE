@@ -41,12 +41,26 @@
                     <i class="bi bi-three-dots-vertical text-white link-body-emphasis fs-5" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"></i>
                   </button>
                   <ul class="dropdown-menu">
+                    <?php
+                      $is_favorited = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$image['id']}");
+                      if ($is_favorited) {
+                    ?>
+                      <form method="POST">
+                        <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
+                        <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
+                      </form>
+                    <?php } else { ?>
+                      <form method="POST">
+                        <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>">
+                        <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
+                      </form>
+                    <?php } ?>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $image['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                     <form method="POST" onsubmit="return confirm('Are you sure you want to delete this image from the album?');">
                       <input type="hidden" name="image_album_id" value="<?php echo htmlspecialchars($image['image_album_id']); ?>">
                       <li><button type="submit" name="delete_image" class="dropdown-item fw-bold"><i class="bi bi-trash-fill"></i> delete</button></li>
                     </form> 
-                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $image['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
-                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                   </ul>
                   <?php include('share_album.php'); ?>
                   

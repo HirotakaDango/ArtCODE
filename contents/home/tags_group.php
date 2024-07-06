@@ -10,9 +10,11 @@
           while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             $firstTag = $row['first_tag'];
             $tagCount = $row['tag_count'];
-    
-            // Display each first tag as an <a> tag with the total count
-            echo "<a class='fw-medium btn btn-sm btn-dark rounded-pill' style='margin-right: 2px;' href='../tagged_images.php?tag=". $firstTag ."'><i class='bi bi-tags-fill'></i> $firstTag</a>";
+      ?>
+            <a class="fw-medium btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill" style="margin-right: 2px;" href="../tagged_images.php?tag=<?php echo urlencode($firstTag); ?>">
+              <i class="bi bi-tags-fill"></i> <?php echo htmlspecialchars($firstTag); ?>
+            </a>
+      <?php
           }
         }
       ?>

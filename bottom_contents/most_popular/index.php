@@ -124,7 +124,7 @@ $resultP = $stmtP->execute();
     </div>
     <div id="loadMoreBtnContainerP">
       <div class="w-100 px-1 mt-2">
-        <button id="loadMoreBtnP" class="btn btn-outline-dark rounded-pill fw-bold w-100">Load More</button>
+        <button id="loadMoreBtnP" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-bold w-100">Load More</button>
       </div>
     </div>
     <div class="mt-5"></div>

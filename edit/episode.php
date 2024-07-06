@@ -106,7 +106,7 @@ $results = $stmt->execute();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -121,8 +121,8 @@ $results = $stmt->execute();
       <?php include('nav.php'); ?>
       <form method="POST" class="mt-4">
         <div class="form-floating mb-2">
-          <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" name="new_episode_name" id="new_episode_name" placeholder="Add episode name" maxlength="500" required>  
-          <label for="floatingInput" class="text-dark fw-bold">Add episode name</label>
+          <input class="form-control border rounded-3 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold border-4" type="text" name="new_episode_name" id="new_episode_name" placeholder="Add episode name" maxlength="500" required>  
+          <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold">Add episode name</label>
           <button type="submit" class="btn btn-primary fw-bold mt-2 w-100">Add Episode</button>
         </div>
       </form>
@@ -158,8 +158,8 @@ $results = $stmt->execute();
             <div class="modal-body">
               <input type="hidden" name="edit_episode_id" id="edit_episode_id">
               <div class="form-floating">
-                <input class="form-control border rounded-3 text-dark fw-bold border-4" type="text" name="edit_episode_name" id="edit_episode_name" placeholder="Edit episode name" maxlength="500" required>
-                <label for="edit_episode_name" class="text-dark fw-bold">Edit episode name</label>
+                <input class="form-control border rounded-3 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold border-4" type="text" name="edit_episode_name" id="edit_episode_name" placeholder="Edit episode name" maxlength="500" required>
+                <label for="edit_episode_name" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold">Edit episode name</label>
               </div>
             </div>
             <div class="btn-group w-100 pb-3 px-3 gap-3">
