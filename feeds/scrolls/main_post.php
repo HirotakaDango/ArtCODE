@@ -96,7 +96,7 @@ if (isset($_POST['favorite'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -143,7 +143,7 @@ if (isset($_POST['favorite'])) {
               </form>
             </div>
           </div>
-          <p class="text-dark small fw-medium" style="word-break: break-word;">
+          <p class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> small fw-medium" style="word-break: break-word;">
             <?php
               if (!empty($image['imgdesc'])) {
                 $messageText = $image['imgdesc'];

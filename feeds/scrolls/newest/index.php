@@ -40,7 +40,7 @@ $result = $stmt->execute();
 ?>
 
 <!DOCTYPE html>
-  <html lang="en">
+  <html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
