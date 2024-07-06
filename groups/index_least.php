@@ -62,7 +62,7 @@ $currentgroups = array_slice($currentgroups, $offset, $limit, true);
         <div class="row justify-content-center">
           <?php foreach ($groupedgroups as $group => $groups): ?>
             <div class="col-4 col-md-2 col-sm-5 px-0">
-              <a class="btn btn-outline-dark border-0 fw-medium d-flex flex-column align-items-center" href="?by=<?php echo $by; ?>&category=<?php echo $group; ?>">
+              <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-0 fw-medium d-flex flex-column align-items-center" href="?by=<?php echo $by; ?>&category=<?php echo $group; ?>">
                 <h6 class="fw-medium">Category</h6>
                 <h6 class="fw-bold"><?php echo $group; ?></h6>
               </a>

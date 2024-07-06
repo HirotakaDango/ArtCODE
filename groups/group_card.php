@@ -10,7 +10,7 @@
               if ($imageResult):
             ?>
             <div class="col-md-2 col-sm-5 px-0">
-              <a href="../tagged_images.php?tag=<?php echo str_replace('%27', "'", urlencode($tag)); ?>" class="m-1 d-block text-decoration-none">
+              <a href="/group/?group=<?php echo str_replace('%27', "'", urlencode($tag)); ?>" class="m-1 d-block text-decoration-none">
                 <div class="card rounded-4 border-0 shadow text-bg-dark ratio ratio-1x1">
                   <img data-src="../thumbnails/<?php echo $imageResult['filename']; ?>" alt="<?php echo $imageResult['title']; ?>" class="lazy-load card-img object-fit-cover rounded-4 w-100 h-100">
                   <div class="card-img-overlay d-flex align-items-center justify-content-center">

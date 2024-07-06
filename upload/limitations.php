@@ -36,7 +36,7 @@
                   <strong>Recommended Action:</strong> <a class="text-decoration-none link-dark fw-bold" href="/edit/upload.php" target="_blank">Upload New Images</a>
                 </p>
                 <p>
-                  To add more images beyond the limit, consider <a class="text-decoration-none link-dark fw-bold" href="/edit/upload.php" target="_blank">uploading new images</a> and associating them with the current image ID. This allows you to seamlessly expand your collection without encountering upload restrictions.
+                  To add more images beyond the limit, consider <a class="text-decoration-none link-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold" href="/edit/upload.php" target="_blank">uploading new images</a> and associating them with the current image ID. This allows you to seamlessly expand your collection without encountering upload restrictions.
                 </p>
               </li>
             </ul>
