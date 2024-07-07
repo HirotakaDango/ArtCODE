@@ -49,19 +49,34 @@ $artist = htmlspecialchars($user['artist']);
 ?>
 
     <main id="swup" class="transition-main">
-    <?php include('setheader.php'); ?>
-    <div class="container">
-      <h3 class="text-dark text-center mt-4 fw-bold"><i class="bi bi-person-circle"></i> Change Your Name</h3>
-      <?php if (isset($_SESSION['success'])): ?>
-        <div class="alert alert-success"><?php echo $_SESSION['success']; ?></div>
-      <?php unset($_SESSION['success']); endif; ?>
-      <form method="post" class="mt-3" action="yourname.php">
-        <div class="form-floating mb-2">
-          <input type="text" class="form-control rounded-3 border text-dark fw-bold border-4" id="artist" name="artist" value="<?php echo $artist; ?>" maxlength="40">
-          <label for="floatingInput" class="text-dark fw-bold">Your current name: <?php echo $artist; ?></label>
+      <?php include('setheader.php'); ?>
+        <?php if (isset($_SESSION['success'])): ?>
+          <div class="alert alert-success"><?php echo $_SESSION['success']; ?></div>
+        <?php unset($_SESSION['success']); endif; ?>
+        <div class="container mt-4">
+          <div class="d-md-none mb-4">
+            <div class="d-flex">
+              <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">
+                <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
+              </a>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-3">
+            Change Username
+          </h3>
+          <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+            <h5 class="fw-bold">
+              <i class="bi bi-person-circle me-2"></i> Update Username
+            </h5>
+            <p class="text-muted mb-4">Edit your username below. Choose between a light or dark theme to adjust the appearance of the website to your preference.</p>
+            <form method="post" class="mt-3" action="yourname.php">
+              <div class="form-floating mb-2">
+                <input type="text" class="form-control rounded-3 border fw-bold border-4" id="artist" name="artist" value="<?php echo $artist; ?>" maxlength="40">
+                <label for="artist" class="fw-bold">Your current username: <?php echo $artist; ?></label>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Save</button>
+            </form>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Save</button>
-      </form>
-    </div>
-    <?php include('end.php'); ?>
+      <?php include('end.php'); ?>
     </main>

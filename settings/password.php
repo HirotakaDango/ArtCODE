@@ -46,35 +46,46 @@ if (isset($_POST['submit'])) {
 ?>
 
     <main id="swup" class="transition-main">
-    <?php include('setheader.php'); ?>
-    <div class="container">
-      <div class="text-center mt-4">
-        <h3 class="text-dark fw-bold"><i class="bi bi-key-fill"></i> Change Password</h3>
-      </div>
-      <div class="container fw-bold text-dark mt-4">
+      <?php include('setheader.php'); ?>
         <?php if (isset($_SESSION['success'])): ?>
           <div class="alert alert-success"><?php echo $_SESSION['success']; ?></div>
         <?php unset($_SESSION['success']); endif; ?>
         <?php if (isset($error)): ?>
           <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
-        <form method="POST">
-          <div class="form-floating mb-2">
-            <input type="password" class="form-control rounded-3 border text-dark fw-bold border-4" name="current_password" placeholder="Enter current password" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
-            <label for="floatingPassword" class="text-dark fw-bold">Enter current password</label>
+        <div class="container mt-4">
+          <div class="d-md-none mb-4">
+            <div class="d-flex">
+              <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">
+                <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
+              </a>
+            </div>
           </div>
-          <div class="form-floating mb-2">
-            <input type="password" class="form-control rounded-3 border text-dark fw-bold border-4" name="new_password" max placeholder="Type new password"length="40" pattern="^[a-zA-Z0-9_@.-]+$">
-            <label for="floatingPassword" class="text-dark fw-bold">Type new password</label>
+          <h3 class="fw-bold mb-4">
+            <i class="bi bi-key-fill"></i> Change Password
+          </h3>
+          <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+            <h5 class="fw-bold">
+              <i class="bi bi-person-circle me-2"></i> Update Password
+            </h5>
+            <p class="text-muted mb-4">Update your password below. Choose a strong password for better security.</p>
+            <form method="POST">
+              <div class="form-floating mb-2">
+                <input type="password" class="form-control rounded-3 border fw-bold border-4" name="current_password" placeholder="Enter current password" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
+                <label for="floatingPassword" class="fw-bold">Enter current password</label>
+              </div>
+              <div class="form-floating mb-2">
+                <input type="password" class="form-control rounded-3 border fw-bold border-4" name="new_password" placeholder="Type new password" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
+                <label for="floatingPassword" class="fw-bold">Type new password</label>
+              </div>
+              <div class="form-floating mb-2">
+                <input type="password" class="form-control rounded-3 border fw-bold border-4" name="confirm_password" placeholder="Confirm new password" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
+                <label for="floatingPassword" class="fw-bold">Confirm new password</label>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 fw-bold mb-2" name="submit">Save</button>
+              <a class="text-decoration-none fw-bold text-primary mb-2" href="setsupport.php">Having trouble?</a>
+            </form>
           </div>
-          <div class="form-floating mb-2">
-            <input type="password" class="form-control rounded-3 border text-dark fw-bold border-4" name="confirm_password" placeholder="Confirm new password" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$">
-            <label for="floatingPassword" class="text-dark fw-bold">Confirm new password</label>
-          </div>
-          <button type="submit" class="btn btn-primary w-100 fw-bold mb-2" name="submit">Save</button>
-          <a class="text-decoration-none fw-bold text-primary mb-2" href="setsupport.php">Having trouble?</a>
-        </form>
-      <div>
-    </div>
-    <?php include('end.php'); ?>
+        </div>
+      <?php include('end.php'); ?>
     </main>

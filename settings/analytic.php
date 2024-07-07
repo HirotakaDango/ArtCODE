@@ -117,107 +117,122 @@ $db->close();
 
     <?php include('setheader.php'); ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <div class="mt-3 mb-3">
-      <h5 class="card-title text-center my-3 text-dark fw-bold">User's Analytical Data</h5>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="card border-0">
-            <div class="d-flex justify-content-center">
-              <canvas id="myChart" ></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="d-flex align-items-center justify-content-center">
-            <div class="container mt-4 pt-3 p-md-5 mt-md-5">
-              <div class="mb-3 row">
-                <label for="imageCount" class="col-6 form-label text-nowrap fw-medium">Images</label>
-                <div class="col-6">
-                  <input type="text" class="form-control-plaintext fw-bold" id="imageCount" value=": <?php echo $total_count; ?>" readonly>
-                </div>
-              </div>
-              <div class="mb-3 row">
-                <label for="tagCount" class="col-6 form-label text-nowrap fw-medium">Tags</label>
-                <div class="col-6">
-                  <input type="text" class="form-control-plaintext fw-bold" id="tagCount" value=": <?php echo $tag_count; ?>" readonly>
-                </div>
-              </div>
-              <div class="mb-3 row">
-                <label for="musicCount" class="col-6 form-label text-nowrap fw-medium">Songs</label>
-                <div class="col-6">
-                  <input type="text" class="form-control-plaintext fw-bold" id="musicCount" value=": <?php echo $count_music; ?>" readonly>
-                </div>
-              </div>
-              <div class="mb-3 row">
-                <label for="videoCount" class="col-6 form-label text-nowrap fw-medium">Videos</label>
-                <div class="col-6">
-                  <input type="text" class="form-control-plaintext fw-bold" id="videoCount" value=": <?php echo $count_videos; ?>" readonly>
-                </div>
-              </div>
-              <div class="mb-3 row">
-                <label for="totalSize" class="col-6 form-label text-nowrap fw-medium">Total Size</label>
-                <div class="col-6">
-                  <input type="text" class="form-control-plaintext fw-bold" id="totalSize" value=": <?php echo $total_size_mb; ?> MB" readonly>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="container mt-4">
+      <div class="d-md-none mb-4">
+        <div class="d-flex">
+          <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">
+            <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
+          </a>
         </div>
       </div>
-    </div>
-    <script>
-      var ctx = document.getElementById('myChart').getContext('2d');
-      ctx.canvas.classList.add('w-100', 'h-100');
-      var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: [
-            '<?php echo $total_count; ?> Images',
-            '<?php echo $count_videos; ?> Videos',
-            '<?php echo $count_music; ?> Music',
-            '<?php echo $tag_count; ?> Tags',
-            '<?php echo $total_size_mb; ?> Size (MB)'
-          ],
-          datasets: [{
-            data: [
-              <?php echo $total_count; ?>,
-              <?php echo $count_videos; ?>,
-              <?php echo $count_music; ?>,
-              <?php echo $tag_count; ?>,
-              <?php echo $total_size_mb; ?>
-            ],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.5)',
-              'rgba(54, 162, 235, 0.5)',
-              'rgba(255, 206, 86, 0.5)',
-              'rgba(75, 192, 192, 0.5)',
-              'rgba(153, 102, 255, 0.5)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)'
-            ],
-            borderWidth: 3
-          }]
-        },
-        options: {
-          responsive: false,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              position: 'bottom',
-              labels: {
-                font: {
-                  size: 12
+      <h3 class="fw-bold mb-4">
+        Analysis
+      </h3>
+      <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+        <h5 class="fw-bold">
+          <i class="bi bi-bar-chart-fill me-2"></i> Your Data
+        </h5>
+        <p class="text-muted mb-4">Visualize your data metrics with interactive charts.</p>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card border-0">
+              <div class="d-flex justify-content-center p-4 p-md-5">
+                <canvas id="myChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex align-items-center justify-content-center">
+              <div class="container mt-4 pt-3 p-md-5 mt-md-5">
+                <div class="mb-3 row">
+                  <label for="imageCount" class="col-6 form-label text-nowrap fw-medium">Images</label>
+                  <div class="col-6">
+                    <input type="text" class="form-control-plaintext fw-bold" id="imageCount" value=": <?php echo $total_count; ?>" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="tagCount" class="col-6 form-label text-nowrap fw-medium">Tags</label>
+                  <div class="col-6">
+                    <input type="text" class="form-control-plaintext fw-bold" id="tagCount" value=": <?php echo $tag_count; ?>" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="musicCount" class="col-6 form-label text-nowrap fw-medium">Songs</label>
+                  <div class="col-6">
+                    <input type="text" class="form-control-plaintext fw-bold" id="musicCount" value=": <?php echo $count_music; ?>" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="videoCount" class="col-6 form-label text-nowrap fw-medium">Videos</label>
+                  <div class="col-6">
+                    <input type="text" class="form-control-plaintext fw-bold" id="videoCount" value=": <?php echo $count_videos; ?>" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="totalSize" class="col-6 form-label text-nowrap fw-medium">Total Size</label>
+                  <div class="col-6">
+                    <input type="text" class="form-control-plaintext fw-bold" id="totalSize" value=": <?php echo $total_size_mb; ?> MB" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          var ctx = document.getElementById('myChart').getContext('2d');
+          ctx.canvas.classList.add('w-100', 'h-100');
+          var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: [
+                '<?php echo $total_count; ?> Images',
+                '<?php echo $count_videos; ?> Videos',
+                '<?php echo $count_music; ?> Music',
+                '<?php echo $tag_count; ?> Tags',
+                '<?php echo $total_size_mb; ?> Size (MB)'
+              ],
+              datasets: [{
+                data: [
+                  <?php echo $total_count; ?>,
+                  <?php echo $count_videos; ?>,
+                  <?php echo $count_music; ?>,
+                  <?php echo $tag_count; ?>,
+                  <?php echo $total_size_mb; ?>
+                ],
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.5)',
+                  'rgba(54, 162, 235, 0.5)',
+                  'rgba(255, 206, 86, 0.5)',
+                  'rgba(75, 192, 192, 0.5)',
+                  'rgba(153, 102, 255, 0.5)'
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 3
+              }]
+            },
+            options: {
+              responsive: false,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: 'bottom',
+                  labels: {
+                    font: {
+                      size: 12
+                    }
+                  }
                 }
               }
             }
-          }
-        }
-      });
-    </script>
+          });
+        </script>
+      </div>
+    </div>
     <?php include('end.php'); ?>

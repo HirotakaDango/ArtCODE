@@ -56,30 +56,46 @@ $db->close();
 ?>
 
     <main id="swup" class="transition-main">
-    <?php include('setheader.php'); ?>
-    <div class="container">
-      <h3 class="mt-4 text-center fw-bold text-dark"><i class="bi bi-phone-fill"></i> Edit Your Linked SNS</h3>
-      <?php if (isset($_SESSION['success_message'])): ?>
-        <div class="alert alert-success">
-          <?php echo $_SESSION['success_message']; ?>
+      <?php include('setheader.php'); ?>
+        <?php if (isset($_SESSION['success_message'])): ?>
+          <div class="alert alert-success">
+            <?php echo $_SESSION['success_message']; ?>
+          </div>
+          <?php unset($_SESSION['success_message']); ?>
+        <?php endif; ?>
+        <div class="container mt-4">
+          <div class="d-md-none mb-4">
+            <div class="d-flex">
+              <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">
+                <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
+              </a>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-4">
+            Edit Linked SNS
+          </h3>
+          <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+            <h5 class="fw-bold">
+              <i class="bi bi-phone-fill"></i> Edit Your Linked SNS
+            </h5>
+            <p class="text-muted mb-4">Update your linked social networking sites for others to connect with you.</p>
+            <form method="POST">
+              <div class="form-floating mt-3 mb-2">
+                <input class="form-control rounded-3 border fw-bold border-4" id="twitter" name="twitter" placeholder="Twitter:" maxlength="180" value="<?php echo htmlspecialchars($current_twitter); ?>">
+                <label for="twitter" class="fw-bold">Twitter: <?php echo htmlspecialchars($current_twitter); ?></label>
+              </div>
+              <div class="form-floating mb-2">
+                <input class="form-control rounded-3 border fw-bold border-4" id="pixiv" name="pixiv" placeholder="Pixiv:" maxlength="180" value="<?php echo htmlspecialchars($current_pixiv); ?>">
+                <label for="pixiv" class="fw-bold">Pixiv: <?php echo htmlspecialchars($current_pixiv); ?></label>
+              </div>
+              <div class="form-floating mb-2">
+                <input class="form-control rounded-3 border fw-bold border-4" id="other" name="other" placeholder="Other:" maxlength="180" value="<?php echo htmlspecialchars($current_other); ?>">
+                <label for="other" class="fw-bold">Additional: <?php echo htmlspecialchars($current_other); ?></label>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Save</button>
+            </form>
+          </div>
         </div>
-        <?php unset($_SESSION['success_message']); ?>
-      <?php endif; ?>
-      <form method="POST">
-        <div class="form-floating mt-3 mb-3">
-          <input class="form-control rounded-3 border text-dark fw-bold border-4" id="desc" name="twitter" placeholder="Twitter:" maxlength="180" value="<?php echo htmlspecialchars($current_twitter); ?>">
-          <label for="floatingInput" class="text-dark fw-bold">Twitter: <?php echo htmlspecialchars($current_twitter); ?></label>
         </div>
-        <div class="form-floating mb-3">
-          <input class="form-control rounded-3 border text-dark fw-bold border-4" id="desc" name="pixiv" placeholder="Pixiv:" maxlength="180" value="<?php echo htmlspecialchars($current_pixiv); ?>">
-          <label for="floatingInput" class="text-dark fw-bold">Pixiv: <?php echo htmlspecialchars($current_pixiv); ?></label>
-        </div>
-        <div class="form-floating mb-2">
-          <input class="form-control rounded-3 border text-dark fw-bold border-4" id="desc" name="other" placeholder="Other:" maxlength="180" value="<?php echo htmlspecialchars($current_other); ?>">
-          <label for="floatingInput" class="text-dark fw-bold">Additional: <?php echo htmlspecialchars($current_other); ?></label>
-        </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Save</button>
-      </form>
-    </div>
-    <?php include('end.php'); ?>
+      <?php include('end.php'); ?> 
     </main>

@@ -49,19 +49,34 @@ $db->close();
 ?>
 
     <main id="swup" class="transition-main">
-    <?php include('setheader.php'); ?>
-    <div class="container-fluid">
-      <h3 class="mt-4 text-center fw-bold text-dark"><i class="bi bi-person-vcard-fill"></i> Edit Bio</h3>
-      <?php if (!empty($success_message)) { ?>
-        <div class="alert alert-success"><?php echo $success_message; ?></div>
-      <?php } ?>
-      <form method="POST" class="mt-3">
-        <div class="form-floating mb-2">
-          <textarea class="form-control rounded-3 border text-dark fw-bold border-4" id="desc" name="desc" rows="5" style="height: 400px;" oninput="stripHtmlTags(this)" placeholder="Description:" maxlength="4400"><?php echo strip_tags($current_desc); ?></textarea>
-          <label for="floatingInput" class="text-dark fw-bold">Description:</label>
+      <?php include('setheader.php'); ?>
+        <?php if (!empty($success_message)) { ?>
+          <div class="alert alert-success"><?php echo $success_message; ?></div>
+        <?php } ?>
+        <div class="container mt-4">
+          <div class="d-md-none mb-4">
+            <div class="d-flex">
+              <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">
+                <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
+              </a>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-3">
+            Change Bio
+          </h3>
+          <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+            <h5 class="fw-bold">
+              <i class="bi bi-person-vcard me-2"></i> Update Bio
+            </h5>
+            <p class="text-muted mb-4">Edit your bio description below. Choose between a light or dark theme to adjust the appearance of the website to your preference.</p>
+            <form method="POST" class="mt-3">
+              <div class="form-floating mb-2">
+                <textarea class="form-control rounded-3 border fw-bold border-4" id="desc" name="desc" rows="5" style="height: 400px;" oninput="stripHtmlTags(this)" placeholder="Current bio:" maxlength="4400"><?php echo strip_tags($current_desc); ?></textarea>
+                <label for="desc" class="fw-bold">Current bio:</label>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Save</button>
+            </form>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Save</button>
-      </form>
-    </div>
-    <?php include('end.php'); ?>
+      <?php include('end.php'); ?>
     </main>

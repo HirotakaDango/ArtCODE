@@ -34,39 +34,54 @@ $database->close();
 ?>
 
     <main id="swup" class="transition-main">
-    <?php include ('setheader.php');?>
-    <div class="container mt-4">
-      <h3 class="text-center fw-bold"><i class="bi bi-images"></i> Change page</h3>
-      <p class="fw-semibold">Current page: <?php echo $currentpage; ?></p>
-      <form method="POST" action="">
-        <div class="form-group">
-          <label class="fw-semibold mb-3" for="page">Select page:</label>
-          <select class="form-select" id="page" name="page">
-            <option value="480" <?php if ($currentpage == '480') echo 'selected'; ?>>480</option>
-            <option value="240" <?php if ($currentpage == '240') echo 'selected'; ?>>240</option>
-            <option value="228" <?php if ($currentpage == '228') echo 'selected'; ?>>228</option>
-            <option value="216" <?php if ($currentpage == '216') echo 'selected'; ?>>216</option>
-            <option value="204" <?php if ($currentpage == '204') echo 'selected'; ?>>204</option>
-            <option value="192" <?php if ($currentpage == '192') echo 'selected'; ?>>192</option>
-            <option value="180" <?php if ($currentpage == '180') echo 'selected'; ?>>180</option>
-            <option value="168" <?php if ($currentpage == '168') echo 'selected'; ?>>168</option>
-            <option value="156" <?php if ($currentpage == '156') echo 'selected'; ?>>156</option>
-            <option value="144" <?php if ($currentpage == '144') echo 'selected'; ?>>144</option>
-            <option value="132" <?php if ($currentpage == '132') echo 'selected'; ?>>132</option>
-            <option value="120" <?php if ($currentpage == '120') echo 'selected'; ?>>120</option>
-            <option value="108" <?php if ($currentpage == '108') echo 'selected'; ?>>108</option>
-            <option value="96" <?php if ($currentpage == '96') echo 'selected'; ?>>96</option>
-            <option value="84" <?php if ($currentpage == '84') echo 'selected'; ?>>84</option>
-            <option value="72" <?php if ($currentpage == '72') echo 'selected'; ?>>72</option>
-            <option value="60" <?php if ($currentpage == '60') echo 'selected'; ?>>60</option>
-            <option value="48" <?php if ($currentpage == '48') echo 'selected'; ?>>48</option>
-            <option value="36" <?php if ($currentpage == '36') echo 'selected'; ?>>36</option>
-            <option value="24" <?php if ($currentpage == '20') echo 'selected'; ?>>24</option>
-            <option value="12" <?php if ($currentpage == '10') echo 'selected'; ?>>12</option>
-          </select>
+      <?php include('setheader.php'); ?>
+        <div class="container mt-4">
+          <div class="d-md-none mb-4">
+            <div class="d-flex">
+              <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">
+                <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
+              </a>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-3">
+            Change Page Number
+          </h3>
+          <p class="fw-semibold mb-4">Current page number: <?php echo $currentpage; ?></p>
+          <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+            <h5 class="fw-bold">
+              <i class="bi bi-file-earmark-fill me-2"></i> Select Number
+            </h5>
+            <p class="text-muted mb-4">Choose a number to adjust how many images to display on each page.</p>
+            <form method="POST" action="">
+              <div class="form-group">
+                <label class="fw-semibold mb-3" for="page">Select number:</label>
+                <select class="form-select" id="page" name="page">
+                  <option value="480" <?php if ($currentpage == '480') echo 'selected'; ?>>480</option>
+                  <option value="240" <?php if ($currentpage == '240') echo 'selected'; ?>>240</option>
+                  <option value="228" <?php if ($currentpage == '228') echo 'selected'; ?>>228</option>
+                  <option value="216" <?php if ($currentpage == '216') echo 'selected'; ?>>216</option>
+                  <option value="204" <?php if ($currentpage == '204') echo 'selected'; ?>>204</option>
+                  <option value="192" <?php if ($currentpage == '192') echo 'selected'; ?>>192</option>
+                  <option value="180" <?php if ($currentpage == '180') echo 'selected'; ?>>180</option>
+                  <option value="168" <?php if ($currentpage == '168') echo 'selected'; ?>>168</option>
+                  <option value="156" <?php if ($currentpage == '156') echo 'selected'; ?>>156</option>
+                  <option value="144" <?php if ($currentpage == '144') echo 'selected'; ?>>144</option>
+                  <option value="132" <?php if ($currentpage == '132') echo 'selected'; ?>>132</option>
+                  <option value="120" <?php if ($currentpage == '120') echo 'selected'; ?>>120</option>
+                  <option value="108" <?php if ($currentpage == '108') echo 'selected'; ?>>108</option>
+                  <option value="96" <?php if ($currentpage == '96') echo 'selected'; ?>>96</option>
+                  <option value="84" <?php if ($currentpage == '84') echo 'selected'; ?>>84</option>
+                  <option value="72" <?php if ($currentpage == '72') echo 'selected'; ?>>72</option>
+                  <option value="60" <?php if ($currentpage == '60') echo 'selected'; ?>>60</option>
+                  <option value="48" <?php if ($currentpage == '48') echo 'selected'; ?>>48</option>
+                  <option value="36" <?php if ($currentpage == '36') echo 'selected'; ?>>36</option>
+                  <option value="24" <?php if ($currentpage == '24') echo 'selected'; ?>>24</option>
+                  <option value="12" <?php if ($currentpage == '12') echo 'selected'; ?>>12</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
+            </form>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
-      </form>
-    </div>
-    <?php include('end.php'); ?> 
+      <?php include('end.php'); ?> 
     </main>

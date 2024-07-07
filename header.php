@@ -49,7 +49,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         <button class="navbar-toggler1 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
           <img src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/icon/toggle1.svg" width="22" height="22">
         </button> 
-        <a class="text-secondary navbar-brand fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+        <a class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> navbar-brand fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
           ArtCODE
         </a>
         <div class="dropdown nav-right">
@@ -66,38 +66,38 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               <h5 class="fw-bold mt-2 "><?php echo $artist1; ?></h5>
               <p class="fw-medium" style="margin-top: -10px;"><small><?php echo $email1; ?></small></p>
             </div>
-            <div class="btn-group mt-2 mb-1 w-100 container" role="group" aria-label="Basic example">
-              <a class="btn btn-sm btn-outline-dark rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'follower.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/follower.php?id=<?php echo $user_id1; ?>"><i class="bi bi-people-fill"></i> <?php echo $num_followers1 ?> <small>followers</small></a>
-              <a class="btn btn-sm btn-outline-dark ms-1 rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'following.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/following.php?id=<?php echo $user_id1; ?>"><i class="bi bi-person-fill"></i> <?php echo $num_following1 ?> <small>following</small></a>
+            <div class="btn-group mt-2 mb-1 w-100 container gap-2" role="group" aria-label="Basic example">
+              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'follower.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/follower.php?id=<?php echo $user_id1; ?>"><i class="bi bi-people-fill"></i> <?php echo $num_followers1 ?> <small>followers</small></a>
+              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'following.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/following.php?id=<?php echo $user_id1; ?>"><i class="bi bi-person-fill"></i> <?php echo $num_following1 ?> <small>following</small></a>
             </div>
-            <div class="btn-group mb-3 w-100 container" role="group" aria-label="Basic example">
-              <a class="btn btn-sm btn-outline-dark rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'myworks.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php"><i class="bi bi-images"></i> <?php echo $count1; ?> <small>images</small></a>
-              <a class="btn btn-sm btn-outline-dark ms-1 rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php"><i class="bi bi-heart-fill"></i> <?php echo $fav_count1;?> <small>favorites</small></a> 
+            <div class="btn-group mb-3 w-100 container gap-2" role="group" aria-label="Basic example">
+              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'myworks.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php"><i class="bi bi-images"></i> <?php echo $count1; ?> <small>images</small></a>
+              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php"><i class="bi bi-heart-fill"></i> <?php echo $fav_count1;?> <small>favorites</small></a> 
             </div>
-            <div class="container">
-              <div class="btn-group w-100 gap-2 mb-1">
-                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/notification/') !== false) || (strpos($_SERVER['PHP_SELF'], '/profile/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'profile') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/profile.php">
+            <div class="w-100">
+              <div class="btn-group mt-2 mb-1 w-100 container gap-2" role="group" aria-label="Basic example">
+                <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'profile/') !== false) echo 'active'; ?>" href="/profile.php">
                   Profile
                 </a>
-                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/favorites/') !== false) || (strpos($_SERVER['PHP_SELF'], '/feeds/favorites/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'feeds/favorites') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php">
+                <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/favorites/') !== false) echo 'active'; ?>" href="/favorite.php">
                   Favorites
                 </a>
               </div>
-              <div class="btn-group w-100 gap-2 mb-1">
-                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'albums/') !== false) || (strpos($_SERVER['PHP_SELF'], '/albums/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'albums') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php">
-                  My Albums
+              <div class="btn-group mb-1 w-100 container gap-2" role="group" aria-label="Basic example">
+                <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'albums/') !== false) echo 'active'; ?>" href="/album.php">
+                  My ALbums
                 </a>
-                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'myworks.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php">
+                <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php echo (basename($_SERVER['PHP_SELF']) == 'myworks.php') ? 'active' : ''; ?>" href="/myworks.php">
                   My Works
-                </a>
+                </a> 
               </div>
-              <div class="btn-group w-100 gap-2">
-                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'setting.php') ? 'text-white bg-darker rounded' : 'text-s'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/setting.php">
+              <div class="btn-group mb-1 w-100 container gap-2" role="group" aria-label="Basic example">
+                <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'all.php' && strpos($_SERVER['PHP_SELF'], 'settings/') !== false) echo 'active'; ?>" href="/setting.php">
                   Settings
                 </a>
-                <a class="text-center dropdown-item w-50 hover-effect fw-bold mb-1 rounded <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/history/') !== false) || (strpos($_SERVER['PHP_SELF'], '/feeds/history/') !== false) ? 'text-white bg-darker rounded' : ((basename($_SERVER['PHP_SELF']) == 'profile') ? 'text-white bg-darker rounded' : 'text-s'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/history.php">
+                <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/history/') !== false) echo 'active'; ?>" href="/history.php">
                   History
-                </a>
+                </a> 
               </div>
             </div>
             <div class="mx-1">
@@ -267,7 +267,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             <!-- end -->
             
             <!-- Desktop -->
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-bold d-none-md-lg">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-bold d-none-md-lg">
               <li class="nav-item">
                 <a class="nav-link nav-center py-1 <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'btn rounded-pill border-0 bg-dark-subtle link-body-emphasis'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
                   Home
@@ -492,7 +492,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         </div>
       </div>
     </div>
-    <button id="scrollButton" class="btn fw-bold btn-dark rounded-pill <?= (basename($_SERVER['PHP_SELF']) === 'album.php' || basename($_SERVER['PHP_SELF']) === 'list_favorite.php' || basename($_SERVER['PHP_SELF']) === 'forum.php') ? 'd-none' : ''; ?> d-md-none d-lg-none position-fixed bottom-0 end-0 m-3 z-3" data-bs-toggle="modal" data-bs-target="#navModal">
+    <button id="scrollButton" class="btn fw-bold btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill <?= (basename($_SERVER['PHP_SELF']) === 'album.php' || basename($_SERVER['PHP_SELF']) === 'list_favorite.php' || basename($_SERVER['PHP_SELF']) === 'forum.php') ? 'd-none' : ''; ?> d-md-none d-lg-none position-fixed bottom-0 end-0 m-3 z-3" data-bs-toggle="modal" data-bs-target="#navModal">
       <i class="fa-solid fa-bars small"></i> menu
     </button>
     <!-- Nav Modal -->
@@ -507,19 +507,19 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             <div class="container">
               <div class="row">
                 <div class="col-4">
-                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/imgupload.php" class="btn btn-outline-dark border-2 d-block feature-icon mb-3 py-3 border-3">
+                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/imgupload.php" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-2 d-block feature-icon mb-3 py-3 border-3">
                     <i class="bi bi-cloud-arrow-up" style="font-size: 30px; -webkit-text-stroke: 1px;"></i>
                   </a>
                   <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/imgupload.php" class="fw-bold text-center text-decoration-none text-dark d-block">Upload</a>
                 </div>
                 <div class="col-4">
-                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php" class="btn btn-outline-dark border-2 d-block feature-icon mb-3 py-3 border-3">
+                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-2 d-block feature-icon mb-3 py-3 border-3">
                     <i class="bi bi-heart" style="font-size: 30px; -webkit-text-stroke: 1px;"></i>
                   </a>
                   <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php" class="fw-bold text-center text-decoration-none text-dark d-block">Favorite</a>
                 </div>
                 <div class="col-4">
-                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php" class="btn btn-outline-dark border-2 d-block feature-icon mb-3 py-3 border-3">
+                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-2 d-block feature-icon mb-3 py-3 border-3">
                     <i class="bi bi-columns" style="font-size: 30px; -webkit-text-stroke: 1px;"></i>
                   </a>
                   <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php" class="fw-bold text-center text-decoration-none text-dark d-block">Album</a>
@@ -539,20 +539,6 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       .hidden-button {
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
-      }
-
-      .hover-effect:hover {
-        color: white;
-        background-color: #28242c;
-        border-radius: 5px;
-      }
-      
-      .text-s {
-        color: #28242c;
-      }
-      
-      .bg-darker {
-        background-color: #28242c;
       }
       
       @media (min-width: 768px) {
@@ -625,18 +611,14 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       }
     
       .navbar-toggler1 {
-        background-color: #ededed;
+        background-color: <?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>;
         border: none;
         font-size: 8px;
-        margin-top: -2px;
+        margin-top: -3px;
         border-radius: 5px;
         padding: 6px;
         transition: background-color 0.3s ease; 
       }
-
-      .navbar-toggler1:hover {
-        background-color: rgba(0,0,0,0.2);
-      } 
     </style>
     <script>
       let lastScrollPos = 0;
