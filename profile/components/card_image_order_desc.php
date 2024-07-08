@@ -271,7 +271,7 @@
                                           if (!empty($tag)) {
                                       ?>
                                         <a href="/tagged_images.php?tag=<?php echo urlencode($tag); ?>"
-                                          class="btn btn-sm btn-outline-dark mb-1 rounded-pill fw-bold">
+                                          class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> mb-1 rounded-pill fw-bold">
                                           <i class="bi bi-tags-fill"></i> <?php echo $tag; ?>
                                         </a>
                                       <?php

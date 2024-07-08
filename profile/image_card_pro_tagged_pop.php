@@ -1,13 +1,13 @@
     <div class="w-100 px-1">
       <div class="<?php include('../rows_columns/row-cols.php'); echo $rows_columns; ?>">
-        <?php foreach ($results as $imageL): ?>
+        <?php foreach ($results as $imageP): ?>
           <div class="col">
             <div class="position-relative">
-              <a class="rounded ratio ratio-1x1" href="../image.php?artworkid=<?php echo $imageL['id']; ?>">
-                <img class="rounded shadow object-fit-cover lazy-load <?php echo ($imageL['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageL['filename']; ?>" alt="<?php echo $imageL['title']; ?>">
+              <a class="rounded ratio ratio-1x1" href="../image.php?artworkid=<?php echo $imageP['id']; ?>">
+                <img class="rounded shadow object-fit-cover lazy-load <?php echo ($imageP['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageP['filename']; ?>" alt="<?php echo $imageP['title']; ?>">
               </a> 
               <?php
-                $current_image_id = $imageL['id'];
+                $current_image_id = $imageP['id'];
                 
                 // Query to count main image from the images table
                 $stmt = $db->prepare("SELECT COUNT(*) as image_count FROM images WHERE id = :id");
@@ -33,15 +33,15 @@
                     <i class="bi bi-three-dots-vertical text-white link-body-emphasis fs-5" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"></i>
                   </button>
                   <ul class="dropdown-menu">
-                    <li><button class="dropdown-item fw-bold" onclick="location.href='../edit_image.php?id=<?php echo $imageL['id']; ?>'" ><i class="bi bi-pencil-fill"></i> edit image</button></li>
-                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $imageL['id']; ?>"><i class="bi bi-trash-fill"></i> delete</button></li>
+                    <li><button class="dropdown-item fw-bold" onclick="location.href='../edit_image.php?id=<?php echo $imageP['id']; ?>'" ><i class="bi bi-pencil-fill"></i> edit image</button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $imageP['id']; ?>"><i class="bi bi-trash-fill"></i> delete</button></li>
                     <?php
                     $is_favorited = false; // Initialize to false
 
                     // Check if the image is favorited
                     $stmt = $db->prepare("SELECT COUNT(*) AS num_favorites FROM favorites WHERE email = :email AND image_id = :image_id");
                     $stmt->bindValue(':email', $email);
-                    $stmt->bindValue(':image_id', $imageL['id']);
+                    $stmt->bindValue(':image_id', $imageP['id']);
                     $stmt->execute();
                     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -56,7 +56,7 @@
                     $button_label = $is_favorited ? 'unfavorite' : 'favorite';
                     ?>
                     <form method="POST">
-                      <input type="hidden" name="image_id" value="<?php echo $imageL['id']; ?>">
+                      <input type="hidden" name="image_id" value="<?php echo $imageP['id']; ?>">
                       <li>
                         <button type="submit" class="dropdown-item fw-bold" name="<?php echo $form_action ?>">
                           <i class="bi <?php echo $is_favorited ? 'bi-heart-fill' : 'bi-heart' ?>"></i>
@@ -64,16 +64,16 @@
                         </button>
                       </li>
                     </form>
-                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageL['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
-                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageL['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageP['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageP['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                   </ul>
-                  <?php include('share_profile_like.php'); ?>
+                  <?php include('share_profile_pop.php'); ?>
                 </div>
               </div>
             </div>
 
-            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/delete_image_like.php'); ?>
-            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/card_image_like.php'); ?>
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/delete_tagged_pop.php'); ?>
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/card_image_pop.php'); ?>
 
           </div>
         <?php endforeach; ?>

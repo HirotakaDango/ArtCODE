@@ -12,13 +12,15 @@
                             .icon-stroke-3 { -webkit-text-stroke: 3px; }
                           </style>
                           <div class="position-absolute top-0 start-100 translate-middle">
-                            <button type="button" class="btn btn-sm rounded-circle btn-light shadow" data-bs-dismiss="modal"><i class="bi bi-x icon-stroke-1"></i></button>
+                            <button type="button" class="btn btn-sm rounded-circle btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> shadow" data-bs-dismiss="modal"><i class="bi bi-x icon-stroke-1"></i></button>
                           </div>
                           <div class="row d-flex justify-content-center">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                               <div class="card border-0 rounded-4 overflow-auto scrollable-div" style="max-height: 250px;">
                                 <a class="w-100 h-100" href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $imageL['id']; ?>">
-                                  <img class="rounded-4 object-fit-cover shadow lazy-load" height="400" width="100%" data-src="http://<?php echo $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $imageL['filename']; ?>" alt="<?php echo $imageL['title']; ?>">
+                                  <div class="ratio ratio-1x1">
+                                    <img class="rounded-4 object-fit-cover shadow lazy-load" data-src="http://<?php echo $_SERVER['HTTP_HOST']; ?>/thumbnails/<?php echo $imageL['filename']; ?>" alt="<?php echo $imageL['title']; ?>">
+                                  </div>
                                 </a>
                               </div>
                             </div>
@@ -26,25 +28,6 @@
                               <div class="h-100">
                                 <div class="card-body">
                                   <h5 class="text-center fw-bold"><?php echo $imageL['title']?></h5>
-                                  <p class="card-text fw-medium">
-                                    <?php
-                                      if (!empty($imageL['imgdesc'])) {
-                                        $messageText = $imageL['imgdesc'];
-                                        $messageTextWithoutTags = strip_tags($messageText);
-                                        $pattern = '/\bhttps?:\/\/\S+/i';
-
-                                        $formattedText = preg_replace_callback($pattern, function ($matches) {
-                                          $url = htmlspecialchars($matches[0]);
-                                          return '<a href="' . $url . '">' . $url . '</a>';
-                                        }, $messageTextWithoutTags);
-
-                                        $formattedTextWithLineBreaks = nl2br($formattedText);
-                                        echo $formattedTextWithLineBreaks;
-                                      } else {
-                                        echo "Image description is empty.";
-                                      }
-                                    ?>
-                                  </p>
                                 </div>
                               </div>
                             </div>
@@ -53,7 +36,7 @@
                           <div class="btn-group w-100">
                             <input type="hidden" name="id" value="<?php echo $imageL['id']; ?>">
                             <button class="btn btn-outline-danger rounded-start-4 fw-bold" type="submit" value="Delete">delete</button>
-                            <button type="button" class="btn btn-outline-dark rounded-end-4 fw-bold" data-bs-dismiss="modal">cancel</button>
+                            <button type="button" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-end-4 fw-bold" data-bs-dismiss="modal">cancel</button>
                           </div>
                         </div>
                       </div>

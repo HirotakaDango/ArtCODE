@@ -67,13 +67,13 @@
                     <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageL['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
                     <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageL['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                   </ul>
-                  <?php include('share_profile_like.php'); ?>
+                  <?php include('share_profile_least.php'); ?>
                 </div>
               </div>
             </div>
 
-            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/delete_image_like.php'); ?>
-            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/card_image_like.php'); ?>
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/delete_tagged_least.php'); ?>
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/card_image_least.php'); ?>
 
           </div>
         <?php endforeach; ?>

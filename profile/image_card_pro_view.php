@@ -72,7 +72,7 @@
               </div>
             </div>
 
-            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/delete_tagged_view.php'); ?>
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/delete_image_view.php'); ?>
             <?php include($_SERVER['DOCUMENT_ROOT'] . '/profile/components/card_image_view.php'); ?>
 
           </div>

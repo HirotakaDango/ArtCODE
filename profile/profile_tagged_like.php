@@ -93,7 +93,7 @@ if ($stmt->execute()) {
 }
 ?>
 
-    <?php include('image_card_pro_like.php'); ?>
+    <?php include('image_card_pro_tagged_like.php'); ?>
     <?php
       $totalPages = ceil($total / $limit);
       $prevPage = $page - 1;
