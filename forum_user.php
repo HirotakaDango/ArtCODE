@@ -112,7 +112,7 @@ $categories = array();
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <title><?php echo $artist_name; ?></title>
     <meta charset="UTF-8"> 
@@ -122,8 +122,13 @@ $categories = array();
   </head>
   <body>
     <?php include('header.php'); ?>
+    <?php include('forum_categories.php'); ?>
+    <form class="input-group container mt-1 mb-2" role="search" action="forum_search.php">
+      <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
+    </form>
     <div class="dropdown container">
-      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
@@ -132,11 +137,6 @@ $categories = array();
         <li><a href="?by=top&id=<?php echo $userid; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top</a></li>
       </ul> 
     </div>
-    <form class="input-group container mb-2" role="search" action="forum_search.php">
-      <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
-    </form>
-    <?php include('forum_categories.php'); ?>
         <?php 
         if(isset($_GET['by'])){
           $sort = $_GET['by'];
@@ -161,7 +161,7 @@ $categories = array();
     <?php if ($artist_email == $email) : ?>
       <nav class="navbar fixed-bottom navbar-expand justify-content-center z-2">
         <div class="container">
-          <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#forum">upload your post</button>
+          <button type="button" class="w-100 btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#forum">upload your post</button>
         </div>
       </nav>
     <?php endif; ?>
@@ -169,17 +169,17 @@ $categories = array();
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content border-0 rounded-4 shadow">
           <div class="modal-header border-0">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Type something else...</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Upload your post</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form class="form-control border-0 mb-2" action="" method="POST">
               <div class="form-floating">
-                <input type="text" class="form-control fw-bold rounded-3 mb-2" name="title" id="floatingInputInvalid" placeholder="Title" required>
+                <input type="text" class="form-control fw-medium rounded-3 border-0 rounded-0 bg-body-tertiary mb-2" name="title" id="floatingInputInvalid" placeholder="Title" required>
                 <label class="fw-bold" for="floatingTextarea">Title</label>
               </div>
               <div class="form-floating">
-                <select class="form-select fw-bold rounded-3 mb-2 py-0 text-start" name="category" required>
+                <select class="form-select fw-medium rounded-3 border-0 rounded-0 bg-body-tertiary mb-2 py-0 text-start" name="category" required>
                   <option class="form-control" value="">Add category:</option>
                   <?php
                     // Loop through each category and create an option in the dropdown list
@@ -191,9 +191,7 @@ $categories = array();
                   ?>
                 </select>
               </div>
-              <textarea type="text" class="form-control fw-bold rounded-3 mb-2" style="height: 200px; max-height: 800px;" name="comment" placeholder="Type something..." aria-label="Type a message..." aria-describedby="basic-addon2" 
-                onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
-                onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 800) { this.style.height = '800px'; } else { this.style.height = newHeight; }" required></textarea>
+              <textarea type="text" class="form-control fw-medium rounded-3 border-0 rounded-0 bg-body-tertiary mb-2" style="height: 200px; max-height: 800px;" name="comment" placeholder="Type something..." aria-label="Type a message..." aria-describedby="basic-addon2" required></textarea>
               <button class="w-100 btn btn-primary rounded-3" type="submit"><i class="bi bi-send-fill"></i></button>
             </form>
           </div>

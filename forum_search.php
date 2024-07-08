@@ -37,7 +37,7 @@ $categories = array();
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <title>Search for <?php echo urlencode($search); ?></title>
     <meta charset="UTF-8"> 
@@ -47,8 +47,13 @@ $categories = array();
   </head>
   <body>
     <?php include('header.php'); ?>
+    <?php include('forum_categories.php'); ?>
+    <form class="input-group container mt-1 mb-2" role="search" action="forum_search.php">
+      <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
+    </form>
     <div class="dropdown container">
-      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
@@ -57,11 +62,6 @@ $categories = array();
         <li><a href="?by=top&q=<?php echo urlencode($search); ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top</a></li>
       </ul> 
     </div>
-    <form class="input-group container mb-2" role="search" action="forum_search.php">
-      <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
-    </form>
-    <?php include('forum_categories.php'); ?>
         <?php 
         if(isset($_GET['by'])){
           $sort = $_GET['by'];

@@ -43,7 +43,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
 
     <nav class="navbar fixed-top navbar-expand-md navbar-light bg-body-tertiary">
       <div class="container-fluid">
-        <button class="navbar-toggler1 d-md-none" type="button" onclick="goBack()">
+        <button class="navbar-toggler1 d-md-none link-body-emphasis" type="button" onclick="goBack()">
           <img src="icon/back.svg" width="22" height="22">
         </button> 
         <a class="navbar-brand text-secondary fw-bold" href="index.php">
@@ -135,20 +135,6 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       </div>
     </div> 
     <style>
-      .hover-effect:hover {
-        color: white;
-        background-color: #28242c;
-        border-radius: 5px;
-      }
-      
-      .text-s {
-        color: #28242c;
-      }
-      
-      .bg-darker {
-        background-color: #28242c;
-      }
-      
       @media (min-width: 768px) {
         .navbar-nav {
           position: absolute;
@@ -219,16 +205,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
       }
     
       .navbar-toggler1 {
-        background-color: #ededed;
+        background-color: <?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>;
         border: none;
         font-size: 8px;
         margin-top: -2px;
         border-radius: 5px;
         padding: 6px;
         transition: background-color 0.3s ease; 
-      }
-
-      .navbar-toggler1:hover {
-        background-color: rgba(0,0,0,0.2);
       }
     </style>

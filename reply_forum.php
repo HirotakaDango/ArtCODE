@@ -82,7 +82,7 @@ $commentName = $commentResult['comment'];
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <title>Reply to <?php echo $commentName; ?></title>
     <meta charset="UTF-8"> 
@@ -91,17 +91,21 @@ $commentName = $commentResult['comment'];
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
-    <?php include('backheader.php'); ?>
-    <br><br>
-    <div class="dropdown container">
-      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-images"></i> sort by
+    <?php include('header.php'); ?>
+    <div class="container d-flex">
+      <div class="dropdown me-auto">
+        <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-images"></i> sort by
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="?sort=newest&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['sort']) || $_GET['sort'] == 'newest') echo 'active'; ?>">newest</a></li>
+          <li><a href="?sort=oldest&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['sort']) && $_GET['sort'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+          <li><a href="?sort=top&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['sort']) && $_GET['sort'] == 'top') echo 'active'; ?>">top comments</a></li>
+        </ul> 
+      </div>
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" onclick="goBack()">
+        <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i> back
       </button>
-      <ul class="dropdown-menu">
-        <li><a href="?sort=newest&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['sort']) || $_GET['sort'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?sort=oldest&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['sort']) && $_GET['sort'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?sort=top&by=<?php echo $sortUrl; ?>&comment_id=<?php echo $commentId; ?>&page=<?php echo $pageUrl; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['sort']) && $_GET['sort'] == 'top') echo 'active'; ?>">top comments</a></li>
-      </ul> 
     </div>
         <?php 
         if(isset($_GET['sort'])){
@@ -126,23 +130,17 @@ $commentName = $commentResult['comment'];
         ?>
     <nav class="navbar fixed-bottom navbar-expand justify-content-center">
       <div class="container">
-        <button type="button" class="w-100 btn btn-primary fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">send your comment</button>
+        <button type="button" class="w-100 btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">post your reply</button>
       </div>
     </nav>
     <div class="modal fade" id="comments" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
-          <div class="modal-header border-0">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Type something else...</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div>
-            <form class="form-control border-0" action="" method="POST">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 bg-transparent">
+          <div class="modal-body px-1">
+            <form class="form-control border-0 bg-transparent shadow p-0" action="" method="POST">
+              <textarea type="text" class="form-control fw-medium bg-body-tertiary border-0 rounded-4 rounded-bottom-0 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 400px; max-height: 800px;" name="reply" id="reply" placeholder="Post your reply..." aria-label="Type a message..." aria-describedby="basic-addon2" required></textarea>
               <input type="hidden" name="reply_comment_id" value="<?= $comment['id'] ?>">
-              <textarea type="text" class="form-control fw-bold rounded-3 mb-2" style="height: 200px; max-height: 800px;" name="reply" id="reply" placeholder="Type something..." aria-label="Type a message..." aria-describedby="basic-addon2" 
-                onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
-                onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 800) { this.style.height = '800px'; } else { this.style.height = newHeight; }" required></textarea>
-              <button class="w-100 btn btn-primary rounded-3" type="submit"><i class="bi bi-send-fill"></i></button>
+              <button class="w-100 btn btn-primary rounded-4 rounded-top-0" type="submit"><i class="bi bi-send-fill"></i></button>
             </form>
           </div>
         </div>

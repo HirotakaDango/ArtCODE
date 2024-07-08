@@ -17,7 +17,12 @@ if ($comment_id !== null) {
       <?php if ($comment_id !== null && $comment !== false): ?>
         <div class="modal-dialog my-2" role="document">
           <div class="modal-content card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
-            <div class="modal-body">
+            <div class="modal-body position-relative">
+              <div class="position-absolute top-0 start-0">
+                <button class="btn border-0 p-0 ms-1 link-body-emphasis" onclick="goBack()">
+                  <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
+                </button>
+              </div>
               <h5 class="mb-0 fw-bold text-center">Reply to</h5>
               <div class="mt-5 container-fluid fw-medium">
                 <div>

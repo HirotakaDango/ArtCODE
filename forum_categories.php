@@ -1,5 +1,5 @@
         <div class="container">
-          <button type="button" class="btn bg-body-tertiary rounded-4 border-0 link-body-emphasis mb-3 w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#categoryModal">
+          <button type="button" class="btn bg-body-tertiary rounded-4 border-0 link-body-emphasis mb-1 w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#categoryModal">
             see all categories
           </button>
         </div>
@@ -13,7 +13,7 @@
               <div class="modal-body fw-medium">
                 <?php while ($row = $result->fetchArray(SQLITE3_ASSOC)): ?>
                   <div class="card p-3 rounded-3 border-0 shadow mt-2">
-                    <a class="text-decoration-none link-body-emphasis" href="forum_category.php?q=<?php echo urlencode($row['category']); ?>"><?php echo str_replace('_', ' ', $row['category']); ?> (<?php echo $row['post_count']; ?> posts)</a>
+                    <a class="text-decoration-none link-body-emphasis" href="forum_category.php?q=<?php echo urlencode($row['category']); ?>">(<?php echo $row['post_count']; ?> posts) <?php echo str_replace('_', ' ', $row['category']); ?></a>
                   </div>
                 <?php endwhile; ?>
               </div>

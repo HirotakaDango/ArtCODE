@@ -91,7 +91,7 @@ $commentName = $commentResult['comment'];
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <title>Reply to <?php echo $commentName; ?></title>
     <meta charset="UTF-8"> 
@@ -101,7 +101,7 @@ $commentName = $commentResult['comment'];
   </head>
   <body>
     <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 my-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 my-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
@@ -133,21 +133,16 @@ $commentName = $commentResult['comment'];
         ?>
     <div class="fixed-bottom w-100">
       <form action="" method="POST">
-        <div class="input-group w-100">
-          <textarea id="reply" name="reply" class="form-control fw-semibold" style="height: 40px; max-height: 150px;" placeholder="Type your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" 
+        <div class="input-group w-100 rounded-0 shadow-lg rounded-4 rounded-bottom-0">
+          <textarea id="reply" name="reply" class="form-control fw-medium bg-body-tertiary border-0 rounded-start-4 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 40px; max-height: 150px;" placeholder="Post your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" 
             onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
             onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }"></textarea>
           <input type="hidden" name="reply_comment_id" value="<?= $comment['id'] ?>">
-          <button type="submit" class="btn btn-primary fw-bold">send</button>
+          <button type="submit" class="btn bg-body-tertiary border-0 rounded-end-4"><i class="bi bi-send-fill"></i></button>
         </div>
       </form> 
     </div>
     <br><br><br>
-    <div class="d-none-sm position-fixed top-50 start-0 translate-middle-y">
-      <button class="btn btn-primary rounded-pill rounded-start-0 fw-bold btn-md ps-1" onclick="goBack()">
-        <i class="bi bi-arrow-left-circle-fill"></i>
-      </button>
-    </div>
     <script>
       function goBack() {
         window.location.href = "comments_preview.php?by=<?php echo $sortUrl; ?>&imageid=<?php echo $imageid; ?>&page=<?php echo $pageUrl; ?>";

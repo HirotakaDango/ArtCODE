@@ -103,17 +103,37 @@ $total_pages = ceil($total_comments / $comments_per_page);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <title>Comment Section</title>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <?php include('bootstrapcss.php'); ?>
+    <style>
+      /* For Webkit-based browsers */
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        border-radius: 0;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border-radius: 0;
+      }
+      
+      .text-stroke {
+        -webkit-text-stroke: 3px;
+      }
+    </style>
   </head>
   <body>
     <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 my-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 my-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
@@ -145,11 +165,11 @@ $total_pages = ceil($total_comments / $comments_per_page);
         ?>
     <div class="fixed-bottom w-100">
       <form action="" method="POST">
-        <div class="input-group w-100 rounded-bottom-2">
-          <textarea id="message-input" name="comment" class="form-control fw-semibold" style="height: 40px; max-height: 150px;" placeholder="Type your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" 
+        <div class="input-group w-100 rounded-0 shadow-lg rounded-4 rounded-bottom-0">
+          <textarea id="message-input" name="comment" class="form-control fw-medium bg-body-tertiary border-0 rounded-start-4 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 40px; max-height: 150px;" placeholder="Post your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" 
             onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
             onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }"></textarea>
-          <button type="submit" class="btn btn-primary fw-bold">send</button>
+          <button type="submit" class="btn bg-body-tertiary border-0 rounded-end-4"><i class="bi bi-send-fill"></i></button>
         </div>
       </form> 
     </div>

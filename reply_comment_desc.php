@@ -13,9 +13,9 @@ if ($comment_id !== null) {
 }
 ?>
 
-    <div class="container mt-2">
+    <div class="container">
       <?php if ($comment_id !== null && $comment !== false): ?>
-        <div class="modal-dialog my-2" role="document">
+        <div class="modal-dialog mb-2" role="document">
           <div class="modal-content card border-0 shadow mb-1 position-relative p-2 bg-body-tertiary rounded-4">
             <div class="modal-body">
               <h5 class="mb-0 fw-bold text-center">Reply to</h5>

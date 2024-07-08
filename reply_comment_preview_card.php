@@ -2,7 +2,7 @@
             <div class="d-flex align-items-center mb-2 position-relative">
               <div class="position-absolute top-0 start-0 m-1">
                 <img class="rounded-circle object-fit-cover" src="<?php echo !empty($reply['pic']) ? $reply['pic'] : "icon/profile.svg"; ?>" alt="Profile Picture" width="32" height="32">
-                <a class="text-dark text-decoration-none fw-medium link-body-emphasis" href="artist.php?id=<?php echo $reply['userid']; ?>"><small>@<?php echo (mb_strlen($reply['artist']) > 15) ? mb_substr($reply['artist'], 0, 15) . '...' : $reply['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
+                <a class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> text-decoration-none fw-medium link-body-emphasis" href="artist.php?id=<?php echo $reply['userid']; ?>"><small>@<?php echo (mb_strlen($reply['artist']) > 15) ? mb_substr($reply['artist'], 0, 15) . '...' : $reply['artist']; ?></small></a>・<small class="small fw-medium"><small><?php echo $reply['date']; ?></small></small>
               </div>
               <?php if ($_SESSION['email'] === $reply['email']): ?>
                 <div class="dropdown ms-auto position-relative">

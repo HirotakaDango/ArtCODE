@@ -1830,7 +1830,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               <div class="collapse" id="collapseExample">
                 <form class="mt-2" action="add_to_album.php" method="post">
                   <input class="form-control" type="hidden" name="image_id" value="<?= $image['id']; ?>">
-                  <select class="form-select fw-bold text-secondary rounded-4 mb-2" name="album_id">
+                  <select class="form-select fw-bold rounded-4 mb-2" name="album_id">
                     <option class="form-control" value=""><small>add to album:</small></option>
                     <?php
                       // Connect to the SQLite database
@@ -1854,9 +1854,10 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                       $db->close();
                     ?>
                   </select>
-                  <button class="form-control bg-dark fw-bold rounded-4" type="submit"><small>add to album</small></button>
+                  <button class="form-control text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4" type="submit"><small>add to album</small></button>
                 </form>
-                <iframe class="mt-2 rounded" style="width: 100%; height: 300px;" src="<?php echo $url_comment; ?>"></iframe>
+                <iframe class="mt-2 rounded-4 shadow" style="width: 100%; height: 400px;" src="<?php echo $url_comment; ?>"></iframe>
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-100 rounded-4 fw-bold mt-2" href="comments.php?imageid=<?php echo $image['id']; ?>"><small>view all comments</small></a>
               </div>
               <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 w-100 fw-bold text-center mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleButton">
                 <i class="bi bi-caret-down-fill"></i> <small id="toggleText">show more</small>

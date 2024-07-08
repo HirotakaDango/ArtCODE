@@ -63,7 +63,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
           </a>
           <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 300px;">
             <div class="text-center mb-2 rounded-top-4">
-              <div class="rounded-top-4" style="background-image: url('<?php echo !empty($bgpic1) ? $bgpic1 : "/icon/bg.png"; ?>'); background-size: cover; background-position: center; height: 100%; width: 100%; padding: 1em; margin-top: -7px;">
+              <div class="rounded-top-4" style="background-image: url('<?php echo !empty($bgpic1) ? $bgpic1 : "/icon/bg.png"; ?>'); background-size: cover; background-position: center; height: 100%; width: 100%; padding: 1em; margin-top: -8px;">
                 <a class="d-block pt-3" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/settings/profile_picture.php"><img class="rounded-circle object-fit-cover border border-5" width="150" height="150" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/<?php echo !empty($pic1) ? $pic1 : "icon/profile.svg"; ?>" alt="Profile Picture"></a>
                 <h5 class="fw-bold mt-2" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);"><?php echo $artist1; ?></h5>
                 <p class="fw-medium" style="margin-top: -10px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);"><small><?php echo $email1; ?></small></p>

@@ -36,34 +36,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <title>Edit Comment</title>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <?php include('bootstrapcss.php'); ?>
+    <style>
+      /* For Webkit-based browsers */
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        border-radius: 0;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border-radius: 0;
+      }
+      
+      .text-stroke {
+        -webkit-text-stroke: 3px;
+      }
+    </style>
   </head>
   <body>
-    <div class="modal-dialog" role="document">
-      <div class="modal-content border-3 border-bottom">
-        <div class="modal-body p-4">
-          <h5 class="mb-0 fw-bold text-center">Edit Comment</h5>
-        </div>
-      </div>
-    </div> 
-    <div class="container-fluid mt-2">
+    <div class="container-fluid mt-2 pt-1 mb-3">
       <form method="post">
-        <div class="mb-3">
-          <textarea class="form-control" id="comment" name="comment" rows="10" oninput="stripHtmlTags(this)" required><?php echo strip_tags($comment['comment']); ?></textarea>
+        <div class="mb-2">
+          <textarea class="form-control border-0 bg-body-tertiary rounded-4 shadow" id="comment" name="comment" rows="13" oninput="stripHtmlTags(this)" required><?php echo strip_tags($comment['comment']); ?></textarea>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold">Save</button>
+        <div class="btn-group w-100 gap-2">
+          <button class="btn btn-secondary w-50 fw-bold rounded-4" onclick="goBack()">Cancel</button>
+          <button type="submit" class="btn btn-primary w-50 fw-bold rounded-4">Save</button>
+        </div>
       </form>
-    </div>
-    <div class="d-none-sm position-fixed top-50 start-0 translate-middle-y">
-      <button class="btn btn-primary rounded-pill rounded-start-0 fw-bold btn-md ps-1" onclick="goBack()">
-        <i class="bi bi-arrow-left-circle-fill"></i>
-      </button>
     </div>
     <script>
       function goBack() {
