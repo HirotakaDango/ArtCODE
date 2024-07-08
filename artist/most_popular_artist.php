@@ -27,8 +27,8 @@
             <a class="d-block" href="../image.php?artworkid=<?php echo $imagePopular['id']; ?>">
               <img src="../thumbnails/<?php echo $imagePopular['filename']; ?>" class="d-block w-100 object-fit-cover" height="280" alt="<?php echo $imagePopular['title']; ?>">
               <div class="carousel-caption d-md-block">
-                <h5 class="fw-bold text-shadow"><?php echo $imagePopular['title']; ?></h5>
-                <p class="fw-medium text-shadow"><?php echo $imagePopular['imgdesc']; ?></p>
+                <h5 class="fw-bold text-white text-shadow"><?php echo $imagePopular['title']; ?></h5>
+                <p class="fw-medium text-white text-shadow"><?php echo $imagePopular['imgdesc']; ?></p>
               </div>
             </a>
           </div>
@@ -59,8 +59,8 @@
                       <a class="d-block" href="../image.php?artworkid=<?php echo $resultsPopular[$i]['id']; ?>">
                         <img src="../thumbnails/<?php echo $resultsPopular[$i]['filename']; ?>" class="d-block w-100 object-fit-cover rounded" height="300" alt="<?php echo $resultsPopular[$i]['title']; ?>">
                         <div class="carousel-caption d-md-block position-absolute">
-                          <h5 class="fw-bold text-shadow"><?php echo $resultsPopular[$i]['title']; ?></h5>
-                          <p class="fw-medium text-shadow"><?php echo $resultsPopular[$i]['imgdesc']; ?></p>
+                          <h5 class="fw-bold text-white text-shadow"><?php echo $resultsPopular[$i]['title']; ?></h5>
+                          <p class="fw-medium text-white text-shadow"><?php echo $resultsPopular[$i]['imgdesc']; ?></p>
                         </div>
                       </a>
                     </div>
@@ -71,8 +71,8 @@
                         <a class="d-block" href="../image.php?artworkid=<?php echo $resultsPopular[$i + 1]['id']; ?>">
                           <img src="../thumbnails/<?php echo $resultsPopular[$i + 1]['filename']; ?>" class="d-block w-100 object-fit-cover rounded" height="300" alt="<?php echo $resultsPopular[$i + 1]['title']; ?>">
                           <div class="carousel-caption d-md-block position-absolute">
-                            <h5 class="fw-bold text-shadow"><?php echo $resultsPopular[$i + 1]['title']; ?></h5>
-                            <p class="fw-medium text-shadow"><?php echo $resultsPopular[$i + 1]['imgdesc']; ?></p>
+                            <h5 class="fw-bold text-white text-shadow"><?php echo $resultsPopular[$i + 1]['title']; ?></h5>
+                            <p class="fw-medium text-white text-shadow"><?php echo $resultsPopular[$i + 1]['imgdesc']; ?></p>
                           </div>
                         </a>
                       </div>

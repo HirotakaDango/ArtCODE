@@ -131,9 +131,9 @@ $db->close();
     <?php include('../bootstrapcss.php'); ?>
   </head>
   <body>
-    <?php include('backheader.php'); ?>
-    <div class="mt-5">
-      <div class="container-fluid">
+    <?php include('../header.php'); ?>
+    <div>
+      <div class="container">
         <?php include('nav.php'); ?>
       </div>
       <div id="preview-container" class="mb-2"></div>

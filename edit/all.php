@@ -41,8 +41,8 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
-    <?php include('backheader.php'); ?>
-    <div class="container my-5">
+    <?php include('../header.php'); ?>
+    <div class="container mb-5">
       <?php include('nav.php'); ?>
       <?php
       // Function to calculate the size of an image in MB
