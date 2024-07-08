@@ -5,11 +5,12 @@ $db1 = new SQLite3($dbPath);
 
 // Get the artist name from the database
 $email1 = $_SESSION['email'];
-$stmt1 = $db1->prepare("SELECT id, artist, pic FROM users WHERE email = :email");
+$stmt1 = $db1->prepare("SELECT id, artist, bgpic, pic FROM users WHERE email = :email");
 $stmt1->bindValue(':email', $email1);
 $result1 = $stmt1->execute();
 $row1 = $result1->fetchArray();
 $pic1 = $row1['pic'];
+$bgpic1 = $row1['bgpic'];
 $artist1 = $row1['artist'];
 $user_id1 = $row1['id'];
 
@@ -61,10 +62,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             <img class="rounded-circle object-fit-cover border border-1" width="32" height="32" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/<?php echo !empty($pic1) ? $pic1 : "icon/profile.svg"; ?>" alt="Profile Picture" style="margin-top: -2px;">
           </a>
           <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 300px;">
-            <div class="text-center mb-2">
-              <a class="d-block pt-2" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/settings/profile_picture.php"><img class="rounded-circle object-fit-cover border border-5" width="150" height="150" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/<?php echo !empty($pic1) ? $pic1 : "icon/profile.svg"; ?>" alt="Profile Picture"></a>
-              <h5 class="fw-bold mt-2 "><?php echo $artist1; ?></h5>
-              <p class="fw-medium" style="margin-top: -10px;"><small><?php echo $email1; ?></small></p>
+            <div class="text-center mb-2 rounded-top-4">
+              <div class="rounded-top-4" style="background-image: url('<?php echo !empty($bgpic1) ? $bgpic1 : "/icon/bg.png"; ?>'); background-size: cover; background-position: center; height: 100%; width: 100%; padding: 1em; margin-top: -7px;">
+                <a class="d-block pt-3" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/settings/profile_picture.php"><img class="rounded-circle object-fit-cover border border-5" width="150" height="150" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/<?php echo !empty($pic1) ? $pic1 : "icon/profile.svg"; ?>" alt="Profile Picture"></a>
+                <h5 class="fw-bold mt-2" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);"><?php echo $artist1; ?></h5>
+                <p class="fw-medium" style="margin-top: -10px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);"><small><?php echo $email1; ?></small></p>
+              </div>
             </div>
             <div class="btn-group mt-2 mb-1 w-100 container gap-2" role="group" aria-label="Basic example">
               <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'follower.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/follower.php?id=<?php echo $user_id1; ?>"><i class="bi bi-people-fill"></i> <?php echo $num_followers1 ?> <small>followers</small></a>
@@ -75,7 +78,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php"><i class="bi bi-heart-fill"></i> <?php echo $fav_count1;?> <small>favorites</small></a> 
             </div>
             <div class="w-100">
-              <div class="btn-group mt-2 mb-1 w-100 container gap-2" role="group" aria-label="Basic example">
+              <div class="btn-group mt-2 mb-2 w-100 container gap-2" role="group" aria-label="Basic example">
                 <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'profile/') !== false) echo 'active'; ?>" href="/profile.php">
                   Profile
                 </a>
@@ -83,7 +86,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   Favorites
                 </a>
               </div>
-              <div class="btn-group mb-1 w-100 container gap-2" role="group" aria-label="Basic example">
+              <div class="btn-group mb-2 w-100 container gap-2" role="group" aria-label="Basic example">
                 <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'albums/') !== false) echo 'active'; ?>" href="/album.php">
                   My ALbums
                 </a>
@@ -530,6 +533,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         </div>
       </div>
     </div>
+    <div class="mb-1"></div>
     <style>
       .fade-in-out {
         opacity: 1;
