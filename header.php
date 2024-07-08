@@ -513,19 +513,19 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/imgupload.php" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-2 d-block feature-icon mb-3 py-3 border-3">
                     <i class="bi bi-cloud-arrow-up" style="font-size: 30px; -webkit-text-stroke: 1px;"></i>
                   </a>
-                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/imgupload.php" class="fw-bold text-center text-decoration-none text-dark d-block">Upload</a>
+                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/imgupload.php" class="fw-bold text-center text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> d-block">Upload</a>
                 </div>
                 <div class="col-4">
                   <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-2 d-block feature-icon mb-3 py-3 border-3">
                     <i class="bi bi-heart" style="font-size: 30px; -webkit-text-stroke: 1px;"></i>
                   </a>
-                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php" class="fw-bold text-center text-decoration-none text-dark d-block">Favorite</a>
+                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php" class="fw-bold text-center text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> d-block">Favorite</a>
                 </div>
                 <div class="col-4">
                   <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-2 d-block feature-icon mb-3 py-3 border-3">
                     <i class="bi bi-columns" style="font-size: 30px; -webkit-text-stroke: 1px;"></i>
                   </a>
-                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php" class="fw-bold text-center text-decoration-none text-dark d-block">Album</a>
+                  <a href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/album.php" class="fw-bold text-center text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> d-block">Album</a>
                 </div>
               </div>
             </div>

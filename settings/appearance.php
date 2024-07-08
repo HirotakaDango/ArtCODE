@@ -35,7 +35,7 @@ $database->close();
 
     <main id="swup" class="transition-main">
       <?php include('setheader.php'); ?>
-        <div class="container mt-4">
+        <div class="container mb-5 mt-4">
           <div class="d-md-none mb-4">
             <div class="d-flex">
               <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">

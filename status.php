@@ -80,7 +80,7 @@ if(isset($_POST['delete'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <title>Status</title>
     <meta charset="UTF-8"> 
@@ -92,7 +92,7 @@ if(isset($_POST['delete'])) {
     <?php include('header.php'); ?>
     <div class="dropdown container mt-2">
       <a href="status_send.php" type="button" class="btn btn-primary w-100 fw-bold mb-2"><i class="bi bi-send-fill"></i> write something</a>
-      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">

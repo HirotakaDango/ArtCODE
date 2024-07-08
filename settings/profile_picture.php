@@ -98,7 +98,7 @@ $db = null; // Close the PDO connection
             Error: <?php echo $error_msg; ?>
           </div>
         <?php endif; ?>
-        <div class="container mt-4">
+        <div class="container mb-5 mt-4">
           <div class="d-md-none mb-4">
             <div class="d-flex">
               <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">

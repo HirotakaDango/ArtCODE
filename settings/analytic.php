@@ -117,7 +117,7 @@ $db->close();
 
     <?php include('setheader.php'); ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <div class="container mt-4">
+    <div class="container mb-5 mt-4">
       <div class="d-md-none mb-4">
         <div class="d-flex">
           <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">
@@ -128,7 +128,7 @@ $db->close();
       <h3 class="fw-bold mb-4">
         Analysis
       </h3>
-      <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+      <div class="card border-0 bg-body-tertiary rounded-4 shadow p-2 mb-4">
         <h5 class="fw-bold">
           <i class="bi bi-bar-chart-fill me-2"></i> Your Data
         </h5>

@@ -1,20 +1,27 @@
 <?php
-// Join the users table and the status table to get the messages from the users that the current user is following
-$status_query = $db->prepare("SELECT users.email, users.artist, users.pic, users.id AS userid, status.message, status.date, status.id, COUNT(favorites_status.id) AS like_count FROM users JOIN status ON users.email = status.email LEFT JOIN favorites_status ON status.id = favorites_status.status_id AND favorites_status.email = :current_user_email WHERE users.email IN (".implode(',', array_fill(0, count($following_emails), '?')).") GROUP BY status.id ORDER BY status.id DESC");
+// Query to get statuses from users that the current user is following
+$status_query = $db->prepare("
+  SELECT users.email, users.artist, users.pic, users.id AS userid, status.message, status.date, status.id, 
+         COALESCE(favorites_status.like_count, 0) AS like_count
+  FROM users
+  JOIN status ON users.email = status.email
+  LEFT JOIN (
+    SELECT status_id, COUNT(*) AS like_count
+    FROM favorites_status
+    GROUP BY status_id
+  ) AS favorites_status ON status.id = favorites_status.status_id
+  WHERE users.email IN (".implode(',', array_fill(0, count($following_emails), '?')).")
+  ORDER BY status.date DESC
+");
 
-// Bind parameters
 foreach ($following_emails as $i => $following_email) {
-  $status_query->bindValue($i+1, $following_email, PDO::PARAM_STR);
+  $status_query->bindValue($i + 1, $following_email, PDO::PARAM_STR);
 }
-$status_query->bindValue(':current_user_email', $email, PDO::PARAM_STR);
 
-// Execute the query
 if (!$status_query->execute()) {
-  // Handle the error, you can output or log the error message
   die("Error executing query: " . implode(" ", $status_query->errorInfo()));
 }
 
-// Create an array to store the messages
 $messages = array();
 while ($row = $status_query->fetch(PDO::FETCH_ASSOC)) {
   $messages[] = $row;

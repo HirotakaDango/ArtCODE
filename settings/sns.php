@@ -63,7 +63,7 @@ $db->close();
           </div>
           <?php unset($_SESSION['success_message']); ?>
         <?php endif; ?>
-        <div class="container mt-4">
+        <div class="container mb-5 mt-4">
           <div class="d-md-none mb-4">
             <div class="d-flex">
               <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="/settings/">
@@ -95,7 +95,6 @@ $db->close();
               <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Save</button>
             </form>
           </div>
-        </div>
         </div>
       <?php include('end.php'); ?> 
     </main>
