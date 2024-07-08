@@ -6,4 +6,3 @@
 </div>
 
 <?php include 'contents/popular_contents/mobile.php'; ?>
-<div class="mb-1"></div>

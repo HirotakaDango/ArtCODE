@@ -50,7 +50,7 @@ if (isset($_POST['favorite'])) {
   </head>
   <body>
     <?php include('../header.php'); ?>
-    <div class="dropdown mt-1">
+    <div class="dropdown">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
