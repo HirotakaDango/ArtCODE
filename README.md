@@ -1,27 +1,6 @@
 # ArtCODE - 🎨🌐 Simple Image Sharing Platform
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/02.png" alt="Home Screenshot">
-</p>
-
-## :clipboard: About ArtCODE 
-
-**ArtCODE** is an image sharing and upload website built with vanilla PHP by a solo developer. Inspired by the likes of Pixiv and Pinterest, this platform has some features and functionalities like those platforms, all meticulously optimized using SQLite database only. This website was created with absolutely zero cost. Because it use vanilla php, making it very ease to modify for those who are unfamiliar with PHP frameworks.
-
-Here's the another screenshots:
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/01.png" alt="Upload Screenshot">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/03.png" alt="Image Preview Desktop">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/04.png" alt="Image Preview Mobile">
-</p>
-
-## :bust_in_silhouette: Profile
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/05.png" alt="Profile Screenshot">
-  <img src="https://raw.githubusercontent.com/BurgerIsReal01/image/main/06.png" alt="Favorite Screenshot">
-</p>
+![45f56b01-f5b4-4c9c-8ea9-4b59ae976ac7](https://github.com/HirotakaDango/ArtCODE/assets/104591072/fd3c300e-4ca0-4939-900a-f1e6e053bd1e)
 
 ## :wrench: Manage
 
