@@ -815,7 +815,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
               </div>
               <h5 class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold text-center mt-3"><?php echo $image['title']; ?></h5>
               <div style="word-break: break-word;" data-lazyload>
-                <p class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> small fw-medium" style="word-break: break-word;">
+                <p class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> small fw-medium my-4" style="word-break: break-word;">
                   <?php
                     if (!empty($image['imgdesc'])) {
                       $messageText = $image['imgdesc'];
