@@ -128,10 +128,10 @@
           <h1 class="text-white py-2 fw-bold display-1 radiating-light">ArtCODE</h1>
           <h5 class="text-white py-2 fw-medium fs-1 typing-text radiating-light"></h5>
           <a href="/session/login?tourl=<?php echo urlencode(isset($_GET['tourl']) ? $_GET['tourl'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/home/'); ?>" class="btn btn-light mt-4 fw-bold rounded-pill">Get Started <i class="bi bi-arrow-right" style="-webkit-text-stroke: 1px;"></i></a>
-          <div class="btn-group position-absolute bottom-0 start-0 m-2">
+          <div class="btn-group position-fixed bottom-0 start-0 m-2">
             <h6 class="fw-medium text-white">© 2022 - <?php echo date('Y'); ?> ArtCODE</h6>
           </div>
-          <div class="btn-group position-absolute bottom-0 end-0 m-2">
+          <div class="btn-group position-fixed bottom-0 end-0 m-2">
             <a class="btn border-0" href="https://github.com/HirotakaDango/ArtCODE"><i class="bi bi-github text-white"></i></a>
             <a class="btn border-0" href="https://gitlab.com/HirotakaDango/ArtCODE"><i class="bi bi-gitlab text-white"></i></a>
             <a class="btn border-0" href="https://x.com/r89dango"><i class="bi bi-twitter-x text-white"></i></a>

@@ -37,14 +37,15 @@ $numpage = $user['numpage'];
 // Set the limit of images per page
 $limit = empty($numpage) ? 50 : $numpage;
 
-// Get all images from the database
+// Get all images from the database with the correct LIMIT based on $numpage
 $stmt = $dbL->prepare("
   SELECT images.*, users.artist, users.pic, users.id AS uid
   FROM images
   JOIN users ON images.email = users.email
   ORDER BY images.id DESC
-  LIMIT $numpage
+  LIMIT :limit
 ");
+$stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 

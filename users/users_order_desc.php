@@ -8,24 +8,14 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'ascending';
 $limit = 20;
 $offset = ($page - 1) * $limit;
 
-// Construct the base query
+// Retrieve users from the database based on the search query
 $query = 'SELECT *, SUBSTR(artist, 1, 1) AS first_letter FROM users';
-
-// Adjust query based on search query
 if (!empty($searchQuery)) {
   $query .= " WHERE artist LIKE '%$searchQuery%'";
 }
+$query .= ' ORDER BY first_letter COLLATE NOCASE ASC, artist COLLATE NOCASE DESC';
 
-// Adjust order by clause
-$query .= ' ORDER BY first_letter COLLATE NOCASE ASC, id ASC';
-
-// Execute the query
 $result = $db->query($query);
-
-if ($result === false) {
-  // Handle query error
-  die("SQLite query error: " . $db->lastErrorMsg());
-}
 
 // Group users by category (first letter)
 $groupedUsers = [];

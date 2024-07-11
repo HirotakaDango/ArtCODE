@@ -27,6 +27,8 @@ $email = $_SESSION['email'];
       <ul class="dropdown-menu">
         <li><a href="?by=ascending&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'ascending') echo 'active'; ?>">ascending</a></li>
         <li><a href="?by=descending&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'descending') echo 'active'; ?>">descending</a></li>
+        <li><a href="?by=newest&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
         <li><a href="?by=popular&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">most followed</a></li>
         <li><a href="?by=least&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least followed</a></li>
         <li><a href="?by=followed&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'followed') echo 'active'; ?>">followed</a></li>
@@ -38,10 +40,16 @@ $email = $_SESSION['email'];
     
       switch ($sort) {
         case 'ascending':
-          include "users_asc.php";
+          include "users_order_asc.php";
           break;
         case 'descending':
+          include "users_order_desc.php";
+          break;
+        case 'newest':
           include "users_desc.php";
+          break;
+        case 'oldest':
+          include "users_asc.php";
           break;
         case 'popular':
           include "users_pop.php";
@@ -55,7 +63,7 @@ $email = $_SESSION['email'];
       }
     }
     else {
-      include "users_asc.php"; // Include ascending by default
+      include "users_order_asc.php"; // Include ascending by default
     }
     
     ?>
