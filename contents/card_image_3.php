@@ -1,1 +1,0 @@
-<?php include('../card_image.php'); ?>
