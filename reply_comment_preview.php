@@ -134,7 +134,7 @@ $commentName = $commentResult['comment'];
     <div class="fixed-bottom w-100">
       <form action="" method="POST">
         <div class="input-group w-100 rounded-0 shadow-lg rounded-4 rounded-bottom-0">
-          <textarea id="reply" name="reply" class="form-control fw-medium bg-body-tertiary border-0 rounded-start-4 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 40px; max-height: 150px;" placeholder="Post your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" 
+          <textarea id="reply" name="reply" class="form-control fw-medium bg-body-tertiary border-0 rounded-start-4 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 40px; max-height: 150px;" placeholder="Post your reply..." aria-label="Type a message..." aria-describedby="basic-addon2" 
             onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
             onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }"></textarea>
           <input type="hidden" name="reply_comment_id" value="<?= $comment['id'] ?>">

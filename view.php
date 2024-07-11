@@ -466,74 +466,79 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                               </a>
                             <?php endif; ?>
                           </div>
+                          <p class="mt-3 text-white fw-bold">
+                            <i class="bi bi-images"></i> Latest images by <?php echo htmlspecialchars($user['artist']); ?>
+                          </p>
                           <?php
                             // Get all images for the given user_email
-                            $stmt = $db->prepare("SELECT id, filename, tags, title FROM images WHERE email = :email ORDER BY id DESC");
+                            $stmt = $db->prepare("SELECT id, filename, tags, title, imgdesc, type FROM images WHERE email = :email ORDER BY id DESC");
                             $stmt->bindParam(':email', $user_email);
                             $stmt->execute();
                             $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           ?>
-    
-                          <div class="mt-2 mb-2 scroll-container media-scrollerF snaps-inlineF overflow-auto">
-                            <?php $count = 0; ?>
-                            <?php foreach ($images as $imageU): ?>
-                              <?php
-                                $image_idF = $imageU['id'];
-                                $image_urlF = $imageU['filename'];
-                                $image_titleF = $imageU['title'];
-                                $current_image_idF = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
+                          <div class="container px-0">
+                            <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                              <div class="carousel-inner">
+                                <?php
+                                $totalImages = count($images);
+                                $slidesCount = ceil($totalImages / 5);
+                        
+                                for ($i = 0; $i < $slidesCount; $i++) :
+                                  $startIndex = $i * 5;
+                                  $endIndex = min($startIndex + 5, $totalImages);
                                 ?>
-                                <div class="media-elementF d-inline-flex">
-                                  <a href="?artworkid=<?php echo $image_idF; ?>">
-                                    <img class="hori <?php echo ($image_idF == $current_image_idF) ? 'opacity-50' : ''; ?>" src="thumbnails/<?php echo $image_urlF; ?>" alt="<?php echo $image_titleF; ?>">
-                                  </a>
-                                </div>
-                              <?php $count++; ?>
-                              <?php if ($count >= 25) break; ?>
-                            <?php endforeach; ?>
-                            <button id="loadMoreBtnF" class="btn btn-secondary hori opacity-25"><i class="bi bi-plus-circle display-5 text-stroke"></i></button>
-                            <script>
-                              var currentIndexF = <?php echo $count; ?>;
-                              var imagesF = <?php echo json_encode($images); ?>;
-                              var containerF = document.querySelector('.media-scrollerF');
-                              var loadMoreBtnF = document.getElementById('loadMoreBtnF');
-    
-                              function loadMoreImagesF() {
-                                for (var i = currentIndexF; i < currentIndexF + 25 && i < imagesF.length; i++) {
-                                  var imageUF = imagesF[i];
-                                  var image_idF = imageUF['id'];
-                                  var image_urlF = imageUF['filename'];
-                                  var image_titleF = imageUF['title'];
-                                  var current_image_idF = '<?php echo $current_image_idF; ?>';
-    
-                                  var mediaElementF = document.createElement('div');
-                                  mediaElementF.classList.add('media-elementF');
-                                  mediaElementF.classList.add('d-inline-flex');
-    
-                                  var linkF = document.createElement('a');
-                                  linkF.href = '?artworkid=' + image_idF;
-    
-                                  var imageF = document.createElement('img');
-                                  imageF.classList.add('hori');
-                                  if (image_idF == current_image_idF) {
-                                    imageF.classList.add('opacity-50');
-                                  }
-                                  imageF.src = 'thumbnails/' + image_urlF;
-                                  imageF.alt = image_titleF;
-    
-                                  linkF.appendChild(imageF);
-                                  mediaElementF.appendChild(linkF);
-                                  containerF.insertBefore(mediaElementF, loadMoreBtnF);
-                                }
-    
-                                currentIndexF += 25;
-                                if (currentIndexF >= imagesF.length) {
-                                  loadMoreBtnF.style.display = 'none';
-                                }
-                              }
-    
-                              loadMoreBtnF.addEventListener('click', loadMoreImagesF);
-                            </script>
+                                  <div class="carousel-item <?php echo $i === 0 ? 'active' : ''; ?>">
+                                    <div class="row row-cols-5 g-1">
+                                      <?php for ($j = $startIndex; $j < $endIndex; $j++) :
+                                        $imageU = $images[$j];
+                                        $image_id = $imageU['id'];
+                                        $image_url = $imageU['filename'];
+                                        $image_title = $imageU['title'];
+                                        $current_image_id = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
+                                      ?>
+                                        <div class="col">
+                                          <a href="?artworkid=<?php echo $image_id; ?>" class="position-relative">
+                                            <div class="ratio ratio-1x1">
+                                              <img class="object-fit-cover rounded <?php echo ($imageU['type'] === 'nsfw') ? 'blurred' : ''; ?> <?php echo ($image_id == $current_image_id) ? 'opacity-50' : ''; ?>" src="thumbnails/<?php echo $image_url; ?>" alt="<?php echo htmlspecialchars($image_title); ?>" style="object-fit: cover;">
+                                            </div>
+                                            <?php
+                                            // Example of error handling and querying
+                                            try {
+                                              $stmt_count_main = $db->prepare("SELECT COUNT(*) as image_count FROM images WHERE id = :id");
+                                              $stmt_count_main->bindValue(':id', $image_id, PDO::PARAM_INT);
+                                              $stmt_count_main->execute();
+                                              $imageCountRow = $stmt_count_main->fetch(PDO::FETCH_ASSOC);
+                                              $imageCount = $imageCountRow ? $imageCountRow['image_count'] : 0;
+                        
+                                              $stmt_count_child = $db->prepare("SELECT COUNT(*) as child_image_count FROM image_child WHERE image_id = :image_id");
+                                              $stmt_count_child->bindValue(':image_id', $image_id, PDO::PARAM_INT);
+                                              $stmt_count_child->execute();
+                                              $childImageCountRow = $stmt_count_child->fetch(PDO::FETCH_ASSOC);
+                                              $childImageCount = $childImageCountRow ? $childImageCountRow['child_image_count'] : 0;
+                        
+                                              $totalImagesCount = $imageCount + $childImageCount;
+                                            } catch (PDOException $e) {
+                                              echo "Error: " . $e->getMessage();
+                                              $totalImagesCount = 0; // Handle error condition
+                                            }
+                                            ?>
+                                            <?php include('rows_columns/image_counts.php'); ?>
+                                          </a>
+                                        </div>
+                                      <?php endfor; ?>
+                                    </div>
+                                  </div>
+                                <?php endfor; ?>
+                              </div>
+                              <div class="d-flex mt-2">
+                                <button class="me-auto btn btn-light p-1 py-0" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                                  <i class="bi bi-chevron-left" style="-webkit-text-stroke: 1px;"></i>
+                                </button>
+                                <button class="ms-auto btn btn-light p-1 py-0" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                                  <i class="bi bi-chevron-right" style="-webkit-text-stroke: 1px;"></i>
+                                </button>
+                              </div>
+                            </div>
                           </div>
                           <div class="mb-5">
                             <?php
@@ -2116,11 +2121,11 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
     <p class="fw-bold ms-2 mt-2">Latest Images</p>
     <?php
-      include 'latest.php';
+      include('latest.php');
     ?>
     <p class="fw-bold ms-2 mt-5">Popular Images</p>
     <?php
-      include 'most_popular.php';
+      include('most_popular.php');
     ?>
     <div class="mt-5"></div>
     <script>

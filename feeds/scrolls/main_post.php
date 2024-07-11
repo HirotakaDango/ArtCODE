@@ -117,14 +117,14 @@ if (isset($_POST['favorite'])) {
               $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             ?>
             <div class="d-flex me-auto">
-              <a class="text-decoration-none text-dark fw-bold rounded-pill" href="#" data-bs-toggle="modal" data-bs-target="#userModal">
+              <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-pill" href="#" data-bs-toggle="modal" data-bs-target="#userModal">
                 <?php if (!empty($user['pic'])): ?>
                   <img class="object-fit-cover border border-1 rounded-circle" src="/<?php echo $user['pic']; ?>" style="width: 32px; height: 32px;">
                 <?php else: ?>
                   <img class="object-fit-cover border border-1 rounded-circle" src="/icon/profile.svg" style="width: 32px; height: 32px;">
                 <?php endif; ?>
                 <?php echo (mb_strlen($user['artist']) > 10) ? mb_substr($user['artist'], 0, 10) . '...' : $user['artist']; ?>
-                <small class="badge rounded-pill bg-dark">
+                <small class="badge rounded-pill text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
                   <i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?>
                 </small>
               </a>
