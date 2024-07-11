@@ -118,7 +118,7 @@ $db = null; // Close the PDO connection
               <div>
                 <div class="fw-bold fs-2"><?php echo $artist; ?></div>
                 <small class="text-muted fw-medium">
-                  <?php echo substr($bio, 0, 240); ?><?php if(strlen($bio) > 240) echo '...'; ?>
+                  <?php echo empty($bio) ? "user's description is empty" : substr($bio, 0, 240) . (strlen($bio) > 240 ? '...' : ''); ?>
                 </small>
               </div>
             </div>

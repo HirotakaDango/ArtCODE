@@ -1,3 +1,44 @@
+<?php
+// Connect to the SQLite database using parameterized query
+$db = new SQLite3('../database.sqlite'); 
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other, region TEXT, joined DATETIME, born DATETIME, numpage TEXT, display TEXT, message_1 TEXT, message_2 TEXT, message_3 TEXT, message_4 TEXT, mode TEXT)");
+$stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, title TEXT, description TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, ver TEXT, verlink TEXT)");
+$stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, email TEXT, tags TEXT, title TEXT, imgdesc TEXT, link TEXT, date DATETIME, view_count INT DEFAULT 0, type TEXT, episode_name TEXT, artwork_type TEXT, `group` TEXT, categories TEXT, language TEXT, parodies TEXT, characters TEXT)");
+$stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS image_child (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT NOT NULL, image_id INTEGER NOT NULL, email TEXT NOT NULL, FOREIGN KEY (image_id) REFERENCES images (id))");
+$stmt->execute();
+
+// Create the "visit" table if it doesn't exist
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS visit (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  visit_count INTEGER,
+  visit_date DATE DEFAULT CURRENT_DATE,
+  UNIQUE(visit_date)
+)");
+$stmt->execute();
+
+// Process any visit requests
+$stmt = $db->prepare("SELECT id, visit_count FROM visit WHERE visit_date = CURRENT_DATE");
+$result = $stmt->execute();
+$row = $result->fetchArray(SQLITE3_ASSOC);
+
+if ($row) {
+  // If the record for the current date exists, increment the visit_count
+  $visitCount = $row['visit_count'] + 1;
+  $stmt = $db->prepare("UPDATE visit SET visit_count = :visitCount WHERE id = :id");
+  $stmt->bindValue(':visitCount', $visitCount, SQLITE3_INTEGER);
+  $stmt->bindValue(':id', $row['id'], SQLITE3_INTEGER);
+  $stmt->execute();
+} else {
+  // If the record for the current date doesn't exist, insert a new record
+  $stmt = $db->prepare("INSERT INTO visit (visit_count) VALUES (:visitCount)");
+  $stmt->bindValue(':visitCount', 1, SQLITE3_INTEGER);
+  $stmt->execute();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
