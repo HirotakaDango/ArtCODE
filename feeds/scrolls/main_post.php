@@ -101,6 +101,22 @@ if (isset($_POST['favorite'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include('../../bootstrapcss.php'); ?>
+    <style>
+      /* For Webkit-based browsers */
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        border-radius: 0;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border-radius: 0;
+      }
+    </style>
   </head>
   <body>
     <div class="container mt-3 mb-5" style="max-width: 750px;">
@@ -192,8 +208,9 @@ if (isset($_POST['favorite'])) {
             }
           </script>
         </div>
+        <?php include('full_image.php'); ?>
         <div class="col-md-6">
-          <img class="w-100 rounded-4" src="/thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+          <a data-bs-toggle="modal" data-bs-target="#originalImage"><img class="w-100 rounded-4" src="/thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>"></a>
           <div class="d-flex justify-content-center w-100 my-3">
             <div class="row g-4">
               <div class="col-3 d-flex justify-content-between">
