@@ -44,21 +44,29 @@ $database->close();
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container mt-3">
-      <h3 class="text-center fw-bold"><i class="bi bi-calendar-fill"></i> Choose Date</h3>
-      <form method="POST" action="">
-        <div class="input-group">
-          <div class="form-floating">
-            <input name="born" type="date" class="form-control fw-bold" id="floatingInput" value="<?php echo $currentborn; ?>" placeholder="Select date yy/mm/dd" required>
-            <label class="fw-bold text-secondary" for="floatingInput">Select date yy/mm/dd</label>
+    <div class="container mb-5 mt-4">
+      <h3 class="fw-bold mb-3">
+        Set Your Date
+      </h3>
+      <p class="fw-semibold mb-4">Current date: <?php echo date("l, d F, Y", strtotime($currentborn)); ?></p>
+      <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+        <h5 class="fw-bold">
+          <i class="bi bi-calendar-fill"></i> Set Date of Birth
+        </h5>
+        <p class="text-muted mb-4">Choose a new date to update your date of birth.</p>
+        <form method="POST" action="">
+          <div class="input-group">
+            <input type="date" class="form-control fw-bold" name="born" placeholder="Select a date" value="<?php echo $currentborn; ?>" required>
+            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
           </div>
-          <span class="input-group-text"><i class="bi bi-calendar-fill"></i></span>
+          <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
+        </form>
+      </div>
+      <div class="d-flex">
+        <div class="ms-auto btn-group gap-2 mt-2">
+          <a href="../index.php" class="btn border-0 text-danger rounded fw-medium">Skip</a>
+          <a href="set_picture.php" class="btn border-0 text-dark rounded fw-medium">Next</a>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
-      </form>
-      <div class="btn-group w-100 gap-2 mt-2">
-        <a href="../index.php" class="btn btn-danger w-50 rounded fw-bold">Skip</a>
-        <a href="set_picture.php" class="btn btn-primary w-50 rounded fw-bold">Next</a>
       </div>
     </div>
     <?php include('bootstrapjs.php'); ?>

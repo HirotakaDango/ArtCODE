@@ -100,32 +100,35 @@ $db = null; // Close the PDO connection
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container-fluid">
-      <?php if (isset($error_msg)): ?>
-        <div class="alert alert-danger" role="alert">
-          Error: <?php echo $error_msg; ?>
-        </div>
-      <?php endif; ?>
-      <div class="mt-3">
-        <h5 class="text-center text-dark fw-bold mb-3">Add Your Profile Picture</h5>
-        <div class="row">
-          <div class="col-md-5 mb-2">
-            <div class="ratio ratio-1x1">
-              <a data-bs-toggle="modal" data-bs-target="#originalImage"><img id="previewImage" src="<?php echo !empty($current_pic) ? $current_pic : "../icon/bg.png"; ?>" alt="Current Background Picture" class="img-thumbnail w-100 h-100 object-fit-cover"></a>
-            </div>
+    <?php if (isset($error_msg)): ?>
+      <div class="alert alert-danger" role="alert">
+        Error: <?php echo $error_msg; ?>
+      </div>
+    <?php endif; ?>
+    <div class="container mb-5 mt-4">
+      <h3 class="fw-bold mb-3">
+        Set Your Profile Background
+      </h3>
+      <p class="fw-semibold">Current profile background:</p>
+      <div class="ratio ratio-16x9 my-4">
+        <a data-bs-toggle="modal" data-bs-target="#originalImage"><img id="previewImage" src="<?php echo !empty($current_pic) ? $current_pic : "../icon/bg.png"; ?>" alt="Current Background Picture" class="img-thumbnail h-100 w-100 rounded-4 object-fit-cover"></a>
+      </div>
+      <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
+        <h5 class="fw-bold">
+          <i class="bi bi-image-fill me-2"></i> Set Profile Background
+        </h5>
+        <p class="text-muted mb-4">Upload a new image file to set your profile background.</p>
+        <form method="post" enctype="multipart/form-data">
+          <div class="form-group mb-2">
+            <label for="bgpic" class="form-label fw-bold">Select a file:</label>
+            <input type="file" id="bgpic" name="bgpic" class="form-control rounded-3 border fw-bold border-4" onchange="previewFile()">
           </div>
-          <div class="col-md-7">
-            <div class="container-fluid">
-              <form method="post" enctype="multipart/form-data">
-                <div class="form-group mb-2">
-                  <label for="bgpic" class="form-label text-dark fw-bold">Select a file:</label>
-                  <input type="file" id="bgpic" name="bgpic" class="form-control rounded-3 border text-dark fw-bold border-4" onchange="previewFile()">
-                </div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Apply</button>
-              </form>
-              <a href="../tutorials/" class="btn btn-primary w-100 rounded fw-bold mt-2">Done</a>
-            </div> 
-          </div>
+          <button type="submit" class="btn btn-primary w-100 fw-bold" name="submit">Apply</button>
+        </form>
+      </div>
+      <div class="d-flex">
+        <div class="ms-auto btn-group gap-2 mt-2">
+          <a href="/index.php" class="btn border-0 text-dark rounded fw-medium">Continue to homepage</a>
         </div>
       </div>
     </div>
@@ -140,7 +143,6 @@ $db = null; // Close the PDO connection
         </div>
       </div>
     </div>
-    
     <script>
       function previewFile() {
         const preview = document.getElementById('previewImage');

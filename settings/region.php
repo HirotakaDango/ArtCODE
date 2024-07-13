@@ -53,7 +53,7 @@ $database->close();
             </h5>
             <p class="text-muted mb-4">Update your region settings to personalize your experience on the website.</p>
             <form method="POST" action="">
-              <div class="form-group">
+              <div class="form-group mb-2">
                 <label class="fw-semibold mb-3" for="region">Select region:</label>
                 <select class="form-select" id="region" name="region">
                   <option value="Afghanistan" <?php if ($currentregion == 'Afghanistan') echo 'selected'; ?>>Afghanistan</option>
@@ -252,7 +252,8 @@ $database->close();
                   <option value="Zimbabwe" <?php if ($currentregion == 'Zimbabwe') echo 'selected'; ?>>Zimbabwe</option>
                 </select>
               </div>
-            </div>
+              <button type="submit" class="btn btn-primary w-100 fw-bold">Save</button>
+            </from>
           </div>
         </div>
       <?php include('end.php'); ?> 
