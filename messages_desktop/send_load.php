@@ -81,7 +81,7 @@ while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
           ob_start();  // Start output buffering
           include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php');
           $oppositeColor = ob_get_clean();  // Get and clear output buffer
-          echo "<a class='text-decoration-none text-{$oppositeColor}' href='/artist.php?id={$sender_id}'>{$sender_artist}</a>";
+          echo "<a class='text-decoration-none text-{$oppositeColor}' href='/artist.php?id={$sender_id}' target='_blank'>{$sender_artist}</a>";
         }
         ?>
       </h6>

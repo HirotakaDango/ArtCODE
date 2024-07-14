@@ -64,37 +64,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
   </head>
   <body>
-    <div class="fixed-top container rounded-bottom-4 bg-dark-subtle px-0 py-2">
-      <div class="d-flex justify-content-between">
+    <div class="fixed-top container-fluid">
+      <div class="container-fluid d-flex rounded-4 bg-dark-subtle py-2 justify-content-between">
         <div class="d-flex align-items-center">
-          <a class="btn border-0" href="/messages/">
-            <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
-          </a>
           <span class="fs-5 d-flex align-items-center gap-2">
             <img src="/<?php echo !empty($chat_user['pic']) ? $chat_user['pic'] : 'icon/profile.svg'; ?>" class="rounded-circle" style="width: 32px; height: 32px;">
-            <?php echo strlen($chat_user['artist']) > 15 ? substr($chat_user['artist'], 0, 15) . '...' : $chat_user['artist']; ?>
+            <?php echo $chat_user['artist']; ?>
           </span>
         </div>
         <div class="dropdown">
-          <button class="btn border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn border-0 px-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-three-dots-vertical"></i>
           </button>
           <ul class="dropdown-menu">
             <li>
               <button class="dropdown-item" id="toggleButton" onclick="toggleAutoScroll()">Auto-Scroll: ON</button>
-              <a class="dropdown-item" href="/artist.php?id=<?php echo $_GET['userid']; ?>">Check User's Profile</a>
+              <a class="dropdown-item" href="/artist.php?id=<?php echo $_GET['userid']; ?>" target="_blank">Check User's Profile</a>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="chat-container py-5">
+    <div class="container-fluid">
+      <div class="chat-container-fluid py-5">
         <div id="messages" class="py-4">
         </div>
       </div>
     </div>
-    <div class="fixed-bottom container py-3">
+    <div class="fixed-bottom container-fluid py-3">
       <form id="messageForm">
         <div class="input-group w-100 rounded-0 shadow-lg rounded-4">
           <input type="hidden" id="userid" name="userid" value="<?php echo $user_id; ?>">
@@ -111,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       function loadMessages() {
         $.get('send_load.php?userid=<?php echo $user_id; ?>', function(data) {
           $('#messages').html(data);
-          // Scroll to bottom of the chat container
+          // Scroll to bottom of the chat container-fluid
           $('#messages').scrollTop($('#messages')[0].scrollHeight);
         });
       }

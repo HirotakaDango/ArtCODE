@@ -180,7 +180,7 @@ function createThumbnail($filePath, $width, $height) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -189,38 +189,9 @@ function createThumbnail($filePath, $width, $height) {
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container-fluid mt-3">
-      <nav aria-label="breadcrumb">
-        <div class="d-none d-md-block d-lg-block">
-          <ol class="breadcrumb breadcrumb-chevron p-3 bg-secondary bg-opacity-25 rounded-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
-            </li>
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis py-2 text-decoration-none" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>">Edit <?php echo $image['title']; ?></a>
-            </li>
-            <li class="breadcrumb-item mb-2 mb-md-0">
-              <a class="link-body-emphasis py-2 text-decoration-none fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/replace.php?id=<?php echo $image['id']; ?>">Replace new images to <?php echo $image['title']; ?></a>
-            </li>
-          </ol>
-        </div>
-        <div class="d-md-none d-lg-none">
-          <a class="btn bg-secondary p-3 bg-opacity-25 fw-bold w-100 text-start mb-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseExample">
-            <i class="bi bi-list" style="-webkit-text-stroke: 1px;"></i> Menu
-          </a>
-          <div class="collapse bg-secondary bg-opacity-25 mt-2 rounded mb-2" id="collapseModal">
-            <div class="btn-group-vertical w-100">
-              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">Home</a>
-              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/image.php?artworkid=<?php echo $image['id']; ?>"><?php echo $image['title']; ?></a>
-              <a class="btn py-2 rounded text-start fw-medium" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/?id=<?php echo $image['id']; ?>">Edit <?php echo $image['title']; ?></a>
-              <a class="btn py-2 rounded text-start fw-bold" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/edit/replace.php?id=<?php echo $image['id']; ?>"><i class="bi bi-chevron-right small" style="-webkit-text-stroke: 2px;"></i> Replace new images to <?php echo $image['title']; ?></a>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <?php include('../header.php'); ?>
+    <div class="container">
+      <?php include('nav.php'); ?>
       <div class="row">
         <div class="col-md-6 pe-md-1 mb-2">
           <a data-bs-toggle="modal" data-bs-target="#originalImage">
@@ -239,7 +210,7 @@ function createThumbnail($filePath, $width, $height) {
         <div class="col-md-6 ps-md-1">
           <form action="" method="post" enctype="multipart/form-data" oninput="showPreview(event)">
             <input class="form-control border border-dark-subtle border-3 rounded-4 mb-2" type="file" id="image" name="image" accept="image/*" required>
-            <button class="btn btn-outline-dark fw-bold text-nowrap border border-dark-subtle border-3 rounded-4 w-100" type="submit">save changes</button>
+            <button class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold text-nowrap border border-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>-subtle border-3 rounded-4 w-100" type="submit">save changes</button>
           </form>
         </div>
       </div>

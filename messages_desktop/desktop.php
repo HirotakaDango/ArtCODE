@@ -20,7 +20,7 @@ require_once('../auth.php');
             
             $.each(latestMessages, function(index, message) {
               // Build HTML for each latest message using the provided template design
-              var messageHtml = '<a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="send.php?userid=' + message.id + '"><div class="card p-3 rounded-4 bg-body-tertiary shadow my-2 border-0">';
+              var messageHtml = '<a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="send.php?userid=' + message.id + '" target="chatFrame" onclick="return false;"><div class="card p-3 rounded-4 bg-body-tertiary shadow my-2 border-0">';
               messageHtml += '<div class="d-flex align-items-center">';
               messageHtml += '<div class="d-inline-flex align-items-center justify-content-center me-3">';
               messageHtml += '<img id="previewImage" src="' + (message.pic ? message.pic : "../icon/bg.png") + '" alt="Current Background Picture" style="width: 96px; height: 96px;" class="border border-4 rounded-circle object-fit-cover">';
@@ -35,6 +35,13 @@ require_once('../auth.php');
               messageHtml += '</div></a>';
               $('#latest-messages').append(messageHtml);
             });
+
+            // Add click event listener to the newly added elements
+            $('#latest-messages a').on('click', function(e) {
+              e.preventDefault();
+              var href = $(this).attr('href');
+              window.parent.document.getElementById('rightFrame').src = href;
+            });
           });
         }
     
@@ -44,14 +51,9 @@ require_once('../auth.php');
         // Periodically refresh latest messages every 10 seconds
         setInterval(loadLatestMessages, 10000); // Adjust interval as needed
       });
-
-      if (window.innerWidth >= 768) {
-        window.location.href = '/messages_desktop/';
-      }
     </script>
   </head>
   <body>
-    <?php include('../header.php'); ?>
     <div class="container mb-5">
       <h5 class="fw-bold mb-3">All Messages</h5>
       <div id="latest-messages">

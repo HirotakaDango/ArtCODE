@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <a data-bs-toggle="modal" data-bs-target="#originalImage">
                 <img src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
               </a>
-              <a class="position-absolute top-0 end-0 m-2 btn btn-sm btn-dark opacity-75 fw-bold" href="replace.php?id=<?php echo $image['id']; ?>">replace image</a>
+              <a class="position-absolute top-0 end-0 m-2 btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> opacity-75 fw-bold" href="replace.php?id=<?php echo $image['id']; ?>">replace image</a>
               <div class="">
                 <div class="border border-4 bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> fw-bold rounded-3 my-2">
                   <a class="btn fw-bold w-100 border-0" data-bs-toggle="collapse" href="#collapseExpand" role="button" aria-expanded="false" aria-controls="collapseExample">
