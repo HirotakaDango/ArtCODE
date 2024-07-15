@@ -55,7 +55,10 @@ require_once('../auth.php');
   </head>
   <body>
     <div class="container mb-5">
-      <h5 class="fw-bold mb-3">All Messages</h5>
+      <div class="btn-group w-100 mb-3 gap-2">
+        <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold opacity-75 shadow text-nowrap" href="desktop.php">Current Contacts</a>
+        <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold text-nowrap" href="search.php">Search Users</a>
+      </div>
       <div id="latest-messages">
         <!-- Latest messages will be dynamically loaded here -->
       </div>

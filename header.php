@@ -77,6 +77,11 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'myworks.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php"><i class="bi bi-images"></i> <?php echo $count1; ?> <small>images</small></a>
               <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php"><i class="bi bi-heart-fill"></i> <?php echo $fav_count1;?> <small>favorites</small></a> 
             </div>
+            <div class="w-100 container mt-2">
+              <a class="w-100 btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'quicknote/') !== false) echo 'active'; ?>" href="/quicknote/">
+                <i class="bi bi-journal-text"></i> Quicknote
+              </a>
+            </div>
             <div class="w-100">
               <div class="btn-group mt-2 mb-2 w-100 container gap-2" role="group" aria-label="Basic example">
                 <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'profile/') !== false) echo 'active'; ?>" href="/profile.php">
@@ -104,21 +109,21 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               </div>
             </div>
             <div class="mx-1">
-              <hr class="border-3 rounded">
               <div class="container-fluid mb-2">
-              <?php if(isset($_SESSION['email']) && isset($_COOKIE['token'])): ?>
-                <li>
-                  <a class="btn btn-danger fw-bold w-100 rounded-3" href="#" data-bs-toggle="modal" data-bs-target="#logOut">
-                    <i class="bi bi-door-open-fill"></i> Logout
-                  </a>
-                </li>
-              <?php else: ?>
-                <li>
-                  <a class="btn btn-primary fw-bold w-100 <?php echo (basename($_SERVER['PHP_SELF']) == 'session.php'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/session.php">
-                    Signin
-                  </a>
-                </li>
-              <?php endif; ?> 
+                <hr class="border-3 rounded">
+                <?php if(isset($_SESSION['email']) && isset($_COOKIE['token'])): ?>
+                  <li>
+                    <a class="btn btn-danger fw-bold w-100 rounded-3" href="#" data-bs-toggle="modal" data-bs-target="#logOut">
+                      <i class="bi bi-door-open-fill"></i> Logout
+                    </a>
+                  </li>
+                <?php else: ?>
+                  <li>
+                    <a class="btn btn-primary fw-bold w-100 <?php echo (basename($_SERVER['PHP_SELF']) == 'session.php'); ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/session.php">
+                      Signin
+                    </a>
+                  </li>
+                <?php endif; ?> 
               </div>
             </div>
           </ul>

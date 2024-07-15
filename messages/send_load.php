@@ -42,7 +42,7 @@ if (!$result) {
 
 while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
   $is_sender = $message['email'] == $email;
-  $messageText = htmlspecialchars($message['message']);
+  $messageText = $message['message'];
   $messageDate = date('l, j F Y | H:i', strtotime($message['date']));
   $messageId = $message['id'];
 

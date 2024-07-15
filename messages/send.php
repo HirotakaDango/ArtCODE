@@ -149,23 +149,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
       });
 
-      // Function to check if user has scrolled to the top of the page
-      function isScrolledToTop() {
-        return window.scrollY === 0;
-      }
-
       // Function to scroll to the bottom of the page
       function scrollToBottom() {
         window.scrollTo({
           top: document.body.scrollHeight,
-          behavior: 'smooth'  // Optional: Smooth scrolling
+          behavior: 'auto'  // Instant scroll
         });
       }
 
       // Toggle function for auto-scroll
       function toggleAutoScroll() {
         autoScrollEnabled = !autoScrollEnabled;
-  
+
         // Update button text based on autoScrollEnabled
         const toggleButton = document.getElementById('toggleButton');
         if (autoScrollEnabled) {
@@ -174,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
           toggleButton.textContent = 'Auto-Scroll: OFF';
         }
-  
+
         // Store autoScrollEnabled state in localStorage
         localStorage.setItem('autoScrollEnabled', autoScrollEnabled);
       }
@@ -193,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       // Check and scroll to bottom periodically
       setInterval(function() {
-        if (autoScrollEnabled && isScrolledToTop()) {
+        if (autoScrollEnabled) {
           scrollToBottom();
         }
       }, 1000);  // Adjust the interval as needed
