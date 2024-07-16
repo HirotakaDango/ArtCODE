@@ -122,3 +122,7 @@ We welcome contributions from developers, designers, and art enthusiasts alike. 
 ---
 
 Join us in painting the future of digital art sharing. With ArtCODE, every pixel tells a story, and every upload opens a new world of possibilities. Let's create, share, and inspire together! 🎨✨
+
+
+
+Note: The beginning of this project is from my school assignment, and I want to develop even further to make it really better. Development progress still far from complete. I will update as possible for this zero cost website.
