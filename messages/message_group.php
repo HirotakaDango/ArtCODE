@@ -8,34 +8,25 @@ if (!isset($_SESSION['email'])) {
 
 $email = $_SESSION['email'];
 
-// Connect to the SQLite database using parameterized query
+// Connect to the SQLite database
 $db = new SQLite3('../database.sqlite');
 
-// Validate and sanitize the user_id from the GET request
-$user_id = filter_input(INPUT_GET, 'userid', FILTER_VALIDATE_INT);
-
-if (!$user_id) {
-  die('Invalid user ID.');
-}
-
-$stmt = $db->prepare("SELECT * FROM users WHERE id = :id");
-$stmt->bindValue(':id', $user_id, SQLITE3_INTEGER);
-$result = $stmt->execute();
-$chat_user = $result->fetchArray(SQLITE3_ASSOC);
-
-if (!$chat_user) {
-  die('User not found.');
-}
+// Create chat_group table if it doesn't exist
+$db->exec("CREATE TABLE IF NOT EXISTS chat_group (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL,
+  group_message TEXT NOT NULL,
+  date TEXT NOT NULL
+)");
 
 // Handle message sending
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
 
   if ($message) {
-    $stmt = $db->prepare("INSERT INTO messages (email, message, date, to_user_email) VALUES (:from_email, :message, datetime('now'), :to_email)");
-    $stmt->bindValue(':from_email', $email, SQLITE3_TEXT);
+    $stmt = $db->prepare("INSERT INTO chat_group (email, group_message, date) VALUES (:email, :message, datetime('now'))");
+    $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':message', $message, SQLITE3_TEXT);
-    $stmt->bindValue(':to_email', $chat_user['email'], SQLITE3_TEXT);
     $stmt->execute();
     echo json_encode(['success' => true]);
     exit;
@@ -51,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with <?php echo $chat_user['artist']; ?></title>
+    <title>Group Chat</title>
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
     <style>
@@ -64,22 +55,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
   </head>
   <body>
-    <div class="fixed-top container-fluid">
-      <div class="container-fluid d-flex rounded-4 bg-dark-subtle py-2 justify-content-between">
+    <div class="fixed-top container rounded-bottom-4 bg-dark-subtle px-0 py-2">
+      <div class="d-flex justify-content-between">
         <div class="d-flex align-items-center">
+          <a class="btn border-0" href="/messages/">
+            <i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i>
+          </a>
           <span class="fs-5 d-flex align-items-center gap-2">
-            <img src="/<?php echo !empty($chat_user['pic']) ? $chat_user['pic'] : 'icon/profile.svg'; ?>" class="rounded-circle" style="width: 32px; height: 32px;">
-            <?php echo $chat_user['artist']; ?>
+            Group Chat
           </span>
         </div>
         <div class="dropdown">
-          <button class="btn border-0 px-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-three-dots-vertical"></i>
           </button>
           <ul class="dropdown-menu">
             <li>
               <button class="dropdown-item" id="toggleButton" onclick="toggleAutoScroll()">Auto-Scroll: ON</button>
-              <a class="dropdown-item" href="/artist.php?id=<?php echo $_GET['userid']; ?>" target="_blank">Check User's Profile</a>
             </li>
           </ul>
         </div>
@@ -94,126 +86,123 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="fixed-bottom container-fluid py-3">
       <form id="messageForm">
         <div class="input-group w-100 rounded-0 shadow-lg rounded-4">
-          <input type="hidden" id="userid" name="userid" value="<?php echo $user_id; ?>">
-          <textarea id="message" name="message" class="form-control bg-body-tertiary border-0 rounded-start-5 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 40px; max-height: 150px;" placeholder="Type a message..." aria-label="Type a message..." aria-describedby="basic-addon2" 
+          <textarea id="message" name="message" class="form-control bg-body-tertiary border-0 rounded-start-5 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 40px; max-height: 150px;" placeholder="Type a message..." aria-label="Type a message..." aria-describedby="basic-addon2"
             onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
             onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }"></textarea>
           <button type="submit" class="btn bg-body-tertiary border-0 rounded-end-5"><i class="bi bi-send-fill"></i></button>
         </div>
-      </form> 
+      </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <div class="modal fade" id="editMessageModal" tabindex="-1" aria-labelledby="editMessageModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4 p-3 position-relative">
           <button type="button" class="btn border-0 position-absolute top-0 end-0" data-bs-dismiss="modal"><i class="bi bi-x fs-5" style="-webkit-text-stroke: 2px;"></i></button>
           <form id="editMessageForm">
-            <div class="mb-3">
-              <label for="editMessageText" class="form-label fw-medium">Message</label>
-              <textarea class="form-control border-0 bg-body-tertiary shadow" id="editMessageText" rows="10"></textarea>
+            <input type="hidden" id="editMessageId" name="editMessageId">
+            <div class="mb-2">
+              <label for="editMessageText" class="form-label fw-medium">Edit Message:</label>
+              <textarea class="form-control border-0 bg-body-tertiary shadow" id="editMessageText" name="editMessageText" rows="10" required></textarea>
             </div>
-            <input type="hidden" id="editMessageId">
+            <button type="submit" class="btn btn-primary w-100 fw-medium">Save changes</button>
           </form>
-          <button type="button" class="btn btn-primary w-100 fw-medium" onclick="saveEditedMessage()">Save changes</button>
         </div>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+      // Function to open edit modal with message content
       function openEditModal(messageId) {
-        // Fetch the existing message text
-        fetch(`send_fetch.php?messageId=${messageId}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              const messageText = data.messageText;
-      
-              // Fill the modal with the existing message text
-              document.getElementById('editMessageText').value = messageText;
-              document.getElementById('editMessageId').value = messageId;
-      
-              // Show the modal
-              new bootstrap.Modal(document.getElementById('editMessageModal')).show();
+        // Fetch message content via AJAX
+        $.ajax({
+          url: 'message_group_fetch.php',
+          method: 'GET',
+          data: { messageId: messageId },
+          dataType: 'json',
+          success: function(response) {
+            if (response.success) {
+              $('#editMessageId').val(messageId);
+              $('#editMessageText').val(response.messageText);
+              $('#editMessageModal').modal('show');
             } else {
-              alert('Error fetching the message text.');
+              alert('Failed to fetch message.');
             }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-      }
-      
-      function saveEditedMessage() {
-        const messageId = document.getElementById('editMessageId').value;
-        const newMessageText = document.getElementById('editMessageText').value;
-      
-        fetch('edit_message.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: `editMessageId=${messageId}&editMessageText=${encodeURIComponent(newMessageText)}`
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Update the message text on the page without moving it
-            const messageTextContainer = document.getElementById(`messageText_${messageId}`);
-            const paragraphs = newMessageText.split('\n').map(paragraph => `<p class="text-break mb-2">${paragraph}</p>`).join('');
-            messageTextContainer.innerHTML = paragraphs + messageTextContainer.querySelector('.message-date').outerHTML;
-      
-            // Hide the modal
-            bootstrap.Modal.getInstance(document.getElementById('editMessageModal')).hide();
-          } else {
-            alert('Error saving the edited message.');
+          error: function() {
+            alert('Error fetching message.');
           }
-        })
-        .catch(error => {
-          console.error('Error:', error);
         });
       }
-
+      
+      // Handle edit message submission
+      $('#editMessageForm').submit(function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+          url: 'message_group_edit.php',
+          method: 'POST',
+          data: formData,
+          dataType: 'json',
+          success: function(response) {
+            if (response.success) {
+              $('#editMessageModal').modal('hide');
+              loadMessages(); // Reload messages after editing
+            } else {
+              alert('Failed to edit message.');
+            }
+          },
+          error: function() {
+            alert('Error editing message.');
+          }
+        });
+      });
+      
       // Function to load messages initially and periodically
       function loadMessages() {
-        $.get('send_load.php?userid=<?php echo $user_id; ?>', function(data) {
+        $.get('message_group_load.php', function(data) {
           $('#messages').html(data);
-          // Scroll to bottom of the chat container-fluid
+          // Scroll to bottom of the chat container
           $('#messages').scrollTop($('#messages')[0].scrollHeight);
         });
       }
-
+      
+      // Submit form using AJAX on form submission
+      $('#messageForm').submit(function(event) {
+        event.preventDefault(); // Prevent default form submission
+        sendMessage(); // Call sendMessage function
+      });
+      
       // Function to send message using AJAX
       function sendMessage() {
         var formData = $('#messageForm').serialize();
-        $.post('send_message.php', formData, function(response) {
+        $.post('message_group_send.php', formData, function(response) {
           if (response.success) {
             $('#message').val(''); // Clear the message input
-            loadMessages(); // Reload messages
+            loadMessages(); // Reload messages after sending
           } else {
-            alert(response.message || 'Failed to send message.');
+            alert('Failed to send message.');
           }
         }, 'json');
       }
-
-      function deleteMessage(id) {
+      
+      // Function to delete message using AJAX
+      function deleteMessage(messageId) {
         if (confirm('Are you sure you want to delete this message?')) {
-          $.post('delete_message.php', {id: id}, function(data) {
-            loadMessages();
-          });
+          $.post('message_group_delete.php', { messageId: messageId }, function(response) {
+            if (response.success) {
+              loadMessages(); // Reload messages after deletion
+            } else {
+              alert('Failed to delete message.');
+            }
+          }, 'json');
         }
       }
-
+      
       // Load messages initially and set interval to refresh messages
       $(document).ready(function() {
         loadMessages();
         setInterval(loadMessages, 5000); // Refresh messages every 5 seconds
-
-        // Submit form using AJAX on form submission
-        $('#messageForm').submit(function(event) {
-          event.preventDefault(); // Prevent default form submission
-          sendMessage(); // Call sendMessage function
-        });
       });
-
+    
       // Function to scroll to the bottom of the page
       function scrollToBottom() {
         window.scrollTo({
@@ -221,11 +210,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           behavior: 'auto'  // Instant scroll
         });
       }
-
+    
       // Toggle function for auto-scroll
       function toggleAutoScroll() {
         autoScrollEnabled = !autoScrollEnabled;
-
+    
         // Update button text based on autoScrollEnabled
         const toggleButton = document.getElementById('toggleButton');
         if (autoScrollEnabled) {
@@ -234,14 +223,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
           toggleButton.textContent = 'Auto-Scroll: OFF';
         }
-
+    
         // Store autoScrollEnabled state in localStorage
         localStorage.setItem('autoScrollEnabled', autoScrollEnabled);
       }
-
+    
       // Initialize autoScrollEnabled from localStorage if available
       let autoScrollEnabled = localStorage.getItem('autoScrollEnabled') === 'true';
-
+    
       // Initially set button text and scroll based on autoScrollEnabled
       const toggleButton = document.getElementById('toggleButton');
       if (autoScrollEnabled) {
@@ -250,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       } else {
         toggleButton.textContent = 'Auto-Scroll: OFF';
       }
-
+    
       // Check and scroll to bottom periodically
       setInterval(function() {
         if (autoScrollEnabled) {

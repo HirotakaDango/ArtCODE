@@ -55,13 +55,13 @@ require_once('../auth.php');
     <script>
       document.getElementById('leftFrame').addEventListener('load', function() {
         this.contentWindow.document.body.addEventListener('click', function(e) {
-          if (e.target.closest('a[href^="send.php"]')) {
-            e.preventDefault();
-            const href = e.target.closest('a').getAttribute('href');
-            document.getElementById('rightFrame').src = href;
-          } else {
-            // Default behavior if no send.php link is clicked
-            document.getElementById('rightFrame').src = 'nothing.php';
+          const link = e.target.closest('a[href]');
+          if (link) {
+            const href = link.getAttribute('href');
+            if (href.includes('send.php') || href.includes('message_group.php')) {
+              e.preventDefault();
+              document.getElementById('rightFrame').src = href;
+            }
           }
         });
       });

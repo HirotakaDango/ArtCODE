@@ -23,7 +23,7 @@ require_once('../auth.php');
               var messageHtml = '<a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="send.php?userid=' + message.id + '"><div class="card p-3 rounded-4 bg-body-tertiary shadow my-2 border-0">';
               messageHtml += '<div class="d-flex align-items-center">';
               messageHtml += '<div class="d-inline-flex align-items-center justify-content-center me-3">';
-              messageHtml += '<img id="previewImage" src="' + (message.pic ? message.pic : "../icon/bg.png") + '" alt="Current Background Picture" style="width: 96px; height: 96px;" class="border border-4 rounded-circle object-fit-cover">';
+              messageHtml += '<img id="previewImage" src="' + (message.pic ? message.pic : "../icon/propic.png") + '" alt="Current Background Picture" style="width: 96px; height: 96px;" class="border border-4 rounded-circle object-fit-cover">';
               messageHtml += '</div>';
               messageHtml += '<div>';
               messageHtml += '<h5 class="fw-bold">' + message.artist + '</h5>';
@@ -36,11 +36,31 @@ require_once('../auth.php');
               $('#latest-messages').append(messageHtml);
             });
           });
+  
+          // Load the latest group message
+          $.getJSON('message_group_new.php', function(latestGroupMessage) {
+            if (latestGroupMessage) {
+              var groupMessageHtml = '<a class="text-decoration-none text-light" href="message_group.php"><div class="card p-3 rounded-4 bg-body-tertiary shadow my-2 border-0">';
+              groupMessageHtml += '<div class="d-flex align-items-center">';
+              groupMessageHtml += '<div class="d-inline-flex align-items-center justify-content-center me-3">';
+              groupMessageHtml += '<img id="previewImage" src="' + (latestGroupMessage.pic ? latestGroupMessage.pic : "../icon/propic.png") + '" alt="Current Background Picture" style="width: 96px; height: 96px;" class="border border-4 rounded-circle object-fit-cover">';
+              groupMessageHtml += '</div>';
+              groupMessageHtml += '<div>';
+              groupMessageHtml += '<h5 class="fw-bold">Group Chat</h5>';
+              let limitedMessage1 = latestGroupMessage.group_message.length > 30 ? latestGroupMessage.group_message.substring(0, 30) + '...' : latestGroupMessage.group_message;
+              groupMessageHtml += '<p class="mb-2"><strong>' + latestGroupMessage.artist + ':</strong> ' + limitedMessage1 + '</p>';
+              groupMessageHtml += '<h6 class="text-muted small"><small>' + latestGroupMessage.date + '</small></h6>';
+              groupMessageHtml += '</div>';
+              groupMessageHtml += '</div>';
+              groupMessageHtml += '</div></a>';
+              $('#latest-group-message').html(groupMessageHtml);
+            }
+          });
         }
-    
+  
         // Load latest messages initially
         loadLatestMessages();
-    
+  
         // Periodically refresh latest messages every 10 seconds
         setInterval(loadLatestMessages, 10000); // Adjust interval as needed
       });
@@ -53,9 +73,12 @@ require_once('../auth.php');
   <body>
     <?php include('../header.php'); ?>
     <div class="container mb-5">
-      <div class="btn-group w-100 mt-2 mb-3 gap-2">
-        <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold opacity-75 shadow text-nowrap" href="/messages/">Current Contacts</a>
-        <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold text-nowrap" href="/messages/search.php">Search Users</a>
+      <div class="btn-group w-100 my-2 gap-3">
+        <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold opacity-75 shadow text-nowrap" href="desktop.php">Current Contacts</a>
+        <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold text-nowrap" href="search.php">Search Users</a>
+      </div>
+      <div id="latest-group-message">
+        <!-- Latest group message will be dynamically loaded here -->
       </div>
       <div id="latest-messages">
         <!-- Latest messages will be dynamically loaded here -->

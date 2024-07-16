@@ -91,9 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
       </div>
     </div>
-    <div class="fixed-bottom container-fluid py-3">
+    <div class="fixed-bottom container-fluid pt-3 pb-2">
       <form id="messageForm">
-        <div class="input-group w-100 rounded-0 shadow-lg rounded-4">
+        <div class="input-group w-100 rounded-0 shadow-lg rounded-4 pb-1">
           <input type="hidden" id="userid" name="userid" value="<?php echo $user_id; ?>">
           <textarea id="message" name="message" class="form-control bg-body-tertiary border-0 rounded-start-5 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 40px; max-height: 150px;" placeholder="Type a message..." aria-label="Type a message..." aria-describedby="basic-addon2" 
             onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
@@ -102,13 +102,81 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
       </form> 
     </div>
+    <div class="modal fade" id="editMessageModal" tabindex="-1" aria-labelledby="editMessageModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4 p-3 position-relative">
+          <button type="button" class="btn border-0 position-absolute top-0 end-0" data-bs-dismiss="modal"><i class="bi bi-x fs-5" style="-webkit-text-stroke: 2px;"></i></button>
+          <form id="editMessageForm">
+            <div class="mb-3">
+              <label for="editMessageText" class="form-label fw-medium">Message</label>
+              <textarea class="form-control border-0 bg-body-tertiary shadow" id="editMessageText" rows="10"></textarea>
+            </div>
+            <input type="hidden" id="editMessageId">
+          </form>
+          <button type="button" class="btn btn-primary w-100 fw-medium" onclick="saveEditedMessage()">Save changes</button>
+        </div>
+      </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+      function openEditModal(messageId) {
+        // Fetch the existing message text
+        fetch(`send_fetch.php?messageId=${messageId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const messageText = data.messageText;
+      
+              // Fill the modal with the existing message text
+              document.getElementById('editMessageText').value = messageText;
+              document.getElementById('editMessageId').value = messageId;
+      
+              // Show the modal
+              new bootstrap.Modal(document.getElementById('editMessageModal')).show();
+            } else {
+              alert('Error fetching the message text.');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+      
+      function saveEditedMessage() {
+        const messageId = document.getElementById('editMessageId').value;
+        const newMessageText = document.getElementById('editMessageText').value;
+      
+        fetch('edit_message.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `editMessageId=${messageId}&editMessageText=${encodeURIComponent(newMessageText)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Update the message text on the page without moving it
+            const messageTextContainer = document.getElementById(`messageText_${messageId}`);
+            const paragraphs = newMessageText.split('\n').map(paragraph => `<p class="text-break mb-2">${paragraph}</p>`).join('');
+            messageTextContainer.innerHTML = paragraphs + messageTextContainer.querySelector('.message-date').outerHTML;
+      
+            // Hide the modal
+            bootstrap.Modal.getInstance(document.getElementById('editMessageModal')).hide();
+          } else {
+            alert('Error saving the edited message.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      }
+
       // Function to load messages initially and periodically
       function loadMessages() {
         $.get('send_load.php?userid=<?php echo $user_id; ?>', function(data) {
           $('#messages').html(data);
-          // Scroll to bottom of the chat container
+          // Scroll to bottom of the chat container-fluid
           $('#messages').scrollTop($('#messages')[0].scrollHeight);
         });
       }
@@ -146,23 +214,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
       });
 
-      // Function to check if user has scrolled to the top of the page
-      function isScrolledToTop() {
-        return window.scrollY === 0;
-      }
-
       // Function to scroll to the bottom of the page
       function scrollToBottom() {
         window.scrollTo({
           top: document.body.scrollHeight,
-          behavior: 'smooth'  // Optional: Smooth scrolling
+          behavior: 'auto'  // Instant scroll
         });
       }
 
       // Toggle function for auto-scroll
       function toggleAutoScroll() {
         autoScrollEnabled = !autoScrollEnabled;
-  
+
         // Update button text based on autoScrollEnabled
         const toggleButton = document.getElementById('toggleButton');
         if (autoScrollEnabled) {
@@ -171,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
           toggleButton.textContent = 'Auto-Scroll: OFF';
         }
-  
+
         // Store autoScrollEnabled state in localStorage
         localStorage.setItem('autoScrollEnabled', autoScrollEnabled);
       }
@@ -190,7 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       // Check and scroll to bottom periodically
       setInterval(function() {
-        if (autoScrollEnabled && isScrolledToTop()) {
+        if (autoScrollEnabled) {
           scrollToBottom();
         }
       }, 1000);  // Adjust the interval as needed

@@ -24,11 +24,11 @@ ob_start();
     <div class="card p-3 rounded-4 bg-body-tertiary shadow my-2 border-0">
       <div class="d-flex align-items-center">
         <div class="d-inline-flex align-items-center justify-content-center me-3">
-          <img id="previewImage" src="<?php echo ($row['pic'] ? $row['pic'] : "../icon/bg.png"); ?>" alt="Profile Picture" style="width: 96px; height: 96px;" class="border border-4 rounded-circle object-fit-cover">
+          <img id="previewImage" src="<?php echo ($row['pic'] ? $row['pic'] : "../icon/propic.png"); ?>" alt="Profile Picture" style="width: 96px; height: 96px;" class="border border-4 rounded-circle object-fit-cover">
         </div>
         <div>
           <h5 class="fw-bold"><?php echo $row['artist']; ?></h5>
-          <p class="mb-2"><strong>ID:</strong> <?php echo $row['id']; ?></p>
+          <p class="mb-2"><strong>User ID:</strong> <?php echo $row['id']; ?></p>
         </div>
       </div>
     </div>

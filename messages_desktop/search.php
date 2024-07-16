@@ -41,7 +41,7 @@ $db = new SQLite3('../database.sqlite');
   </head>
   <body>
     <div class="container mb-5">
-      <div class="btn-group w-100 mb-2 gap-2">
+      <div class="btn-group w-100 mt-2 mb-3 gap-3">
         <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold text-nowrap" href="desktop.php">Current Contacts</a>
         <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold opacity-75 shadow text-nowrap" href="search.php">Search Users</a>
       </div>

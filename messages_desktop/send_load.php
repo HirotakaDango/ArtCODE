@@ -67,6 +67,9 @@ while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
                 <li>
                   <a class="dropdown-item" href="#" onclick="deleteMessage(<?php echo $messageId; ?>)">Delete</a>
                 </li>
+                <li>
+                  <a class="dropdown-item" href="#" onclick="openEditModal(<?php echo $messageId; ?>)">Edit</a>
+                </li>
               </ul>
             </div>
           <?php endif; ?>
@@ -85,7 +88,7 @@ while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
         }
         ?>
       </h6>
-      <div>
+      <div id="messageText_<?php echo $messageId; ?>">
         <?php
           if (!function_exists('getYouTubeVideoId')) {
             function getYouTubeVideoId($urlCommentThread)
@@ -124,19 +127,19 @@ while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
                     return '<a href="' . $urlThread . '">' . $urlThread . '</a>';
                   }
                 } else {
-                  return '<a href="' . $urlThread . '">' . $urlThread . '</a>';
+                  return '<a href="' . $urlThread . '" target="_blank">' . $urlThread . '</a>';
                 }
               }, $textWithoutTagsThread);
     
-              echo "<p style=\"white-space: break-spaces; overflow: hidden;\">$formattedTextThread</p>";
+              echo '<p class="text-break mb-2">' . $formattedTextThread . '</p>';
             }
-          } else {
-            echo "Sorry, no text...";
           }
         ?>
+        <div class="message-date">
+          <small><?php echo $messageDate; ?></small>
+        </div>
       </div>
-      <h6 class="text-muted text-end small"><small><?php echo $messageDate; ?></small></h6>
-  </div>
+    </div>
   <?php
 }
 ?>
