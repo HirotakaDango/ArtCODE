@@ -125,4 +125,4 @@ Join us in painting the future of digital art sharing. With ArtCODE, every pixel
 
 
 
-Note: The beginning of this project is from my school assignment, and I want to develop even further to make it really better. Development progress still far from complete. I will update as possible for this zero cost website.
+Note: My name is Ray, the beginning of this project is from my school assignment, and I want to develop even further to make it really better. Development progress still far from complete. I will update as possible for this zero cost website.
