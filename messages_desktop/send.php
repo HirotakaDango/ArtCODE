@@ -56,16 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php include('../bootstrapcss.php'); ?>
     <style>
       .message {
-        margin-bottom: 15px;
         position: relative;
-        max-width: 60%;
+        max-width: 55%;
         overflow: hidden;
       }
     </style>
   </head>
   <body>
-    <div class="fixed-top container-fluid">
-      <div class="container-fluid d-flex rounded-4 bg-dark-subtle py-2 justify-content-between">
+    <div class="fixed-top container-fluid p-0">
+      <div class="container-fluid d-flex rounded-4 rounded-top-0 bg-dark-subtle p-2 px-3 justify-content-between">
         <div class="d-flex align-items-center">
           <span class="fs-5 d-flex align-items-center gap-2">
             <img src="/<?php echo !empty($chat_user['pic']) ? $chat_user['pic'] : 'icon/profile.svg'; ?>" class="rounded-circle" style="width: 32px; height: 32px;">
@@ -87,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     <div class="container-fluid">
       <div class="chat-container-fluid py-5">
-        <div id="messages" class="py-4">
+        <div id="messages" class="pt-1 pb-2">
         </div>
       </div>
     </div>
@@ -97,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <input type="hidden" id="userid" name="userid" value="<?php echo $user_id; ?>">
           <textarea id="message" name="message" class="form-control bg-body-tertiary border-0 rounded-start-5 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 40px; max-height: 150px;" placeholder="Type a message..." aria-label="Type a message..." aria-describedby="basic-addon2" 
             onkeydown="if(event.keyCode == 13) { this.style.height = (parseInt(this.style.height) + 10) + 'px'; return true; }"
-            onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }"></textarea>
+            onkeyup="this.style.height = '40px'; var newHeight = (this.scrollHeight + 10 * (this.value.split(/\r?\n/).length - 1)) + 'px'; if (parseInt(newHeight) > 150) { this.style.height = '150px'; } else { this.style.height = newHeight; }" required></textarea>
           <button type="submit" class="btn bg-body-tertiary border-0 rounded-end-5"><i class="bi bi-send-fill"></i></button>
         </div>
       </form> 

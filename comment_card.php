@@ -51,7 +51,7 @@
                     $formattedText = preg_replace_callback($pattern, function ($matches) {
                       $urlComment = htmlspecialchars($matches[0]);
 
-                      if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlComment)) {
+                      if (preg_match('/\.(png|jpg|jpeg|webp|gif)$/i', $urlComment)) {
                         return '<a href="' . $urlComment . '" target="_blank"><img class="w-100 h-100 rounded-4 lazy-load" loading="lazy" data-src="' . $urlComment . '" alt="Image"></a>';
                       } elseif (strpos($urlComment, 'youtube.com') !== false) {
                         $videoId = getYouTubeVideoId($urlComment);

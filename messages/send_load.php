@@ -55,7 +55,7 @@ while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
   $sender_id = $sender['id'];
   $sender_artist = $sender['artist'];
   ?>
-    <div id="message_<?php echo $messageId; ?>" class="message shadow rounded-4 p-3 <?php echo ($is_sender ? "bg-success-subtle text-align-right ms-auto" : "bg-secondary-subtle text-align-left me-auto"); ?>">
+    <div id="message_<?php echo $messageId; ?>" class="message my-2 p-3 <?php echo ($is_sender ? "bg-light-subtle text-align-right ms-auto rounded-4 rounded-top-0 rounded-start-4 rounded-bottom-4" : "bg-secondary-subtle text-align-left me-auto rounded-4 rounded-top-0 rounded-end-4 rounded-bottom-4"); ?>">
       <div class="position-relative">
         <div class="position-absolute top-0 end-0 translate-middle-y mt-2">
           <?php if ($is_sender): ?>
@@ -115,7 +115,7 @@ while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
                 $urlThread = htmlspecialchars($matchesThread[0]);
     
                 // Check if the URL ends with .png, .jpg, .jpeg, or .webp
-                if (preg_match('/\.(png|jpg|jpeg|webp)$/i', $urlThread)) {
+                if (preg_match('/\.(png|jpg|jpeg|webp|gif)$/i', $urlThread)) {
                   return '<a href="' . $urlThread . '" target="_blank"><img class="img-fluid rounded-4" loading="lazy" src="' . $urlThread . '" alt="Image"></a>';
                 } elseif (strpos($urlThread, 'youtube.com') !== false) {
                   // If the URL is from YouTube, embed it as an iframe with a very low-resolution thumbnail
@@ -136,7 +136,7 @@ while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
           }
         ?>
         <div class="message-date">
-          <small><?php echo $messageDate; ?></small>
+          <h6 class="<?php echo ($is_sender ? "text-end" : "text-start"); ?> mt-4 small"><small><?php echo $messageDate; ?></small></h6>
         </div>
       </div>
     </div>

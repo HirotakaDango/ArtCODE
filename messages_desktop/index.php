@@ -37,17 +37,17 @@ require_once('../auth.php');
       iframe {
         width: 100%;
         height: 100%;
-        border: none;
+        border-radius: 1em;
       }
     </style>
   </head>
   <body>
     <?php include('../header.php'); ?>
     <div class="message-container">
-      <div class="left-column">
+      <div class="left-column ps-2 pe-1">
         <iframe src="desktop.php" id="leftFrame"></iframe>
       </div>
-      <div class="right-column">
+      <div class="right-column pe-2 ps-1">
         <iframe src="nothing.php" id="rightFrame" name="chatFrame"></iframe>
       </div>
     </div>

@@ -20,7 +20,7 @@ require_once('../auth.php');
             
             $.each(latestMessages, function(index, message) {
               // Build HTML for each latest message using the provided template design
-              var messageHtml = '<a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="send.php?userid=' + message.id + '"><div class="card p-3 rounded-4 bg-body-tertiary shadow my-2 border-0">';
+              var messageHtml = '<a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="send.php?userid=' + message.id + '"><div class="card p-3 rounded-4 bg-body-tertiary my-2 border-0">';
               messageHtml += '<div class="d-flex align-items-center">';
               messageHtml += '<div class="d-inline-flex align-items-center justify-content-center me-3">';
               messageHtml += '<img id="previewImage" src="' + (message.pic ? message.pic : "../icon/propic.png") + '" alt="Current Background Picture" style="width: 96px; height: 96px;" class="border border-4 rounded-circle object-fit-cover">';
@@ -40,7 +40,7 @@ require_once('../auth.php');
           // Load the latest group message
           $.getJSON('message_group_new.php', function(latestGroupMessage) {
             if (latestGroupMessage) {
-              var groupMessageHtml = '<a class="text-decoration-none text-light" href="message_group.php"><div class="card p-3 rounded-4 bg-body-tertiary shadow my-2 border-0">';
+              var groupMessageHtml = '<a class="text-decoration-none text-light" href="message_group.php"><div class="card p-3 rounded-4 bg-body-tertiary my-2 border-0">';
               groupMessageHtml += '<div class="d-flex align-items-center">';
               groupMessageHtml += '<div class="d-inline-flex align-items-center justify-content-center me-3">';
               groupMessageHtml += '<img id="previewImage" src="' + (latestGroupMessage.pic ? latestGroupMessage.pic : "../icon/propic.png") + '" alt="Current Background Picture" style="width: 96px; height: 96px;" class="border border-4 rounded-circle object-fit-cover">';
@@ -73,9 +73,9 @@ require_once('../auth.php');
   <body>
     <?php include('../header.php'); ?>
     <div class="container mb-5">
-      <div class="btn-group w-100 my-2 gap-3">
-        <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold opacity-75 shadow text-nowrap" href="desktop.php">Current Contacts</a>
-        <a class="btn bg-body-tertiary p-4 rounded-4 shadow w-50 fw-bold text-nowrap" href="search.php">Search Users</a>
+      <div class="btn-group w-100 gap-2">
+        <a class="btn bg-body-tertiary p-3 rounded-4 w-50 fw-bold opacity-75 text-nowrap" href="/messages/">Current Contacts</a>
+        <a class="btn bg-body-tertiary p-3 rounded-4 w-50 fw-bold text-nowrap" href="search.php">Search Users</a>
       </div>
       <div id="latest-group-message">
         <!-- Latest group message will be dynamically loaded here -->
