@@ -1,6 +1,7 @@
 # 🎨 ArtCODE
 
-![ArtCODE Banner]([https://github.com/HirotakaDango/ArtCODE/assets/104591072/fd3c300e-4ca0-4939-900a-f1e6e053bd1e](https://repository-images.githubusercontent.com/802596191/17fabef4-56e8-45a0-9937-7d74c9f2748f))
+
+![ArtCODE Banner](https://github.com/user-attachments/assets/69e3b07d-b529-404b-b387-88f0c50408f1)
 
 ## 🌟 Introduction
 
