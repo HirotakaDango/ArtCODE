@@ -31,17 +31,9 @@
                 </div>
               </li>
               <li class="mb-1">
-                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#images-collapse" aria-expanded="true">
+                <a class="btn btn-toggle d-inline-flex align-items-center rounded border-0" href="/admin/images_section/">
                   Images
-                </button>
-                <div class="collapse show" id="images-collapse">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All</a></li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Search</a></li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tags</a></li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Manage</a></li>
-                  </ul>
-                </div>
+                </a>
               </li>
               <li class="border-top my-3"></li>
               <li class="mb-1">
@@ -50,9 +42,8 @@
                 </button>
                 <div class="collapse" id="account-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a></li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a></li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a></li>
+                    <li><a href="/admin/profile/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a></li>
+                    <li><a href="/admin/settings/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a></li>
                     <li><a href="/admin/logout.php" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign out</a></li>
                   </ul>
                 </div>

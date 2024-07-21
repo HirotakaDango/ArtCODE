@@ -22,20 +22,34 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
 // Get the total number of images
+$totalQuery = $db->prepare("SELECT COUNT(images.id) as total
+    FROM images
+    LEFT JOIN favorites ON images.id = favorites.image_id
+    WHERE favorites.email = :email");
+$totalQuery->bindValue(':email', $email, PDO::PARAM_STR);
+
 try {
-  $total = $db->query("SELECT COUNT(*) FROM images")->fetchColumn();
+  $totalQuery->execute();
+  $total = $totalQuery->fetchColumn();
 } catch (PDOException $e) {
   die("Query failed: " . $e->getMessage());
 }
 
 // Get the images for the current page
-$stmt = $db->prepare("SELECT * FROM images ORDER BY id ASC LIMIT :limit OFFSET :offset");
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$imageQuery = $db->prepare("SELECT images.*
+    FROM images
+    LEFT JOIN favorites ON images.id = favorites.image_id
+    WHERE favorites.email = :email
+    ORDER BY images.id DESC
+    LIMIT :limit OFFSET :offset");
+
+$imageQuery->bindValue(':email', $email, PDO::PARAM_STR);
+$imageQuery->bindValue(':limit', $limit, PDO::PARAM_INT);
+$imageQuery->bindValue(':offset', $offset, PDO::PARAM_INT);
 
 try {
-  $stmt->execute();
-  $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $imageQuery->execute();
+  $images = $imageQuery->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
   die("Query failed: " . $e->getMessage());
 }

@@ -1,24 +1,22 @@
 <?php
-session_start();
-if (!isset($_SESSION['email'])) {
-  header("Location: ../session.php");
-  exit;
-}
+// admin/images_section/edit/delete.php
+require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/auth_admin.php');
+requireAdmin();
 
-// Check if the image ID is provided in the POST request
-if (isset($_POST['id'])) {
-  $id = $_POST['id'];
+// Retrieve the email from the session
+$email = $_SESSION['admin']['email'];
 
-  // Retrieve the email of the logged-in user
-  $email = $_SESSION['email'];
+// Connect to SQLite database
+$db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
 
-  // Connect to SQLite database
-  $db = new SQLite3('../database.sqlite');
+// Start a transaction
+$db->exec('BEGIN');
 
-  // Start a transaction
-  $db->exec('BEGIN');
+try {
+  // Check if the image ID is provided in the POST request
+  if (isset($_POST['id'])) {
+    $id = $_POST['id'];
 
-  try {
     // Get the filename of the image to delete
     $stmt = $db->prepare("SELECT filename FROM images WHERE id = :id");
     $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
@@ -29,8 +27,8 @@ if (isset($_POST['id'])) {
       $filename = $row['filename'];
 
       // Define the path to the images folder and thumbnails folder
-      $imagesFolder = '../images/';
-      $thumbnailsFolder = '../thumbnails/';
+      $imagesFolder = $_SERVER['DOCUMENT_ROOT'] . '/images/';
+      $thumbnailsFolder = $_SERVER['DOCUMENT_ROOT'] . '/thumbnails/';
 
       // Delete records from the reply_comments table based on the comment ID (comment_id)
       $stmt = $db->prepare("
@@ -101,19 +99,17 @@ if (isset($_POST['id'])) {
     } else {
       throw new Exception('Image not found.');
     }
-  } catch (Exception $e) {
-    // Rollback the transaction if an error occurs
-    $db->exec('ROLLBACK');
-    // Log the exception message or handle it as needed
-    error_log($e->getMessage());
+  } else {
+    throw new Exception('No image ID provided.');
   }
-
-  // Redirect to a success page or wherever you'd like
-  header('Location: ../profile.php');
-  exit();
-} else {
-  // Redirect to an error page if image ID is not specified
-  header('Location: ../profile.php');
-  exit();
+} catch (Exception $e) {
+  // Rollback the transaction if an error occurs
+  $db->exec('ROLLBACK');
+  // Log the exception message or handle it as needed
+  error_log($e->getMessage());
 }
+
+// Redirect to a success page or wherever you'd like
+header('Location: /admin/images_section/');
+exit();
 ?>
