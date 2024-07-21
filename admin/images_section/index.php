@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8">
-    <title>Admin News Dashboard</title>
+    <title>Admin Images Management</title>
     <?php include('../../bootstrapcss.php'); ?>
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" type="image/png" href="/icon/favicon.png">

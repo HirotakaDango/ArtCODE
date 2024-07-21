@@ -32,7 +32,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -83,15 +83,61 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         <?php else : ?>
-          <div class="position-relative">
-            <img data-src="../images/<?php echo $child_image['filename']; ?>" class="mb-1 rounded lazy-load" style="height: 100%; width: 100%;" alt="<?php echo $image['title']; ?>">
-            <div class="d-flex position-absolute bottom-0 start-0 fw-bold w-100">
-              <div>
-                <div class="badge ms-2 bg-dark bg-opacity-50 rounded-pill"><small><?php echo getImageSizeInMB($child_image['filename']); ?> MB</small></div>
+          <?php
+          $file_path = "../images/" . $child_image['filename'];
+          $file_info = stat($file_path);
+          $image_info = getimagesize($file_path);
+          $exif_data = exif_read_data($file_path, 'IFD0', true);
+          ?>
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="position-relative">
+                <img data-src="<?php echo $file_path; ?>" class="rounded-4 w-100 lazy-load" alt="<?php echo $image['title']; ?>">
               </div>
-              <button type="button" class="btn link-body-emphasis border-0 fw-bold ms-auto my-auto text-shadow" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $child_image['id']; ?>">
-                <i class="bi bi-trash-fill"></i>
-              </button>
+            </div>
+            <div class="col-md-6">
+              <div class="mt-3">
+                <h5 class="mb-3">Image Metadata</h5>
+              
+                <div class="mb-2 row">
+                  <label class="col-4 col-form-label text-nowrap fw-medium">Filename</label>
+                  <div class="col-8">
+                    <p class="form-control-plaintext fw-bold text-white"><?php echo $child_image['filename']; ?></p>
+                  </div>
+                </div>
+              
+                <div class="mb-2 row">
+                  <label class="col-4 col-form-label text-nowrap fw-medium">File Size</label>
+                  <div class="col-8">
+                    <p class="form-control-plaintext fw-bold text-white"><?php echo number_format($file_info['size'] / (1024 * 1024), 2); ?> MB</p>
+                  </div>
+                </div>
+              
+                <div class="mb-2 row">
+                  <label class="col-4 col-form-label text-nowrap fw-medium">Dimensions</label>
+                  <div class="col-8">
+                    <p class="form-control-plaintext fw-bold text-white"><?php echo $image_info[0] . 'x' . $image_info[1]; ?> pixels</p>
+                  </div>
+                </div>
+              
+                <div class="mb-2 row">
+                  <label class="col-4 col-form-label text-nowrap fw-medium">MIME Type</label>
+                  <div class="col-8">
+                    <p class="form-control-plaintext fw-bold text-white"><?php echo $image_info['mime']; ?></p>
+                  </div>
+                </div>
+    
+                <div class="mb-2 row">
+                  <label class="col-4 col-form-label text-nowrap fw-medium">Creation Date</label>
+                  <div class="col-8">
+                    <p class="form-control-plaintext fw-bold text-white"><?php echo date("l, d F, Y", $file_info['ctime']); ?></p>
+                  </div>
+                </div>
+    
+                <button type="button" class="btn mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $child_image['id']; ?>">
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
           <div class="modal fade" id="deleteImage_<?php echo $child_image['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
