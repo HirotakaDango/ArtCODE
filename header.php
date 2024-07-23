@@ -94,7 +94,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               </div>
               <div class="btn-group mb-2 w-100 container gap-2" role="group" aria-label="Basic example">
                 <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'albums/') !== false) echo 'active'; ?>" href="/album.php">
-                  My ALbums
+                  My Albums
                 </a>
                 <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php echo (basename($_SERVER['PHP_SELF']) == 'myworks.php') ? 'active' : ''; ?>" href="/myworks.php">
                   My Works

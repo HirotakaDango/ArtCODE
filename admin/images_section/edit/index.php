@@ -96,8 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="col overflow-auto vh-100">
           <?php include('../../navbar.php'); ?>
-            <div class="container">
+            <div class="container-fluid">
               <div class="mt-3">
+                <div class="d-flex justify-content-center align-items-center mb-3">
+                  <a class="btn bg-secondary-subtle fw-medium rounded-pill me-auto" href="redirect.php?back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/admin/images_section/'); ?>"><i class="bi bi-arrow-left"></i> back to section</a>
+                  <a class="btn bg-secondary-subtle fw-medium rounded-pill ms-auto" href="all.php?id=<?php echo $image['id']; ?>&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/admin/images_section/'); ?>">view all image child</a>
+                </div>
                 <div class="row">
                   <div class="col-md-4 pe-md-1">
                     <div class="position-relative">
@@ -299,14 +303,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <button type="submit" class="btn btn-light fw-bold w-100 mb-2 rounded">
                           <i class="bi bi-floppy-fill"></i> save
                         </button>
-                      </div>
-                      <div class="btn-group gap-2 w-100">
-                        <a class="btn btn-light fw-bold w-100 mb-2 rounded" href="upload.php?id=<?php echo $image['id']; ?>">
-                          <i class="bi bi-cloud-arrow-up-fill"></i> upload new images child
-                        </a>
-                        <a class="btn btn-light fw-bold w-100 mb-2 rounded" href="all.php?id=<?php echo $image['id']; ?>">
-                          <i class="bi bi-images"></i> view all images child
-                        </a>
                       </div>
                       <div class="mt-5"></div>
                     </form> 

@@ -39,10 +39,10 @@ if (!empty($conditions)) {
 
 // Check if q (search term) is empty
 if (empty($searchTerm)) {
-  // If q is empty, order by view_count DESC
+  // If q is empty, order by title DESC
   $query .= " ORDER BY title ASC";
 } else {
-  // Otherwise, order by id DESC
+  // Otherwise, order by title DESC
   $query .= " ORDER BY title ASC";
 }
 
@@ -118,7 +118,7 @@ $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
         </form>
       </div>
       <div class="d-flex mb-1">
-        <p class="fw-bold text-secondary mb-1 mt-1">search for "<?php echo $searchTerm; ?>"</p>
+        <p class="fw-bold mb-1 mt-1">search for "<?php echo $searchTerm; ?>"</p>
         <button type="button" class="btn btn-sm btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#infoSearchA">
           <i class="bi bi-info-circle-fill"></i> 
         </button>

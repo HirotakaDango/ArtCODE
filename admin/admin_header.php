@@ -31,9 +31,16 @@
                 </div>
               </li>
               <li class="mb-1">
-                <a class="btn btn-toggle d-inline-flex align-items-center rounded border-0" href="/admin/images_section/">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#images-collapse" aria-expanded="true">
                   Images
-                </a>
+                </button>
+                <div class="collapse show" id="images-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="/admin/images_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All</a></li>
+                    <li><a href="/admin/images_section/search/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Search</a></li>
+                    <li><a href="/admin/images_section/keyword/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Keyword</a></li>
+                  </ul>
+                </div>
               </li>
               <li class="border-top my-3"></li>
               <li class="mb-1">

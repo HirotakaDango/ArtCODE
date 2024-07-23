@@ -1,6 +1,6 @@
     <div class="w-100 px-2 mb-2">
       <div class="<?php include($_SERVER['DOCUMENT_ROOT'] . '/rows_columns/row-cols.php'); echo $rows_columns; ?>">
-        <?php foreach ($images as $image): ?>
+        <?php foreach ($resultArray  as $image): ?>
           <div class="col">
             <div class="position-relative">
               <a class="rounded ratio ratio-1x1" href="/image.php?artworkid=<?php echo $image['id']; ?>">

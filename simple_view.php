@@ -1127,18 +1127,11 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                   </a>
                 <?php endif; ?>
               </div>
-              <div class="btn-group w-100">
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 mt-2 fw-bold rounded-end-0" style="word-wrap: break-word;" data-bs-toggle="modal" href="#imgcarousel" role="button" aria-expanded="false" aria-controls="collapseExample">
-                  <small>
-                    <i class="bi bi-images"></i> view all <?php echo $user['artist']; ?>'s images
-                  </small>
-                </a>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 mt-2 fw-bold rounded-start-0" style="max-width: 50px;" href="artist.php?by=newest&id=<?= $user['id'] ?>">
-                  <small>
-                    <i class="bi bi-box-arrow-up-right text-stroke"></i>
-                  </small>
-                </a>
-              </div>
+              <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 mt-2 fw-bold w-100" style="word-wrap: break-word;" href="/artist.php?id=<?php echo $user['id']; ?>">
+                <small>
+                  view all <?php echo $user['artist']; ?>'s images
+                </small>
+              </a>
               <?php include 'imguser.php'; ?>
               <div class="card shadow border-0 rounded-4 bg-body-tertiary mt-3">
                 <div class="card-body">

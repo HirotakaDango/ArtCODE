@@ -3,10 +3,23 @@
 session_start(); // Ensure session is started
 require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/auth_admin.php');
 
+// Check if user is logged in
 if (isLoggedIn()) {
   header('Location: /admin/analytic/');
   exit();
 }
+
+// Create the database connection
+$db = new PDO('sqlite:' . $_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
+
+// Create the `admin` table if it does not exist
+$db->exec("
+  CREATE TABLE IF NOT EXISTS admin (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    status TEXT NOT NULL
+  );
+");
 ?>
 
 <!DOCTYPE html>
