@@ -115,7 +115,7 @@ while ($message = $result->fetchArray(SQLITE3_ASSOC)) {
                 $urlThread = htmlspecialchars($matchesThread[0]);
     
                 // Check if the URL ends with .png, .jpg, .jpeg, or .webp
-                if (preg_match('/\.(png|jpg|jpeg|webp|gif)$/i', $urlThread)) {
+                if (preg_match('/\.(png|jpg|jpeg|webp|gif|svg|heic|tiff|bmp|raw|heif|icns|webp2)$/i', $urlThread)) {
                   return '<a href="' . $urlThread . '" target="_blank"><img class="img-fluid rounded-4" loading="lazy" src="' . $urlThread . '" alt="Image"></a>';
                 } elseif (strpos($urlThread, 'youtube.com') !== false) {
                   // If the URL is from YouTube, embed it as an iframe with a very low-resolution thumbnail
