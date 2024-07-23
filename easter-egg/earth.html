@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../icon/favicon.png">
+    <title>You Found Earth!</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      let scene, camera, renderer, earthMesh, cloudsMesh, starsMesh;
+      let sunLight, ambientLight;
+      let isDragging = false;
+      let previousMousePosition = {
+        x: 0,
+        y: 0
+      };
+      const rotationSpeed = 0.005;
+      let zoomLevel = 3;
+      const minZoom = 1.5;
+      const maxZoom = 10;
+      let targetRotation = {
+        x: 0,
+        y: 0
+      };
+      let currentRotation = {
+        x: 0,
+        y: 0
+      };
+
+      function init() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = zoomLevel;
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const textureLoader = new THREE.TextureLoader();
+        
+        // Earth
+        const earthGeometry = new THREE.SphereGeometry(1, 64, 64);
+        const earthMaterial = new THREE.MeshPhongMaterial({
+          map: textureLoader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg'),
+          bumpMap: textureLoader.load('https://threejs.org/examples/textures/planets/earth_normal_2048.jpg'),
+          bumpScale: 0.05,
+          specularMap: textureLoader.load('https://threejs.org/examples/textures/planets/earth_specular_2048.jpg'),
+          specular: new THREE.Color('grey')
+        });
+        earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
+        scene.add(earthMesh);
+
+        // Clouds
+        const cloudGeometry = new THREE.SphereGeometry(1.01, 64, 64);
+        const cloudMaterial = new THREE.MeshPhongMaterial({
+          map: textureLoader.load('https://threejs.org/examples/textures/planets/earth_clouds_1024.png'),
+          transparent: true,
+          opacity: 0.8
+        });
+        cloudsMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
+        scene.add(cloudsMesh);
+
+        // Stars
+        const starsGeometry = new THREE.SphereGeometry(90, 64, 64);
+        const starsMaterial = new THREE.MeshBasicMaterial({
+          map: textureLoader.load('https://threejs.org/examples/textures/planets/starry_background.jpg'),
+          side: THREE.BackSide
+        });
+        starsMesh = new THREE.Mesh(starsGeometry, starsMaterial);
+        scene.add(starsMesh);
+
+        // Galaxy particles
+        addStars();
+
+        // Lights
+        sunLight = new THREE.DirectionalLight(0xffffff, 1);
+        sunLight.position.set(5, 3, 5);
+        scene.add(sunLight);
+        ambientLight = new THREE.AmbientLight(0x333333);
+        scene.add(ambientLight);
+
+        // Event listeners
+        renderer.domElement.addEventListener('mousedown', onMouseDown, false);
+        renderer.domElement.addEventListener('mousemove', onMouseMove, false);
+        renderer.domElement.addEventListener('mouseup', onMouseUp, false);
+        renderer.domElement.addEventListener('wheel', onMouseWheel, false);
+        renderer.domElement.addEventListener('touchstart', onTouchStart, false);
+        renderer.domElement.addEventListener('touchmove', onTouchMove, false);
+        renderer.domElement.addEventListener('touchend', onTouchEnd, false);
+
+        animate();
+      }
+
+      function addStars() {
+        const starGeometry = new THREE.BufferGeometry();
+        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff });
+
+        const starVertices = [];
+        for (let i = 0; i < 10000; i++) {
+          const x = THREE.MathUtils.randFloatSpread(2000);
+          const y = THREE.MathUtils.randFloatSpread(2000);
+          const z = THREE.MathUtils.randFloatSpread(2000);
+          starVertices.push(x, y, z);
+        }
+
+        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+        const starField = new THREE.Points(starGeometry, starMaterial);
+        scene.add(starField);
+      }
+
+      function onMouseDown(event) {
+        isDragging = true;
+        previousMousePosition = {
+          x: event.clientX,
+          y: event.clientY
+        };
+      }
+
+      function onMouseMove(event) {
+        if (!isDragging) return;
+        const deltaMove = {
+          x: event.clientX - previousMousePosition.x,
+          y: event.clientY - previousMousePosition.y
+        };
+        targetRotation.y += deltaMove.x * 0.01;
+        targetRotation.x += deltaMove.y * 0.01;
+        targetRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.x));
+        previousMousePosition = {
+          x: event.clientX,
+          y: event.clientY
+        };
+      }
+
+      function onMouseUp(event) {
+        isDragging = false;
+      }
+
+      function onMouseWheel(event) {
+        const delta = -Math.sign(event.deltaY) * 0.1;
+        zoomLevel = Math.max(minZoom, Math.min(maxZoom, zoomLevel + delta));
+      }
+
+      function onTouchStart(event) {
+        if (event.touches.length === 1) {
+          isDragging = true;
+          previousMousePosition = {
+            x: event.touches[0].clientX,
+            y: event.touches[0].clientY
+          };
+        }
+      }
+
+      function onTouchMove(event) {
+        if (event.touches.length === 1) {
+          const touch = event.touches[0];
+          onMouseMove({
+            clientX: touch.clientX,
+            clientY: touch.clientY
+          });
+        }
+      }
+
+      function onTouchEnd(event) {
+        isDragging = false;
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        // Smooth rotation
+        currentRotation.x += (targetRotation.x - currentRotation.x) * 0.1;
+        currentRotation.y += (targetRotation.y - currentRotation.y) * 0.1;
+        earthMesh.rotation.x = currentRotation.x;
+        earthMesh.rotation.y = currentRotation.y;
+        cloudsMesh.rotation.x = currentRotation.x;
+        cloudsMesh.rotation.y = currentRotation.y;
+
+        // Auto-rotation (left to right)
+        if (!isDragging) {
+          targetRotation.y += 0.001;
+        }
+
+        // Smooth zooming
+        camera.position.z += (zoomLevel - camera.position.z) * 0.1;
+
+        renderer.render(scene, camera);
+      }
+
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      window.addEventListener('resize', onWindowResize, false);
+      init();
+    </script>
+  </body>
+</html>
