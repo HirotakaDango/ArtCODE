@@ -4,6 +4,10 @@ php_value date.timezone America/New_York
 
 RewriteEngine On
 
+# Redirect access to database.sqlite to denied.php
+RewriteCond %{REQUEST_URI} ^/database\.sqlite$
+RewriteRule ^ /denied.php [L]
+
 # Remove .php extension for files in the session directory
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
