@@ -1,68 +1,78 @@
 <?php
-require_once('../auth.php');
+// admin/images_section/index.php
+require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/auth_admin.php');
+requireAdmin();
+
+// Retrieve the email from the session
+$email = $_SESSION['admin']['email'];
 
 // Connect to the SQLite database
-$db = new SQLite3('../database.sqlite');
-
-// Get user's email from session or wherever it's stored
-$email = $_SESSION['email'];
+$db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All Groups</title>
+    <title>All Tags</title>
     <link rel="icon" type="image/png" href="/icon/favicon.png">
-    <?php include('../bootstrapcss.php'); ?>
+    <?php include('../../../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <?php include('../header.php'); ?>
-    <?php include('../contents/columns_header.php'); ?>
-    <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-images"></i> sort by
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="?by=ascending&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'ascending') echo 'active'; ?>">ascending</a></li>
-        <li><a href="?by=descending&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'descending') echo 'active'; ?>">descending</a></li>
-        <li><a href="?by=popular&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
-        <li><a href="?by=view&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
-        <li><a href="?by=least&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
-        <li><a href="?by=liked&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
-      </ul> 
-    </div> 
-    <?php 
-    if(isset($_GET['by'])){
-      $sort = $_GET['by'];
-    
-      switch ($sort) {
-        case 'ascending':
-          include "index_asc.php";
-          break;
-        case 'descending':
-          include "index_desc.php";
-          break;
-        case 'popular':
-          include "index_pop.php";
-          break;
-        case 'view':
-          include "index_view.php";
-          break;
-        case 'least':
-          include "index_least.php";
-          break;
-        case 'liked':
-          include "index_like.php";
-          break;
-      }
-    }
-    else {
-      include "index_asc.php"; // Include ascending by default
-    }
-    
-    ?>
+    <div class="container-fluid px-0">
+      <div class="row g-0">
+        <div class="col-auto">
+          <?php include('../../../admin_header.php'); ?>
+        </div>
+        <div class="col overflow-auto vh-100">
+          <?php include('../../../navbar.php'); ?>
+            <div class="dropdown mt-2">
+              <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-images"></i> sort by
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="?by=ascending&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'ascending') echo 'active'; ?>">ascending</a></li>
+                <li><a href="?by=descending&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'descending') echo 'active'; ?>">descending</a></li>
+                <li><a href="?by=popular&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+                <li><a href="?by=view&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+                <li><a href="?by=least&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
+                <li><a href="?by=liked&category=<?php echo isset($_GET['category']) ? $_GET['category'] : 'A'; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
+              </ul> 
+            </div> 
+            <?php 
+            if(isset($_GET['by'])){
+              $sort = $_GET['by'];
+            
+              switch ($sort) {
+                case 'ascending':
+                  include "index_asc.php";
+                  break;
+                case 'descending':
+                  include "index_desc.php";
+                  break;
+                case 'popular':
+                  include "index_pop.php";
+                  break;
+                case 'view':
+                  include "index_view.php";
+                  break;
+                case 'least':
+                  include "index_least.php";
+                  break;
+                case 'liked':
+                  include "index_like.php";
+                  break;
+              }
+            }
+            else {
+              include "index_asc.php"; // Include ascending by default
+            }
+            
+            ?>
+          </div>
+        </div>
+      </div>
+    </div>
     <button class="z-3 btn btn-primary btn-md rounded-pill fw-bold position-fixed bottom-0 end-0 m-2" id="scrollToTopBtn" onclick="scrollToTop()"><i class="bi bi-chevron-up" style="-webkit-text-stroke: 3px;"></i></button>
     <script>
       // Show or hide the button based on scroll position
@@ -190,6 +200,6 @@ $email = $_SESSION['email'];
       // Initial loading
       loadMoreImages();
     </script>
-    <?php include('../bootstrapjs.php'); ?>
+    <?php include('../../../../bootstrapjs.php'); ?>
   </body>
 </html>

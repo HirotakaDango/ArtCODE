@@ -49,8 +49,8 @@ foreach ($currentTags as $tag => $count) {
   $viewCounts[$tag] = $result['total_views'] ?? 0;
 }
 
-// Sort tags by view_count in ascending order (least viewed first)
-array_multisort($viewCounts, SORT_ASC, $currentTags);
+// Sort tags by view_count in descending order
+array_multisort($viewCounts, SORT_DESC, $currentTags);
 
 $totalTags = count($currentTags);
 $totalPages = ceil($totalTags / $limit);
@@ -62,7 +62,7 @@ $currentTags = array_slice($currentTags, $offset, $limit, true);
         <div class="row justify-content-center">
           <?php foreach ($groupedTags as $group => $tags): ?>
             <div class="col-4 col-md-2 col-sm-5 px-0">
-              <a class="btn btn-outline-dark <?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-0 fw-medium d-flex flex-column align-items-center" href="?by=<?php echo $by; ?>&category=<?php echo $group; ?>">
+              <a class="btn btn-outline-light border-0 fw-medium d-flex flex-column align-items-center" href="?by=<?php echo $by; ?>&category=<?php echo $group; ?>">
                 <h6 class="fw-medium">Category</h6>
                 <h6 class="fw-bold"><?php echo $group; ?></h6>
               </a>

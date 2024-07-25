@@ -28,30 +28,18 @@ while ($row = $result->fetchArray()) {
   }
 }
 
-// Group the tags by the first character and sort them
+// Group the tags by the last character and sort them in descending order
 $groupedTags = [];
 foreach ($tagCounts as $tag => $count) {
-  $firstChar = strtoupper(mb_substr($tag, 0, 1));
-  $groupedTags[$firstChar][$tag] = $count;
+  $lastChar = strtoupper(mb_substr($tag, -1, 1));
+  $groupedTags[$lastChar][$tag] = $count;
 }
 
-ksort($groupedTags); // Sort groups by first character
+krsort($groupedTags); // Sort groups by last character in descending order
 
-// Get tags for the current category and sort them by view_count of images
+// Get tags for the current category and sort them in descending order
 $currentTags = isset($groupedTags[$category]) ? $groupedTags[$category] : [];
-
-// Fetch view_count for each tag
-$viewCounts = [];
-foreach ($currentTags as $tag => $count) {
-  $stmt = $db->prepare("SELECT SUM(view_count) as total_views FROM images WHERE tags LIKE ?");
-  $stmt->bindValue(1, '%' . $tag . '%');
-  $result = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
-  $viewCounts[$tag] = $result['total_views'] ?? 0;
-}
-
-// Sort tags by view_count in ascending order (least viewed first)
-array_multisort($viewCounts, SORT_ASC, $currentTags);
-
+arsort($currentTags); // Sort tags within the category in descending order
 $totalTags = count($currentTags);
 $totalPages = ceil($totalTags / $limit);
 $currentTags = array_slice($currentTags, $offset, $limit, true);
@@ -62,7 +50,7 @@ $currentTags = array_slice($currentTags, $offset, $limit, true);
         <div class="row justify-content-center">
           <?php foreach ($groupedTags as $group => $tags): ?>
             <div class="col-4 col-md-2 col-sm-5 px-0">
-              <a class="btn btn-outline-dark <?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-0 fw-medium d-flex flex-column align-items-center" href="?by=<?php echo $by; ?>&category=<?php echo $group; ?>">
+              <a class="btn btn-outline-light border-0 fw-medium d-flex flex-column align-items-center" href="?by=<?php echo $by; ?>&category=<?php echo $group; ?>">
                 <h6 class="fw-medium">Category</h6>
                 <h6 class="fw-bold"><?php echo $group; ?></h6>
               </a>

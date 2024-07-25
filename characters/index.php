@@ -87,16 +87,11 @@ $email = $_SESSION['email'];
       }
     </script>
     <script>
-      function updatePlaceholder(input) {
-        input.setAttribute('placeholder', input.value.trim() !== '' ? input.value.trim() : 'Search by tags or title');
-      }
-    </script>
-    <script>
       let lazyloadImages = document.querySelectorAll(".lazy-load");
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "../icon/bg.png";
+      const defaultPlaceholder = "/icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {
@@ -194,17 +189,6 @@ $email = $_SESSION['email'];
 
       // Initial loading
       loadMoreImages();
-    </script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('../sw.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
     </script>
     <?php include('../bootstrapjs.php'); ?>
   </body>

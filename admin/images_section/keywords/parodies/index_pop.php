@@ -3,66 +3,54 @@
 $category = isset($_GET['category']) ? strtoupper($_GET['category']) : 'A';
 $by = isset($_GET['by']) ? $_GET['by'] : 'ascending';
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-$limit = 20; // Limit to 20 tags per page
+$limit = 20; // Limit to 20 parodies per page
 $offset = ($page - 1) * $limit;
 
-// Retrieve the count of images for each tag matching the search condition
-$query = "SELECT tags, COUNT(*) as count FROM images";
+// Retrieve the count of images for each parody matching the search condition, sorted by count in descending order
+$query = "SELECT parodies, COUNT(*) as count FROM images";
 if (!empty($searchCondition)) {
   $query .= " WHERE $searchCondition";
 }
-$query .= " GROUP BY tags";
+$query .= " GROUP BY parodies ORDER BY COUNT(*) DESC";
 
 $result = $db->query($query);
 
-// Store the tag counts as an associative array
-$tagCounts = [];
+// Store the parody counts as an associative array
+$parodyCounts = [];
 while ($row = $result->fetchArray()) {
-  $tagList = explode(',', $row['tags']);
-  foreach ($tagList as $tag) {
-    $trimmedTag = trim($tag);
-    if (!isset($tagCounts[$trimmedTag])) {
-      $tagCounts[$trimmedTag] = 0;
+  $parodyList = explode(',', $row['parodies']);
+  foreach ($parodyList as $parody) {
+    $trimmedparody = trim($parody);
+    if (!isset($parodyCounts[$trimmedparody])) {
+      $parodyCounts[$trimmedparody] = 0;
     }
-    $tagCounts[$trimmedTag] += $row['count'];
+    $parodyCounts[$trimmedparody] += $row['count'];
   }
 }
 
-// Group the tags by the first character and sort them
-$groupedTags = [];
-foreach ($tagCounts as $tag => $count) {
-  $firstChar = strtoupper(mb_substr($tag, 0, 1));
-  $groupedTags[$firstChar][$tag] = $count;
+// Group the parodies by the first character and sort them
+$groupedparodies = [];
+foreach ($parodyCounts as $parody => $count) {
+  $firstChar = strtoupper(mb_substr($parody, 0, 1));
+  $groupedparodies[$firstChar][$parody] = $count;
 }
 
-ksort($groupedTags); // Sort groups by first character
+ksort($groupedparodies); // Sort groups by first character
 
-// Get tags for the current category and sort them by view_count of images
-$currentTags = isset($groupedTags[$category]) ? $groupedTags[$category] : [];
-
-// Fetch view_count for each tag
-$viewCounts = [];
-foreach ($currentTags as $tag => $count) {
-  $stmt = $db->prepare("SELECT SUM(view_count) as total_views FROM images WHERE tags LIKE ?");
-  $stmt->bindValue(1, '%' . $tag . '%');
-  $result = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
-  $viewCounts[$tag] = $result['total_views'] ?? 0;
-}
-
-// Sort tags by view_count in ascending order (least viewed first)
-array_multisort($viewCounts, SORT_ASC, $currentTags);
-
-$totalTags = count($currentTags);
-$totalPages = ceil($totalTags / $limit);
-$currentTags = array_slice($currentTags, $offset, $limit, true);
+// Get parodies for the current category and sort them
+$currentparodies = isset($groupedparodies[$category]) ? $groupedparodies[$category] : [];
+arsort($currentparodies); // Sort parodies within the category by count in descending order
+$totalparodies = count($currentparodies);
+$totalPages = ceil($totalparodies / $limit);
+$currentparodies = array_slice($currentparodies, $offset, $limit, true);
 ?>
 
     <div class="container-fluid mt-2">
       <div class="container-fluid">
         <div class="row justify-content-center">
-          <?php foreach ($groupedTags as $group => $tags): ?>
+          <?php foreach ($groupedparodies as $group => $parodies): ?>
             <div class="col-4 col-md-2 col-sm-5 px-0">
-              <a class="btn btn-outline-dark <?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-0 fw-medium d-flex flex-column align-items-center" href="?by=<?php echo $by; ?>&category=<?php echo $group; ?>">
+              <a class="btn btn-outline-light border-0 fw-medium d-flex flex-column align-items-center" href="?by=<?php echo $by; ?>&category=<?php echo $group; ?>">
                 <h6 class="fw-medium">Category</h6>
                 <h6 class="fw-bold"><?php echo $group; ?></h6>
               </a>
@@ -71,7 +59,7 @@ $currentTags = array_slice($currentTags, $offset, $limit, true);
         </div>
       </div>
     
-      <?php include('tag_card.php'); ?>
+      <?php include('parody_card.php'); ?>
     
       <!-- Pagination -->
       <div class="pagination d-flex gap-1 justify-content-center mt-3">

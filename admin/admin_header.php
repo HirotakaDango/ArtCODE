@@ -10,7 +10,7 @@
                 </button>
                 <div class="collapse show" id="home-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="/admin/analytic/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Main</a></li>
+                    <li><a href="/admin/analytic/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">General</a></li>
                     <li><a href="/admin/analytic/#contentSection" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Contents</a></li>
                     <li><a href="/admin/analytic/#regionSection" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Regions</a></li>
                     <li><a href="/admin/analytic/#mediaSection" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Media</a></li>
@@ -37,8 +37,10 @@
                 <div class="collapse show" id="images-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                     <li><a href="/admin/images_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All</a></li>
-                    <li><a href="/admin/images_section/search/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Search</a></li>
-                    <li><a href="/admin/images_section/keyword/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Keyword</a></li>
+                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a></li>
+                    <li><a href="/admin/images_section/keywords/tags/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tags</a></li>
+                    <li><a href="/admin/images_section/keywords/groups/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Groups</a></li>
+                    <li><a href="/admin/images_section/keywords/parodies/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Parodies</a></li>
                   </ul>
                 </div>
               </li>
@@ -56,4 +58,16 @@
                 </div>
               </li>
             </ul>
+          </div>
+          <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content bg-transparent border-0">
+                <div class="modal-body">
+                  <form class="input-group" role="search" action="/admin/images_section/search/">
+                    <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
+                  </form>
+                </div>
+              </div>
+            </div>
           </div>

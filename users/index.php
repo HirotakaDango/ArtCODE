@@ -90,29 +90,6 @@ $email = $_SESSION['email'];
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
       }
     </script>
-    <script>
-      // Get the search input element
-      const searchInput = document.getElementById('search-input');
-
-      // Get all the artist buttons
-      const artistButtons = document.querySelectorAll('.artist');
-
-      // Add an event listener to the search input field
-      searchInput.addEventListener('input', () => {
-      const searchTerm = searchInput.value.toLowerCase();
-
-        // Filter the artist buttons based on the search term
-        artistButtons.forEach(button => {
-        const artistName = button.textContent.toLowerCase();
-
-          if (artistName.includes(searchTerm)) {
-            button.style.display = 'inline-block';
-          } else {
-            button.style.display = 'none';
-          }
-        });
-      });
-    </script>
     <?php include('../bootstrapjs.php'); ?>
   </body>
 </html>

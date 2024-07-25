@@ -56,7 +56,7 @@ if (isset($_GET['character'])) {
   $filter = 'parodies';
   $filterValue = $_GET['parody'];
 } elseif (isset($_GET['group'])) {
-  $filter = 'group';
+  $filter = '`group`';
   $filterValue = $_GET['group'];
 } elseif (isset($_GET['tag'])) {
   $filter = 'tags';
