@@ -1,150 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <title>Whispers in the Dark</title>
     <style>
-      body {
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
         background-color: #000;
         color: #0f0;
-        font-family: "VT323", monospace;
+        font-family: 'Courier New', monospace;
+        overflow: hidden;
+        font-size: 1.3em;
+      }
+
+      #game-container {
+        width: 100%;
+        height: 100%;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        margin: 0;
         padding: 20px;
         box-sizing: border-box;
-        overflow: hidden;
-      }
-      #game-container {
-        max-width: 800px;
-        width: 100%;
         position: relative;
       }
-      #crt-screen {
-        position: relative;
-        background-color: #0f0a;
-        padding: 20px;
-        border-radius: 20px;
-        box-shadow:
-          0 0 10px #0f0,
-          0 0 20px #0f0,
-          0 0 30px #0f0;
-        overflow: hidden;
-      }
-      #crt-screen::before {
-        content: " ";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: linear-gradient(
-          to bottom,
-          rgba(18, 16, 16, 0) 50%,
-          rgba(0, 0, 0, 0.25) 50%
-        );
-        background-size: 100% 4px;
-        z-index: 2;
-        pointer-events: none;
-      }
-      #crt-screen::after {
-        content: " ";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: rgba(18, 16, 16, 0.1);
-        opacity: 0;
-        z-index: 2;
-        pointer-events: none;
-      }
+
       #question {
-        font-size: 1.2em;
+        font-size: 1.5em;
         margin-bottom: 20px;
-        text-shadow: 0 0 5px #0f0;
+        text-align: center;
       }
+
       #choices {
         display: flex;
         flex-direction: column;
+        align-items: center;
       }
+
       button {
         background-color: #000;
         color: #0f0;
         border: 1px solid #0f0;
-        padding: 10px;
-        margin: 5px 0;
+        padding: 10px 20px;
+        margin: 5px;
         cursor: pointer;
-        transition: all 0.3s;
-        font-family: "VT323", monospace;
+        font-family: 'Courier New', monospace;
         font-size: 1em;
-        text-shadow: 0 0 5px #0f0;
+        transition: all 0.3s;
       }
+
       button:hover {
         background-color: #0f0;
         color: #000;
       }
-      #status {
+
+      #status, #sanity, #artifacts {
         margin-top: 20px;
         font-style: italic;
       }
-      @keyframes flicker {
+
+      .tv-line {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: rgba(0, 255, 0, 0.2);
+        pointer-events: none;
+        animation: scanline 1s linear infinite;
+        z-index: 2;
+      }
+
+      @keyframes scanline {
         0% {
-          opacity: 0.9;
+          transform: translateY(0);
         }
-        5% {
-          opacity: 0.8;
-        }
-        10% {
-          opacity: 0.9;
-        }
-        15% {
-          opacity: 0.8;
-        }
-        20% {
-          opacity: 1;
-        }
-        80% {
-          opacity: 0.9;
-        }
-        85% {
-          opacity: 0.8;
-        }
-        90% {
-          opacity: 0.9;
-        }
-        95% {
-          opacity: 0.8;
-        }
+
         100% {
-          opacity: 0.9;
+          transform: translateY(100%);
         }
       }
-      #crt-screen {
-        animation: flicker 5s infinite;
+
+      #main-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+
+      #main-menu h1 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+
+      #instructions {
+        text-align: center;
+        margin-bottom: 20px;
       }
     </style>
   </head>
   <body>
     <div id="game-container">
-      <div id="crt-screen">
-        <div id="question"></div>
-        <div id="choices"></div>
-        <div id="status"></div>
-      </div>
+      <!-- Main menu will be inserted here -->
     </div>
-
     <script>
       const questions = [
         {
           text: "You wake up in a dark room. There's a faint whisper coming from...",
           choices: [
-            { text: "Under the bed", nextQuestion: 1 },
+            { text: "Under the bed", nextQuestion: 1, artifact: true },
             { text: "Inside the closet", nextQuestion: 2 },
             { text: "Behind the mirror", nextQuestion: 3 },
           ],
@@ -152,7 +120,7 @@
         {
           text: "You peer under the bed and see glowing eyes. They blink and ask, 'Do you want to play?'",
           choices: [
-            { text: "Yes", nextQuestion: 4 },
+            { text: "Yes", nextQuestion: 4, artifact: true },
             { text: "No", nextQuestion: 5 },
           ],
         },
@@ -160,319 +128,320 @@
           text: "The closet door creaks open. A shadowy figure emerges and asks, 'Have you seen my child?'",
           choices: [
             { text: "Lie and say yes", nextQuestion: 6 },
-            { text: "Tell the truth and say no", nextQuestion: 7 },
+            { text: "Tell the truth and say no", nextQuestion: 7, artifact: true },
           ],
         },
         {
           text: "Your reflection in the mirror begins to move independently. It smiles and says, 'Let's switch places.'",
           choices: [
             { text: "Agree", nextQuestion: 8 },
-            { text: "Refuse", nextQuestion: 9 },
+            { text: "Refuse", nextQuestion: 9, artifact: true },
           ],
         },
         {
-          text: "The eyes grow larger, and a clawed hand reaches out. 'The game is hide and seek. You hide first.'",
+          text: "You find an old diary. The pages are filled with strange symbols. Do you...",
           choices: [
-            { text: "Hide in the attic", nextQuestion: 10 },
-            { text: "Hide in the basement", nextQuestion: 11 },
+            { text: "Try to decipher it", nextQuestion: 10, artifact: true },
+            { text: "Put it back", nextQuestion: 11 },
           ],
         },
         {
-          text: "The eyes narrow. 'Then you'll be my new toy.' The darkness under the bed starts to expand...",
+          text: "A ghostly child appears, crying. It points to a locked door. Do you...",
           choices: [
-            { text: "Run for the door", nextQuestion: 12 },
-            { text: "Grab a nearby lamp as a weapon", nextQuestion: 13 },
+            { text: "Try to comfort the child", nextQuestion: 12 },
+            { text: "Look for the key", nextQuestion: 13, artifact: true },
           ],
         },
         {
-          text: "The figure's face contorts in anger. 'Liar!' it shrieks, lunging towards you.",
+          text: "You hear scratching sounds coming from inside the walls. They seem to be getting closer. Do you...",
           choices: [
-            { text: "Dodge to the side", nextQuestion: 14 },
-            { text: "Stand your ground", nextQuestion: 15 },
+            { text: "Put your ear against the wall", nextQuestion: 14 },
+            { text: "Run to another room", nextQuestion: 15 },
           ],
         },
         {
-          text: "The figure slumps. 'Then you must help me find them.' It holds out a rusty key.",
+          text: "A painting on the wall seems to be changing. The figure in it is now staring at you. Do you...",
           choices: [
-            { text: "Take the key", nextQuestion: 16 },
-            { text: "Refuse the key", nextQuestion: 17 },
+            { text: "Stare back", nextQuestion: 16, artifact: true },
+            { text: "Cover the painting", nextQuestion: 17 },
           ],
         },
         {
-          text: "You feel a cold sensation as you start to merge with the mirror. Your reflection whispers, 'Freedom at last.'",
+          text: "You find a music box. When you open it, it plays a haunting melody. Do you...",
           choices: [
-            { text: "Try to break free", nextQuestion: 18 },
-            { text: "Accept your fate", nextQuestion: 19 },
+            { text: "Keep listening", nextQuestion: 18 },
+            { text: "Close it immediately", nextQuestion: 19, artifact: true },
           ],
         },
         {
-          text: "The mirror cracks. Your reflection snarls, 'You'll regret this!' Shards of glass fly towards you.",
+          text: "A cold hand touches your shoulder from behind. You turn around and see...",
           choices: [
-            { text: "Shield your face", nextQuestion: 20 },
-            { text: "Dive to the floor", nextQuestion: 21 },
+            { text: "An old woman", nextQuestion: 20 },
+            { text: "A faceless figure", nextQuestion: 21 },
           ],
         },
         {
-          text: "In the attic, you find old photographs. The people in them seem to be staring at you, their eyes following your movements.",
+          text: "You discover a hidden passageway behind a bookshelf. It leads to...",
           choices: [
-            { text: "Examine the photos closer", nextQuestion: 22 },
-            { text: "Look for a better hiding spot", nextQuestion: 23 },
+            { text: "A dimly lit staircase going down", nextQuestion: 22, artifact: true },
+            { text: "A room full of antique dolls", nextQuestion: 23 },
           ],
         },
         {
-          text: "The basement is filled with strange symbols carved into the walls. You hear footsteps coming down the stairs.",
+          text: "Suddenly, all the lights in the house turn on, then off. In the brief moment of light, you saw...",
           choices: [
-            { text: "Hide behind old furniture", nextQuestion: 24 },
-            { text: "Try to decipher the symbols", nextQuestion: 25 },
+            { text: "Countless eyes watching you", nextQuestion: 24 },
+            { text: "The room transformed into something else", nextQuestion: 25, artifact: true },
           ],
         },
         {
-          text: "As you reach for the door, you realize it's locked. The darkness is getting closer...",
+          text: "You hear a phone ringing. The caller ID shows your own number. Do you...",
           choices: [
-            { text: "Search for the key", nextQuestion: 26 },
-            { text: "Try to break down the door", nextQuestion: 27 },
+            { text: "Answer it", nextQuestion: 26, artifact: true },
+            { text: "Ignore it", nextQuestion: 27 },
           ],
         },
         {
-          text: "You grab the lamp, but it comes to life in your hands, its cord wrapping around your wrist like a snake.",
+          text: "A door slams shut behind you. You try the handle and...",
           choices: [
-            { text: "Struggle to break free", nextQuestion: 28 },
-            { text: "Use the lamp to fight the darkness", nextQuestion: 29 },
+            { text: "It's locked", nextQuestion: 28 },
+            { text: "It falls off in your hand", nextQuestion: 29 },
           ],
         },
         {
-          text: "You successfully dodge, but find yourself in a different room. The walls are covered in writing: 'Don't look back.'",
+          text: "You find a note that says 'Don't look up'. Do you...",
           choices: [
-            { text: "Look back", nextQuestion: 30 },
-            { text: "Keep moving forward", nextQuestion: 31 },
+            { text: "Look up", nextQuestion: 30 },
+            { text: "Keep your eyes down", nextQuestion: 31, artifact: true },
           ],
         },
         {
-          text: "The figure passes through you, leaving you feeling cold and empty. You hear a child's laughter echoing around you.",
+          text: "The temperature suddenly drops. You can see your breath. Then you hear...",
           choices: [
-            { text: "Follow the laughter", nextQuestion: 32 },
-            { text: "Curl up and close your eyes", nextQuestion: 33 },
+            { text: "A child's laughter", nextQuestion: 32 },
+            { text: "A deep, guttural growl", nextQuestion: 33 },
           ],
         },
         {
-          text: "The key burns in your hand. Suddenly, you know exactly where the child is, but the knowledge is terrifying.",
+          text: "You stumble upon a ritual circle drawn on the floor. In the center is...",
           choices: [
-            { text: "Go to the child", nextQuestion: 34 },
-            { text: "Throw away the key", nextQuestion: 35 },
+            { text: "A ancient-looking book", nextQuestion: 34, artifact: true },
+            { text: "A sacrificial dagger", nextQuestion: 35 },
           ],
         },
         {
-          text: "The figure disappears, but now you hear children's voices all around you, begging for help.",
+          text: "The lights flicker, and for a moment, you see your shadow cast multiple times. Do you...",
           choices: [
-            { text: "Try to help them", nextQuestion: 36 },
-            { text: "Cover your ears and run", nextQuestion: 37 },
+            { text: "Try to touch the other shadows", nextQuestion: 36 },
+            { text: "Stay perfectly still", nextQuestion: 37, artifact: true },
           ],
         },
         {
-          text: "You manage to pull away, but part of your essence remains in the mirror. You feel... incomplete.",
+          text: "You hear a voice whispering your name. It seems to be coming from...",
           choices: [
-            { text: "Look for a way to restore yourself", nextQuestion: 38 },
-            { text: "Embrace your new partial existence", nextQuestion: 39 },
+            { text: "The attic", nextQuestion: 38 },
+            { text: "The basement", nextQuestion: 39 },
           ],
         },
         {
-          text: "You're now trapped in the mirror world. Everything is familiar, yet wrong. Your reflection lives your life outside.",
+          text: "You find an old camera. When you look through the viewfinder, you see...",
           choices: [
-            { text: "Try to communicate with the outside", nextQuestion: 40 },
-            { text: "Explore the mirror world", nextQuestion: 41 },
+            { text: "The past", nextQuestion: 40, artifact: true },
+            { text: "The future", nextQuestion: 41 },
           ],
         },
         {
-          text: "The glass shards cut your arms, but miss your face. The mirror now shows hundreds of your reflections, all moving independently.",
+          text: "A book on the table opens by itself. The pages flip rapidly until they stop at...",
           choices: [
-            { text: "Smash the mirror completely", nextQuestion: 42 },
-            { text: "Ask your reflections for help", nextQuestion: 43 },
+            { text: "A drawing of you", nextQuestion: 42 },
+            { text: "A drawing of a monstrous figure", nextQuestion: 43 },
           ],
         },
         {
-          text: "You avoid injury, but now the room is filled with floating shards of glass, each reflecting a different scene of horror.",
+          text: "You hear footsteps behind you, but when you turn around...",
           choices: [
-            { text: "Close your eyes and wish it all away", nextQuestion: 44 },
-            {
-              text: "Navigate through the shards to the door",
-              nextQuestion: 45,
-            },
+            { text: "Nothing is there", nextQuestion: 44 },
+            { text: "A shadowy figure stands silently", nextQuestion: 45 },
           ],
         },
         {
-          text: "As you look closer, you realize one of the photos is of you, taken moments ago. In it, something stands behind you.",
+          text: "A door appears where there wasn't one before. Do you...",
           choices: [
-            { text: "Turn around quickly", nextQuestion: 46 },
-            { text: "Keep staring at the photo", nextQuestion: 47 },
+            { text: "Open it", nextQuestion: 46, artifact: true },
+            { text: "Ignore it", nextQuestion: 47 },
           ],
         },
         {
-          text: "You find a small door, just big enough to crawl through. From inside, you hear what sounds like your own voice calling for help.",
+          text: "You find a mirror that shows your reflection differently. It seems to be...",
           choices: [
-            { text: "Crawl through the door", nextQuestion: 48 },
-            { text: "Find another hiding spot", nextQuestion: 49 },
+            { text: "Aged significantly", nextQuestion: 48 },
+            { text: "Wounded and bleeding", nextQuestion: 49, artifact: true },
           ],
         },
         {
-          text: "You hide, but the furniture starts to creak and move. A voice whispers, 'I know you're here. Come out, come out...'",
+          text: "You hear a song playing softly. It is...",
           choices: [
-            { text: "Stay hidden", nextQuestion: 50 },
-            { text: "Run up the stairs", nextQuestion: 51 },
+            { text: "A lullaby", nextQuestion: 50, artifact: true },
+            { text: "A funeral dirge", nextQuestion: 51 },
           ],
         },
         {
-          text: "As you study the symbols, they start to rearrange themselves. You realize they're spelling out your name, over and over.",
+          text: "You find an old key. It looks like it belongs to...",
           choices: [
-            { text: "Touch the symbols", nextQuestion: 52 },
-            { text: "Speak your name out loud", nextQuestion: 53 },
+            { text: "A treasure chest", nextQuestion: 52, artifact: true },
+            { text: "A hidden door", nextQuestion: 53 },
           ],
         },
         {
-          text: "While searching, you find a key made of bone. The darkness has almost reached you.",
+          text: "You find a photo of yourself that you don't remember taking. In the background, there is...",
           choices: [
-            { text: "Use the bone key", nextQuestion: 54 },
-            { text: "Keep searching for a normal key", nextQuestion: 55 },
+            { text: "A shadowy figure", nextQuestion: 54 },
+            { text: "An unfamiliar place", nextQuestion: 55 },
           ],
         },
         {
-          text: "The door splinters, but doesn't break. On the other side, you hear multiple voices talking about you.",
+          text: "You find a candle. When you light it, the flame burns...",
           choices: [
-            { text: "Listen to the conversation", nextQuestion: 56 },
-            { text: "Keep trying to break the door", nextQuestion: 57 },
+            { text: "Blue", nextQuestion: 56, artifact: true },
+            { text: "Green", nextQuestion: 57 },
           ],
         },
         {
-          text: "You break free, but the lamp shatters. In the darkness, you see countless pairs of eyes opening all around you.",
+          text: "You find an old locket. Inside, there is...",
           choices: [
-            { text: "Scream", nextQuestion: 58 },
-            { text: "Stay completely still", nextQuestion: 59 },
+            { text: "A lock of hair", nextQuestion: 58, artifact: true },
+            { text: "A tiny portrait", nextQuestion: 59 },
           ],
         },
         {
-          text: "The lamp's light pushes back the darkness, revealing a hidden door. But the light is fading fast...",
+          text: "You find a letter addressed to you. It says...",
           choices: [
-            { text: "Rush to the door", nextQuestion: 60 },
-            { text: "Look for a way to recharge the lamp", nextQuestion: 61 },
+            { text: "'Beware the watcher'", nextQuestion: 60, artifact: true },
+            { text: "'You are not alone'", nextQuestion: 61 },
           ],
         },
-        {
-          text: "You look back and see a grotesque figure rushing towards you. As it touches you, you wake up in your bed, heart pounding.",
-          choices: [
-            { text: "Go back to sleep", nextQuestion: 62 },
-            { text: "Stay awake", nextQuestion: 63 },
-          ],
-        },
-        {
-          text: "You find yourself in a room filled with old TVs. Each one shows a different moment from your past. One TV catches your eye...",
-          choices: [
-            {
-              text: "Watch a happy memory",
-              nextQuestion: 64,
-              consequence: "positive",
-            },
-            {
-              text: "Watch a traumatic memory",
-              nextQuestion: 65,
-              consequence: "negative",
-            },
-          ],
-        },
-        {
-          text: "You're in a long hallway with doors on both sides. You hear whispers coming from behind each door...",
-          choices: [
-            {
-              text: "Open the door on the left",
-              nextQuestion: 66,
-              consequence: "neutral",
-            },
-            {
-              text: "Open the door on the right",
-              nextQuestion: 67,
-              consequence: "neutral",
-            },
-          ],
-        }
       ];
 
-      let currentQuestion = 0;
-      let sanity = 100;
-      let artifacts = 0;
-
-      function updateQuestion() {
-        const question = questions[currentQuestion];
-        document.getElementById("question").innerText = question.text;
-
-        const choicesElement = document.getElementById("choices");
-        choicesElement.innerHTML = "";
-        question.choices.forEach((choice) => {
-          const button = document.createElement("button");
-          button.innerText = choice.text;
-          button.onclick = () => makeChoice(choice);
-          choicesElement.appendChild(button);
-        });
-
-        updateStatus();
+      const statusMessages = {
+        success: "Your choice seems to have been the right one.",
+        failure: "You feel an eerie chill as if you've made a wrong choice.",
+      };
+    
+      const artifacts = [
+        "a tarnished key",
+        "an old diary",
+        "a mysterious locket",
+        "a strange amulet",
+        "an ancient map",
+      ];
+    
+      let currentQuestionIndex = 0;
+      let playerArtifacts = [];
+      let sanityPoints = 100; // Starting sanity points
+    
+      const gameContainer = document.getElementById("game-container");
+    
+      function updateStatus() {
+        const status = document.getElementById("status");
+        const sanity = document.getElementById("sanity");
+        const artifactsDisplay = document.getElementById("artifacts");
+    
+        status.textContent = playerArtifacts.length > 0 
+          ? `You found ${playerArtifacts[playerArtifacts.length - 1]}. ${statusMessages.success}` 
+          : statusMessages.failure;
+    
+        sanity.textContent = `Sanity: ${sanityPoints}`;
+        artifactsDisplay.textContent = `Artifacts Found: ${playerArtifacts.length}`;
       }
-
-      function makeChoice(choice) {
-        switch (choice.consequence) {
-          case "positive":
-            sanity += 5;
-            break;
-          case "negative":
-            sanity -= 10;
-            break;
-          case "neutral":
-            sanity -= Math.floor(Math.random() * 5) + 1;
-            break;
-        }
-
+    
+      function startGame() {
+        // Reset game variables
+        currentQuestionIndex = 0;
+        playerArtifacts = [];
+        sanityPoints = 100;
+    
+        gameContainer.innerHTML = `
+          <div id="main-menu">
+            <h1>Whispers in the Dark</h1>
+            <div id="instructions">
+              Venture into the eerie darkness of a haunted house by making chilling choices.<br>
+              Seek out hidden artifacts to unveil the house's dark secrets.<br>
+              Every decision you make will twist your fate in this spine-tingling adventure.
+            </div>
+            <button onclick="nextQuestion()">Start</button>
+          </div>
+        `;
+      }
+    
+      function nextQuestion() {
+        const question = questions[currentQuestionIndex];
+        gameContainer.innerHTML = `
+          <div id="question">${question.text}</div>
+          <div id="choices">
+            ${question.choices
+              .map(
+                (choice, index) =>
+                  `<button onclick="makeChoice(${index})">${choice.text}</button>`
+              )
+              .join("")}
+          </div>
+          <div id="status"></div>
+          <div id="sanity">Sanity: ${sanityPoints}</div>
+          <div id="artifacts">Artifacts Found: ${playerArtifacts.length}</div>
+        `;
+      }
+    
+      function makeChoice(choiceIndex) {
+        const choice = questions[currentQuestionIndex].choices[choiceIndex];
+        currentQuestionIndex = choice.nextQuestion;
+    
         if (choice.artifact) {
-          artifacts++;
+          const artifact = artifacts[Math.floor(Math.random() * artifacts.length)];
+          playerArtifacts.push(artifact);
+          sanityPoints -= 10; // Decrease sanity when finding an artifact
+        } else {
+          sanityPoints -= 5; // Decrease sanity on a wrong choice
         }
-
-        currentQuestion = choice.nextQuestion;
-        if (
-          currentQuestion >= questions.length ||
-          sanity <= 0 ||
-          artifacts >= 5
-        ) {
+    
+        updateStatus();
+    
+        if (sanityPoints <= 0) {
+          endGame();
+        } else if (currentQuestionIndex >= questions.length) {
           endGame();
         } else {
-          updateQuestion();
+          setTimeout(nextQuestion, 2000); // Delay to allow reading the status message
         }
       }
-
-      function updateStatus() {
-        const statusElement = document.getElementById("status");
-        statusElement.innerText = `Sanity: ${sanity}% | Artifacts: ${artifacts}/5`;
-        if (sanity < 30) {
-          statusElement.style.color = "#f00";
-        } else if (sanity < 60) {
-          statusElement.style.color = "#ff0";
-        } else {
-          statusElement.style.color = "#0f0";
-        }
-      }
-
+    
       function endGame() {
-        const gameContainer = document.getElementById("crt-screen");
-        if (sanity <= 0) {
-          gameContainer.innerHTML =
-            "<h1>Bad Ending 1: You have lost your sanity. The darkness consumes you.</h1>";
-        } else if (artifacts < 3) {
-          gameContainer.innerHTML =
-            "<h1>Bad Ending 2: You escape, but the horrors follow you into the real world.</h1>";
-        } else if (artifacts >= 3 && artifacts < 5) {
-          gameContainer.innerHTML =
-            "<h1>Bad Ending 3: You survive, but at a great cost. Your mind will never be the same.</h1>";
-        } else if (artifacts === 5 && sanity > 50) {
-          gameContainer.innerHTML =
-            "<h1>Good Ending: You have conquered the darkness and emerged stronger. The whispers fade away...</h1>";
-        }
+        gameContainer.innerHTML = `
+          <h1>Game Over</h1>
+          <div>Your journey has ended. You found the following artifacts:</div>
+          <ul>${playerArtifacts.map((artifact) => `<li>${artifact}</li>`).join("")}</ul>
+          <button onclick="startGame()">Play Again</button>
+        `;
       }
-
-      updateQuestion();
+    
+      function createTVLines() {
+          const lines = 100;
+          const container = document.createDocumentFragment();
+    
+          for (let i = 0; i < lines; i++) {
+              const line = document.createElement("div");
+              line.classList.add("tv-line");
+              line.style.top = `${(i / lines) * 100}%`;
+              line.style.animationDelay = `${i * 0.1}s`;
+              container.appendChild(line);
+          }
+    
+          document.body.appendChild(container);
+      }
+    
+      window.onload = () => {
+        startGame();
+        createTVLines();
+      };
     </script>
   </body>
 </html>
