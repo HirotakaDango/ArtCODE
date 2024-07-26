@@ -31,7 +31,7 @@
                   <a class="rounded rounded-bottom-0 ratio ratio-1x1" href="../album_images.php?album=<?= urlencode($album_id) ?>"><img data-src="../icon/bg.png" class="rounded rounded-bottom-0 object-fit-cover lazy-load"></a>
                 <?php
                 } ?>
-                <?php include('../rows_columns/image_counts.php'); ?>
+                <?php include('rows_columns/image_counts_prev.php'); ?>
                 <div class="position-absolute top-0 start-0">
                   <div class="dropdown">
                     <button class="btn border-0 p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -48,7 +48,7 @@
                   </div>
                 </div>
               </div>
-              <h6 class="text-center fw-bold bg-body-tertiary shadow p-2 rounded rounded-top-0"><?= substr($album_name, 0, 13) ?></h6>
+              <h6 class="text-center fw-bold bg-body-tertiary shadow p-2 rounded rounded-top-0 m-0"><?= substr($album_name, 0, 13) ?></h6>
             </div>
           <?php }
         } ?>

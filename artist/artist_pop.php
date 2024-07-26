@@ -17,7 +17,7 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
 // Execute the initial query to get images with favorite counts
-$query = $db->prepare('SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count, COUNT(favorites.id) AS favorite_count FROM images JOIN users ON images.email = users.email LEFT JOIN favorites ON images.id = favorites.image_id WHERE users.id = :id GROUP BY images.id ORDER BY favorite_count DESC');
+$query = $db->prepare('SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images JOIN users ON images.email = users.email LEFT JOIN favorites ON images.id = favorites.image_id WHERE users.id = :id GROUP BY images.id ORDER BY favorite_count DESC');
 $query->bindParam(':id', $id);
 $query->execute();
 $imagesWithFavorites = $query->fetchAll(PDO::FETCH_ASSOC);

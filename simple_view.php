@@ -200,7 +200,7 @@ $reduction_percentage = ((($original_image_size - $thumbnail_image_size) / $orig
 
 // Get image dimensions
 list($width, $height) = getimagesize('images/' . $image['filename']);
-?> 
+?>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">

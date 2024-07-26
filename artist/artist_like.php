@@ -31,7 +31,7 @@ $total = $query->fetchColumn();
 
 // Get all images for the selected user from the images table
 $query = $db->prepare('
-  SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count 
+  SELECT images.* 
   FROM images 
   JOIN users ON images.email = users.email 
   LEFT JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email

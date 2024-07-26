@@ -23,7 +23,7 @@ $query->execute();
 $total = $query->fetchColumn();
 
 // Get all images for the selected user from the images table
-$query = $db->prepare('SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count FROM images JOIN users ON images.email = users.email WHERE users.id = :id ORDER BY images.id ASC LIMIT :limit OFFSET :offset');
+$query = $db->prepare('SELECT images.* FROM images JOIN users ON images.email = users.email WHERE users.id = :id ORDER BY images.id ASC LIMIT :limit OFFSET :offset');
 $query->bindParam(':id', $id);
 $query->bindValue(':limit', $limit, PDO::PARAM_INT);
 $query->bindValue(':offset', $offset, PDO::PARAM_INT);

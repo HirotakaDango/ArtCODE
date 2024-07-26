@@ -262,25 +262,90 @@
                                     <small>4. Server sometimes have problem with file and folder path, download manually is the best option if this happening.</small>
                                   </p>
                                 </div>
-                                <div class="overflow-x-auto text-nowrap mt-4">
-                                  <?php
-                                    if (!empty($imageP['tags'])) {
-                                      $tags = explode(',', $imageP['tags']);
-                                      foreach ($tags as $tag) {
-                                        $tag = trim($tag);
-                                          if (!empty($tag)) {
-                                      ?>
-                                        <a href="/tagged_images.php?tag=<?php echo urlencode($tag); ?>"
-                                          class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> mb-1 rounded-pill fw-bold">
-                                          <i class="bi bi-tags-fill"></i> <?php echo $tag; ?>
-                                        </a>
+                                <div class="card shadow border-0 rounded-4 bg-body-tertiary mt-3">
+                                  <div class="card-body">
+                                    <!-- Tags -->
+                                    <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-tags-fill"></i> Tags</h6>
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
                                       <?php
+                                      if (!empty($imageP['tags'])) {
+                                        $tags = explode(',', $imageP['tags']);
+                                        foreach ($tags as $tag) {
+                                          $tag = trim($tag);
+                                          if (!empty($tag)) {
+                                            ?>
+                                            <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                              <i class="bi bi-tag-fill"></i> <?php echo htmlspecialchars($tag); ?>
+                                            </a>
+                                            <?php
+                                          }
                                         }
+                                      } else {
+                                        echo "<p class='text-muted'>No tags available.</p>";
                                       }
-                                    } else {
-                                      echo "No tags available.";
-                                    }
-                                  ?>
+                                      ?>
+                                    </div>
+                                
+                                    <!-- Characters -->
+                                    <?php if (!empty($imageP['characters'])): ?>
+                                      <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-people-fill"></i> Characters</h6>
+                                      <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <?php
+                                        $characters = explode(',', $imageP['characters']);
+                                        foreach ($characters as $character) {
+                                          $character = trim($character);
+                                          if (!empty($character)) {
+                                            ?>
+                                            <a href="character/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                              <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($character); ?>
+                                            </a>
+                                            <?php
+                                          }
+                                        }
+                                        ?>
+                                      </div>
+                                    <?php endif; ?>
+                                
+                                    <!-- Parodies -->
+                                    <?php if (!empty($imageP['parodies'])): ?>
+                                      <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-journals"></i> Parodies</h6>
+                                      <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <?php
+                                        $parodies = explode(',', $imageP['parodies']);
+                                        foreach ($parodies as $parody) {
+                                          $parody = trim($parody);
+                                          if (!empty($parody)) {
+                                            ?>
+                                            <a href="parody/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                              <i class="bi bi-journal"></i> <?php echo htmlspecialchars($parody); ?>
+                                            </a>
+                                            <?php
+                                          }
+                                        }
+                                        ?>
+                                      </div>
+                                    <?php endif; ?>
+                                
+                                    <!-- Group -->
+                                    <?php if (!empty($imageP['group'])): ?>
+                                      <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-person-fill"></i> Group</h6>
+                                      <div class="d-flex flex-wrap gap-2">
+                                        <?php
+                                        $groups = explode(',', $imageP['group']);
+                                        foreach ($groups as $group) {
+                                          $group = trim($group);
+                                          if (!empty($group)) {
+                                            ?>
+                                            <a href="group/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                              <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($group); ?>
+                                            </a>
+                                            <?php
+                                          }
+                                        }
+                                        ?>
+                                      </div>
+                                    <?php endif; ?>
+                                  </div>
                                 </div>
                               </div>
                             </div>

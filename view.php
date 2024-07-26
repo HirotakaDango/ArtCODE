@@ -522,7 +522,7 @@ list($width, $height) = getimagesize('images/' . $image['filename']);
                                               $totalImagesCount = 0; // Handle error condition
                                             }
                                             ?>
-                                            <?php include('rows_columns/image_counts.php'); ?>
+                                            <?php include('rows_columns/image_counts_prev.php'); ?>
                                           </a>
                                         </div>
                                       <?php endfor; ?>

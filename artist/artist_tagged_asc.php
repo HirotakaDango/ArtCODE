@@ -31,7 +31,7 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count FROM images JOIN users ON images.email = users.email WHERE users.id = :id AND images.tags LIKE :tagPattern ORDER BY images.id ASC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT images.* FROM images JOIN users ON images.email = users.email WHERE users.id = :id AND images.tags LIKE :tagPattern ORDER BY images.id ASC LIMIT :limit OFFSET :offset");
   $stmt->bindParam(':id', $id);
   $stmt->bindValue(':tagPattern', "%$tag%", PDO::PARAM_STR);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -47,7 +47,7 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count FROM images JOIN users ON images.email = users.email WHERE users.id = :id ORDER BY images.id ASC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT images.* FROM images JOIN users ON images.email = users.email WHERE users.id = :id ORDER BY images.id ASC LIMIT :limit OFFSET :offset");
   $stmt->bindParam(':id', $id);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);

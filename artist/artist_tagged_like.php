@@ -1,5 +1,6 @@
 <?php include('header_artist_like.php'); ?>
 <?php
+// Prepare and execute a query to get the user's numpage
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindParam(':email', $email, PDO::PARAM_STR);
 $queryNum->execute();
@@ -20,14 +21,13 @@ $offset = ($page - 1) * $limit;
 if (isset($_GET['tag'])) {
   $tag = $_GET['tag'];
 
-  // Modify your SQL queries to retrieve images with tags that contain the specified tag
+  // Query to count the total number of favorited images with the specified tag
   $query = $db->prepare("
-    SELECT COUNT(DISTINCT images.id) 
-    FROM images 
-    JOIN users ON images.email = users.email 
-    LEFT JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
-    WHERE (users.id = :id AND images.tags LIKE :tagPattern AND favorites.id IS NOT NULL)
-    OR (users.id <> :id AND images.tags LIKE :tagPattern)
+    SELECT COUNT(DISTINCT images.id)
+    FROM images
+    JOIN users ON images.email = users.email
+    JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
+    WHERE users.id = :id AND images.tags LIKE :tagPattern
   ");
   $query->bindParam(':id', $id);
   $query->bindParam(':email', $email);
@@ -39,14 +39,15 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
+  // Query to retrieve favorited images with the specified tag
   $stmt = $db->prepare("
-    SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count 
-    FROM images 
-    JOIN users ON images.email = users.email 
-    LEFT JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
-    WHERE (users.id = :id AND images.tags LIKE :tagPattern AND favorites.id IS NOT NULL)
-    OR (users.id <> :id AND images.tags LIKE :tagPattern)
-    ORDER BY images.id DESC LIMIT :limit OFFSET :offset
+    SELECT images.*
+    FROM images
+    JOIN users ON images.email = users.email
+    JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
+    WHERE users.id = :id AND images.tags LIKE :tagPattern
+    ORDER BY images.id DESC
+    LIMIT :limit OFFSET :offset
   ");
   $stmt->bindParam(':id', $id);
   $stmt->bindParam(':email', $email);
@@ -54,11 +55,11 @@ if (isset($_GET['tag'])) {
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 } else {
-  // If the 'tag' parameter is not present, retrieve all images
+  // Query to count the total number of favorited images
   $query = $db->prepare("
-    SELECT COUNT(DISTINCT images.id) 
-    FROM images 
-    JOIN users ON images.email = users.email 
+    SELECT COUNT(DISTINCT images.id)
+    FROM images
+    JOIN users ON images.email = users.email
     JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
     WHERE users.id = :id
   ");
@@ -71,12 +72,13 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
+  // Query to retrieve favorited images
   $stmt = $db->prepare("
-    SELECT images.id, images.tags, images.filename, images.title, images.imglike, images.type, images.view_count 
-    FROM images 
-    JOIN users ON images.email = users.email 
+    SELECT images.*
+    FROM images
+    JOIN users ON images.email = users.email
     JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
-    WHERE users.id = :id 
+    WHERE users.id = :id
     ORDER BY images.id DESC
     LIMIT :limit OFFSET :offset
   ");

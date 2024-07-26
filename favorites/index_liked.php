@@ -17,7 +17,7 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
 // Get favorite tagged images with pagination
-$query = $db->prepare('SELECT images.filename, images.id, images.imgdesc, images.title, images.tags, images.type, images.view_count FROM images 
+$query = $db->prepare('SELECT images.* FROM images 
 JOIN favorites ON images.id = favorites.image_id 
 WHERE favorites.email = :email AND images.tags IS NOT NULL AND images.tags != "" 
 ORDER BY favorites.id DESC 

@@ -119,10 +119,15 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                   </div>
                 <?php else : ?>
                   <?php
-                    $file_path = "../../../images/" . $child_image['filename'];
-                    $file_info = stat($file_path);
-                    $image_info = getimagesize($file_path);
+                  $file_path = "../../../images/" . $child_image['filename'];
+                  $file_info = stat($file_path);
+                  $image_info = getimagesize($file_path);
+                  $exif_data = [];
+                  
+                  // Check if the file is a supported image type before reading EXIF data
+                  if ($image_info && $image_info['mime'] === 'image/jpeg') {
                     $exif_data = exif_read_data($file_path, 'IFD0', true);
+                  }
                   ?>
                   <div class="row mb-4">
                     <div class="col-md-6">

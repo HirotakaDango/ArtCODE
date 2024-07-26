@@ -17,7 +17,7 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
 // Get favorite images with pagination, sorted by popularity (view_count)
-$query = $db->prepare('SELECT images.filename, images.id, images.imgdesc, images.title, images.tags, images.type, images.view_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY COUNT(favorites.id) DESC, images.view_count DESC LIMIT :limit OFFSET :offset');
+$query = $db->prepare('SELECT images.* FROM images LEFT JOIN favorites ON images.id = favorites.image_id GROUP BY images.id ORDER BY COUNT(favorites.id) DESC, images.view_count DESC LIMIT :limit OFFSET :offset');
 $query->bindParam(':limit', $limit, PDO::PARAM_INT);
 $query->bindParam(':offset', $offset, PDO::PARAM_INT);
 $query->execute();

@@ -32,13 +32,13 @@ $limit = $numpage;
 $offset = ($page - 1) * $limit;
 
 if (isset($_GET['tag'])) {
-  $stmt = $db->prepare("SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count, COUNT(favorites.id) AS favorite_count FROM images JOIN users ON images.email = users.email LEFT JOIN favorites ON images.id = favorites.image_id WHERE users.id = :id AND images.tags LIKE :tagPattern GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images JOIN users ON images.email = users.email LEFT JOIN favorites ON images.id = favorites.image_id WHERE users.id = :id AND images.tags LIKE :tagPattern GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
   $stmt->bindParam(':id', $id);
   $stmt->bindValue(':tagPattern', "%$tag%", PDO::PARAM_STR);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 } else {
-  $stmt = $db->prepare("SELECT images.id, images.tags, images.filename, images.title, images.imgdesc, images.type, images.view_count, COUNT(favorites.id) AS favorite_count FROM images JOIN users ON images.email = users.email LEFT JOIN favorites ON images.id = favorites.image_id WHERE users.id = :id GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
+  $stmt = $db->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images JOIN users ON images.email = users.email LEFT JOIN favorites ON images.id = favorites.image_id WHERE users.id = :id GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
   $stmt->bindParam(':id', $id);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
