@@ -48,7 +48,6 @@ $database->close();
       <h3 class="fw-bold mb-3">
         Set Your Region
       </h3>
-      <p class="fw-semibold mb-4">Current region: <?php echo $currentregion; ?></p>
       <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
         <h5 class="fw-bold">
           <i class="bi bi-globe-asia-australia"></i> Set Region
