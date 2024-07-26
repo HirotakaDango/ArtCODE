@@ -155,12 +155,13 @@ $fav_count = $fav_count->fetchColumn();
             <div class="container text-center">
               <img class="shadow border border-light border-5 rounded-circle object-fit-cover" src="<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 96px; height: 96px;">
               <div class="container">
+                <h5 class="fw-bold text-white mt-2" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);"><?php echo $artist; ?></h5>
                 <?php if ($logged_in): ?>
                   <form class="w-100" method="post">
                     <?php if ($is_following): ?>
-                      <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill w-100 fw-medium mt-3 shadow" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button>
+                      <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill w-100 fw-medium mt-1 shadow" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button>
                     <?php else: ?>
-                      <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill w-100 fw-medium mt-3 shadow" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button>
+                      <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill w-100 fw-medium mt-1 shadow" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button>
                     <?php endif; ?>
                   </form>
                 <?php endif; ?>

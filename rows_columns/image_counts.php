@@ -1,4 +1,4 @@
-<h6 class="position-absolute bottom-0 end-0 text-white small m-2 rounded-1" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"><i class="bi bi-images"></i> <?php echo $totalImagesCount; ?></h6>
+<?php include('image_counts_prev.php'); ?>
 <?php
 // Initialize $image_email with a default value
 $image_email = '';
@@ -61,19 +61,23 @@ if (!empty($image_email)) {
 
 <?php if ($userPic): ?>
   <div class="position-absolute bottom-0 start-0 m-2 d-flex align-items-center">
-    <div class="dropdown d-flex align-items-center">
-      <button class="fw-bold text-white btn border-0 link-body-emphasis p-0 d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;">
-        <img src="/<?php echo !empty($userPic) ? $userPic : 'icon/profile.svg'; ?>" alt="User Profile Picture" class="rounded-circle object-fit-cover border border-2 border-light shadow" style="width: 32px; height: 32px;">
-        <div class="ms-2">
-          <?php echo $userArtist; ?>
+    <button class="fw-bold text-white btn border-0 link-body-emphasis p-0 d-flex align-items-center" type="button" data-bs-toggle="modal" data-bs-target="#userModal" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;">
+      <img src="/<?php echo !empty($userPic) ? $userPic : 'icon/profile.svg'; ?>" alt="User Profile Picture" class="rounded-circle object-fit-cover border border-2 border-light shadow" style="width: 30px; height: 30px;">
+      <div class="ms-1">
+        <small><?php echo $userArtist; ?></small>
+      </div>
+    </button>
+  </div>
+  <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-body position-relative">
+          <a class="position-absolute top-0 end-0 m-4 text-white" href="/artist.php?id=<?php echo urlencode($userId); ?>" target="_blank">
+            <i class="bi bi-box-arrow-up-right link-body-emphasis" style="-webkit-text-stroke: 1px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"></i>
+          </a>
+          <iframe src="/rows_columns/user_preview.php?id=<?php echo urlencode($userId); ?>" class="rounded-4 p-0 shadow" width="100%" height="275" style="border: none;"></iframe>
         </div>
-      </button>
-      <ul class="dropdown-menu rounded-4 border-0 p-0 m-0 bg-transparent">
-        <div class="position-relative">
-          <a class="position-absolute top-0 end-0 m-2 text-white" href="/artist.php?id=<?php echo urlencode($userId); ?>" target="_blank"><i class="bi bi-box-arrow-up-right link-body-emphasis" style="-webkit-text-stroke: 1px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"></i></a>
-          <iframe src="/rows_columns/user_preview.php?id=<?php echo urlencode($userId); ?>" class="rounded-4 p-0 shadow" width="300" height="250" style="border: none;"></iframe>
-        </div>
-      </ul>
+      </div>
     </div>
   </div>
 <?php endif; ?>
