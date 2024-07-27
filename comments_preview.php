@@ -3,15 +3,15 @@ require_once('auth.php');
 
 // Connect to the database
 $db = new SQLite3('database.sqlite');
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at DATETIME)");
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, imageid TEXT, email TEXT, comment TEXT, created_at DATETIME)");
 $stmt->execute();
 
-// Get the filename from the query string
-$filename = $_GET['imageid'];
+// Get the imageid from the query string
+$imageId = $_GET['imageid'];
 
 // Get the image information from the database
-$stmt = $db->prepare("SELECT * FROM images WHERE id=:filename");
-$stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+$stmt = $db->prepare("SELECT * FROM images WHERE id=:imageid");
+$stmt->bindValue(':imageid', $imageId, SQLITE3_TEXT);
 $image = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
 // Check if the image exists
@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
     $currentDate = date("Y/m/d");
 
     // Insert the comment into the database
-    $stmt = $db->prepare("INSERT INTO comments (filename, email, comment, created_at) VALUES (:filename, :email, :comment, :created_at)");
-    $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+    $stmt = $db->prepare("INSERT INTO comments (imageid, email, comment, created_at) VALUES (:imageid, :email, :comment, :created_at)");
+    $stmt->bindValue(':imageid', $imageId, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
     $stmt->bindValue(':created_at', $currentDate, SQLITE3_TEXT); // Bind the current date
@@ -94,8 +94,8 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $comments_per_page;
 
 // Get the total number of comments for the current image
-$total_comments_stmt = $db->prepare("SELECT COUNT(*) FROM comments WHERE filename=:filename");
-$total_comments_stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+$total_comments_stmt = $db->prepare("SELECT COUNT(*) FROM comments WHERE imageid=:imageid");
+$total_comments_stmt->bindValue(':imageid', $imageId, SQLITE3_TEXT);
 $total_comments = $total_comments_stmt->execute()->fetchArray()[0];
 
 // Calculate the total number of pages
@@ -137,9 +137,9 @@ $total_pages = ceil($total_comments / $comments_per_page);
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=newest&imageid=<?php echo $filename; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&imageid=<?php echo $filename; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=top&imageid=<?php echo $filename; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top comments</a></li>
+        <li><a href="?by=newest&imageid=<?php echo $imageId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+        <li><a href="?by=oldest&imageid=<?php echo $imageId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+        <li><a href="?by=top&imageid=<?php echo $imageId; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'top') echo 'active'; ?>">top comments</a></li>
       </ul> 
     </div>
         <?php 

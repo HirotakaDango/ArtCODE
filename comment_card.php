@@ -14,7 +14,7 @@
                     <a href="edit_comment.php?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&commentid=<?php echo $comment['id']; ?>&page=<?php echo isset($_GET['page']) ? intval($_GET['page']) : 1; ?>" class="dropdown-item fw-medium">
                       <i class="bi bi-pencil-fill me-2"></i> Edit
                     </a>
-                    <input type="hidden" name="filename" value="<?php echo $filename; ?>">
+                    <input type="hidden" name="imageid" value="<?php echo $imageId; ?>">
                     <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
                     <button type="submit" name="action" onclick="return confirm('Are you sure?')" value="delete" class="dropdown-item fw-medium">
                       <i class="bi bi-trash-fill me-2"></i> Delete
@@ -84,7 +84,7 @@
               $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
               $comment_id = isset($comment['id']) ? $comment['id'] : '';
 
-              $url = "reply_comment.php?sort=$sort&by=$by&imageid=$filename&comment_id=$comment_id&page=$page";
+              $url = "reply_comment.php?sort=$sort&by=$by&imageid=$imageId&comment_id=$comment_id&page=$page";
             ?>
             <a class="btn btn-sm fw-semibold link-body-emphasis" href="<?php echo $url; ?>">
               <i class="bi bi-reply-fill"></i> Reply

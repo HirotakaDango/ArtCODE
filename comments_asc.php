@@ -1,7 +1,7 @@
 <?php
 // Get all comments for the current image for the current page
-$stmt = $db->prepare("SELECT comments.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments.id) as reply_count FROM comments JOIN users ON comments.email = users.email LEFT JOIN reply_comments ON comments.id = reply_comments.comment_id WHERE comments.filename=:filename GROUP BY comments.id ORDER BY comments.id ASC LIMIT :comments_per_page OFFSET :offset");
-$stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+$stmt = $db->prepare("SELECT comments.*, users.artist, users.pic, users.id as iduser, COUNT(reply_comments.id) as reply_count FROM comments JOIN users ON comments.email = users.email LEFT JOIN reply_comments ON comments.id = reply_comments.comment_id WHERE comments.imageid=:imageid GROUP BY comments.id ORDER BY comments.id ASC LIMIT :comments_per_page OFFSET :offset");
+$stmt->bindValue(':imageid', $imageId, SQLITE3_TEXT);
 $stmt->bindValue(':comments_per_page', $comments_per_page, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $comments = $stmt->execute();

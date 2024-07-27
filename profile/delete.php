@@ -15,13 +15,13 @@ try {
   $filename = $db->querySingle("SELECT filename FROM images WHERE id = $id");
 
   // Delete records from the reply_comments table based on the comment ID (comment_id)
-  $stmt = $db->prepare("DELETE FROM reply_comments WHERE comment_id IN (SELECT id FROM comments WHERE filename = :filename)");
-  $stmt->bindValue(':filename', $id);
+  $stmt = $db->prepare("DELETE FROM reply_comments WHERE comment_id IN (SELECT id FROM comments WHERE imageid = :imageid)");
+  $stmt->bindValue(':imageid', $id);
   $stmt->execute();
 
   // Delete records from the comments table based on the image ID (filename)
-  $stmt = $db->prepare("DELETE FROM comments WHERE filename = :filename");
-  $stmt->bindValue(':filename', $id);
+  $stmt = $db->prepare("DELETE FROM comments WHERE imageid = :imageid");
+  $stmt->bindValue(':imageid', $id);
   $stmt->execute();
 
   // Delete the image from the images table

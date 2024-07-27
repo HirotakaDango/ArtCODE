@@ -36,14 +36,14 @@ if (isset($_POST['id'])) {
       $stmt = $db->prepare("
         DELETE FROM reply_comments 
         WHERE comment_id IN (
-          SELECT id FROM comments WHERE filename = :id
+          SELECT id FROM comments WHERE imageid = :id
         )
       ");
       $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
       $stmt->execute();
 
       // Delete records from the comments table based on the image ID (image_id)
-      $stmt = $db->prepare("DELETE FROM comments WHERE filename = :id");
+      $stmt = $db->prepare("DELETE FROM comments WHERE imageid = :id");
       $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
       $stmt->execute();
 

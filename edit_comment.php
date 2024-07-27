@@ -2,7 +2,7 @@
 require_once('auth.php');
 
 $db = new SQLite3('database.sqlite');
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, filename TEXT, email TEXT, comment TEXT, created_at TEXT)");
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, imageid TEXT, email TEXT, comment TEXT, created_at TEXT)");
 $stmt->execute();
 
 $comment_id = $_GET['commentid'];
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
   }
 
   // Append $sortUrl to the redirect URL
-  $redirectUrl = "comments.php?by={$sortUrl}&imageid={$comment['filename']}&page={$pageUrl}";
+  $redirectUrl = "comments.php?by={$sortUrl}&imageid={$comment['imageid']}&page={$pageUrl}";
   header("Location: $redirectUrl");
   exit();
 }
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
     </div>
     <script>
       function goBack() {
-        window.location.href = "comments.php?by=<?php echo urlencode($sortUrl); ?>&imageid=<?php echo urlencode($comment['filename']); ?>&page=<?php echo urlencode($pageUrl); ?>";
+        window.location.href = "comments.php?by=<?php echo urlencode($sortUrl); ?>&imageid=<?php echo urlencode($comment['imageid']); ?>&page=<?php echo urlencode($pageUrl); ?>";
       }
     </script> 
   </body>

@@ -34,7 +34,7 @@ require_once('../auth.php');
     <div class="mt-2">
       <div id="preview-container" class="mb-2"></div>
       <div class="caard container">
-        <div id="drop-zone" class="drop-zone fw-bold mb-2 rounded-3 border-4 text-center">
+        <div id="drop-zone" class="drop-zone fw-medium mb-2 rounded-3 border-4 text-center">
           <div class="d-flex flex-column align-items-center">
             <div class="mb-4 mt-2">
               <i class="bi bi-filetype-png me-4 display-4"></i>
@@ -42,7 +42,7 @@ require_once('../auth.php');
               <i class="bi bi-filetype-gif display-4"></i>
             </div>
             <label for="file-ip-1">
-              <input class="form-control mb-2 border rounded-3 fw-bold border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
+              <input class="form-control mb-2 border rounded-3 fw-medium border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
               <p style="word-break: break-word;" class="badge bg-dark text-wrap" style="font-size: 15px;">Drag and drop files here</p>
               <p><small><i class="bi bi-info-circle-fill"></i> type of extension you can upload: jpg, jpeg, png, gif</small></p>
               <div class="total-size"></div>
@@ -53,37 +53,37 @@ require_once('../auth.php');
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content rounded-4 shadow border-0">
               <div class="modal-header border-0">
-                <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel">Upload</h1>
+                <h1 class="modal-title fw-medium fs-5" id="exampleModalLabel">Upload</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
                 <form id="upload-form" enctype="multipart/form-data">
                   <div class="form-floating mb-2">
                     <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
-                    <label for="title" class="fw-bold">Enter title for your image</label>
+                    <label for="title" class="fw-medium">Enter title for your image</label>
                   </div>
                   <div class="form-floating mb-2">
                     <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="500" required>  
-                    <label for="tags" class="fw-bold">Enter tags for your image</label>
+                    <label for="tags" class="fw-medium">Enter tags for your image</label>
                   </div>
                   <div class="form-floating mb-2">
                     <textarea class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="5000" style="height: 200px;" required></textarea>
-                    <label for="imgdesc" class="fw-bold">Enter description for your image</label>
+                    <label for="imgdesc" class="fw-medium">Enter description</label>
                   </div>
                   <h6 class="fw-medium mb-2 mt-4">Group is optional, to displaying group names for <a class="text-decoration-none fw-medium" href="/manga/?group=">manga section only!</a></h6>
                   <div class="form-floating mb-2">
                     <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="group" id="group" placeholder="Enter group for your image" maxlength="4500">  
-                    <label for="group" class="fw-bold">Enter group for your image</label>
+                    <label for="group" class="fw-medium">Enter group for your image</label>
                   </div>
                   <h6 class="fw-medium mb-2 mt-4">Characters is optional, to displaying character names for <a class="text-decoration-none fw-medium" href="/manga/?character=">manga section only!</a></h6>
                   <div class="form-floating mb-2">
                     <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="characters" id="characters" placeholder="Enter characters for your image" maxlength="4500">  
-                    <label for="characters" class="fw-bold">Enter characters for your image</label>
+                    <label for="characters" class="fw-medium">Enter characters for your image</label>
                   </div>
                   <h6 class="fw-medium mb-2 mt-4">Parodies is optional, to displaying fiction names for <a class="text-decoration-none fw-medium" href="/manga/?parody=">manga section only!</a></h6>
                   <div class="form-floating mb-4">
                     <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="parodies" id="parodies" placeholder="Enter parodies for your image" maxlength="4500">  
-                    <label for="parodies" class="fw-bold">Enter parodies for your image</label>
+                    <label for="parodies" class="fw-medium">Enter parodies for your image</label>
                   </div>
                   <div class="form-floating mb-2">
                     <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium py-0 text-start" name="episode_name">
@@ -156,18 +156,18 @@ require_once('../auth.php');
                   </div>
                   <div class="form-floating mb-2">
                     <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
-                    <label for="link" class="fw-bold">Enter link for your image</label>
+                    <label for="link" class="fw-medium">Enter link for your image</label>
                   </div>
-                  <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit">UPLOAD</button>
+                  <button class="btn btn-lg btn-primary fw-medium w-100" id="upload-button" type="submit">UPLOAD</button>
                 </form>
-                <div id="progress-bar-container" class="progress fw-bold" style="height: 45px; display: none;">
+                <div id="progress-bar-container" class="progress fw-medium" style="height: 45px; display: none;">
                   <div id="progress-bar" class="progress-bar progress-bar-animated" style="height: 45px;" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-primary w-100 fw-bold mb-2" data-bs-toggle="modal" data-bs-target="#uploadModal">
+        <button type="button" class="btn btn-primary w-100 fw-medium mb-2" data-bs-toggle="modal" data-bs-target="#uploadModal">
           UPLOAD
         </button>
         <div class="d-flex align-items-center justify-content-center">
@@ -181,7 +181,7 @@ require_once('../auth.php');
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div class="modal-content rounded-4 shadow border-0">
           <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold" id="metadataModalLabel">Image Metadata</h5>
+            <h5 class="modal-title fw-medium" id="metadataModalLabel">Image Metadata</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -277,7 +277,7 @@ require_once('../auth.php');
         totalSizeContainer.classList.add('total-size');
   
         var totalSizeLabel = document.createElement('small');
-        totalSizeLabel.classList.add('fw-bold');
+        totalSizeLabel.classList.add('fw-medium');
         totalSizeLabel.textContent = 'Total Images Size: ' + totalSizeText;
   
         totalSizeContainer.appendChild(totalSizeLabel);
@@ -355,7 +355,7 @@ require_once('../auth.php');
         closeButton.setAttribute('aria-label', 'Close');
 
         var toastBody = document.createElement('div');
-        toastBody.classList.add('toast-body', 'fw-bold');
+        toastBody.classList.add('toast-body', 'fw-medium');
         toastBody.textContent = 'File uploaded successfully.';
 
         var actionButtons = document.createElement('div');
@@ -365,12 +365,12 @@ require_once('../auth.php');
         buttonGroup.classList.add('btn-group', 'w-100', 'gap-2');
 
         var goToHomeButton = document.createElement('a');
-        goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-bold', 'rounded');
+        goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToHomeButton.textContent = 'Go to Home';
         goToHomeButton.href = '../?by=newest';
 
         var goToProfileButton = document.createElement('a');
-        goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-bold', 'rounded');
+        goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToProfileButton.textContent = 'Go to Profile';
         goToProfileButton.href = '../profile.php';
 
@@ -381,7 +381,7 @@ require_once('../auth.php');
 
         var closeButtonInToast = document.createElement('button');
         closeButtonInToast.type = 'button';
-        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-bold', 'w-100');
+        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-medium', 'w-100');
         closeButtonInToast.setAttribute('data-bs-dismiss', 'toast');
         closeButtonInToast.textContent = 'Close';
 
@@ -433,12 +433,12 @@ require_once('../auth.php');
         closeButton.setAttribute('aria-label', 'Close');
 
         var toastBody = document.createElement('div');
-        toastBody.classList.add('toast-body', 'fw-bold', 'text-light');
+        toastBody.classList.add('toast-body', 'fw-medium', 'text-light');
         toastBody.textContent = 'Image upload failed. Please try again.';
 
         var closeButtonInToast = document.createElement('button');
         closeButtonInToast.type = 'button';
-        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-bold', 'w-100');
+        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-medium', 'w-100');
         closeButtonInToast.setAttribute('data-bs-dismiss', 'toast');
         closeButtonInToast.textContent = 'Close';
 
@@ -495,7 +495,7 @@ require_once('../auth.php');
           var fileSizeText = fileSizeRounded + " MB";
   
           var fileSizeBadge = document.createElement("span");
-          fileSizeBadge.classList.add("badge", "rounded-1", "opacity-75", "bg-dark", "position-absolute", "bottom-0", "start-0", "mb-1", "ms-1", "fw-bold");
+          fileSizeBadge.classList.add("badge", "rounded-1", "opacity-75", "bg-dark", "position-absolute", "bottom-0", "start-0", "mb-1", "ms-1", "fw-medium");
           fileSizeBadge.textContent = fileSizeText;
   
           var infoButton = document.createElement("button");

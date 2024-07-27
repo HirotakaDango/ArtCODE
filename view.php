@@ -5,11 +5,11 @@ require_once('auth.php');
 $db = new PDO('sqlite:database.sqlite');
 
 // Get the filename from the query string
-$filename = $_GET['artworkid'];
+$artworkId = $_GET['artworkid'];
 
 // Get the current image information from the database
-$stmt = $db->prepare("SELECT * FROM images WHERE id = :filename ");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid ");
+$stmt->bindParam(':artworkid', $artworkId);
 $stmt->execute();
 $image = $stmt->fetch();
 
@@ -38,8 +38,8 @@ $stmt->execute();
 $next_image = $stmt->fetch();
 
 // Get the image information from the database
-$stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid");
+$stmt->bindParam(':artworkid', $artworkId);
 $stmt->execute();
 $image = $stmt->fetch();
 $image_id = $image['id'];
@@ -124,13 +124,13 @@ if (isset($_POST['favorite'])) {
 $url_comment = "comments_preview.php?imageid=" . $image_id;
 
 // Increment the view count for the image
-$stmt = $db->prepare("UPDATE images SET view_count = view_count + 1 WHERE id = :filename");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("UPDATE images SET view_count = view_count + 1 WHERE id = :artworkid");
+$stmt->bindParam(':artworkid', $artworkId);
 $stmt->execute();
 
 // Get the updated image information from the database
-$stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid");
+$stmt->bindParam(':artworkid', $artworkId);
 $stmt->execute();
 $image = $stmt->fetch();
 
@@ -175,14 +175,14 @@ $stmt->execute();
 $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Count the total number of images from "images" table for the specific artworkid
-$stmt = $db->prepare("SELECT COUNT(*) as total_images FROM images WHERE id = :filename");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("SELECT COUNT(*) as total_images FROM images WHERE id = :artworkid");
+$stmt->bindParam(':artworkid', $artworkId);
 $stmt->execute();
 $total_images = $stmt->fetch()['total_images'];
 
 // Count the total number of images from "image_child" table for the specific artworkid
-$stmt = $db->prepare("SELECT COUNT(*) as total_child_images FROM image_child WHERE image_id = :filename");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("SELECT COUNT(*) as total_child_images FROM image_child WHERE image_id = :artworkid");
+$stmt->bindParam(':artworkid', $artworkId);
 $stmt->execute();
 $total_child_images = $stmt->fetch()['total_child_images'];
 
@@ -200,7 +200,30 @@ $reduction_percentage = ((($original_image_size - $thumbnail_image_size) / $orig
 
 // Get image dimensions
 list($width, $height) = getimagesize('images/' . $image['filename']);
-?> 
+
+// Get the current date
+$currentDate = date('Y-m-d');
+
+// Check if there's already a record for today in the daily table
+$stmt = $db->prepare("SELECT * FROM daily WHERE image_id = :image_id AND date = :date");
+$stmt->bindParam(':image_id', $image['id']);
+$stmt->bindParam(':date', $currentDate);
+$stmt->execute();
+$daily_view = $stmt->fetch();
+
+if ($daily_view) {
+  // If there's already a record for today, increment the view count
+  $stmt = $db->prepare("UPDATE daily SET views = views + 1 WHERE id = :id");
+  $stmt->bindParam(':id', $daily_view['id']);
+  $stmt->execute();
+} else {
+  // If there's no record for today, insert a new record
+  $stmt = $db->prepare("INSERT INTO daily (image_id, views, date) VALUES (:image_id, 1, :date)");
+  $stmt->bindParam(':image_id', $image['id']);
+  $stmt->bindParam(':date', $currentDate);
+  $stmt->execute();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
