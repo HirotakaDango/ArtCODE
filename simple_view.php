@@ -370,14 +370,14 @@ if ($daily_view) {
               }
 
               // Get the total size of images from 'images' table
-              $stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-              $stmt->bindParam(':filename', $filename);
+              $stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid");
+              $stmt->bindParam(':artworkid', $artworkId);
               $stmt->execute();
               $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
               // Get the total size of images from 'image_child' table
-              $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :filename");
-              $stmt->bindParam(':filename', $filename);
+              $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :artworkid");
+              $stmt->bindParam(':artworkid', $artworkId);
               $stmt->execute();
               $image_childs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                   

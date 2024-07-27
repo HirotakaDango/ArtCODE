@@ -46,7 +46,7 @@ $latestArtistId = htmlspecialchars($images[0]['user_id']);
       <div id="imageCarouselUser" class="carousel slide" data-bs-ride="carousel">
         <h5 class="fw-bold text-white" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">Popular Images This Year</h5>
         <h6 class="text-white fw-bold small" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);">
-          These images are displayed based on their view counts from this <?php echo $_GET['time']; ?>. The more views an image has, the higher its ranking in this list.
+          These images are displayed based on their view counts from this <?php echo isset($_GET['time']) ? $_GET['time'] : 'day'; ?>. The more views an image has, the higher its ranking in this list.
         </h6>
         <div class="carousel-inner">
           <?php
@@ -86,8 +86,8 @@ $latestArtistId = htmlspecialchars($images[0]['user_id']);
                       <div class="d-flex align-items-center p-2 bg-light rounded-bottom mx-0 text-dark">
                         <img class="rounded-circle object-fit-cover border border-1" width="40" height="40" src="/<?php echo !empty($userPic) ? $userPic : 'icon/profile.svg'; ?>" alt="Profile Picture" style="margin-top: -2px;">
                         <div class="ms-2">
-                          <a class="fw-bold text-decoration-none text-dark" href="#"  type="button" data-bs-toggle="modal" data-bs-target="#userModalBest-<?php echo $user_id; ?>"><?php echo $artist_name; ?></a>
-                          <div class="fw-medium small"><?php echo $image_title; ?></div>
+                          <div class="fw-bold"><?php echo $image_title; ?></div>
+                          <a class="fw-medium text-decoration-none text-dark small" href="#" type="button" data-bs-toggle="modal" data-bs-target="#userModalBest-<?php echo $user_id; ?>"><?php echo $artist_name; ?></a>
                         </div>
                       </div>
                     </div>
@@ -109,16 +109,15 @@ $latestArtistId = htmlspecialchars($images[0]['user_id']);
             </div>
           <?php endfor; ?>
         </div>
-        <div class="d-flex mt-2">
-          <button class="me-auto btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> p-1 py-0" type="button" data-bs-target="#imageCarouselUser" data-bs-slide="prev">
-            <i class="bi bi-chevron-left" style="-webkit-text-stroke: 1px;"></i>
-          </button>
-          <button class="ms-auto btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> p-1 py-0" type="button" data-bs-target="#imageCarouselUser" data-bs-slide="next">
-            <i class="bi bi-chevron-right" style="-webkit-text-stroke: 1px;"></i>
-          </button>
-        </div>
       </div>
     </div>
+    <!-- Custom Navigation Buttons -->
+    <button class="carousel-control-prev position-absolute top-50 start-0 translate-middle-y ms-4" type="button" data-bs-target="#imageCarouselUser" data-bs-slide="prev" style="background: rgba(0, 0, 0, 0.5); border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+      <i class="bi bi-chevron-left text-white" style="font-size: 24px;"></i>
+    </button>
+    <button class="carousel-control-next position-absolute top-50 end-0 translate-middle-y me-4" type="button" data-bs-target="#imageCarouselUser" data-bs-slide="next" style="background: rgba(0, 0, 0, 0.5); border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+      <i class="bi bi-chevron-right text-white" style="font-size: 24px;"></i>
+    </button>
   </div>
   <h6 class="position-absolute end-0 bottom-0 m-3 text-white" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;">
     image by <a class="text-white text-decoration-none" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);" href="/artist.php?id=<?php echo urlencode($latestArtistId); ?>"><?php echo $latestArtistName; ?></a>

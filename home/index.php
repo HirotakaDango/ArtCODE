@@ -192,57 +192,64 @@ if ($row) {
         
         ?>
     <?php
-    $totalPages = ceil($total / $limit);
-    $prevPage = $page - 1;
-    $nextPage = $page + 1;
-    
-    // Get current URL without query parameters
-    $currentUrl = strtok($_SERVER["REQUEST_URI"], '?');
-    
-    // Build the query string for current parameters
-    $queryParams = array_diff_key($_GET, array('page' => ''));
-    ?>
-    
-    <div class="pagination d-flex gap-1 justify-content-center mt-3">
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => 1])); ?>">
-          <i class="bi text-stroke bi-chevron-double-left"></i>
-        </a>
-      <?php endif; ?>
-    
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => $prevPage])); ?>">
-          <i class="bi text-stroke bi-chevron-left"></i>
-        </a>
-      <?php endif; ?>
-    
-      <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-    
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="' . $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => $i])) . '">' . $i . '</a>';
-          }
-        }
+    // Check if 'by' is set to 'top' and skip pagination if so
+    if (isset($_GET['by']) && $_GET['by'] == 'top') {
+      // Skip pagination
+    } else {
+      $totalPages = ceil($total / $limit);
+      $prevPage = $page - 1;
+      $nextPage = $page + 1;
+      
+      // Get current URL without query parameters
+      $currentUrl = strtok($_SERVER["REQUEST_URI"], '?');
+      
+      // Build the query string for current parameters
+      $queryParams = array_diff_key($_GET, array('page' => ''));
       ?>
+      
+      <div class="pagination d-flex gap-1 justify-content-center mt-3">
+        <?php if ($page > 1): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => 1])); ?>">
+            <i class="bi text-stroke bi-chevron-double-left"></i>
+          </a>
+        <?php endif; ?>
     
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => $nextPage])); ?>">
-          <i class="bi text-stroke bi-chevron-right"></i>
-        </a>
-      <?php endif; ?>
+        <?php if ($page > 1): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => $prevPage])); ?>">
+            <i class="bi text-stroke bi-chevron-left"></i>
+          </a>
+        <?php endif; ?>
     
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => $totalPages])); ?>">
-          <i class="bi text-stroke bi-chevron-double-right"></i>
-        </a>
-      <?php endif; ?>
-    </div>
+        <?php
+          // Calculate the range of page numbers to display
+          $startPage = max($page - 2, 1);
+          $endPage = min($page + 2, $totalPages);
+    
+          // Display page numbers within the range
+          for ($i = $startPage; $i <= $endPage; $i++) {
+            if ($i === $page) {
+              echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+            } else {
+              echo '<a class="btn btn-sm btn-primary fw-bold" href="' . $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => $i])) . '">' . $i . '</a>';
+            }
+          }
+        ?>
+    
+        <?php if ($page < $totalPages): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => $nextPage])); ?>">
+            <i class="bi text-stroke bi-chevron-right"></i>
+          </a>
+        <?php endif; ?>
+    
+        <?php if ($page < $totalPages): ?>
+          <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $currentUrl . '?' . http_build_query(array_merge($queryParams, ['page' => $totalPages])); ?>">
+            <i class="bi text-stroke bi-chevron-double-right"></i>
+          </a>
+        <?php endif; ?>
+      </div>
+      <?php
+    }
+    ?>
     <div class="mt-5"></div>
     <script>
       let lazyloadImages = document.querySelectorAll(".lazy-load");

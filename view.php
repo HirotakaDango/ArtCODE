@@ -816,23 +816,35 @@ if ($daily_view) {
                                         function getImageSizeInMB($filename) {
                                           return round(filesize('images/' . $filename) / (1024 * 1024), 2);
                                         }
-    
+                        
                                         // Get the total size of images from 'images' table
-                                        $stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-                                        $stmt->bindParam(':filename', $filename);
+                                        $stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid");
+                                        $stmt->bindParam(':artworkid', $artworkId);
                                         $stmt->execute();
                                         $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+                        
                                         // Get the total size of images from 'image_child' table
-                                        $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :filename");
-                                        $stmt->bindParam(':filename', $filename);
+                                        $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :artworkid");
+                                        $stmt->bindParam(':artworkid', $artworkId);
                                         $stmt->execute();
                                         $image_childs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                      
+                                                            
                                         // Function to format the date
                                         function formatDate($date) {
                                           return date('Y/F/l jS') ;
                                         }
+                        
+                                        $images_total_size = 0;
+                                        foreach ($images as $image) {
+                                          $images_total_size += getImageSizeInMB($image['filename']);
+                                        }
+                        
+                                        $image_child_total_size = 0;
+                                        foreach ($image_childs as $image_child) {
+                                          $image_child_total_size += getImageSizeInMB($image_child['filename']);
+                                        }
+                                                        
+                                        $total_size = $images_total_size + $image_child_total_size;
                                       ?>
                                       <?php foreach ($images as $index => $image) { ?>
                                         <div class="mb-3 rounded-4 shadow bg-dark p-3">
