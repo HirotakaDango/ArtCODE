@@ -8,6 +8,7 @@ $query = "
   FROM images
   JOIN users ON images.email = users.email
   LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+  WHERE images.artwork_type = 'illustration'
   ORDER BY views DESC, images.id DESC
   LIMIT 20
 ";

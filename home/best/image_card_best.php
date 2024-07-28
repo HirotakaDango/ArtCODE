@@ -28,7 +28,12 @@
                     $current_image_id = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
                     
                     $artist_name = substr($artist_name, 0, 10);
-                    $image_title = substr($image_title, 0, 15);
+                    $image_title = mb_substr($image_title, 0, 15, 'UTF-8');
+                    
+                    // Optionally, you can add an ellipsis if the string was truncated
+                    if (mb_strlen($image_title, 'UTF-8') > 15) {
+                      $image_title .= '...';
+                    }
     
                     // Determine badge color
                     $badgeClass = '';
@@ -61,7 +66,7 @@
                       <div class="d-flex align-items-center p-2 bg-light rounded-bottom mx-0 text-dark">
                         <img class="rounded-circle object-fit-cover border border-1" width="40" height="40" src="/<?php echo !empty($userPic) ? $userPic : 'icon/profile.svg'; ?>" alt="Profile Picture" style="margin-top: -2px;">
                         <div class="ms-2">
-                          <div class="fw-bold"><?php echo $image_title; ?></div>
+                          <div class="fw-bold text-truncate" style="max-width: 150px;"><?php echo $image_title; ?></div>
                           <a class="fw-medium text-decoration-none text-dark small" href="#" type="button" data-bs-toggle="modal" data-bs-target="#userModalBest-<?php echo $user_id; ?>"><?php echo $artist_name; ?></a>
                         </div>
                       </div>

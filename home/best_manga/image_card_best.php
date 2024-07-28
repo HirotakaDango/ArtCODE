@@ -32,7 +32,12 @@
                     $current_image_idManga = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
                     
                     $artist_nameManga = substr($artist_nameManga, 0, 10);
-                    $image_episodeManga = substr($image_episodeManga, 0, 15);
+                    $image_episodeManga = mb_substr($image_episodeManga, 0, 15, 'UTF-8');
+                    
+                    // Optionally, you can add an ellipsis if the string was truncated
+                    if (mb_strlen($image_episodeManga, 'UTF-8') > 15) {
+                      $image_episodeManga .= '...';
+                    }
     
                     // Determine badge color
                     $badgeClassManga = '';
@@ -64,7 +69,7 @@
                       <div class="d-flex align-items-center p-2 bg-light rounded-bottom mx-0 text-dark">
                         <img class="rounded-circle object-fit-cover border border-1" width="40" height="40" src="/<?php echo !empty($userPicManga) ? $userPicManga : 'icon/profile.svg'; ?>" alt="Profile Picture" style="margin-top: -2px;">
                         <div class="ms-2">
-                          <div class="fw-bold"><?php echo $image_episodeManga; ?></div>
+                          <div class="fw-bold text-truncate" style="max-width: 140px;"><?php echo $image_episodeManga; ?></div>
                           <a class="fw-medium text-decoration-none text-dark small" href="#" type="button" data-bs-toggle="modal" data-bs-target="#userModalBestManga-<?php echo $user_idManga; ?>"><?php echo $artist_nameManga; ?></a>
                         </div>
                       </div>

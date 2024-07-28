@@ -5,6 +5,7 @@ $query = "
   FROM images
   JOIN users ON images.email = users.email
   LEFT JOIN daily ON images.id = daily.image_id 
+  WHERE images.artwork_type = 'illustration'
   GROUP BY images.id
   ORDER BY views DESC, images.id DESC
   LIMIT 20
