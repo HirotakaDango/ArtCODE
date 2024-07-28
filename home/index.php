@@ -132,9 +132,20 @@ if ($row) {
   </head>
   <body>
     <?php include('../header.php'); ?>
-    <div class="d-none d-md-block">
-      <?php include('best/index.php'); ?>
-    </div>
+    <?php
+    // Get the current page number from the query parameter, defaulting to 1 if not set
+    $pageNumber = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    ?>
+    
+    <!-- Conditionally include sections based on the page number -->
+    <?php if ($pageNumber === 1): ?>
+      <div class="d-none d-md-block">
+        <?php include('best/index.php'); ?>
+      </div>
+      <div class="d-none d-md-block">
+        <?php include('best_manga/index.php'); ?>
+      </div>
+    <?php endif; ?>
     <div class="dropdown">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
