@@ -26,6 +26,7 @@ $db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
         </div>
         <div class="col overflow-auto vh-100">
           <?php include('../../../navbar.php'); ?>
+          <div>
             <div class="dropdown mt-2">
               <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-images"></i> sort by

@@ -96,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="col overflow-auto vh-100">
           <?php include('../../navbar.php'); ?>
+          <div>
             <div class="container-fluid">
               <div class="mt-3">
                 <div class="d-flex justify-content-center align-items-center mb-3">

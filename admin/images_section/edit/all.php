@@ -68,6 +68,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         </div>
         <div class="col overflow-auto vh-100">
           <?php include('../../navbar.php'); ?>
+          <div>
             <div class="container-fluid mt-3 mb-5">
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <a class="btn bg-secondary-subtle fw-medium rounded-pill me-auto" href="redirect.php?back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/admin/images_section/'); ?>"><i class="bi bi-arrow-left"></i> back to section</a>
