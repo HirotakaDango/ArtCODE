@@ -71,7 +71,7 @@ $database->close();
       </div>
       <div class="d-flex">
         <div class="ms-auto btn-group gap-2 mt-2">
-          <a href="/index.php" class="btn border-0 text-dark rounded fw-medium">Continue to homepage</a>
+          <a href="/index.php" class="btn border-0 <?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded fw-medium">Continue to homepage</a>
         </div>
       </div>
     </div>
