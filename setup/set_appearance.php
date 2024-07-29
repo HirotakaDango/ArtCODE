@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $statement->execute();
 
   // Redirect the user to a success page or any other desired location
-  header("Location: appearance.php");
+  header("Location: set_appearance.php");
   exit;
 }
 
