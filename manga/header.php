@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 fw-medium">
             <li class="nav-item">
-              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'forum/') === false) echo 'active' ?>" href="/manga/index.php"><i class="bi bi-house-fill"></i> Home</a>
+              <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'forum/') === false) echo 'active' ?>" href="/manga/"><i class="bi bi-house-fill"></i> Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'active' ?>" href="/manga/parodies.php"><i class="bi bi-book-half"></i> Parodies</a>
@@ -66,7 +66,7 @@
               }
             ?>
           </ul>
-          <form class="d-flex" role="search" action="/manga/index.php">
+          <form class="d-flex" role="search" action="/manga/">
             <input class="form-control me-2 fw-medium" type="search" placeholder="Search" aria-label="Search" name="search">
             <button class="btn btn-outline-light fw-medium" type="submit"><i class="bi bi-search"></i></button>
           </form>
