@@ -29,6 +29,21 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
         -webkit-text-stroke: 1px;
       }
 
+      /* For Webkit-based browsers */
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        border-radius: 0;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border-radius: 0;
+      }
+
       @media (max-width: 767px) {
         .vh-100-sm {
           height: 100vh;
@@ -49,7 +64,9 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
     </style>
   </head>
   <body>
-    <?php include('header.php'); ?>
+    <div id="displayHeader">
+      <?php include('header.php'); ?>
+    </div>
     <div class="d-md-none btn-group w-100">
       <div class="btn-group w-100">
         <button type="button" class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium d-flex justify-content-between align-items-center w-50 rounded-0" data-bs-toggle="modal" data-bs-target="#pageModal">
@@ -75,6 +92,9 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
         <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
           <i class="bi bi-list text-stroke"></i> Menu
         </a>
+      </div>
+      <div class="position-fixed start-0 end-0 z-2 d-none d-md-block">
+        <button class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" id="toggleHeaderBtn">Hide Header</button>
       </div>
       <div class="d-flex justify-content-center align-items-center vh-100-sm">
         <div class="w-100">
@@ -147,7 +167,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                     }
                   ?>
                   <img class="d-none" src="<?= $prevRender; ?>" alt="<?= $image_details['title']; ?>">
-                  <img class="mangaImage" src="<?= $imageSource; ?>" alt="<?= $image_details['title']; ?>">
+                  <img class="mangaImage" id="mainMangaImage" src="<?= $imageSource; ?>" alt="<?= $image_details['title']; ?>">
                   <img class="d-none" src="<?= $nextRender; ?>" alt="<?= $image_details['title']; ?>">
                   <?php
                     $totalPages = count($image_child) + 1;
@@ -207,6 +227,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
         </a>
       </div>
       <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>">Back to Title</a></h2>
+      <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis fw-bold" href="<?php echo $web; ?>/download_images.php?artworkid=<?php echo $_GET['id']; ?>">Download Batch</a></h2>
     </div>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
       <div class="container">
@@ -267,6 +288,9 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               </div>
             </div>
             <div class="container my-3">
+              <a class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" href="<?php echo $web; ?>/download_images.php?artworkid=<?php echo $_GET['id']; ?>">Download Batch</a>
+            </div>
+            <div class="container my-3">
               <button type="button" class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" data-bs-dismiss="offcanvas">Close Menu</button>
             </div>
             <div class="container my-3">
@@ -295,7 +319,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
             ?>
             <main id="swup" class="transition-main ">
               <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                <a class="w-100 btn btn-outline-light fw-bold p-3 text-start my-1 <?= isActive($i, $currentPage) ?>" href="?title=<?= urlencode($episode_name) ?>&uid=<?= $user_id ?>&id=<?= $image_id ?>&page=<?= $i ?>">
+                <a class="w-100 btn btn-outline-light border-0 fw-bold p-3 text-start my-1 <?= isActive($i, $currentPage) ?>" href="?title=<?= urlencode($episode_name) ?>&uid=<?= $user_id ?>&id=<?= $image_id ?>&page=<?= $i ?>">
                   Page <?= $i ?>
                 </a>
               <?php endfor; ?>
@@ -333,5 +357,96 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
         </div>
       </div>
     </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Function to get the current URL parameters
+        function getQueryParams() {
+          const params = new URLSearchParams(window.location.search);
+          return {
+            title: params.get('title'),
+            uid: params.get('uid'),
+            id: params.get('id'),
+            page: parseInt(params.get('page'), 10) || 1
+          };
+        }
+    
+        // Function to navigate to a new page
+        function navigateToPage(newPage) {
+          const params = getQueryParams();
+          params.page = newPage;
+          const newUrl = `?title=${encodeURIComponent(params.title)}&uid=${params.uid}&id=${params.id}&page=${params.page}`;
+          window.location.href = newUrl;
+        }
+    
+        // Event listener for keydown events
+        document.addEventListener('keydown', (event) => {
+          const { page } = getQueryParams();
+          const totalPages = <?php echo json_encode(count($image_child) + 1); ?>;
+    
+          if (event.key === 'ArrowLeft') {
+            // Navigate to previous page
+            if (page > 1) {
+              navigateToPage(page - 1);
+            } else {
+              window.location.href = `title.php?title=${encodeURIComponent(getQueryParams().title)}&uid=${getQueryParams().uid}`;
+            }
+          } else if (event.key === 'ArrowRight') {
+            // Navigate to next page
+            if (page < totalPages) {
+              navigateToPage(page + 1);
+            } else {
+              window.location.href = `title.php?title=${encodeURIComponent(getQueryParams().title)}&uid=${getQueryParams().uid}`;
+            }
+          }
+        });
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const header = document.getElementById('displayHeader');
+        const toggleBtn = document.getElementById('toggleHeaderBtn');
+    
+        // Function to check if the device is in desktop mode
+        function isDesktop() {
+          return window.innerWidth >= 768; // Adjust the width as needed
+        }
+    
+        // Function to update header visibility based on local storage and viewport
+        function updateHeaderVisibility() {
+          if (isDesktop()) {
+            // Check local storage to set the initial state of the header for desktop
+            if (localStorage.getItem('headerVisible') === 'false') {
+              header.style.display = 'none';
+              toggleBtn.textContent = 'Show Header';
+            } else {
+              header.style.display = 'block';
+              toggleBtn.textContent = 'Hide Header';
+            }
+          } else {
+            // Always show header on mobile
+            header.style.display = 'block';
+            toggleBtn.style.display = 'none'; // Hide the button on mobile
+          }
+        }
+    
+        // Initial update
+        updateHeaderVisibility();
+    
+        // Event listener for button click
+        toggleBtn.addEventListener('click', () => {
+          if (header.style.display === 'none') {
+            header.style.display = 'block';
+            toggleBtn.textContent = 'Hide Header';
+            localStorage.setItem('headerVisible', 'true');
+          } else {
+            header.style.display = 'none';
+            toggleBtn.textContent = 'Show Header';
+            localStorage.setItem('headerVisible', 'false');
+          }
+        });
+    
+        // Adjust visibility on window resize
+        window.addEventListener('resize', updateHeaderVisibility);
+      });
+    </script>
   </body>
 </html>
