@@ -165,10 +165,21 @@ $fav_count = $fav_count->fetchColumn();
                     <?php endif; ?>
                   </form>
                 <?php endif; ?>
-                <div class="d-flex mt-2">
-                  <span class="mx-2 fw-medium text-white" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"><?php echo $num_followers ?> <small>Followers</small></span>
-                  <span class="mx-2 fw-medium text-white" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"><?php echo $num_following ?> <small>Following</small></span>
-                  <span class="mx-2 fw-medium text-white" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"><?php echo count($images); ?> <small> Images</small></span>
+                <div class="position-absolute start-50 translate-middle-x">
+                  <div class="d-flex mt-2">
+                    <div class="fw-bold p-0 d-flex flex-column justify-content-center align-items-center border-0 text-white" style="width: 4em; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">
+                      <?php echo $num_followers ?>
+                      <span class="d-lg-inline small"><small>Followers</small></span>
+                    </div>
+                    <div class="fw-bold p-0 d-flex flex-column justify-content-center align-items-center border-0 text-white" style="width: 4em; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">
+                      <?php echo $num_following ?>
+                      <span class="d-lg-inline small"><small>Following</small></span>
+                    </div>
+                    <div class="fw-bold p-0 d-flex flex-column justify-content-center align-items-center border-0 text-white" style="width: 4em; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">
+                      <?php echo count($images); ?>
+                      <span class="d-lg-inline small"><small>Images</small></span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

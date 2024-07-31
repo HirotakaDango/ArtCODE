@@ -1062,7 +1062,7 @@ if ($daily_view) {
                         <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
                       </p>
                       <p class="fw-bold text-center container">
-                        <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_images.php?artworkid=<?= $image_id; ?>">click this link</a> for third option if download all images error or failed.</small>
+                        <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_batch.php?artworkid=<?= $image_id; ?>">click this link</a> for third option if download all images error or failed.</small>
                       </p>
                       <p class="fw-bold text-center container">
                         <small>3. If you found problem where the zip contain empty file or 0b, download the images manually.</small>
@@ -1079,13 +1079,13 @@ if ($daily_view) {
               </div>
               <div class="modal fade" id="rusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                  <div class="modal-content">
-                    <div class="modal-header">
+                  <div class="modal-content rounded-4 border-0">
+                    <div class="modal-header border-0">
                       <h1 class="modal-title fw-bold fs-5" id="exampleModalToggleLabel2">Are You Sure?</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body scrollable-div">
-                      <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="#" id="downloadAllImages">
+                      <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="/download_images.php?artworkid=<?php echo $image['id']; ?>">
                         <i class="bi bi-file-earmark-zip-fill"></i> Download all images (<?php echo $total_size; ?> MB)
                       </a>
                       <button type="button" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> mb-2 fw-bold w-100 text-center rounded-3" data-bs-target="#downloadOption" data-bs-toggle="modal"><i class="bi bi-arrow-left-circle-fill"></i> back to previous</button>
@@ -1097,7 +1097,7 @@ if ($daily_view) {
                         <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
                       </p>
                       <p class="fw-bold text-center container">
-                        <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_images.php?artworkid=<?= $image_id; ?>">click this link</a> for third option if download all images error or failed.</small>
+                        <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_batch.php?artworkid=<?= $image_id; ?>">click this link</a> for third option if download all images error or failed.</small>
                       </p>
                       <p class="fw-bold text-center container">
                         <small>3. If you found problem where the zip contain empty file or 0b, download the images manually.</small>
@@ -1112,140 +1112,8 @@ if ($daily_view) {
                   </div>
                 </div>
               </div>
-              <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                  var progressBar1 = document.getElementById('progress-bar1');
-                  var progressBarContainer1 = progressBar1.parentElement;
-
-                  var progressBar2 = document.getElementById('progress-bar2');
-                  var progressBarContainer2 = progressBar2.parentElement;
-
-                  var downloadAllImagesButton = document.getElementById('downloadAllImages');
-                  var downloadInProgress = false; // Variable to track download status
-
-                  downloadAllImagesButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    // If download is already in progress, do nothing
-                    if (downloadInProgress) {
-                      return;
-                    }
-
-                    // Disable the download button to prevent double-clicking
-                    downloadAllImagesButton.disabled = true;
-                    downloadInProgress = true;
-
-                    // Show both progress bars when the download starts
-                    progressBarContainer1.style.display = 'block';
-                    progressBarContainer2.style.display = 'block';
-
-                    var artworkId = <?= $image_id; ?>; // Get the artwork ID from PHP variable
-
-                    function downloadImages(imageId, progressBar, progressBarContainer) {
-                      var xhr = new XMLHttpRequest();
-                      xhr.open('GET', 'download_images.php?artworkid=' + imageId);
-                      xhr.responseType = 'arraybuffer'; // Use arraybuffer responseType instead of blob
-
-                      xhr.addEventListener('loadstart', function() {
-                        progressBar.style.width = '0%';
-                        progressBar.textContent = '0%';
-                      });
-
-                      xhr.addEventListener('progress', function(e) {
-                        if (e.lengthComputable) {
-                          var percent = Math.round((e.loaded / e.total) * 100);
-                          progressBar.style.width = percent + '%';
-                          progressBar.textContent = percent + '%';
-
-                          // Show "success" alert and replace progress bar when progress bar reaches 100%
-                          if (percent === 100) {
-                            showSuccessAlert(progressBarContainer);
-                          }
-                        }
-                      });
-
-                      xhr.onreadystatechange = function() {
-                        if (xhr.readyState === XMLHttpRequest.DONE) {
-                          progressBarContainer.style.display = 'none';
-
-                          if (xhr.status === 200) {
-                            // Handle successful download
-                            var filename = getFilenameFromResponse(xhr); // Get filename from the response
-                            var url = URL.createObjectURL(new Blob([xhr.response], { type: xhr.getResponseHeader('Content-Type') }));
-
-                            // Create a temporary anchor element to trigger the download
-                            var a = document.createElement('a');
-                            a.style.display = 'none';
-                            a.href = url;
-                            a.download = filename;
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                            window.URL.revokeObjectURL(url);
-                          } else {
-                            // Handle download error
-                            alert('Download failed. Please try again.');
-                          }
-
-                          // Enable the download button again after the download is finished
-                          downloadAllImagesButton.disabled = false;
-                          downloadInProgress = false;
-                        }
-                      };
-
-                      xhr.send();
-                    }
-
-                    // Assuming you have an array of image IDs from the server
-                    var imageIds = [artworkId];
-                    downloadImages(artworkId, progressBar1, progressBarContainer1);
-                    downloadImages(artworkId, progressBar2, progressBarContainer2);
-                  });
-
-                  // Clear progress bars when the modal is closed
-                  var downloadOptionModal = document.getElementById('downloadOption');
-                  downloadOptionModal.addEventListener('hidden.bs.modal', function() {
-                    progressBar1.style.width = '0%';
-                    progressBar1.textContent = '0%';
-                    progressBarContainer1.style.display = 'none';
-
-                    progressBar2.style.width = '0%';
-                    progressBar2.textContent = '0%';
-                    progressBarContainer2.style.display = 'none';
-
-                    // Enable the download button again when the modal is closed
-                    downloadAllImagesButton.disabled = false;
-                    downloadInProgress = false;
-                  });
-
-                  // Function to show the "success" alert and replace progress bar
-                  function showSuccessAlert(progressBarContainer) {
-                    var successAlert = document.createElement('div');
-                    successAlert.classList.add('alert', 'alert-success', 'mt-3');
-                    successAlert.textContent = 'Download complete!';
-
-                    // Replace progress bar with success alert
-                    progressBarContainer.style.display = 'none';
-                    progressBarContainer.insertAdjacentElement('afterend', successAlert);
-                  }
-
-                  // Function to extract filename from the response headers
-                  function getFilenameFromResponse(xhr) {
-                    var contentDisposition = xhr.getResponseHeader('Content-Disposition');
-                    var filename = '';
-
-                    if (contentDisposition && contentDisposition.indexOf('filename=') !== -1) {
-                      var match = contentDisposition.match(/filename=([^;]+)/);
-                      filename = match ? match[1] : '';
-                    }
-
-                    // Convert filename to UTF-8 encoding
-                    filename = decodeURIComponent(escape(filename));
-                    return filename;
-                  }
-                });
-              </script>
             </div>
+            <!--  End of Download Option Modal -->
             <?php if ($next_image): ?>
               <div class="d-md-none d-lg-none">
                 <button class="btn btn-sm opacity-75 rounded fw-bold position-absolute start-0 top-50 translate-middle-y rounded-start-0"  onclick="location.href='?artworkid=<?= $next_image['id'] ?>'">

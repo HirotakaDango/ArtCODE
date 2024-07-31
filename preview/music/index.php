@@ -42,7 +42,7 @@ $websiteUrl = $row ? $row['website_url'] : '';
   <body>
     <?php include('../header_preview.php'); ?>
     <form class="container-fluid mt-5" method="POST">
-      <div class="input-group">
+      <div class="input-group container">
         <input class="form-control bg-dark-subtle border-0 focus-ring focus-ring-dark rounded-start-4 fw-medium" type="text" name="website_url" value="<?php echo $websiteUrl; ?>" placeholder="website url">
         <button class="btn bg-dark-subtle border-0 link-body-emphasis fw-medium rounded-end-4">save</button>
       </div>

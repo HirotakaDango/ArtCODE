@@ -1,52 +1,20 @@
 <?php
-require_once('../../../auth.php');
-
 // Connect to the SQLite database using parameterized query
 $db = new SQLite3('../../../database.sqlite');
 
-$email = $_SESSION['email'];
-
-// Process any favorite/unfavorite requests
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (isset($_POST['action'])) {
-    $action = $_POST['action'];
-    $image_id = $_POST['image_id'];
-
-    if ($action === 'favorite') {
-      $existing_fav = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = $image_id");
-
-      if ($existing_fav == 0) {
-        $db->exec("INSERT INTO favorites (email, image_id) VALUES ('$email', $image_id)");
-        echo json_encode(['success' => true]);
-        exit();
-      }
-    } elseif ($action === 'unfavorite') {
-      $db->exec("DELETE FROM favorites WHERE email = '$email' AND image_id = $image_id");
-      echo json_encode(['success' => true]);
-      exit();
-    }
-  }
-}
-
 // Get all images from the database
 $stmt = $db->prepare("
-  SELECT images.*, 
-       COUNT(favorites.id) AS favorite_count, 
-       users.artist, 
-       users.pic, 
-       users.id AS uid
-FROM images
-LEFT JOIN favorites ON images.id = favorites.image_id
-LEFT JOIN users ON images.email = users.email
-GROUP BY images.id, users.artist, users.pic, users.id
-ORDER BY favorite_count DESC
-LIMIT 12
+  SELECT images.*, users.artist, users.pic, users.id AS uid
+  FROM images
+  JOIN users ON images.email = users.email
+  ORDER BY images.title DESC
+  LIMIT 12
 ");
 $result = $stmt->execute();
 ?>
 
 <!DOCTYPE html>
-  <html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
+  <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -57,10 +25,10 @@ $result = $stmt->execute();
     <?php include('../../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <?php include('../../../header.php'); ?>
+    <?php include('../../header_preview.php'); ?>
     <div class="container-fluid mb-5">
       <div class="row">
-        <div class="d-none d-md-block col-4">
+        <div class="col-md-4">
           <?php include('../scroll_header.php'); ?>
         </div>
         <div class="col-md-4" id="mainContent">
@@ -134,31 +102,13 @@ $result = $stmt->execute();
               <!-- Favorite/unfavorite button -->
               <div class="d-flex justify-content-center w-100 mt-3">
                 <div class="row g-5">
-                  <div class="col-3 d-flex justify-content-between">
+                  <div class="col-4 d-flex justify-content-between">
                     <button type="button" class="btn border-0" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $image['id']; ?>"><i class="bi bi-share-fill"></i></button>
                   </div>
-                  <div class="col-3 d-flex justify-content-between">
-                    <?php
-                      $is_favorited = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$image['id']}");
-                      if ($is_favorited) {
-                    ?>
-                      <form class="favoriteForm">
-                        <input type="hidden" name="image_id" value="<?= $image['id']; ?>">
-                        <input type="hidden" name="action" value="unfavorite">
-                        <button type="button" class="btn border-0 unfavoriteBtn"><i class="bi bi-heart-fill"></i></button>
-                      </form>
-                    <?php } else { ?>
-                      <form class="favoriteForm">
-                        <input type="hidden" name="image_id" value="<?= $image['id']; ?>">
-                        <input type="hidden" name="action" value="favorite">
-                        <button type="button" class="btn border-0 favoriteBtn"><i class="bi bi-heart"></i></button>
-                      </form>
-                    <?php } ?>
-                  </div>
-                  <div class="col-3 d-flex justify-content-between">
+                  <div class="col-4 d-flex justify-content-between">
                     <button class="btn d-flex gap-2 border-0"><i class="bi bi-bar-chart-line-fill"></i> <?= $image['view_count']; ?></button>
                   </div>
-                  <div class="col-3 d-flex justify-content-between">
+                  <div class="col-4 d-flex justify-content-between">
                     <a href="/image.php?artworkid=<?= $image['id']; ?>" class="btn border-0"><i class="bi bi-box-arrow-up-right"></i></a>
                   </div>
                 </div>
@@ -179,41 +129,6 @@ $result = $stmt->execute();
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Function to handle favorite/unfavorite action
-        function handleFavoriteAction(button) {
-          var formData = new FormData(button.closest('.favoriteForm'));
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', 'favorite.php', true);
-          xhr.onload = function() {
-            if (xhr.status === 200) {
-              var response = JSON.parse(xhr.responseText);
-              if (response.success) {
-                // Update button appearance based on action
-                var form = button.closest('.favoriteForm');
-                var action = form.querySelector('input[name="action"]').value;
-                if (action === 'favorite') {
-                  form.querySelector('.btn').innerHTML = '<i class="bi bi-heart-fill"></i>';
-                  form.querySelector('input[name="action"]').value = 'unfavorite';
-                } else if (action === 'unfavorite') {
-                  form.querySelector('.btn').innerHTML = '<i class="bi bi-heart"></i>';
-                  form.querySelector('input[name="action"]').value = 'favorite';
-                }
-              } else {
-                console.error('Failed to update favorite status.');
-              }
-            }
-          };
-          xhr.send(formData);
-        }
-    
-        // Event delegation for favorite/unfavorite buttons
-        document.getElementById('mainContent').addEventListener('click', function(event) {
-          var target = event.target;
-          if (target.matches('.favoriteBtn') || target.matches('.unfavoriteBtn')) {
-            handleFavoriteAction(target);
-          }
-        });
-    
         // Infinite scroll functionality
         var loading = false; // Flag to prevent multiple simultaneous requests
         var loadMoreBtn = document.getElementById('load-more-btn');
@@ -235,41 +150,23 @@ $result = $stmt->execute();
     
               // Reattach event listeners for new favorite/unfavorite buttons
               updateEventListeners();
+            } else {
+              // Handle errors
+              console.error('Failed to load more images. Status: ' + xhr.status);
             }
           };
           xhr.send('offset=' + offset);
         }
     
-        // Throttle scroll event to prevent excessive AJAX requests
-        var throttleTimeout;
-        function throttleScroll() {
-          if (!throttleTimeout) {
-            throttleTimeout = setTimeout(function() {
-              throttleTimeout = null;
-              var windowHeight = window.innerHeight;
-              var bodyHeight = document.body.offsetHeight;
-              var scrollY = window.scrollY || window.pageYOffset;
-              if (windowHeight + scrollY >= bodyHeight) {
-                loadMoreImages();
-              }
-            }, 200); // Adjust throttle time as needed
-          }
-        }
-    
-        // Function to update event listeners for favorite/unfavorite buttons
-        function updateEventListeners() {
-          document.querySelectorAll('.favoriteBtn, .unfavoriteBtn').forEach(function(button) {
-            button.addEventListener('click', function() {
-              handleFavoriteAction(this);
-            });
-          });
-        }
-    
-        // Initial load more button click handler
+        // Load more images when button is clicked
         loadMoreBtn.addEventListener('click', loadMoreImages);
     
-        // Attach event listeners for existing favorite/unfavorite buttons
-        updateEventListeners();
+        // Optional: Load more images when the user scrolls near the bottom
+        window.addEventListener('scroll', function() {
+          if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
+            loadMoreImages();
+          }
+        });
       });
     </script>
     <?php include('../../../bootstrapjs.php'); ?>

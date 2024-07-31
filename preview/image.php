@@ -110,6 +110,29 @@ $reduction_percentage = ((($original_image_size - $thumbnail_image_size) / $orig
 
 // Get image dimensions
 list($width, $height) = getimagesize('../images/' . $image['filename']);
+
+// Get the current date
+$currentDate = date('Y-m-d');
+
+// Check if there's already a record for today in the daily table
+$stmt = $db->prepare("SELECT * FROM daily WHERE image_id = :image_id AND date = :date");
+$stmt->bindParam(':image_id', $image['id']);
+$stmt->bindParam(':date', $currentDate);
+$stmt->execute();
+$daily_view = $stmt->fetch();
+
+if ($daily_view) {
+  // If there's already a record for today, increment the view count
+  $stmt = $db->prepare("UPDATE daily SET views = views + 1 WHERE id = :id");
+  $stmt->bindParam(':id', $daily_view['id']);
+  $stmt->execute();
+} else {
+  // If there's no record for today, insert a new record
+  $stmt = $db->prepare("INSERT INTO daily (image_id, views, date) VALUES (:image_id, 1, :date)");
+  $stmt->bindParam(':image_id', $image['id']);
+  $stmt->bindParam(':date', $currentDate);
+  $stmt->execute();
+}
 ?>  
 
 <!DOCTYPE html>
@@ -239,14 +262,14 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
             <?php endif; ?>
           </div>
           <div class="caard position-relative">
-            <a href="#" id="originalImageLink" data-bs-toggle="modal" data-bs-target="#originalImageModal2" data-original-src="../images/<?php echo $image['filename']; ?>">
+            <a href="#" id="originalImageLink" data-bs-toggle="modal" data-bs-target="#signupModal" data-original-src="../images/<?php echo $image['filename']; ?>">
               <img class="img-pointer shadow-lg rounded-r h-100 w-100" src="../thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
             </a>
             <!-- Original Image Modal -->
 
-            <div class="modal fade" id="originalImageModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal fade" id="signinModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
               <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-5">
+                <div class="modal-content rounded-4">
                   <div class="modal-header p-5 pb-4 border-bottom-0">
                     <h1 class="fw-bold mb-0 fs-2">Sign in to continue</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -263,14 +286,14 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                       </div>
                       <button name="login" class="w-100 mb-2 btn btn-lg rounded-3 btn-dark fw-bold" type="submit">Sign in</button>
                     </form>
-                    <p class="fw-medium fw-bold">Don't have an account? <button data-bs-target="#originalImageModal2" data-bs-toggle="modal" class="text-decoration-none text-white btn btn-dark btn-sm text-white fw-bold rounded-pill white-75">Signup</button></p>
+                    <p class="fw-medium fw-bold">Don't have an account? <button data-bs-target="#signupModal" data-bs-toggle="modal" class="text-decoration-none text-white btn btn-dark btn-sm text-white fw-bold rounded-pill white-75">Signup</button></p>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="modal fade" id="originalImageModal2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+            <div class="modal fade" id="signupModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
               <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-5">
+                <div class="modal-content rounded-4">
                   <div class="modal-header p-5 pb-4 border-bottom-0">
                     <h1 class="fw-bold mb-0 fs-2">Sign up for free</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -292,7 +315,7 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                       <button name="register" class="w-100 mb-2 btn btn-lg rounded-3 btn-dark fw-bold" type="submit">Sign up</button>
                     </form>
                     <p class="fw-bold"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" required> By clicking this, you'll agree with the <a class="" href="#" data-bs-target="#terms" data-bs-toggle="modal">terms of service</a>.</p>
-                    <p class="fw-bold">Already have an account? <button data-bs-target="#originalImageModal" data-bs-toggle="modal" class="text-decoration-none btn btn-dark btn-sm text-white fw-bold rounded-pill opacity-75">Signin</button></p>
+                    <p class="fw-bold">Already have an account? <button data-bs-target="#signinModal" data-bs-toggle="modal" class="text-decoration-none btn btn-dark btn-sm text-white fw-bold rounded-pill opacity-75">Signin</button></p>
                   </div>
                 </div>
               </div>
@@ -306,24 +329,19 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                   </button>
                   <ul class="dropdown-menu">
                     <li>
-                      <a class="dropdown-item fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#originalImageModal">
-                        <i class="bi bi-images"></i> full modal view
-                      </a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item fw-bold" href="view/gallery/?artworkid=<?php echo $image['id']; ?>">
+                      <a class="dropdown-item fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">
                         <i class="bi bi-distribute-vertical"></i> full gallery view
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item fw-bold" href="view/carousel/?artworkid=<?php echo $image['id']; ?>">
+                      <a class="dropdown-item fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">
                         <i class="bi bi-distribute-horizontal"></i> full carousel view
                       </a>
                     </li>
                   </ul>
                 </div>
                 <button class="btn btn-sm btn-dark fw-bold opacity-75 rounded-0" id="loadOriginalBtn">Load Original Image</button>
-                <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded-start-0 text-white" data-bs-toggle="modal" data-bs-target="#originalImageModal">
+                <a class="btn btn-sm btn-dark fw-bold opacity-75 rounded-3 rounded-start-0" data-bs-toggle="modal" data-bs-target="#signupModal">
                   <i class="bi bi-cloud-arrow-down-fill"></i>
                 </a>
               </div>
@@ -574,7 +592,7 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
                 <button class="btn btn-dark fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
                   <i class="bi bi-share-fill"></i> <small>share</small>
                 </button>
-                <a class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#originalImageModal">
+                <a class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#signinModal">
                   <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
                 </a>
                 <button class="btn btn-dark dropdown-toggle fw-bold rounded-end-4" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#dataModal">
@@ -1282,7 +1300,7 @@ list($width, $height) = getimagesize('../images/' . $image['filename']);
         originalImage.setAttribute("src", originalImageSrc);
       });
 
-      var modal = document.getElementById("originalImageModal");
+      var modal = document.getElementById("signinModal");
       modal.addEventListener("hidden.bs.modal", function() {
         originalImage.setAttribute("src", "");
       });

@@ -10,9 +10,10 @@
         </a>
         <div class="position-absolute top-50 start-50 translate-middle d-none d-md-block" style="padding-bottom: 0.1em;">
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/home/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/">Home</a>
+          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/scrolls/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/scrolls">Scrolls</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis" href="/manga/">Manga</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/music/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/music/">Music</a>
-          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/keyword/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a>
+          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/keyword/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Keyword</a>
         </div>
         <div class="dropdown nav-right">
           <div class="btn-group gap-1">
@@ -31,21 +32,27 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-bold d-md-none d-lg-none">
               <form action="/preview/keyword/" method="GET" class="mb-3">
                 <div class="input-group">
-                  <input type="text" name="q" class="form-control text-lowercase fw-bold rounded-end-0 rounded-4 border-0 bg-body-tertiary">
+                  <input type="text" name="q" class="form-control text-lowercase fw-bold rounded-end-0 rounded-4 border-0 bg-body-tertiary" placeholder="Search tags or title (e.g: white, sky)">
                   <button type="submit" class="btn bg-body-tertiary link-body-emphasis border-0 rounded-start-0 rounded-4"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
                 </div>
               </form>
-              <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 d-flex justify-content-center align-items-center text-center flex-column mt-2" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
-                <i class="bi bi-journals fs-5"></i>
-                <span class="d-lg-inline">Manga</span>
-              </a>
               <div class="btn-group gap-2 w-100 mt-2">
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
                   <i class="bi bi-house-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none">Home</span>
                 </a>
-                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'feeds/scrolls/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/scrolls/">
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/scrolls/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/preview/scrolls/">
                   <i class="bi bi-distribute-vertical fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none">Scrolls</span>
+                </a>
+              </div>
+              <div class="btn-group gap-2 w-100 mt-2">
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column mt-2" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
+                  <i class="bi bi-journals fs-5"></i>
+                  <span class="d-lg-inline">Manga</span>
+                </a>
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/music/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/preview/music/">
+                  <i class="bi bi-vinyl-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none">Music</span>
                 </a>
               </div>

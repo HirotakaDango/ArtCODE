@@ -1,10 +1,6 @@
 <?php
-require_once('../../../auth.php');
-
 // Connect to the SQLite database using parameterized query
 $db = new SQLite3('../../../database.sqlite');
-
-$email = $_SESSION['email'];
 
 // Retrieve offset from POST parameters
 $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
@@ -13,17 +9,11 @@ $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
 $limit = 12; // Number of images per batch
 
 // Prepare query to fetch images with LIMIT and OFFSET
-$stmt = $db->prepare("SELECT images.*, 
-       COUNT(favorites.id) AS favorite_count, 
-       users.artist, 
-       users.pic, 
-       users.id AS uid
-FROM images
-LEFT JOIN favorites ON images.id = favorites.image_id
-LEFT JOIN users ON images.email = users.email
-GROUP BY images.id, users.artist, users.pic, users.id
-ORDER BY favorite_count DESC
-LIMIT :limit OFFSET :offset");
+$stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS uid
+  FROM images
+  JOIN users ON images.email = users.email
+  ORDER BY images.title DESC
+  LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $result = $stmt->execute();
@@ -106,30 +96,14 @@ while ($image = $result->fetchArray()) {
             <button type="button" class="btn border-0" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $image['id']; ?>"><i class="bi bi-share-fill"></i></button>
           </div>
           <div class="col-3 d-flex justify-content-between">
-            <?php
-              $is_favorited = $db->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = {$image['id']}");
-              if ($is_favorited) {
-            ?>
-              <form class="favoriteForm">
-                <input type="hidden" name="image_id" value="<?= $image['id']; ?>">
-                <input type="hidden" name="action" value="unfavorite">
-                <button type="button" class="btn border-0 unfavoriteBtn"><i class="bi bi-heart-fill"></i></button>
-              </form>
-            <?php } else { ?>
-              <form class="favoriteForm">
-                <input type="hidden" name="image_id" value="<?= $image['id']; ?>">
-                <input type="hidden" name="action" value="favorite">
-                <button type="button" class="btn border-0 favoriteBtn"><i class="bi bi-heart"></i></button>
-              </form>
-            <?php } ?>
-          </div>
-          <div class="col-3 d-flex justify-content-between">
             <button class="btn d-flex gap-2 border-0"><i class="bi bi-bar-chart-line-fill"></i> <?= $image['view_count']; ?></button>
           </div>
           <div class="col-3 d-flex justify-content-between">
             <a href="/image.php?artworkid=<?= $image['id']; ?>" class="btn border-0"><i class="bi bi-box-arrow-up-right"></i></a>
           </div>
         </div>
+        <?php include('../view_post.php'); ?>
+        <?php include('../share_post.php'); ?>
       </div>
     </div>
     <?php

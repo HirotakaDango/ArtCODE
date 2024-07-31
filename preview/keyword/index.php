@@ -57,7 +57,7 @@ if (empty($output)) {
   </head>
   <body>
     <?php include('../header_preview.php'); ?>
-    <div class="dropdown mt-2">
+    <div class="dropdown">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
@@ -71,7 +71,7 @@ if (empty($output)) {
         <li><a href="?by=order_desc<?php echo isset($_GET['character']) ? '&character=' . $_GET['character'] : ''; ?><?php echo isset($_GET['parody']) ? '&parody=' . $_GET['parody'] : ''; ?><?php echo isset($_GET['group']) ? '&group=' . $_GET['group'] : ''; ?><?php echo isset($_GET['tag']) ? '&tag=' . $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
       </ul> 
     </div>
-    <h5 class="ms-2 mt-2 mb-3">
+    <h5 class="ms-2 my-2 fw-bold">
       <?php echo $output; ?>
     </h5>
     <?php 

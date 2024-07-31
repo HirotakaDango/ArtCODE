@@ -41,13 +41,13 @@
                                   ?>
                                 </p>
                                 <div class="btn-group mt-2 w-100">
-                                  <a class="btn btn-sm border-0" data-bs-toggle="collapse" href="#shareSection" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-share-fill icon-stroke-1"></i></a>
+                                  <a class="btn btn-sm border-0" data-bs-toggle="collapse" href="#shareSection_<?php echo $image['id']; ?>" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-share-fill icon-stroke-1"></i></a>
                                   <button class="btn btn-sm fw-bold border-0"><i class="bi bi-bar-chart-line-fill"></i> <?php echo $image['view_count']?></button>
-                                  <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfoDesktop" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-info-circle-fill"></i></button>
-                                  <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-download icon-stroke-1"></i></button>
+                                  <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfoDesktop_<?php echo $image['id']; ?>" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-info-circle-fill"></i></button>
+                                  <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload_<?php echo $image['id']; ?>" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-download icon-stroke-1"></i></button>
                                   <a href="/image.php?artworkid=<?php echo $image['id']; ?>" class="btn btn-sm border-0"><i class="bi bi-eye-fill"></i></a>
                                 </div>
-                                <div class="collapse" id="shareSection">
+                                <div class="collapse" id="shareSection_<?php echo $image['id']; ?>">
                                   <p class="text-start fw-bold mt-3">share to:</p>
                                   <div class="card rounded-4 p-4">
                                     <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
@@ -114,7 +114,7 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="collapse mt-2" id="collapseInfoDesktop">
+                                <div class="collapse mt-2" id="collapseInfoDesktop_<?php echo $image['id']; ?>">
                                   <div class="card rounded-4 container">
                                     <p class="text-center fw-medium mt-2">Metadata Information</p>
                                     <?php
@@ -187,71 +187,16 @@
                                     ?>
                                   </div>
                                 </div>
-                                <div class="collapse mt-2" id="collapseDownload">
-                                  <a class="btn btn-primary fw-bold rounded-4 w-100" href="#" onclick="downloadWithProgressBar(<?php echo $image['id']; ?>, '<?php echo $image['title']; ?>')">
+                                <div class="collapse mt-2" id="collapseDownload_<?php echo $image['id']; ?>">
+                                  <a class="btn btn-primary fw-bold rounded-4 w-100" href="/download_images.php?artworkid=<?php echo $image['id']; ?>" target="_blank">
                                     <i class="bi bi-download text-stroke"></i> download all images (<?php echo $total_image_size; ?> MB)
                                   </a>
-                                  <div class="progress fw-bold mt-2 rounded-4" id="progressBarContainer_<?php echo $image['id']; ?>" style="height: 30px; display: none;">
-                                    <div id="progressBar_<?php echo $image['id']; ?>" class="progress-bar progress-bar progress-bar-animated fw-bold" style="width: 0; height: 30px;">0%</div>
-                                  </div>
-                                  <script>
-                                    function downloadWithProgressBar(artworkId, title) {
-                                      var progressBar = document.getElementById('progressBar_' + artworkId);
-                                      var progressBarContainer = document.getElementById('progressBarContainer_' + artworkId);
-                                      title = title.replace(/\s+/g, '_');
-    
-                                      // Create a new XMLHttpRequest object
-                                      var xhr = new XMLHttpRequest();
-    
-                                      // Function to update the progress bar
-                                      function updateProgress(event) {
-                                        if (event.lengthComputable) {
-                                          var percentComplete = (event.loaded / event.total) * 100;
-                                          progressBar.style.width = percentComplete + '%';
-                                          progressBar.innerHTML = percentComplete.toFixed(2) + '%';
-                                        }
-                                      }
-    
-                                      // Set up the XMLHttpRequest object
-                                      xhr.open('GET', '/download_images.php?artworkid=' + artworkId, true);
-    
-                                      // Set the responseType to 'blob' to handle binary data
-                                      xhr.responseType = 'blob';
-    
-                                      // Track progress with the updateProgress function
-                                      xhr.addEventListener('progress', updateProgress);
-    
-                                      // On successful download completion
-                                      xhr.onload = function () {
-                                        progressBar.innerHTML = '100%';
-                                        // Delay hiding the progress bar to show 100% for a brief moment
-                                        setTimeout(function () {
-                                          progressBarContainer.style.display = 'none';
-                                        }, 1000);
-    
-                                        // Create a download link for the downloaded file
-                                        var downloadLink = document.createElement('a');
-                                        downloadLink.href = URL.createObjectURL(xhr.response);
-                                        downloadLink.download = title + '_image_id_' + artworkId + '.zip';
-                                        downloadLink.style.display = 'none';
-                                        document.body.appendChild(downloadLink);
-                                        downloadLink.click(); // Trigger the click event to download the file
-                                        document.body.removeChild(downloadLink); // Remove the link from the document
-                                      };
-    
-                                      // Show the progress bar container
-                                      progressBarContainer.style.display = 'block';
-    
-                                      // Send the XMLHttpRequest to start the download
-                                      xhr.send();
-                                    }
-                                  </script>
                                   <h5 class="fw-bold text-center mt-2">Please Note!</h5>
                                   <p class="fw-bold text-center container">
                                     <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
                                   </p>
                                   <p class="fw-bold text-center container">
-                                    <small>2. If you found download error or failed, <a class="text-decoration-none" href="/download_images.php?artworkid=<?php echo $image['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
+                                    <small>2. If you found download error or failed, <a class="text-decoration-none" href="/download_batch.php?artworkid=<?php echo $image['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
                                   </p>
                                   <p class="fw-bold text-center container">
                                     <small>3. If you found problem where the zip contain empty file or 0b, download the images manually.</small>
