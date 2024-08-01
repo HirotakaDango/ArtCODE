@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
       <?php include('nav.php'); ?>
       <div class="mt-3">
-        <div class="row g-1">
+        <div class="row g-2">
           <div class="col-md-6">
             <div class="position-relative">
               <a data-bs-toggle="modal" data-bs-target="#originalImage">
