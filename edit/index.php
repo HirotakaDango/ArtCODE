@@ -94,8 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
       <?php include('nav.php'); ?>
       <div class="mt-3">
-        <div class="row">
-          <div class="col-md-4 pe-md-1">
+        <div class="row g-1">
+          <div class="col-md-6">
             <div class="position-relative">
               <a data-bs-toggle="modal" data-bs-target="#originalImage">
                 <img src="../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </center>
           </div>
         </div>
-        <div class="col-md-8 ps-md-1">
+        <div class="col-md-6">
           <div class="">
             <form method="POST">
               <div class="form-floating mb-2">
@@ -289,26 +289,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" value="<?php echo htmlspecialchars($image['link']); ?>" name="link" placeholder="Image link" maxlength="300"> 
                 <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter link for your image</label>
               </div>
-              <div class="btn-group gap-2 w-100">
-                <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-100 mb-2 rounded" data-bs-toggle="modal" data-bs-target="#deleteImage">
+              <div class="btn-group gap-2 w-100 mb-2">
+                <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded" data-bs-toggle="modal" data-bs-target="#deleteImage">
                   <i class="bi bi-trash-fill"></i> delete
                 </button>
-                <button type="submit" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-100 mb-2 rounded">
+                <button type="submit" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded">
                   <i class="bi bi-floppy-fill"></i> save
                 </button>
               </div>
-              <div class="btn-group gap-2 w-100">
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-100 mb-2 rounded" href="upload.php?id=<?php echo $image['id']; ?>">
+              <div class="btn-group gap-2 w-100 mb-2">
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded" href="upload.php?id=<?php echo $image['id']; ?>">
                   <i class="bi bi-cloud-arrow-up-fill"></i> upload new images child
                 </a>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-100 mb-2 rounded" href="all.php?id=<?php echo $image['id']; ?>">
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded" href="all.php?id=<?php echo $image['id']; ?>">
                   <i class="bi bi-images"></i> view all images child
                 </a>
               </div>
-              <div class="btn-group w-100">
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium" href="../profile.php">Back to Profile</a>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium" href="../image.php?artworkid=<?php echo $image['id']; ?>">Back to Image</a>
+              <div class="btn-group w-100 mb-2">
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50" href="../profile.php">Back to Profile</a>
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50" href="../image.php?artworkid=<?php echo $image['id']; ?>">Back to Artwork</a>
               </div>
+              <a class="btn w-100 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium" href="export.php?artworkid=<?php echo $image['id']; ?>">Export Your Artwork</a>
               <div class="mt-5"></div>
             </form> 
           </div> 

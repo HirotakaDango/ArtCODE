@@ -53,7 +53,7 @@ $database->close();
             </h5>
             <p class="text-muted mb-4">Choose between a light or dark theme to adjust the appearance of the website to your preference.</p>
             <form method="POST" action="">
-              <div class="form-group mb-3">
+              <div class="form-group mb-2">
                 <label class="fw-semibold mb-2" for="page">Select mode:</label>
                 <select class="form-select" id="page" name="page">
                   <option value="light" <?php if ($currenttheme == 'light') echo 'selected'; ?>>light</option>

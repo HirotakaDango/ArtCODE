@@ -138,8 +138,12 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p class="form-control-plaintext fw-bold text-white"><?php echo date("l, d F, Y", $file_info['ctime']); ?></p>
                   </div>
                 </div>
-    
-                <button type="button" class="btn mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $child_image['id']; ?>">
+
+                <a href="replace_image_child.php?id=<?php echo $_GET['id']; ?>&child_id=<?php echo $child_image['id']; ?>" class="btn btn-sm mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium">
+                  Replace Image
+                </a>
+
+                <button type="button" class="btn btn-sm mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo $child_image['id']; ?>">
                   Delete
                 </button>
               </div>

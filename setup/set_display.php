@@ -5,12 +5,12 @@ require_once('../auth.php');
 $database = new SQLite3('../database.sqlite');
 
 // Get the current page of the user from the database
-$query = "SELECT numpage FROM users WHERE email = :email";
+$query = "SELECT display FROM users WHERE email = :email";
 $statement = $database->prepare($query);
 $statement->bindValue(':email', $_SESSION['email']);
 $result = $statement->execute();
 $row = $result->fetchArray(SQLITE3_ASSOC);
-$currentpage = $row['numpage'];
+$currentpage = $row['display'];
 
 // Process the form submission if the user has selected a new page
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $selectedpage = $_POST['page'];
 
   // Update the user's page in the database
-  $query = "UPDATE users SET numpage = :numpage WHERE email = :email";
+  $query = "UPDATE users SET display = :display WHERE email = :email";
   $statement = $database->prepare($query);
-  $statement->bindValue(':numpage', $selectedpage);
+  $statement->bindValue(':display', $selectedpage);
   $statement->bindValue(':email', $_SESSION['email']);
   $statement->execute();
 
@@ -57,8 +57,8 @@ $database->close();
           <div class="form-group">
             <label class="fw-semibold mb-3" for="page">Select mode:</label>
             <select class="form-select" id="page" name="page">
-              <option value="simple_view" <?php if ($currentpage == 'simple_view') echo 'selected'; ?>>Simple View</option>
               <option value="view" <?php if ($currentpage == 'view') echo 'selected'; ?>>Full View</option>
+              <option value="simple_view" <?php if ($currentpage == 'simple_view') echo 'selected'; ?>>Simple View</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>
