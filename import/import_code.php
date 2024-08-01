@@ -2,7 +2,7 @@
 require_once('../auth.php');
 
 // Function to create a thumbnail
-function createThumbnail($sourcePath, $destPath, $thumbWidth = 150) {
+function createThumbnail($sourcePath, $destPath, $thumbWidth = 300) {
   list($width, $height) = getimagesize($sourcePath);
   $thumbHeight = (int) (($thumbWidth / $width) * $height);
   $thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
