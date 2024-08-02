@@ -46,7 +46,7 @@ $database->close();
           <h3 class="fw-bold mb-3">
             Change Image Display Mode
           </h3>
-          <p class="fw-semibold">Current display mode: <?php echo ($currentpage == 'simple_view') ? 'simple view' : 'full view'; ?></p>
+          <p class="fw-semibold">Current display mode: <?php echo ($currentpage == 'simple_view') ? 'simple view' : 'normal view'; ?></p>
           <div class="card border-0 bg-body-tertiary rounded-4 shadow-sm p-4 mb-4">
             <h5 class="fw-bold">
               <i class="bi bi-display-fill me-2"></i> Select Mode
@@ -56,7 +56,8 @@ $database->close();
               <div class="form-group">
                 <label class="fw-semibold mb-3" for="page">Select mode:</label>
                 <select class="form-select" id="page" name="page">
-                  <option value="view" <?php if ($currentpage == 'view') echo 'selected'; ?>>Full View</option>
+                  <option value="view" <?php if ($currentpage == 'view') echo 'selected'; ?>>Normal View</option>
+                  <option value="view" <?php if ($currentpage == 'full_view') echo 'selected'; ?>>Full View</option>
                   <option value="simple_view" <?php if ($currentpage == 'simple_view') echo 'selected'; ?>>Simple View</option>
                 </select>
               </div>

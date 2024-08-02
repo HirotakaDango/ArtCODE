@@ -10,7 +10,8 @@
         </a>
         <div class="position-absolute top-50 start-50 translate-middle d-none d-md-block" style="padding-bottom: 0.1em;">
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/home/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/">Home</a>
-          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/scrolls/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/scrolls">Scrolls</a>
+          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/scrolls/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/scrolls/">Scrolls</a>
+          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/gallerium/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/gallerium/">Gallerium</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis" href="/manga/">Manga</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/music/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/music/">Music</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/keyword/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Keyword</a>
@@ -36,10 +37,14 @@
                   <button type="submit" class="btn bg-body-tertiary link-body-emphasis border-0 rounded-start-0 rounded-4"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
                 </div>
               </form>
+              <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 mt-2 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
+                <i class="bi bi-house-fill fs-5"></i>
+                <span class="d-md-none d-lg-inline d-lg-none">Home</span>
+              </a>
               <div class="btn-group gap-2 w-100 mt-2">
-                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
-                  <i class="bi bi-house-fill fs-5"></i>
-                  <span class="d-md-none d-lg-inline d-lg-none">Home</span>
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/gallerium/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/preview/gallerium/">
+                  <i class="bi bi-collection-fill fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none">Gallerium</span>
                 </a>
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], 'preview/scrolls/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/preview/scrolls/">
                   <i class="bi bi-distribute-vertical fs-5"></i>

@@ -999,9 +999,16 @@ if ($daily_view) {
               </div>
             </div>
             <div class="position-absolute top-0 start-0 ms-2 mt-2">
-              <a class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded" href="simple_view.php?artworkid=<?php echo $image['id']; ?>">
-                simple view
-              </a>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  view option
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item <?php if(basename($_SERVER['PHP_SELF']) == 'view.php') echo 'active' ?>" href="view.php?artworkid=<?php echo $image['id']; ?>">normal view</a></li>
+                  <li><a class="dropdown-item <?php if(basename($_SERVER['PHP_SELF']) == 'full_view.php') echo 'active' ?>" href="full_view.php?artworkid=<?php echo $image['id']; ?>">full view</a></li>
+                  <li><a class="dropdown-item <?php if(basename($_SERVER['PHP_SELF']) == 'simple_view.php') echo 'active' ?>" href="simple_view.php?artworkid=<?php echo $image['id']; ?>">simple view</a></li>
+                </ul>
+              </div>
             </div>
             <div class="position-absolute bottom-0 end-0 me-2 mb-2">
               <div class="btn-group">
@@ -1016,12 +1023,12 @@ if ($daily_view) {
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item fw-bold" href="simple_view/gallery/?artworkid=<?php echo $image['id']; ?>">
+                      <a class="dropdown-item fw-bold" href="/view/gallery/?artworkid=<?php echo $image['id']; ?>">
                         <i class="bi bi-distribute-vertical"></i> full gallery view
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item fw-bold" href="simple_view/carousel/?artworkid=<?php echo $image['id']; ?>">
+                      <a class="dropdown-item fw-bold" href="/view/carousel/?artworkid=<?php echo $image['id']; ?>">
                         <i class="bi bi-distribute-horizontal"></i> full carousel view
                       </a>
                     </li>
@@ -1045,52 +1052,17 @@ if ($daily_view) {
                         <i class="bi bi-cloud-arrow-down-fill"></i> Download first image (<?php echo getImageSizeInMB($image['filename']); ?> MB)
                       </a>
                       <?php if ($total_size > 10): ?>
-                        <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="#" data-bs-target="#rusModal" data-bs-toggle="modal">
+                        <a type="button" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="/download_images.php?artworkid=<?php echo $image['id']; ?>">
                           <p><i class="bi bi-file-earmark-zip-fill"></i> Download all images (<?php echo $total_size; ?> MB)</p>
                           <p><small>This file is too big. The total size is <?php echo $total_size; ?> MB.</small></p>
                         </a>
                       <?php else: ?>
-                        <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="#" id="downloadAllImages">
+                        <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="/download_images.php?artworkid=<?php echo $image['id']; ?>">
                           <i class="bi bi-file-earmark-zip-fill"></i> Download all images (<?php echo $total_size; ?> MB)
                         </a>
                       <?php endif; ?>
                       <div class="progress fw-bold" style="height: 30px; display: none;">
                         <div class="progress-bar progress-bar progress-bar-animated fw-bold" style="width: 0; height: 30px;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progress-bar1">0%</div>
-                      </div>
-                      <h5 class="fw-bold text-center mt-2">Please Note!</h5>
-                      <p class="fw-bold text-center container">
-                        <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
-                      </p>
-                      <p class="fw-bold text-center container">
-                        <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_batch.php?artworkid=<?= $image_id; ?>">click this link</a> for third option if download all images error or failed.</small>
-                      </p>
-                      <p class="fw-bold text-center container">
-                        <small>3. If you found problem where the zip contain empty file or 0b, download the images manually.</small>
-                      </p>
-                      <p class="fw-bold text-center container">
-                        <small>4. Server sometimes have problem with file and folder path, download manually is the best option if this happening.</small>
-                      </p>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 text-center rounded-3" data-bs-dismiss="modal">cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal fade" id="rusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                  <div class="modal-content rounded-4 border-0">
-                    <div class="modal-header border-0">
-                      <h1 class="modal-title fw-bold fs-5" id="exampleModalToggleLabel2">Are You Sure?</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body scrollable-div">
-                      <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="/download_images.php?artworkid=<?php echo $image['id']; ?>">
-                        <i class="bi bi-file-earmark-zip-fill"></i> Download all images (<?php echo $total_size; ?> MB)
-                      </a>
-                      <button type="button" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> mb-2 fw-bold w-100 text-center rounded-3" data-bs-target="#downloadOption" data-bs-toggle="modal"><i class="bi bi-arrow-left-circle-fill"></i> back to previous</button>
-                      <div class="progress fw-bold" style="height: 30px; display: none;">
-                        <div class="progress-bar progress-bar progress-bar-animated fw-bold" style="width: 0; height: 30px;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progress-bar2">0%</div>
                       </div>
                       <h5 class="fw-bold text-center mt-2">Please Note!</h5>
                       <p class="fw-bold text-center container">
@@ -2015,14 +1987,6 @@ if ($daily_view) {
     </style>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
-    <p class="fw-bold ms-2 mt-2">Latest Images</p>
-    <?php
-      include('latest.php');
-    ?>
-    <p class="fw-bold ms-2 mt-5">Popular Images</p>
-    <?php
-      include('most_popular.php');
-    ?>
     <div class="mt-5"></div>
     <script>
       function copyToClipboard() {

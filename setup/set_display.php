@@ -57,7 +57,8 @@ $database->close();
           <div class="form-group">
             <label class="fw-semibold mb-3" for="page">Select mode:</label>
             <select class="form-select" id="page" name="page">
-              <option value="view" <?php if ($currentpage == 'view') echo 'selected'; ?>>Full View</option>
+              <option value="view" <?php if ($currentpage == 'view') echo 'selected'; ?>>Normal View</option>
+              <option value="view" <?php if ($currentpage == 'full_view') echo 'selected'; ?>>Full View</option>
               <option value="simple_view" <?php if ($currentpage == 'simple_view') echo 'selected'; ?>>Simple View</option>
             </select>
           </div>

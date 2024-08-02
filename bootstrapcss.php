@@ -3,40 +3,17 @@
     <style>
       /* For Webkit-based browsers */
       ::-webkit-scrollbar {
-        width: 8px;
-        height: 10px;
+        width: 0;
+        height: 0;
         border-radius: 10px;
-        background-color: #F2F2F2;
       }
 
       ::-webkit-scrollbar-track {
-        background: #F2F2F2;
-        border-radius: 10px;
+        border-radius: 0;
       }
 
       ::-webkit-scrollbar-thumb {
-        background: #D6D6D6;
-        border-radius: 10px;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
-      
-      .scrollable-div {
-        overflow: auto;
-        scrollbar-width: thin;  /* For Firefox */
-        -ms-overflow-style: none;  /* For Internet Explorer and Edge */
-        scrollbar-color: transparent transparent;  /* For Chrome, Safari, and Opera */
-      }
-
-      .scrollable-div::-webkit-scrollbar {
-        width: 0;
-        background-color: transparent;
-      }
-      
-      .scrollable-div::-webkit-scrollbar-thumb {
-        background-color: transparent;
+        border-radius: 0;
       }
       
      .text-stroke {
