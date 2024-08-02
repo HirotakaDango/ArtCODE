@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../icon/favicon.png">
+    <title>Whispers in the Dark</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: #000;
+        color: #0f0;
+        font-family: 'Courier New', monospace;
+        overflow: hidden;
+        font-size: 1.3em;
+      }
+
+      #game-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+        position: relative;
+      }
+
+      #question {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      #choices {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      button {
+        background-color: #000;
+        color: #0f0;
+        border: 1px solid #0f0;
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+        font-family: 'Courier New', monospace;
+        font-size: 1em;
+        transition: all 0.3s;
+      }
+
+      button:hover {
+        background-color: #0f0;
+        color: #000;
+      }
+
+      #status, #sanity, #artifacts {
+        margin-top: 20px;
+        font-style: italic;
+      }
+
+      .tv-line {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: rgba(0, 255, 0, 0.2);
+        pointer-events: none;
+        animation: scanline 1s linear infinite;
+        z-index: 2;
+      }
+
+      @keyframes scanline {
+        0% {
+          transform: translateY(0);
+        }
+
+        100% {
+          transform: translateY(100%);
+        }
+      }
+
+      #main-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+
+      #main-menu h1 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+
+      #instructions {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <!-- Main menu will be inserted here -->
+    </div>
+    <script>
+      const questions = [
+        {
+          text: "You wake up in a dark room. There's a faint whisper coming from...",
+          choices: [
+            { text: "Under the bed", nextQuestion: 1, artifact: true },
+            { text: "Inside the closet", nextQuestion: 2 },
+            { text: "Behind the mirror", nextQuestion: 3 },
+          ],
+        },
+        {
+          text: "You peer under the bed and see glowing eyes. They blink and ask, 'Do you want to play?'",
+          choices: [
+            { text: "Yes", nextQuestion: 4, artifact: true },
+            { text: "No", nextQuestion: 5 },
+          ],
+        },
+        {
+          text: "The closet door creaks open. A shadowy figure emerges and asks, 'Have you seen my child?'",
+          choices: [
+            { text: "Lie and say yes", nextQuestion: 6 },
+            { text: "Tell the truth and say no", nextQuestion: 7, artifact: true },
+          ],
+        },
+        {
+          text: "Your reflection in the mirror begins to move independently. It smiles and says, 'Let's switch places.'",
+          choices: [
+            { text: "Agree", nextQuestion: 8 },
+            { text: "Refuse", nextQuestion: 9, artifact: true },
+          ],
+        },
+        {
+          text: "You find an old diary. The pages are filled with strange symbols. Do you...",
+          choices: [
+            { text: "Try to decipher it", nextQuestion: 10, artifact: true },
+            { text: "Put it back", nextQuestion: 11 },
+          ],
+        },
+        {
+          text: "A ghostly child appears, crying. It points to a locked door. Do you...",
+          choices: [
+            { text: "Try to comfort the child", nextQuestion: 12 },
+            { text: "Look for the key", nextQuestion: 13, artifact: true },
+          ],
+        },
+        {
+          text: "You hear scratching sounds coming from inside the walls. They seem to be getting closer. Do you...",
+          choices: [
+            { text: "Put your ear against the wall", nextQuestion: 14 },
+            { text: "Run to another room", nextQuestion: 15 },
+          ],
+        },
+        {
+          text: "A painting on the wall seems to be changing. The figure in it is now staring at you. Do you...",
+          choices: [
+            { text: "Stare back", nextQuestion: 16, artifact: true },
+            { text: "Cover the painting", nextQuestion: 17 },
+          ],
+        },
+        {
+          text: "You find a music box. When you open it, it plays a haunting melody. Do you...",
+          choices: [
+            { text: "Keep listening", nextQuestion: 18 },
+            { text: "Close it immediately", nextQuestion: 19, artifact: true },
+          ],
+        },
+        {
+          text: "A cold hand touches your shoulder from behind. You turn around and see...",
+          choices: [
+            { text: "An old woman", nextQuestion: 20 },
+            { text: "A faceless figure", nextQuestion: 21 },
+          ],
+        },
+        {
+          text: "You discover a hidden passageway behind a bookshelf. It leads to...",
+          choices: [
+            { text: "A dimly lit staircase going down", nextQuestion: 22, artifact: true },
+            { text: "A room full of antique dolls", nextQuestion: 23 },
+          ],
+        },
+        {
+          text: "Suddenly, all the lights in the house turn on, then off. In the brief moment of light, you saw...",
+          choices: [
+            { text: "Countless eyes watching you", nextQuestion: 24 },
+            { text: "The room transformed into something else", nextQuestion: 25, artifact: true },
+          ],
+        },
+        {
+          text: "You hear a phone ringing. The caller ID shows your own number. Do you...",
+          choices: [
+            { text: "Answer it", nextQuestion: 26, artifact: true },
+            { text: "Ignore it", nextQuestion: 27 },
+          ],
+        },
+        {
+          text: "A door slams shut behind you. You try the handle and...",
+          choices: [
+            { text: "It's locked", nextQuestion: 28 },
+            { text: "It falls off in your hand", nextQuestion: 29 },
+          ],
+        },
+        {
+          text: "You find a note that says 'Don't look up'. Do you...",
+          choices: [
+            { text: "Look up", nextQuestion: 30 },
+            { text: "Keep your eyes down", nextQuestion: 31, artifact: true },
+          ],
+        },
+        {
+          text: "The temperature suddenly drops. You can see your breath. Then you hear...",
+          choices: [
+            { text: "A child's laughter", nextQuestion: 32 },
+            { text: "A deep, guttural growl", nextQuestion: 33 },
+          ],
+        },
+        {
+          text: "You stumble upon a ritual circle drawn on the floor. In the center is...",
+          choices: [
+            { text: "A ancient-looking book", nextQuestion: 34, artifact: true },
+            { text: "A sacrificial dagger", nextQuestion: 35 },
+          ],
+        },
+        {
+          text: "The lights flicker, and for a moment, you see your shadow cast multiple times. Do you...",
+          choices: [
+            { text: "Try to touch the other shadows", nextQuestion: 36 },
+            { text: "Stay perfectly still", nextQuestion: 37, artifact: true },
+          ],
+        },
+        {
+          text: "You hear a voice whispering your name. It seems to be coming from...",
+          choices: [
+            { text: "The attic", nextQuestion: 38 },
+            { text: "The basement", nextQuestion: 39 },
+          ],
+        },
+        {
+          text: "You find an old camera. When you look through the viewfinder, you see...",
+          choices: [
+            { text: "The past", nextQuestion: 40, artifact: true },
+            { text: "The future", nextQuestion: 41 },
+          ],
+        },
+        {
+          text: "A book on the table opens by itself. The pages flip rapidly until they stop at...",
+          choices: [
+            { text: "A drawing of you", nextQuestion: 42 },
+            { text: "A drawing of a monstrous figure", nextQuestion: 43 },
+          ],
+        },
+        {
+          text: "You hear footsteps behind you, but when you turn around...",
+          choices: [
+            { text: "Nothing is there", nextQuestion: 44 },
+            { text: "A shadowy figure stands silently", nextQuestion: 45 },
+          ],
+        },
+        {
+          text: "A door appears where there wasn't one before. Do you...",
+          choices: [
+            { text: "Open it", nextQuestion: 46, artifact: true },
+            { text: "Ignore it", nextQuestion: 47 },
+          ],
+        },
+        {
+          text: "You find a mirror that shows your reflection differently. It seems to be...",
+          choices: [
+            { text: "Aged significantly", nextQuestion: 48 },
+            { text: "Wounded and bleeding", nextQuestion: 49, artifact: true },
+          ],
+        },
+        {
+          text: "You hear a song playing softly. It is...",
+          choices: [
+            { text: "A lullaby", nextQuestion: 50, artifact: true },
+            { text: "A funeral dirge", nextQuestion: 51 },
+          ],
+        },
+        {
+          text: "You find an old key. It looks like it belongs to...",
+          choices: [
+            { text: "A treasure chest", nextQuestion: 52, artifact: true },
+            { text: "A hidden door", nextQuestion: 53 },
+          ],
+        },
+        {
+          text: "You find a photo of yourself that you don't remember taking. In the background, there is...",
+          choices: [
+            { text: "A shadowy figure", nextQuestion: 54 },
+            { text: "An unfamiliar place", nextQuestion: 55 },
+          ],
+        },
+        {
+          text: "You find a candle. When you light it, the flame burns...",
+          choices: [
+            { text: "Blue", nextQuestion: 56, artifact: true },
+            { text: "Green", nextQuestion: 57 },
+          ],
+        },
+        {
+          text: "You find an old locket. Inside, there is...",
+          choices: [
+            { text: "A lock of hair", nextQuestion: 58, artifact: true },
+            { text: "A tiny portrait", nextQuestion: 59 },
+          ],
+        },
+        {
+          text: "You find a letter addressed to you. It says...",
+          choices: [
+            { text: "'Beware the watcher'", nextQuestion: 60, artifact: true },
+            { text: "'You are not alone'", nextQuestion: 61 },
+          ],
+        },
+      ];
+
+      const statusMessages = {
+        success: "Your choice seems to have been the right one.",
+        failure: "You feel an eerie chill as if you've made a wrong choice.",
+      };
+    
+      const artifacts = [
+        "a tarnished key",
+        "an old diary",
+        "a mysterious locket",
+        "a strange amulet",
+        "an ancient map",
+      ];
+    
+      let currentQuestionIndex = 0;
+      let playerArtifacts = [];
+      let sanityPoints = 100; // Starting sanity points
+    
+      const gameContainer = document.getElementById("game-container");
+    
+      function updateStatus() {
+        const status = document.getElementById("status");
+        const sanity = document.getElementById("sanity");
+        const artifactsDisplay = document.getElementById("artifacts");
+    
+        status.textContent = playerArtifacts.length > 0 
+          ? `You found ${playerArtifacts[playerArtifacts.length - 1]}. ${statusMessages.success}` 
+          : statusMessages.failure;
+    
+        sanity.textContent = `Sanity: ${sanityPoints}`;
+        artifactsDisplay.textContent = `Artifacts Found: ${playerArtifacts.length}`;
+      }
+    
+      function startGame() {
+        // Reset game variables
+        currentQuestionIndex = 0;
+        playerArtifacts = [];
+        sanityPoints = 100;
+    
+        gameContainer.innerHTML = `
+          <div id="main-menu">
+            <h1>Whispers in the Dark</h1>
+            <div id="instructions">
+              Venture into the eerie darkness of a haunted house by making chilling choices.<br>
+              Seek out hidden artifacts to unveil the house's dark secrets.<br>
+              Every decision you make will twist your fate in this spine-tingling adventure.
+            </div>
+            <button onclick="nextQuestion()">Start</button>
+          </div>
+        `;
+      }
+    
+      function nextQuestion() {
+        const question = questions[currentQuestionIndex];
+        gameContainer.innerHTML = `
+          <div id="question">${question.text}</div>
+          <div id="choices">
+            ${question.choices
+              .map(
+                (choice, index) =>
+                  `<button onclick="makeChoice(${index})">${choice.text}</button>`
+              )
+              .join("")}
+          </div>
+          <div id="status"></div>
+          <div id="sanity">Sanity: ${sanityPoints}</div>
+          <div id="artifacts">Artifacts Found: ${playerArtifacts.length}</div>
+        `;
+      }
+    
+      function makeChoice(choiceIndex) {
+        const choice = questions[currentQuestionIndex].choices[choiceIndex];
+        currentQuestionIndex = choice.nextQuestion;
+    
+        if (choice.artifact) {
+          const artifact = artifacts[Math.floor(Math.random() * artifacts.length)];
+          playerArtifacts.push(artifact);
+          sanityPoints -= 10; // Decrease sanity when finding an artifact
+        } else {
+          sanityPoints -= 5; // Decrease sanity on a wrong choice
+        }
+    
+        updateStatus();
+    
+        if (sanityPoints <= 0) {
+          endGame();
+        } else if (currentQuestionIndex >= questions.length) {
+          endGame();
+        } else {
+          setTimeout(nextQuestion, 2000); // Delay to allow reading the status message
+        }
+      }
+    
+      function endGame() {
+        gameContainer.innerHTML = `
+          <h1>Game Over</h1>
+          <div>Your journey has ended. You found the following artifacts:</div>
+          <ul>${playerArtifacts.map((artifact) => `<li>${artifact}</li>`).join("")}</ul>
+          <button onclick="startGame()">Play Again</button>
+        `;
+      }
+    
+      function createTVLines() {
+          const lines = 100;
+          const container = document.createDocumentFragment();
+    
+          for (let i = 0; i < lines; i++) {
+              const line = document.createElement("div");
+              line.classList.add("tv-line");
+              line.style.top = `${(i / lines) * 100}%`;
+              line.style.animationDelay = `${i * 0.1}s`;
+              container.appendChild(line);
+          }
+    
+          document.body.appendChild(container);
+      }
+    
+      window.onload = () => {
+        startGame();
+        createTVLines();
+      };
+    </script>
+  </body>
+</html>
