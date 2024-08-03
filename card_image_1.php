@@ -217,7 +217,7 @@
                                           $tag = trim($tag);
                                           if (!empty($tag)) {
                                             ?>
-                                            <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/tagged_images.php?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-tag-fill"></i> <?php echo htmlspecialchars($tag); ?>
                                             </a>
                                             <?php
@@ -239,7 +239,7 @@
                                           $character = trim($character);
                                           if (!empty($character)) {
                                             ?>
-                                            <a href="character/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/character/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($character); ?>
                                             </a>
                                             <?php
@@ -259,7 +259,7 @@
                                           $parody = trim($parody);
                                           if (!empty($parody)) {
                                             ?>
-                                            <a href="parody/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/parody/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-journal"></i> <?php echo htmlspecialchars($parody); ?>
                                             </a>
                                             <?php
@@ -279,7 +279,7 @@
                                           $group = trim($group);
                                           if (!empty($group)) {
                                             ?>
-                                            <a href="group/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/group/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($group); ?>
                                             </a>
                                             <?php
