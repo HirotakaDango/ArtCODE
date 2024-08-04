@@ -326,7 +326,7 @@ require_once('../auth.php');
         uploadButton.style.display = 'none';
       }
   
-    function showSuccessMessage() {
+      function showSuccessMessage() {
         // Hide the modal
         var uploadModal = document.getElementById('uploadModal');
         var modal = bootstrap.Modal.getInstance(uploadModal);

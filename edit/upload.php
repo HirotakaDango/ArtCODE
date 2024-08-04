@@ -351,130 +351,136 @@ $db->close();
         var uploadModal = document.getElementById('uploadModal');
         var modal = bootstrap.Modal.getInstance(uploadModal);
         modal.hide();
-
+      
         var toastContainer = document.createElement('div');
-        toastContainer.classList.add('container', 'mb-3', 'd-flex', 'justify-content-center');
-
+        toastContainer.classList.add('toast-container', 'position-fixed', 'bottom-0', 'end-0', 'p-3');
+      
         var toast = document.createElement('div');
-        toast.classList.add('toast', 'mt-3');
-
+        toast.classList.add('toast');
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+      
         var toastHeader = document.createElement('div');
         toastHeader.classList.add('toast-header');
-
+      
         var toastTitle = document.createElement('strong');
         toastTitle.classList.add('me-auto');
         toastTitle.textContent = 'ArtCODE';
-
+      
         var toastTime = document.createElement('small');
-        toastTime.textContent = 'Now';
-
+        toastTime.textContent = 'Just now';
+      
         var closeButton = document.createElement('button');
         closeButton.type = 'button';
         closeButton.classList.add('btn-close');
         closeButton.setAttribute('data-bs-dismiss', 'toast');
         closeButton.setAttribute('aria-label', 'Close');
-
+      
         var toastBody = document.createElement('div');
-        toastBody.classList.add('toast-body', 'fw-bold');
+        toastBody.classList.add('toast-body', 'fw-medium');
         toastBody.textContent = 'File uploaded successfully.';
-
+      
         var actionButtons = document.createElement('div');
         actionButtons.classList.add('mt-2', 'pt-2', 'border-top');
-
+      
         var buttonGroup = document.createElement('div');
         buttonGroup.classList.add('btn-group', 'w-100', 'gap-2');
-
+      
         var goToHomeButton = document.createElement('a');
-        goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-bold', 'rounded');
+        goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToHomeButton.textContent = 'Go to Home';
         goToHomeButton.href = '../?by=newest';
-
+      
         var goToProfileButton = document.createElement('a');
-        goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-bold', 'rounded');
-        goToProfileButton.textContent = 'Go to Image';
-        goToProfileButton.href = "../image.php?artworkid=<?php echo $image['id']; ?>";
-
+        goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
+        goToProfileButton.textContent = 'Go to Artwork';
+        goToProfileButton.href = '../image.php?artworkid=<?php echo $image['id']; ?>';
+      
         buttonGroup.appendChild(goToHomeButton);
         buttonGroup.appendChild(goToProfileButton);
-
+      
         actionButtons.appendChild(buttonGroup);
-
+      
         var closeButtonInToast = document.createElement('button');
         closeButtonInToast.type = 'button';
-        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-bold', 'w-100');
+        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-medium', 'w-100');
         closeButtonInToast.setAttribute('data-bs-dismiss', 'toast');
         closeButtonInToast.textContent = 'Close';
-
+      
         toastHeader.appendChild(toastTitle);
         toastHeader.appendChild(toastTime);
         toastHeader.appendChild(closeButton);
-
+      
         toastBody.appendChild(actionButtons);
         toastBody.appendChild(closeButtonInToast);
-
+      
         toast.appendChild(toastHeader);
         toast.appendChild(toastBody);
-
+      
         toastContainer.appendChild(toast);
-
+      
         document.body.appendChild(toastContainer);
-
+      
         // Show the toast
         var toastElement = new bootstrap.Toast(toast);
         toastElement.show();
-
+      
         // Automatically hide the toast after 1 minute (60000 milliseconds)
         setTimeout(function () {
           toastElement.hide();
         }, 60000);
       }
-
+      
       function showErrorMessage() {
         var toastContainer = document.createElement('div');
-        toastContainer.classList.add('container-fluid', 'w-100', 'position-absolute', 'top-0',  'mt-5', 'd-flex', 'justify-content-center');
-
+        toastContainer.classList.add('toast-container', 'position-fixed', 'bottom-0', 'end-0', 'p-3');
+      
         var toast = document.createElement('div');
-        toast.classList.add('toast', 'mt-3', 'bg-danger');
-
+        toast.classList.add('toast', 'bg-danger');
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+      
         var toastHeader = document.createElement('div');
         toastHeader.classList.add('toast-header');
-
+      
         var toastTitle = document.createElement('strong');
         toastTitle.classList.add('me-auto');
         toastTitle.textContent = 'ArtCODE';
-
+      
         var toastTime = document.createElement('small');
-        toastTime.textContent = 'Now';
-
+        toastTime.textContent = 'Just now';
+      
         var closeButton = document.createElement('button');
         closeButton.type = 'button';
         closeButton.classList.add('btn-close');
         closeButton.setAttribute('data-bs-dismiss', 'toast');
         closeButton.setAttribute('aria-label', 'Close');
-
+      
         var toastBody = document.createElement('div');
-        toastBody.classList.add('toast-body', 'fw-bold', 'text-light');
+        toastBody.classList.add('toast-body', 'fw-medium', 'text-light');
         toastBody.textContent = 'Image upload failed. Please try again.';
-
+      
         var closeButtonInToast = document.createElement('button');
         closeButtonInToast.type = 'button';
-        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-bold', 'w-100');
+        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-medium', 'w-100');
         closeButtonInToast.setAttribute('data-bs-dismiss', 'toast');
         closeButtonInToast.textContent = 'Close';
-
+      
         toastHeader.appendChild(toastTitle);
         toastHeader.appendChild(toastTime);
         toastHeader.appendChild(closeButton);
-
+      
         toastBody.appendChild(closeButtonInToast);
-
+      
         toast.appendChild(toastHeader);
         toast.appendChild(toastBody);
-
+      
         toastContainer.appendChild(toast);
-
+      
         document.body.appendChild(toastContainer);
-
+      
         // Show the toast
         var toastElement = new bootstrap.Toast(toast);
         toastElement.show();
