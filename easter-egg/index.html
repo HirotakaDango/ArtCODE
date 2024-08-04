@@ -86,11 +86,15 @@
           </div>
         </div>
       </div>
-      <div id="question" class="my-3 text-center">Welcome to the trivia game. Select a difficulty to begin.</div>
+      <div id="welcome-message" class="my-3 text-center">Welcome to the trivia game. Select a difficulty to begin.</div>
+      <div id="question" class="my-3 text-center"></div>
       <div id="answer" class="list-group"></div>
       <div id="feedback" class="feedback"></div>
       <div id="next-question-container" class="text-center mt-3 d-none">
         <button id="next-question" class="btn btn-info">Next Question</button>
+      </div>
+      <div id="back-to-menu-container" class="text-center mt-3 d-none">
+        <button id="back-to-menu" class="btn btn-primary">Back to Main Menu</button>
       </div>
     </div>
 
@@ -105,6 +109,7 @@
       function startGame(selectedDifficulty) {
         difficulty = selectedDifficulty;
         document.getElementById('menu').style.display = 'none';
+        document.getElementById('welcome-message').style.display = 'none'; // Hide the welcome message
         document.getElementById('health-bar').classList.remove('d-none');
         document.getElementById('difficulty').classList.remove('d-none');
         document.getElementById('score').classList.remove('d-none');
@@ -114,6 +119,7 @@
 
       async function fetchTrivia() {
         answerClicked = false; // Reset answer click status for the new question
+        document.getElementById('next-question').disabled = true; // Disable the button to prevent multiple clicks
         try {
           const response = await fetch(`https://opentdb.com/api.php?amount=1&difficulty=${difficulty}&type=multiple`);
           const data = await response.json();
@@ -140,6 +146,8 @@
           }
         } catch (error) {
           console.error('Error fetching trivia:', error);
+        } finally {
+          document.getElementById('next-question').disabled = false; // Re-enable the button
         }
       }
 
@@ -149,12 +157,12 @@
 
         const feedbackElement = document.getElementById('feedback');
         if (selectedAnswer === correctAnswer) {
-          feedbackElement.innerHTML = "You're correct! &#128077;"; // Using HTML entity for thumbs up emoji
+          feedbackElement.innerHTML = `Your answer "${selectedAnswer}" is correct! &#128077;`; // Detailed feedback
           feedbackElement.classList.remove('text-danger');
           feedbackElement.classList.add('text-success');
           score++;
         } else {
-          feedbackElement.innerHTML = `You're incorrect! The correct answer was: <strong>${correctAnswer}</strong> &#128078;`; // Using HTML entity for thumbs down emoji
+          feedbackElement.innerHTML = `You're incorrect! The correct answer was: <strong>${correctAnswer}</strong> &#128078;`; // Detailed feedback for incorrect answer
           feedbackElement.classList.remove('text-success');
           feedbackElement.classList.add('text-danger');
           health -= 5;
@@ -177,31 +185,28 @@
         document.getElementById('feedback').innerHTML = `Game Over! Your final score is <strong>${score}</strong>. &#128577;`; // Using HTML entity for frowning face emoji
         document.getElementById('question').innerHTML = '';
         document.getElementById('answer').innerHTML = '';
-        document.getElementById('menu').style.display = 'block';
-        document.getElementById('menu').innerHTML += `<button class="btn btn-info mt-3" onclick="shareScore()">Share Score</button>`;
+        document.getElementById('next-question-container').classList.add('d-none'); // Hide Next Question button
+        document.getElementById('back-to-menu-container').classList.remove('d-none'); // Show Back to Menu button
       }
 
-      function shareScore() {
-        const score = document.getElementById('score-value').textContent;
-        const shareText = `I scored ${score} points in the Trivia Challenge! Can you beat my score?`;
-
-        if (navigator.share) {
-          navigator.share({
-            title: 'Trivia Challenge',
-            text: shareText,
-            url: window.location.href
-          }).then(() => {
-            console.log('Thanks for sharing!');
-          }).catch(err => {
-            console.error('Error sharing:', err);
-          });
-        } else {
-          alert('Sharing is not supported in your browser.');
-        }
+      function goBackToMenu() {
+        document.getElementById('menu').style.display = 'block';
+        document.getElementById('welcome-message').style.display = 'block'; // Keep welcome message visible
+        document.getElementById('back-to-menu-container').classList.add('d-none'); // Hide Back to Menu button
+        document.getElementById('health-bar').classList.add('d-none');
+        document.getElementById('difficulty').classList.add('d-none');
+        document.getElementById('score').classList.add('d-none');
+        document.getElementById('question').innerHTML = '';
+        document.getElementById('answer').innerHTML = '';
+        document.getElementById('feedback').innerHTML = '';
       }
 
       document.getElementById('next-question').onclick = function() {
         fetchTrivia(); // Fetch the next question when the button is clicked
+      };
+
+      document.getElementById('back-to-menu').onclick = function() {
+        goBackToMenu(); // Go back to the main menu
       };
 
       // Inline service worker script
