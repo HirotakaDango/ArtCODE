@@ -167,7 +167,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               <div class="btn-group gap-2 w-100 mt-2">
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/upload/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
                   <i class="bi bi-cloud-arrow-up-fill fs-5"></i>
-                  <span class="d-md-none d-lg-inline d-lg-none">Uploads</span>
+                  <span class="d-md-none d-lg-inline d-lg-none">Upload</span>
                 </a>
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
                   <i class="bi bi-journals fs-5"></i>
@@ -324,7 +324,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
               </li>
               <li class="nav-item mx-1">
                 <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/upload/index.php') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
-                  Uploads
+                  Upload
                 </a>
               </li>
               <li class="nav-item mx-1">
