@@ -17,7 +17,7 @@ $searchPage = isset($_GET['q']) ? $_GET['q'] : null;
   </head>
   <body>
     <?php include('header.php'); ?>
-    <div class="dropdown mt-3">
+    <div class="dropdown mb-2 mt-3">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>

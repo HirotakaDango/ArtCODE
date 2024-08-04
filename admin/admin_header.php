@@ -37,10 +37,22 @@
                 <div class="collapse show" id="images-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                     <li><a href="/admin/images_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All</a></li>
+                    <li><a href="/admin/images_section/similar_image_search/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Similar Search</a></li>
                     <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a></li>
                     <li><a href="/admin/images_section/keywords/tags/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tags</a></li>
                     <li><a href="/admin/images_section/keywords/groups/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Groups</a></li>
                     <li><a href="/admin/images_section/keywords/parodies/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Parodies</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="mb-1">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#minutes-collapse" aria-expanded="true">
+                  Minutes
+                </button>
+                <div class="collapse show" id="minutes-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="/admin/minutes_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All</a></li>
+                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded" data-bs-toggle="modal" data-bs-target="#searchModalMinutes">Search</a></li>
                   </ul>
                 </div>
               </li>
@@ -64,6 +76,18 @@
               <div class="modal-content bg-transparent border-0">
                 <div class="modal-body">
                   <form class="input-group" role="search" action="/admin/images_section/search/">
+                    <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="searchModalMinutes" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content bg-transparent border-0">
+                <div class="modal-body">
+                  <form class="input-group" role="search" action="/admin/minutes_section/search.php">
                     <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
                   </form>

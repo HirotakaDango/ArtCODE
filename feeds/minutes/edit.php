@@ -140,10 +140,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
         </div>
       </nav>
-      <div class="row">
-        <div class="col-md-4 pe-md-1 mb-2">
+      <div class="row g-2">
+        <div class="col-md-6">
           <a data-bs-toggle="modal" data-bs-target="#originalImage">
-            <div class="ratio ratio-1x1">
+            <div class="ratio ratio-16x9">
               <div id="file-preview-container" class="d-flex align-items-center justify-content-center h-100 border border-3 rounded-4">
                 <?php if (!empty($row['thumb'])): ?>
                   <img src="thumbnails/<?php echo $row['thumb']; ?>" style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover" id="coverImage">
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
           </a>
         </div>
-        <div class="col-md-8 ps-md-1">
+        <div class="col-md-6">
           <form oninput="showPreview(event)" enctype="multipart/form-data" action="" method="post">
             <div class="mb-2">
               <label for="cover" class="form-label">Select Cover Image</label>
