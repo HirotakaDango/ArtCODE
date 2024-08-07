@@ -24,9 +24,15 @@ if ($query->execute()) {
   echo "Error executing the query.";
 }
 
+$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindParam(':email', $email, PDO::PARAM_STR);
+$queryNum->execute();
+$user = $queryNum->fetch(PDO::FETCH_ASSOC);
+
+$numpage = $user['numpage'];
+
 // Set the limit of images per page
-$numpage = isset($user['numpage']) ? $user['numpage'] : 50;
-$limit = $numpage;
+$limit = empty($numpage) ? 50 : $numpage;
 
 // Calculate the offset based on the current page number and limit
 $offset = ($page - 1) * $limit;

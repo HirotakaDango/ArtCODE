@@ -71,8 +71,8 @@
                           </a>
                         </div>
                         <div class="input-group">
-                          <input type="text" id="urlInput1" value="<?php echo $url; ?>" class="form-control border-2 fw-bold" readonly>
-                          <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard1()">
+                          <input type="text" id="urlInput_<?php echo $imageId; ?>" value="<?php echo $url; ?>" class="form-control border-2 fw-bold" readonly>
+                          <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard_<?php echo $imageId; ?>()">
                             <i class="bi bi-clipboard-fill"></i>
                           </button>
                         </div>
@@ -81,11 +81,21 @@
                   </div>
                 </div>
                 <script>
-                  function copyToClipboard1() {
-                    var urlInput1 = document.getElementById('urlInput1');
-                    urlInput1.select();
-                    urlInput1.setSelectionRange(0, 99999); // For mobile devices
-            
-                    document.execCommand('copy');
+                  function copyToClipboard_<?php echo $imageId; ?>() {
+                    var urlInput = document.getElementById('urlInput_<?php echo $imageId; ?>');
+                    urlInput.select();
+                    urlInput.setSelectionRange(0, 99999); // For mobile devices
+                
+                    try {
+                      // Modern clipboard API
+                      navigator.clipboard.writeText(urlInput.value).then(function() {
+                        console.log('Text copied to clipboard');
+                      }, function(err) {
+                        console.error('Failed to copy text: ', err);
+                      });
+                    } catch (err) {
+                      // Fallback to document.execCommand if Clipboard API is not supported
+                      document.execCommand('copy');
+                    }
                   }
                 </script>
