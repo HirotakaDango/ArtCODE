@@ -1,6 +1,6 @@
                 <?php
                   $domain = $_SERVER['HTTP_HOST'];
-                  $imageId = $image['id'];
+                  $imageId = $imageA['id'];
                   $url = "http://$domain/image.php?artworkid=$imageId";
                 ?>
                 <div class="modal fade" id="shareImage<?php echo $imageId; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -71,8 +71,8 @@
                           </a>
                         </div>
                         <div class="input-group">
-                          <input type="text" id="urlInput_<?php echo $url; ?>" value="<?php echo $url; ?>" class="form-control border-2 fw-bold" readonly>
-                          <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard_<?php echo $url; ?>()">
+                          <input type="text" id="urlInput_<?php echo $imageId; ?>" value="<?php echo $url; ?>" class="form-control border-2 fw-bold" readonly>
+                          <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard_<?php echo $imageId; ?>()">
                             <i class="bi bi-clipboard-fill"></i>
                           </button>
                         </div>
@@ -81,8 +81,8 @@
                   </div>
                 </div>
                 <script>
-                  function copyToClipboard_<?php echo $image['id']; ?>() {
-                    var urlInput = document.getElementById('urlInput_<?php echo $image['id']; ?>');
+                  function copyToClipboard_<?php echo $imageId; ?>() {
+                    var urlInput = document.getElementById('urlInput_<?php echo $imageId; ?>');
                     urlInput.select();
                     urlInput.setSelectionRange(0, 99999); // For mobile devices
                 
