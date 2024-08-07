@@ -1,28 +1,24 @@
 <?php
-require_once('auth.php');
-
-$email = $_SESSION['email'];
-
-// Connect to SQLite database
-$db = new PDO('sqlite:database.sqlite');
+session_start();
 
 // Get the ID of the selected user from the URL
-$id = $_GET['id'];
-$query = $db->prepare('SELECT artist, `desc`, `bgpic`, pic, twitter, pixiv, other, region, joined, born, email FROM users WHERE id = :id');
-$query->bindParam(':id', $id);
-$query->execute();
-$user = $query->fetch(PDO::FETCH_ASSOC);
-$artist = $user['artist'];
-$desc = $user['desc'];
-$pic = $user['pic'];
-$bgpic = $user['bgpic'];
-$twitter = $user['twitter'];
-$pixiv = $user['pixiv'];
-$other = $user['other'];
-$region = $user['region'];
-$joined = $user['joined'];
-$born = $user['born'];
+$id = isset($_GET['id']) ? $_GET['id'] : '';
 
-header("Location: artist/?id=$id&by=newest");
+// Validate the ID (e.g., ensure it's a numeric value)
+if (!is_numeric($id)) {
+  // Handle invalid ID
+  die('Invalid ID');
+}
+
+// Check if the user is logged in
+if (isset($_SESSION['email'])) {
+  // If logged in, redirect to /artist/?id=id
+  header("Location: /artist/?id=$id&by=newest");
+} else {
+  // If not logged in, redirect to /preview/artist/?id=id
+  header("Location: /preview/artist/?id=$id&by=newest");
+}
+
+// Ensure no further code is executed after redirection
 exit();
 ?>
