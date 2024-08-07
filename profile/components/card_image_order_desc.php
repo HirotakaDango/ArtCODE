@@ -41,13 +41,13 @@
                                   ?>
                                 </p>
                                 <div class="btn-group mt-2 w-100">
-                                  <a class="btn btn-sm border-0" data-bs-toggle="collapse" href="#shareSection" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-share-fill icon-stroke-1"></i></a>
+                                  <a class="btn btn-sm border-0" data-bs-toggle="collapse" href="#shareSection_<?php echo $imageD['id']; ?>" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-share-fill icon-stroke-1"></i></a>
                                   <button class="btn btn-sm fw-bold border-0"><i class="bi bi-bar-chart-line-fill"></i> <?php echo $imageD['view_count']?></button>
-                                  <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfoDesktop" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-info-circle-fill"></i></button>
-                                  <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-download icon-stroke-1"></i></button>
+                                  <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfoDesktop_<?php echo $imageD['id']; ?>" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-info-circle-fill"></i></button>
+                                  <button class="btn btn-sm border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload_<?php echo $imageD['id']; ?>" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-download icon-stroke-1"></i></button>
                                   <a href="/image.php?artworkid=<?php echo $imageD['id']; ?>" class="btn btn-sm border-0"><i class="bi bi-eye-fill"></i></a>
                                 </div>
-                                <div class="collapse" id="shareSection">
+                                <div class="collapse" id="shareSection_<?php echo $imageD['id']; ?>">
                                   <p class="text-start fw-bold mt-3">share to:</p>
                                   <div class="card rounded-4 p-4">
                                     <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
@@ -114,7 +114,7 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="collapse mt-2" id="collapseInfoDesktop">
+                                <div class="collapse mt-2" id="collapseInfoDesktop_<?php echo $imageD['id']; ?>">
                                   <div class="card rounded-4 container">
                                     <p class="text-center fw-medium mt-2">Metadata Information</p>
                                     <?php
@@ -124,13 +124,13 @@
                                       $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/images/';
                                     
                                       // Define the local file system path to the image folder
-                                      $imageD_folder_path = $_SERVER['DOCUMENT_ROOT'] . '/images/';
+                                      $imageA_folder_path = $_SERVER['DOCUMENT_ROOT'] . '/images/';
     
                                       // Calculate and display image size and dimensions for the main image
-                                      $imageD_path = $imageD_folder_path . $imageD['filename'];
-                                      $imageD_size = round(filesize($imageD_path) / (1024 * 1024), 2);
-                                      $total_image_size += $imageD_size;
-                                      list($width, $height) = getimagesize($imageD_path);
+                                      $imageA_path = $imageA_folder_path . $imageD['filename'];
+                                      $imageA_size = round(filesize($imageA_path) / (1024 * 1024), 2);
+                                      $total_image_size += $imageA_size;
+                                      list($width, $height) = getimagesize($imageA_path);
                                       echo "<div class='mb-3 row'>
                                               <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Image ID</label>
                                                 <div class='col-sm-8'>
@@ -141,7 +141,7 @@
                                       echo "<div class='mb-3 row'>
                                               <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Data Size</label>
                                               <div class='col-sm-8'>
-                                                <input type='text' class='form-control-plaintext fw-bold' id='' value='{$imageD_size} MB' readonly>
+                                                <input type='text' class='form-control-plaintext fw-bold' id='' value='{$imageA_size} MB' readonly>
                                               </div>
                                             </div>";
                   
@@ -157,7 +157,7 @@
                                       $child_images_result = $db1->query("SELECT filename FROM image_child WHERE image_id = " . $imageD['id']);
     
                                       while ($child_image = $child_images_result->fetchArray()) {
-                                        $child_image_path = $imageD_folder_path . $child_image['filename'];
+                                        $child_image_path = $imageA_folder_path . $child_image['filename'];
                                         $child_image_size = round(filesize($child_image_path) / (1024 * 1024), 2);
                                         $total_image_size += $child_image_size;
                                         list($child_width, $child_height) = getimagesize($child_image_path);
@@ -189,71 +189,16 @@
                                     ?>
                                   </div>
                                 </div>
-                                <div class="collapse mt-2" id="collapseDownload">
-                                  <a class="btn btn-primary fw-bold rounded-4 w-100" href="#" onclick="downloadWithProgressBar(<?php echo $imageD['id']; ?>, '<?php echo $imageD['title']; ?>')">
+                                <div class="collapse mt-2" id="collapseDownload_<?php echo $imageD['id']; ?>">
+                                  <a class="btn btn-primary fw-bold rounded-4 w-100" href="/download_images.php?artworkid=<?php echo $imageD['id']; ?>" target="_blank">
                                     <i class="bi bi-download text-stroke"></i> download all images (<?php echo $total_image_size; ?> MB)
                                   </a>
-                                  <div class="progress fw-bold mt-2 rounded-4" id="progressBarContainer_<?php echo $imageD['id']; ?>" style="height: 30px; display: none;">
-                                    <div id="progressBar_<?php echo $imageD['id']; ?>" class="progress-bar progress-bar progress-bar-animated fw-bold" style="width: 0; height: 30px;">0%</div>
-                                  </div>
-                                  <script>
-                                    function downloadWithProgressBar(artworkId, title) {
-                                      var progressBar = document.getElementById('progressBar_' + artworkId);
-                                      var progressBarContainer = document.getElementById('progressBarContainer_' + artworkId);
-                                      title = title.replace(/\s+/g, '_');
-    
-                                      // Create a new XMLHttpRequest object
-                                      var xhr = new XMLHttpRequest();
-    
-                                      // Function to update the progress bar
-                                      function updateProgress(event) {
-                                        if (event.lengthComputable) {
-                                          var percentComplete = (event.loaded / event.total) * 100;
-                                          progressBar.style.width = percentComplete + '%';
-                                          progressBar.innerHTML = percentComplete.toFixed(2) + '%';
-                                        }
-                                      }
-    
-                                      // Set up the XMLHttpRequest object
-                                      xhr.open('GET', '/download_images.php?artworkid=' + artworkId, true);
-    
-                                      // Set the responseType to 'blob' to handle binary data
-                                      xhr.responseType = 'blob';
-    
-                                      // Track progress with the updateProgress function
-                                      xhr.addEventListener('progress', updateProgress);
-    
-                                      // On successful download completion
-                                      xhr.onload = function () {
-                                        progressBar.innerHTML = '100%';
-                                        // Delay hiding the progress bar to show 100% for a brief moment
-                                        setTimeout(function () {
-                                          progressBarContainer.style.display = 'none';
-                                        }, 1000);
-    
-                                        // Create a download link for the downloaded file
-                                        var downloadLink = document.createElement('a');
-                                        downloadLink.href = URL.createObjectURL(xhr.response);
-                                        downloadLink.download = title + '_image_id_' + artworkId + '.zip';
-                                        downloadLink.style.display = 'none';
-                                        document.body.appendChild(downloadLink);
-                                        downloadLink.click(); // Trigger the click event to download the file
-                                        document.body.removeChild(downloadLink); // Remove the link from the document
-                                      };
-    
-                                      // Show the progress bar container
-                                      progressBarContainer.style.display = 'block';
-    
-                                      // Send the XMLHttpRequest to start the download
-                                      xhr.send();
-                                    }
-                                  </script>
                                   <h5 class="fw-bold text-center mt-2">Please Note!</h5>
                                   <p class="fw-bold text-center container">
                                     <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
                                   </p>
                                   <p class="fw-bold text-center container">
-                                    <small>2. If you found download error or failed, <a class="text-decoration-none" href="/download_images.php?artworkid=<?php echo $imageD['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
+                                    <small>2. If you found download error or failed, <a class="text-decoration-none" href="/download_batch.php?artworkid=<?php echo $imageD['id']; ?>">click this link</a> for third option if download all images error or failed.</small>
                                   </p>
                                   <p class="fw-bold text-center container">
                                     <small>3. If you found problem where the zip contain empty file or 0b, download the images manually.</small>
@@ -274,7 +219,7 @@
                                           $tag = trim($tag);
                                           if (!empty($tag)) {
                                             ?>
-                                            <a href="tagged_images.php?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/tagged_images.php?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-tag-fill"></i> <?php echo htmlspecialchars($tag); ?>
                                             </a>
                                             <?php
@@ -296,7 +241,7 @@
                                           $character = trim($character);
                                           if (!empty($character)) {
                                             ?>
-                                            <a href="character/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/character/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($character); ?>
                                             </a>
                                             <?php
@@ -316,7 +261,7 @@
                                           $parody = trim($parody);
                                           if (!empty($parody)) {
                                             ?>
-                                            <a href="parody/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/parody/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-journal"></i> <?php echo htmlspecialchars($parody); ?>
                                             </a>
                                             <?php
@@ -336,7 +281,7 @@
                                           $group = trim($group);
                                           if (!empty($group)) {
                                             ?>
-                                            <a href="group/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/group/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($group); ?>
                                             </a>
                                             <?php
