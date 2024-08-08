@@ -122,7 +122,7 @@ if (isset($_POST['login'])) {
     $_SESSION['email'] = $email;
 
     // Redirect the user to the homepage
-    header("Location: ../regrg.php");
+    header("Location: /tutorials/");
     exit;
   }
 } else {

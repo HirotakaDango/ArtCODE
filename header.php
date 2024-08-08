@@ -349,7 +349,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 400px;">
                     <div class="container-fluid px-3 overflow-auto">
-                      <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-100 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/similar_image_search/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/similar_image_search/">
+                      <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 mt-2 fw-bold p-3 w-100 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/similar_image_search/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/similar_image_search/">
                         <i class="bi bi-search fs-5"></i>
                         <span class="d-lg-inline">Similar Image Search</span>
                       </a>

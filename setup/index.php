@@ -1,4 +1,4 @@
 <?php
-header("Location: /setup/set_region.php");
+header("Location: /setup/generate_profile.php");
 exit();
 ?>

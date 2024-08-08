@@ -81,7 +81,7 @@
                             <a class="position-absolute top-0 end-0 m-4" href="/artist.php?id=<?php echo urlencode($user_idManga); ?>" target="_blank">
                               <i class="bi bi-box-arrow-up-right link-body-emphasis text-white" style="-webkit-text-stroke: 1px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"></i>
                             </a>
-                            <iframe src="/rows_columns/user_preview.php?id=<?php echo urlencode($user_idManga); ?>" class="rounded-4 p-0 shadow" width="100%" height="276" style="border: none;"></iframe>
+                            <iframe src="/rows_columns/user_preview.php?id=<?php echo urlencode($user_idManga); ?>" class="rounded-4 p-0 shadow" width="100%" height="300" style="border: none;"></iframe>
                           </div>
                         </div>
                       </div>

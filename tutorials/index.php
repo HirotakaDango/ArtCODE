@@ -21,8 +21,9 @@
             <div class="modal-body py-0">
               <p>Welcome to our website! Before you start exploring all the amazing features and functionalities it has to offer, let's take a moment to dive into this comprehensive tutorial together. This guide is designed to help you navigate through various options and make the most out of your experience on our platform.</p>
             </div>
-            <div class="d-flex">
-              <a class="ms-auto link-primary text-decoration-none" href="/tutorials/beginners_guide.php">next</a>
+            <div class="d-flex mt-2" style="margin: -5px;">
+              <a class="me-auto link-primary text-decoration-none" href="/setup/">skip to setup</a>
+              <a class="ms-auto link-primary text-decoration-none" href="/tutorials/beginners_guide.php">continue to next tutorials</a>
             </div>
           </div>
         </div>
@@ -35,7 +36,10 @@
               <p>Welcome to our website! Before you start exploring all the amazing features and functionalities it has to offer, let's take a moment to dive into this comprehensive tutorial together. This guide is designed to help you navigate through various options and make the most out of your experience on our platform.</p>
             </div>
             <br>
-            <a class="position-absolute end-0 bottom-0 m-3 link-primary text-decoration-none" href="/tutorials/beginners_guide.php">next</a>
+            <div class="d-flex" style="margin: -5px;">
+              <a class="me-auto link-primary text-decoration-none" href="/setup/">skip to setup</a>
+              <a class="ms-auto link-primary text-decoration-none" href="/tutorials/beginners_guide.php">continue to next tutorials</a>
+            </div>
           </div>
         </div>
       </div>
