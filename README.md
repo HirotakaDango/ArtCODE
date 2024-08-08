@@ -56,7 +56,7 @@ At ArtCODE, we envision a world where every artist has a platform to showcase th
 
 1. **Clone the Repository**:
    ```
-   git clone https://github.com/YourUsername/ArtCODE.git
+   git clone https://github.com/HirotakaDango/ArtCODE.git
    ```
 
 2. **Configure Web Server**:
