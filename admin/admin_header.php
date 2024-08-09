@@ -56,6 +56,19 @@
                   </ul>
                 </div>
               </li>
+              <li class="mb-1">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#music-collapse" aria-expanded="true">
+                  Music
+                </button>
+                <div class="collapse show" id="music-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="/admin/music_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All</a></li>
+                    <li><a href="/admin/music_section/all_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'lists'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'newest_lists' ? (isset($_GET['by']) && ($_GET['by'] === 'asc' || $_GET['by'] === 'desc') ? $_GET['by'] : 'desc') : (isset($_GET['by']) && ($_GET['by'] === 'asc_lists' || $_GET['by'] === 'desc_lists') ? $_GET['by'] : 'desc_lists'); ?>" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All Albums</a></li>
+                    <li><a href="/admin/music_section/favorite.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'lists'; ?>" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Favorites</a></li>
+                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded" data-bs-toggle="modal" data-bs-target="#searchModalMusic">Search</a></li>
+                  </ul>
+                </div>
+              </li>
               <li class="border-top my-3"></li>
               <li class="mb-1">
                 <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
@@ -88,6 +101,20 @@
               <div class="modal-content bg-transparent border-0">
                 <div class="modal-body">
                   <form class="input-group" role="search" action="/admin/minutes_section/search.php">
+                    <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="searchModalMusic" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content bg-transparent border-0">
+                <div class="modal-body">
+                  <form class="input-group" role="search" action="/admin/music_section/search.php">
+                    <input type="hidden" name="mode" value="<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'lists'; ?>">
+                    <input type="hidden" name="by" value="<?php echo isset($_GET['mode']) && $_GET['mode'] === 'newest_lists' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>">
                     <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-dark" name="q" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
                   </form>

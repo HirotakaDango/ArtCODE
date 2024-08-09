@@ -185,8 +185,7 @@ try {
           <?php endif; ?>
         <?php else: ?>
           <h5 class="mt-4 fw-bold text-center">Database and admin user are already set up.</h5>
-          <h6>It's reccomended to <a class="text-decoration-none" href="/upload/">upload</a> your first image!</h6>
-          <a href="/tutorials/" class="btn btn-success mt-4">Or go to tutorial first</a>
+          <a href="/install/next.php" class="btn btn-success mt-4">Next</a>
         <?php endif; ?>
       </div>
     </div>

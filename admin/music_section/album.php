@@ -1,7 +1,13 @@
 <?php
-require_once('auth.php');
-$db = new PDO('sqlite:../../database.sqlite');
-$userEmail = $_SESSION['email'];
+// admin/music_section/album.php
+require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/auth_admin.php');
+requireAdmin();
+
+// Retrieve the email from the session
+$email = $_SESSION['admin']['email'];
+
+// Connect to the SQLite database
+$db = new PDO('sqlite:' . $_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
 
 // Get the album and userid parameters from the URL
 $album = isset($_GET['album']) ? $_GET['album'] : null;
@@ -51,9 +57,9 @@ $rows = [];
 $totalCountDuration = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   // Use getID3 to analyze the music file
-  require_once 'getID3/getid3/getid3.php';
+  require_once '../../feeds/music/getID3/getid3/getid3.php';
   $getID3 = new getID3();
-  $fileInfo = $getID3->analyze($row['file']);
+  $fileInfo = $getID3->analyze($_SERVER['DOCUMENT_ROOT'] . '/feeds/music/' . $row['file']);
   getid3_lib::CopyTagsToComments($fileInfo);
 
   // Extract information
@@ -190,142 +196,156 @@ if (isset($_POST['follow'])) {
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></title>
-    <link rel="icon" type="image/png" href="covers/<?php echo $imagePath; ?>">
     <?php include('../../bootstrapcss.php'); ?>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/png" href="/feeds/music/covers/<?php echo $imagePath; ?>">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <?php include('header.php'); ?>
-    <div class="container-fluid mt-3 mt-md-4">
-      <div class="row">
-        <div class="col-md-3 pe-md-1">
-          <div class="bg-body-tertiary rounded-4 p-3 h-100 w-100 d-none d-md-block d-lg-block">
-            <div class="d-flex align-content-center justify-content-center">
-              <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3 object-fit-cover" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
-            </div>
-            <h5 class="fw-bold mt-3 text-center"><?php echo $artist; ?></h5>
-            <div class="d-flex align-content-center justify-content-center">
-              <a class="btn btn-sm rounded-3 btn-outline-light border-0 fw-bold" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right text-stroke"></i></a>
-            </div>
-            <div class="mt-3">
-              <form method="post">
-                <?php if ($is_following): ?>
-                  <span class="me-3"><button class="btn btn-outline-light rounded-pill fw-medium w-100" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button></span>
-                <?php else: ?>
-                  <span class="me-3"><button class="btn btn-outline-light rounded-pill fw-medium w-100" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button></span>
-                <?php endif; ?>
-              </form>
-              <div class="btn-group w-100 mt-2">
-                <a class="btn border-0 fw-medium text-center w-50" href="../../follower.php?id=<?php echo $userid; ?>"> <?php echo $num_followers ?> <small>Followers</small></a>
-                <a class="btn border-0 fw-medium text-center w-50" href="../../following.php?id=<?php echo $userid; ?>"> <?php echo $num_following ?> <small>Following</small></a>
-              </div>
-              <div class="btn-group w-100 mt-2">
-                <a class="btn border-0 fw-medium text-center w-50" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $userTotalTracksCount; ?> <small>songs</small></a>
-                <button class="btn border-0 fw-medium text-center w-50" onclick="shareArtist(<?php echo $userid; ?>)"><small>Shares</small></button>
-              </div>
-              <p class="mt-4 ms-3 fw-medium text-break">
-                <small>
-                  <?php
-                    if (!empty($desc)) {
-                      $messageText = $desc;
-                      $messageTextWithoutTags = strip_tags($messageText);
-                      $pattern = '/\bhttps?:\/\/\S+/i';
-
-                      $formattedText = preg_replace_callback($pattern, function ($matches) {
-                        $url = htmlspecialchars($matches[0]);
-                        return '<a href="' . $url . '">' . $url . '</a>';
-                      }, $messageTextWithoutTags);
-
-                      $charLimit = 100; // Set your character limit
-
-                      if (strlen($formattedText) > $charLimit) {
-                        $limitedText = substr($formattedText, 0, $charLimit);
-                        echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
-                        echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
-                        echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction()" id="myBtn">read more</button>';
-                      } else {
-                        // If the text is within the character limit, just display it with line breaks.
-                        echo nl2br($formattedText);
-                      }
-                    } else {
-                      echo "User description is empty.";
-                    }
-                  ?>
-                </small>
-              </p>
-
-              <script>
-                function myFunction() {
-                  var dots = document.getElementById("limitedText");
-                  var moreText = document.getElementById("more");
-                  var btnText = document.getElementById("myBtn");
-
-                  if (moreText.style.display === "none") {
-                    dots.style.display = "none";
-                    moreText.style.display = "inline";
-                    btnText.innerHTML = "read less";
-                  } else {
-                    dots.style.display = "inline";
-                    moreText.style.display = "none";
-                    btnText.innerHTML = "read more";
-                  }
-                }
-              </script>
-            </div>
-          </div>
+    <div class="container-fluid px-0">
+      <div class="row g-0">
+        <div class="col-auto">
+          <?php include('../admin_header.php'); ?>
         </div>
-        <div class="col-md-9">
-          <div class="p-0">
-            <div class="row mb-3 ps-md-2">
-              <div class="col-md-3 order-md-1 mb-3 p-md-0 pe-md-4 p-4">
-                <div class="position-relative">
-                  <div class="ratio ratio-1x1">
-                    <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="covers/<?php echo $imagePath; ?>" class="object-fit-cover h-100 w-100 rounded-4 shadow" alt="..."></a>
-                  </div>
-                  <button type="button" class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-medium" data-bs-toggle="modal" data-bs-target="#shareLink"><small><i class="bi bi-share-fill"></i> share</small></button>
-                </div>
-              </div>
-              <div class="col-md-7 order-md-2">
-                <h2 class="featurette-heading fw-normal fw-bold"><?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></span></h2>
-                <p class="fw-medium mt-3 d-none d-md-block d-lg-block">Artist: <a class="text-decoration-none text-white" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
-                <p class="fw-medium mt-3 d-md-none d-lg-none">Artist: <a class="text-decoration-none text-white" data-bs-toggle="modal" data-bs-target="#profileModal"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
-                <p class="fw-medium mt-3">Total Tracks: <?php echo $albumTrackCount; ?></p>
-                <p class="fw-medium mt-3 mb-4">Duration: <?php echo $totalCountDurationFormatted; ?></p>
-                <div class="btn-group gap-2 mb-2">
-                  <a class="btn btn-outline-light fw-medium rounded-pill" href="/feeds/music/play_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
-                  <a class="btn btn-outline-light fw-medium rounded-pill" href="/feeds/music/play_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $shuffledId; ?>"><i class="bi bi-shuffle"></i> shuffle</a>
-                  <a class="btn btn-outline-light fw-medium rounded-pill" href="download_batch.php?album=<?php echo urlencode($album); ?>&userid=<?php echo $userid; ?>"><i class="bi bi-download"></i> download batch</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr>
-          <div class="mt-3">
-            <div class="container-fluid d-flex">
-              <div class="btn-group ms-auto">
-                <a class="btn border-0 link-body-emphasis" href="?mode=grid&album=<?php echo $album; ?>"><i class="bi bi-grid-fill"></i></a>
-                <a class="btn border-0 link-body-emphasis" href="?mode=lists&album=<?php echo $album; ?>"><i class="bi bi-view-list"></i></a>
-              </div>
-            </div>
-            <?php 
-              if(isset($_GET['mode'])){
-                $sort = $_GET['mode'];
- 
-                switch ($sort) {
-                  case 'grid':
-                  include "album_grid.php";
-                  break;
-                  case 'lists':
-                  include "album_lists.php";
-                  break;
-                }
-              }
-              else {
-                include "album_grid.php";
-              }
+        <div class="col overflow-auto vh-100">
+          <?php include('../navbar.php'); ?>
+          <div>
+            <div class="container-fluid mt-2 mt-md-4">
+              <div class="row">
+                <div class="col-md-3 pe-md-1">
+                  <div class="bg-body-tertiary rounded-4 p-3 h-100 w-100 d-none d-md-block d-lg-block">
+                    <div class="d-flex align-content-center justify-content-center">
+                      <img class="img-thumbnail border-0 shadow text-center rounded-circle mt-3 object-fit-cover" src="../<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 150px; height: 150px;">
+                    </div>
+                    <h5 class="fw-bold mt-3 text-center"><?php echo $artist; ?></h5>
+                    <div class="d-flex align-content-center justify-content-center">
+                      <a class="btn btn-sm rounded-3 btn-outline-light border-0 fw-bold" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>">view artist <i class="bi bi-box-arrow-up-right text-stroke"></i></a>
+                    </div>
+                    <div class="mt-3">
+                      <form method="post">
+                        <?php if ($is_following): ?>
+                          <span class="me-3"><button class="btn btn-outline-light rounded-pill fw-medium w-100" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button></span>
+                        <?php else: ?>
+                          <span class="me-3"><button class="btn btn-outline-light rounded-pill fw-medium w-100" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button></span>
+                        <?php endif; ?>
+                      </form>
+                      <div class="btn-group w-100 mt-2">
+                        <a class="btn border-0 fw-medium text-center w-50" href="../../follower.php?id=<?php echo $userid; ?>"> <?php echo $num_followers ?> <small>Followers</small></a>
+                        <a class="btn border-0 fw-medium text-center w-50" href="../../following.php?id=<?php echo $userid; ?>"> <?php echo $num_following ?> <small>Following</small></a>
+                      </div>
+                      <div class="btn-group w-100 mt-2">
+                        <a class="btn border-0 fw-medium text-center w-50" href="<?php echo $_SERVER['REQUEST_URI']; ?>"> <?php echo $userTotalTracksCount; ?> <small>songs</small></a>
+                        <button class="btn border-0 fw-medium text-center w-50" onclick="shareArtist(<?php echo $userid; ?>)"><small>Shares</small></button>
+                      </div>
+                      <p class="mt-4 ms-3 fw-medium text-break">
+                        <small>
+                          <?php
+                            if (!empty($desc)) {
+                              $messageText = $desc;
+                              $messageTextWithoutTags = strip_tags($messageText);
+                              $pattern = '/\bhttps?:\/\/\S+/i';
         
-            ?>
+                              $formattedText = preg_replace_callback($pattern, function ($matches) {
+                                $url = htmlspecialchars($matches[0]);
+                                return '<a href="' . $url . '">' . $url . '</a>';
+                              }, $messageTextWithoutTags);
+        
+                              $charLimit = 100; // Set your character limit
+        
+                              if (strlen($formattedText) > $charLimit) {
+                                $limitedText = substr($formattedText, 0, $charLimit);
+                                echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                                echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                                echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0" onclick="myFunction()" id="myBtn">read more</button>';
+                              } else {
+                                // If the text is within the character limit, just display it with line breaks.
+                                echo nl2br($formattedText);
+                              }
+                            } else {
+                              echo "User description is empty.";
+                            }
+                          ?>
+                        </small>
+                      </p>
+        
+                      <script>
+                        function myFunction() {
+                          var dots = document.getElementById("limitedText");
+                          var moreText = document.getElementById("more");
+                          var btnText = document.getElementById("myBtn");
+        
+                          if (moreText.style.display === "none") {
+                            dots.style.display = "none";
+                            moreText.style.display = "inline";
+                            btnText.innerHTML = "read less";
+                          } else {
+                            dots.style.display = "inline";
+                            moreText.style.display = "none";
+                            btnText.innerHTML = "read more";
+                          }
+                        }
+                      </script>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-9">
+                  <div class="p-0">
+                    <div class="row mb-3 ps-md-2">
+                      <div class="col-md-3 order-md-1 mb-3 p-md-0 pe-md-4 p-4">
+                        <div class="position-relative">
+                          <div class="ratio ratio-1x1">
+                            <a data-bs-toggle="modal" data-bs-target="#originalImage"><img src="/feeds/music/covers/<?php echo $imagePath; ?>" class="object-fit-cover h-100 w-100 rounded-4 shadow" alt="..."></a>
+                          </div>
+                          <button type="button" class="btn btn-dark opacity-75 position-absolute bottom-0 end-0 m-2 fw-medium" data-bs-toggle="modal" data-bs-target="#shareLink"><small><i class="bi bi-share-fill"></i> share</small></button>
+                        </div>
+                      </div>
+                      <div class="col-md-7 order-md-2">
+                        <h2 class="featurette-heading fw-normal fw-bold"><?php echo (!empty($rows) ? htmlspecialchars($rows[0]['album']) : 'Untitled Album'); ?></span></h2>
+                        <p class="fw-medium mt-3 d-none d-md-block d-lg-block">Artist: <a class="text-decoration-none text-white" href="artist.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&id=<?php echo $userid; ?>"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
+                        <p class="fw-medium mt-3 d-md-none d-lg-none">Artist: <a class="text-decoration-none text-white" data-bs-toggle="modal" data-bs-target="#profileModal"><?php echo isset($rows[0]['artist']) ? htmlentities($rows[0]['artist']) : ''; ?></a></p>
+                        <p class="fw-medium mt-3">Total Tracks: <?php echo $albumTrackCount; ?></p>
+                        <p class="fw-medium mt-3 mb-4">Duration: <?php echo $totalCountDurationFormatted; ?></p>
+                        <div class="btn-group gap-2">
+                          <a class="btn btn-outline-light fw-medium rounded-pill" href="/feeds/music/play_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $id; ?>"><i class="bi bi-play-circle"></i> play the first song</a>
+                          <a class="btn btn-outline-light fw-medium rounded-pill" href="/feeds/music/play_album.php?mode=<?php echo isset($_GET['mode']) ? $_GET['mode'] : 'grid'; ?>&by=<?php echo isset($_GET['mode']) && $_GET['mode'] === 'grid' ? (isset($_GET['by']) && ($_GET['by'] === 'oldest' || $_GET['by'] === 'newest') ? $_GET['by'] : 'newest') : (isset($_GET['by']) && ($_GET['by'] === 'oldest_lists' || $_GET['by'] === 'newest_lists') ? $_GET['by'] : 'newest_lists'); ?>&album=<?php echo $album; ?>&id=<?php echo $shuffledId; ?>"><i class="bi bi-shuffle"></i> shuffle</a>
+                          <a class="btn btn-outline-light fw-medium rounded-pill" href="download_batch.php?album=<?php echo urlencode($album); ?>&userid=<?php echo $userid; ?>"><i class="bi bi-download"></i> download batch</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="mt-3">
+                    <div class="container-fluid d-flex">
+                      <div class="btn-group ms-auto">
+                        <a class="btn border-0 link-body-emphasis" href="?mode=grid&album=<?php echo $album; ?>"><i class="bi bi-grid-fill"></i></a>
+                        <a class="btn border-0 link-body-emphasis" href="?mode=lists&album=<?php echo $album; ?>"><i class="bi bi-view-list"></i></a>
+                      </div>
+                    </div>
+                    <?php 
+                      if(isset($_GET['mode'])){
+                        $sort = $_GET['mode'];
+         
+                        switch ($sort) {
+                          case 'grid':
+                          include "album_grid.php";
+                          break;
+                          case 'lists':
+                          include "album_lists.php";
+                          break;
+                        }
+                      }
+                      else {
+                        include "album_grid.php";
+                      }
+                
+                    ?>
+                  </div>
+                  <div class="mt-5"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -500,14 +520,13 @@ if (isset($_POST['follow'])) {
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-transparent border-0 rounded-0">
           <div class="modal-body position-relative">
-            <img class="object-fit-contain h-100 w-100 rounded" src="covers/<?php echo $imagePath; ?>">
+            <img class="object-fit-contain h-100 w-100 rounded" src="/feeds/music/covers/<?php echo $imagePath; ?>">
             <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
             <a class="btn btn-primary fw-bold w-100 mt-2" href="covers/<?php echo $imagePath; ?>" download>Download Cover Image</a>
           </div>
         </div>
       </div>
     </div>
-    <div class="mt-5"></div>
     <script>
       function shareArtist(userId) {
         // Compose the share URL
