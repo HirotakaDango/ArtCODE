@@ -483,7 +483,7 @@ if ($daily_view) {
                                     </div>
                                   <?php endif; ?>
                                   <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                                    <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
+                                    All <i class="bi bi-box-arrow-in-up-right text-stroke"></i>
                                   </h6>
                                 </div>
                               </a>
@@ -1000,7 +1000,7 @@ if ($daily_view) {
             </div>
             <div class="position-absolute top-0 start-0 ms-2 mt-2">
               <div class="dropdown">
-                <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   view option
                 </button>
                 <ul class="dropdown-menu">
@@ -1247,7 +1247,7 @@ if ($daily_view) {
                         </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
+                        All <i class="bi bi-box-arrow-in-up-right text-stroke"></i>
                       </h6>
                     </div>
                   </a>
@@ -1561,7 +1561,7 @@ if ($daily_view) {
                         </div>
                       <?php endif; ?>
                       <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
+                        All <i class="bi bi-box-arrow-in-up-right text-stroke"></i>
                       </h6>
                     </div>
                   </a>

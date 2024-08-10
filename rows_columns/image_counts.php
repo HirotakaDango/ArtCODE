@@ -42,12 +42,6 @@ if (!empty($image_email)) {
     $userArtist = $user['artist'];
     $userId = $user['id'];
 
-    // Ensure the profile picture is not in the 'albums' folder
-    $albumsPath = '/albums/';
-    if (strpos($userPic, $albumsPath) === 0) {
-      $userPic = 'icon/profile.svg'; // Default image if it's in the albums folder
-    }
-
     // Limit artist name to 10 characters
     $userArtist = substr($userArtist, 0, 10);
   } else {

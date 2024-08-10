@@ -15,7 +15,7 @@ $db = new PDO('sqlite:../database.sqlite');
 function createGradientImage($width, $height) {
   $image = imagecreatetruecolor($width, $height);
 
-  // Function to generate a random color
+  // Generate two random colors
   $color1 = imagecolorallocate($image, rand(0, 255), rand(0, 255), rand(0, 255));
   $color2 = imagecolorallocate($image, rand(0, 255), rand(0, 255), rand(0, 255));
 
@@ -48,7 +48,9 @@ function saveImageAndThumbnail($image, $originalPath, $thumbnailPath) {
   $thumbnailWidth = 400;
   $thumbnailHeight = round($thumbnailWidth * imagesy($image) / imagesx($image));
   $thumbnail = imagecreatetruecolor($thumbnailWidth, $thumbnailHeight);
-  imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $thumbnailWidth, $thumbnailHeight, imagesx($image), imagesy($image));
+  $originalWidth = imagesx($image);
+  $originalHeight = imagesy($image);
+  imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $thumbnailWidth, $thumbnailHeight, $originalWidth, $originalHeight);
   imagepng($thumbnail, $thumbnailPath);
   imagedestroy($thumbnail);
 }
@@ -63,6 +65,7 @@ if ($imageCount == 0) {
   $width = 2500;
   $height = 1400;
 
+  // Generate 24 images for illustration
   for ($i = 0; $i < 24; $i++) {
     // Generate a new gradient image
     $image = createGradientImage($width, $height);
@@ -86,13 +89,56 @@ if ($imageCount == 0) {
     $stmt->bindValue(':type', 'safe', PDO::PARAM_STR);
     $stmt->bindValue(':artwork_type', 'illustration', PDO::PARAM_STR);
     $stmt->execute();
+
+    // Insert into image_child table
+    $imageId = $db->lastInsertId(); // Get the ID of the inserted image
+    $stmt = $db->prepare('INSERT INTO image_child (filename, image_id, email) VALUES (:filename, :image_id, :email)');
+    $stmt->bindValue(':filename', $fileName, PDO::PARAM_STR);
+    $stmt->bindValue(':image_id', $imageId, PDO::PARAM_INT);
+    $stmt->bindValue(':email', $_SESSION['email'], PDO::PARAM_STR);
+    $stmt->execute();
   }
 
-  echo "24 gradient images have been generated and uploaded.";
+  // Generate 24 images for manga
+  for ($i = 0; $i < 24; $i++) {
+    // Generate a new gradient image
+    $image = createGradientImage($width, $height);
+
+    // Define paths
+    $fileName = uniqid('img_') . '.png';
+    $originalPath = '../images/' . $fileName;
+    $thumbnailPath = '../thumbnails/' . $fileName;
+
+    // Save image and thumbnail
+    saveImageAndThumbnail($image, $originalPath, $thumbnailPath);
+
+    // Insert metadata into the database
+    $stmt = $db->prepare('INSERT INTO images (filename, email, tags, title, imgdesc, date, type, artwork_type, episode_name) VALUES (:filename, :email, :tags, :title, :imgdesc, :date, :type, :artwork_type, :episode_name)');
+    $stmt->bindValue(':filename', $fileName, PDO::PARAM_STR);
+    $stmt->bindValue(':email', $_SESSION['email'], PDO::PARAM_STR);
+    $stmt->bindValue(':tags', 'gradient, wallpaper, background', PDO::PARAM_STR);
+    $stmt->bindValue(':title', 'Gradient Image ' . ($i + 25), PDO::PARAM_STR);
+    $stmt->bindValue(':imgdesc', 'Generated gradient image', PDO::PARAM_STR);
+    $stmt->bindValue(':date', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+    $stmt->bindValue(':type', 'safe', PDO::PARAM_STR);
+    $stmt->bindValue(':artwork_type', 'manga', PDO::PARAM_STR);
+    $stmt->bindValue(':episode_name', 'Gradient Image ' . ($i + 25), PDO::PARAM_STR);
+    $stmt->execute();
+
+    // Insert into image_child table
+    $imageId = $db->lastInsertId(); // Get the ID of the inserted image
+    $stmt = $db->prepare('INSERT INTO image_child (filename, image_id, email) VALUES (:filename, :image_id, :email)');
+    $stmt->bindValue(':filename', $fileName, PDO::PARAM_STR);
+    $stmt->bindValue(':image_id', $imageId, PDO::PARAM_INT);
+    $stmt->bindValue(':email', $_SESSION['email'], PDO::PARAM_STR);
+    $stmt->execute();
+  }
+
+  echo "48 gradient images have been generated and uploaded.";
 }
 
 // Redirect to home
-header("Location: /tutorials/");
+header("Location: /install/generate_all_profile_pictures.php");
 exit();
 
 $db = null; // Close the PDO connection

@@ -1,19 +1,12 @@
 <?php
+session_start(); // Start session for managing user sessions
+
 // Define the path to the SQLite database
 $dbPath = '../database.sqlite';
 
 // Initialize status variables
 $databaseCreated = false;
 $adminCreated = false;
-
-// Start session for user authentication
-session_start();
-
-// Check if user is logged in
-if (!isset($_SESSION['email'])) {
-  header('Location: /index.php');
-  exit();
-}
 
 try {
   $db = new PDO('sqlite:' . $dbPath);
@@ -35,7 +28,7 @@ try {
   }
 
   // Handle form submission
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['install'])) {
     // Retrieve form data
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -85,38 +78,33 @@ try {
         $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, status TEXT DEFAULT 'superadmin')");
         $stmt->execute();
 
-        // Insert the user as an admin
-        $stmt = $db->prepare("INSERT INTO admin (email, status) VALUES (:email, 'superadmin')");
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        // Insert the user as an admin if not already present
+        $stmt = $db->prepare("SELECT COUNT(*) FROM admin WHERE email = :email");
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
+        if ($stmt->fetchColumn() == 0) {
+          $stmt = $db->prepare("INSERT INTO admin (email, status) VALUES (:email, 'superadmin')");
+          $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+          $stmt->execute();
+        }
 
         // Create a user table if it does not exist
         $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other TEXT, region TEXT, joined DATETIME, born DATETIME, numpage TEXT, display TEXT, message_1 TEXT, message_2 TEXT, message_3 TEXT, message_4 TEXT, mode TEXT)");
         $stmt->execute();
         
+        // Insert the new user
         $stmt = $db->prepare("INSERT INTO users (email, password, artist) VALUES (:email, :password, :artist)");
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':password', $password, PDO::PARAM_STR); // Store plain password
-        $stmt->bindParam(':artist', $artist, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        $stmt->bindValue(':password', $password, PDO::PARAM_STR); // Store plain password (consider hashing passwords for security)
+        $stmt->bindValue(':artist', $artist, PDO::PARAM_STR);
         $stmt->execute();
 
-        // Get user ID
-        $stmt = $db->prepare("SELECT id FROM users WHERE email = :email");
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && $user['id'] == 1) {
-          // Directly log in the user
-          $_SESSION['email'] = $email;
-          // Redirect to the current page (installation page)
-          header('Location: /install/');
-          exit();
-        } else {
-          // Redirect to index page for other users
-          header('Location: /index.php');
-          exit();
-        }
+        // Directly log in the user
+        $_SESSION['email'] = $email;
+        
+        // Redirect to the next step
+        header('Location: /install/next.php');
+        exit();
 
       } catch (PDOException $e) {
         $error_msg = 'Database error: ' . $e->getMessage();
@@ -154,7 +142,7 @@ try {
                   </div>
                 </div>
               </div>
-  
+
               <div class="row mt-3 align-items-center">
                 <div class="col-md-3">
                   <span class="fw-medium" for="email">Email</span>
@@ -165,7 +153,7 @@ try {
                   </div>
                 </div>
               </div>
-  
+
               <div class="row mt-3 align-items-center">
                 <div class="col-md-3">
                   <span class="fw-medium" for="password">Password</span>
@@ -176,8 +164,8 @@ try {
                   </div>
                 </div>
               </div>
-  
-              <button type="submit" class="btn btn-primary w-100 mt-4">Set your current configuration</button>
+
+              <button type="submit" name="install" class="btn btn-primary w-100 mt-4">Set your current configuration</button>
             </div>
           </form>
           <?php if (!empty($error_msg)): ?>
