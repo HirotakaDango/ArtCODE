@@ -216,9 +216,9 @@ if ($daily_view) {
   <body>
     <?php include('header.php'); ?>
     <div class="container mt-2 d-flex justify-content-center">
-      <div class="position-relative">
+      <div class="position-relative" style="height: calc(100vh - 75px);">
         <a href="#" id="originalImageLink" data-bs-toggle="modal" data-bs-target="#originalImageModal" data-original-src="images/<?php echo $image['filename']; ?>">
-          <img class="img-pointer shadow-lg rounded-4 w-100" style="height: 89vh;" src="thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
+          <img class="img-pointer shadow-lg rounded-4" style="height: calc(100vh - 75px);" src="thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
         </a>
         <?php
           // Function to calculate the size of an image in MB
