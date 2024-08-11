@@ -264,76 +264,7 @@ if ($daily_view) {
           </form>
         </div>
       </div>
-      <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header border-bottom-0">
-              <h5 class="modal-title fw-bold fs-5" id="exampleModalLabel"><?php echo $user['artist']; ?> <small class="badge rounded-pill text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="row featurette">
-                <div class="col-5 order-1">
-                  <a class="text-decoration-none d-flex justify-content-center fw-bold rounded-pill text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="artist.php?by=newest&id=<?= $user['id'] ?>">
-                    <?php if (!empty($user['pic'])): ?>
-                      <img class="object-fit-cover border border-3 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 103px; height: 103px;">
-                    <?php else: ?>
-                      <img class="object-fit-cover border border-3 rounded-circle" src="icon/profile.svg" style="width: 103px; height: 103px;">
-                    <?php endif; ?>
-                  </a>
-                </div>
-                <div class="col-7 order-2">
-                  <div class="btn-group w-100 mb-1 gap-1" role="group" aria-label="Basic example">
-                    <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-50 rounded fw-bold" href="follower.php?id=<?php echo $user['id']; ?>"><small>followers</small></a>
-                    <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-50 rounded fw-bold" href="following.php?id=<?php echo $user['id']; ?>"><small>following</small></a>
-                  </div>
-                  <div class="btn-group w-100 mb-1 gap-1" role="group" aria-label="Basic example">
-                    <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-50 rounded fw-bold" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>"><small>images</small></a>
-                    <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-50 rounded fw-bold" href="list_favorite.php?id=<?php echo $user['id']; ?>"><small>favorites</small></a> 
-                  </div>
-                  <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-100 rounded fw-bold" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>"><small>view profile</small></a>
-                </div>
-              </div>
-              <div class="input-group my-1">
-                <?php
-                  $domain = $_SERVER['HTTP_HOST'];
-                  $user_id_url = $user['id'];
-                  $url = "http://$domain/artist.php?by=newest&id=$user_id_url";
-                ?>
-                <input type="text" id="urlInput" value="<?php echo $url; ?>" class="form-control border-2 fw-bold" readonly>
-                <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard()">
-                  <i class="bi bi-clipboard-fill"></i>
-                </button>
-                <button class="btn btn-sm btn-secondary rounded-3 rounded-start-0 fw-bold opacity-50" onclick="shareArtist(<?php echo $user_id_url; ?>)">
-                  <i class="bi bi-share-fill"></i> <small>share</small>
-                </button>
-              </div>
-              <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-100 fw-bold mt-1" data-bs-toggle="collapse" href="#collapseBio" role="button" aria-expanded="false" aria-controls="collapseExample">
-                <small>view description</small>
-              </a>
-              <div class="collapse mt-1" id="collapseBio">
-                <div class="card fw-bold card-body">
-                  <small>
-                    <?php
-                      $messageText = $user['desc'];
-                      $messageTextWithoutTags = strip_tags($messageText);
-                      $pattern = '/\bhttps?:\/\/\S+/i';
-
-                      $formattedText = preg_replace_callback($pattern, function ($matches) {
-                        $url = htmlspecialchars($matches[0]);
-                        return '<a target="_blank" href="' . $url . '">' . $url . '</a>';
-                      }, $messageTextWithoutTags);
-
-                      $formattedTextWithLineBreaks = nl2br($formattedText);
-                      echo $formattedTextWithLineBreaks;
-                    ?>
-                  </small>
-                </div>
-              </div> 
-            </div>
-          </div>
-        </div>
-      </div>
+      <?php include('image_bio.php'); ?>
       <div class="roow">
         <div class="cool-6">
           <div class="bg-body-tertiary d-flex justify-content-center d-md-none d-lg-none">
@@ -998,18 +929,7 @@ if ($daily_view) {
                 </div>
               </div>
             </div>
-            <div class="position-absolute top-0 start-0 ms-2 mt-2">
-              <div class="dropdown">
-                <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  view option
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item <?php if(basename($_SERVER['PHP_SELF']) == 'view.php') echo 'active' ?>" href="view.php?artworkid=<?php echo $image['id']; ?>">normal view</a></li>
-                  <li><a class="dropdown-item <?php if(basename($_SERVER['PHP_SELF']) == 'full_view.php') echo 'active' ?>" href="full_view.php?artworkid=<?php echo $image['id']; ?>">full view</a></li>
-                  <li><a class="dropdown-item <?php if(basename($_SERVER['PHP_SELF']) == 'simple_view.php') echo 'active' ?>" href="simple_view.php?artworkid=<?php echo $image['id']; ?>">simple view</a></li>
-                </ul>
-              </div>
-            </div>
+            <?php include('view_option.php'); ?>
             <div class="position-absolute bottom-0 end-0 me-2 mb-2">
               <div class="btn-group">
                 <div class="dropdown">
@@ -1023,12 +943,12 @@ if ($daily_view) {
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item fw-bold" href="/full_view/gallery/?artworkid=<?php echo $image['id']; ?>">
+                      <a class="dropdown-item fw-bold" href="/view/gallery/?artworkid=<?php echo $image['id']; ?>">
                         <i class="bi bi-distribute-vertical"></i> full gallery view
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item fw-bold" href="/full_view/carousel/?artworkid=<?php echo $image['id']; ?>">
+                      <a class="dropdown-item fw-bold" href="/view/carousel/?artworkid=<?php echo $image['id']; ?>">
                         <i class="bi bi-distribute-horizontal"></i> full carousel view
                       </a>
                     </li>
@@ -1308,46 +1228,7 @@ if ($daily_view) {
                   </small>
                 </a>
               </p>
-              <div class="container-fluid bg-body-secondary p-2 mt-2 mb-2 rounded-4 text-center align-items-center d-flex justify-content-center">
-                <div class="dropdown-center">
-                  <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <small>
-                      <?php echo date('Y/m/d', strtotime($image['date'])); ?>
-                    </small
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a class="dropdown-item fw-semibold text-center" href="#">
-                        uploaded at <?php echo date('F j, Y', strtotime($image['date'])); ?>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="dropdown-center">
-                  <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-heart-fill text-sm"></i> <small><?php echo $fav_count; ?></small>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a class="dropdown-item fw-semibold text-center" href="#">
-                        total <?php echo $fav_count; ?> favorites
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="dropdown-center">
-                  <button class="btn text-secondary border-0 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-eye-fill"></i> <small><?php echo $viewCount; ?></small>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a class="dropdown-item fw-semibold text-center" href="#">
-                        total <?php echo $viewCount; ?> views
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              <?php include('image_information.php'); ?>
               <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
                 <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 mb-2 w-100" href="episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
                   <small>all episodes from <?php echo $image['episode_name']; ?></small>

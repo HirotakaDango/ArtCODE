@@ -60,6 +60,7 @@ $database->close();
               <option value="view" <?php if ($currentpage == 'view') echo 'selected'; ?>>Normal View</option>
               <option value="view" <?php if ($currentpage == 'full_view') echo 'selected'; ?>>Full View</option>
               <option value="simple_view" <?php if ($currentpage == 'simple_view') echo 'selected'; ?>>Simple View</option>
+              <option value="simplest_view" <?php if ($currentpage == 'simplest_view') echo 'selected'; ?>>Simplest View</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary w-100 fw-bold mt-2">Save</button>

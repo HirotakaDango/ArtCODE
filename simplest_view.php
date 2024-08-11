@@ -531,71 +531,6 @@ if ($daily_view) {
               </div>
             </div>
             <div class="me-2 ms-2 rounded fw-bold">
-              <div class="d-flex d-md-none d-lg-none gap-2">
-                <?php if ($next_image): ?>
-                  <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
-                    <div class="position-relative">
-                      <div class="ratio ratio-1x1">
-                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
-                      </div>
-                      <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
-                        <i class="bi bi-arrow-left-circle text-stroke"></i> Next
-                      </h6>
-                    </div>
-                  </a>
-                <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
-                    <div class="position-relative">
-                      <?php if (!empty($user['pic'])): ?>
-                        <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
-                        </div>
-                      <?php else: ?>
-                        <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
-                        </div>
-                      <?php endif; ?>
-                      <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
-                      </h6>
-                    </div>
-                  </a>
-                <?php endif; ?>
-                <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
-                  <div class="ratio ratio-1x1">
-                    <img class="object-fit-cover opacity-50 rounded" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
-                  </div>
-                </a>
-                <?php if ($prev_image): ?>
-                  <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
-                    <div class="position-relative">
-                      <div class="ratio ratio-1x1">
-                        <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
-                      </div>
-                      <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
-                        Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
-                      </h6>
-                    </div>
-                  </a>
-                <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
-                    <div class="position-relative">
-                      <?php if (!empty($user['pic'])): ?>
-                        <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
-                        </div>
-                      <?php else: ?>
-                        <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
-                        </div>
-                      <?php endif; ?>
-                      <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
-                        All <i class="bi bi-box-arrow-in-up-right text-stroke"></i>
-                      </h6>
-                    </div>
-                  </a>
-                <?php endif; ?>
-              </div>
               <h5 class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold text-center mt-3"><?php echo $image['title']; ?></h5>
               <div style="word-break: break-word;" data-lazyload>
                 <p class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> small fw-medium my-4" style="word-break: break-word;">
@@ -665,147 +600,6 @@ if ($daily_view) {
                   </a>
                 </div>
               <?php endif; ?>
-              <div class="btn-group w-100" role="group" aria-label="Basic example">
-                <button class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
-                  <i class="bi bi-share-fill"></i> <small>share</small>
-                </button>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold" data-bs-toggle="modal" data-bs-target="#downloadOption">
-                  <i class="bi bi-cloud-arrow-down-fill"></i> <small>download</small>
-                </a>
-                <button class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle fw-bold rounded-end-4" type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" data-bs-toggle="modal" data-bs-target="#dataModal">
-                  <i class="bi bi-info-circle-fill"></i> <small>info</small>
-                </button>
-
-                <!-- Data Modal -->
-                <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-                    <div class="modal-content rounded-4 border-0">
-                      <div class="modal-header border-0">
-                        <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">All Data from <?php echo $image['title']; ?></h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <div>
-                          <div class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> text-center mt-2 mb-4">
-                            <h6 class="fw-bold"><i class="bi bi-file-earmark-plus"></i> Total size of all images: <?php echo $total_size; ?> MB</h6>
-                          </div>
-                          <button class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2" id="toggleButton3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage1" aria-expanded="false" aria-controls="collapseExample">
-                            <i class="bi bi-caret-down-fill"></i> <small>show more</small>
-                          </button>
-                          <div class="collapse mt-2" id="collapseDataImage1">
-                            <?php foreach ($images as $index => $image) { ?>
-                              <div class="mb-3 img-thumbnail bg-body-tertiary shadow border-0 p-3">
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image['filename']; ?>" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image['filename']); ?> MB" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image['filename']); echo $width . 'x' . $height; ?>" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image['filename']); ?>" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="images/<?php echo $image['filename']; ?>">
-                                    <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
-                                  </a>
-                                </div>
-                                <div>
-                                  <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="images/<?php echo $image['filename']; ?>" download>
-                                    <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
-                                  </a>
-                                </div>
-                              </div>
-                            <?php } ?>
-                            <?php foreach ($image_childs as $index => $image_child) { ?>
-                              <div class="mt-3 mb-3 img-thumbnail bg-body-tertiary shadow border-0 p-3">
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Filename</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo $image_child['filename']; ?>" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image data size</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo getImageSizeInMB($image_child['filename']); ?> MB" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image dimensions</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php list($width, $height) = getimagesize('images/' . $image_child['filename']); echo $width . 'x' . $height; ?>" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">MIME type</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo mime_content_type('images/' . $image_child['filename']); ?>" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <label for="" class="col-sm-4 col-form-label text-nowrap fw-medium">Image date</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control-plaintext fw-bold" id="" value="<?php echo date('Y/m/d', strtotime($image['date'])); ?>" readonly>
-                                  </div>
-                                </div>
-                                <div class="mb-3 row">
-                                  <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="images/<?php echo $image_child['filename']; ?>">
-                                    <p><i class='bi bi-arrows-fullscreen text-stroke'></i> View original image</p>
-                                  </a>
-                                </div>
-                                <div>
-                                  <a class="text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" href="images/<?php echo $image_child['filename']; ?>" download>
-                                    <p><i class='bi bi-cloud-arrow-down-fill'></i> Download original image</p>
-                                  </a>
-                                </div>
-                              </div>
-                            <?php } ?>
-                            <a class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100" href="#downloadOption" data-bs-toggle="modal">
-                              <i class="bi bi-cloud-arrow-down-fill"></i> download all
-                            </a>
-                            <?php
-                              $images_total_size = 0;
-                              foreach ($images as $image) {
-                                $images_total_size += getImageSizeInMB($image['filename']);
-                              }
-
-                              $image_child_total_size = 0;
-                              foreach ($image_childs as $image_child) {
-                                $image_child_total_size += getImageSizeInMB($image_child['filename']);
-                              }
-                                
-                              $total_size = $images_total_size + $image_child_total_size;
-                            ?>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End of Data Modal -->
-
-              </div>
               <div class="d-none d-md-flex d-lg-flex mt-2 gap-2">
                 <?php if ($next_image): ?>
                   <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
@@ -876,7 +670,6 @@ if ($daily_view) {
                   view all <?php echo $user['artist']; ?>'s images
                 </small>
               </a>
-              <?php include 'imguser.php'; ?>
               <div class="card shadow border-0 rounded-4 bg-body-tertiary mt-3">
                 <div class="card-body">
                   <!-- Tags -->
@@ -1004,41 +797,6 @@ if ($daily_view) {
                   <?php endif; ?>
                 </div>
               </div>
-              <div class="collapse" id="collapseExample">
-                <form class="mt-2" action="add_to_album.php" method="post">
-                  <input class="form-control" type="hidden" name="image_id" value="<?= $image['id']; ?>">
-                  <select class="form-select fw-bold rounded-4 mb-2" name="album_id">
-                    <option class="form-control" value=""><small>add to album:</small></option>
-                    <?php
-                      // Connect to the SQLite database
-                      $db = new SQLite3('database.sqlite');
-
-                      // Get the email of the current user
-                      $email = $_SESSION['email'];
-
-                      // Retrieve the list of albums created by the current user
-                      $stmt = $db->prepare('SELECT album_name, id FROM album WHERE email = :email');
-                      $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-                      $results = $stmt->execute();
-
-                      // Loop through each album and create an option in the dropdown list
-                      while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
-                        $album_name = $row['album_name'];
-                        $id = $row['id'];
-                        echo '<option value="' . $id. '">' . htmlspecialchars($album_name). '</option>';
-                      }
-
-                      $db->close();
-                    ?>
-                  </select>
-                  <button class="form-control text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4" type="submit"><small>add to album</small></button>
-                </form>
-                <iframe class="mt-2 rounded-4 shadow" style="width: 100%; height: 400px;" src="<?php echo $url_comment; ?>"></iframe>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-100 rounded-4 fw-bold mt-2" href="comments.php?imageid=<?php echo $image['id']; ?>"><small>view all comments</small></a>
-              </div>
-              <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 w-100 fw-bold text-center mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleButton">
-                <i class="bi bi-caret-down-fill"></i> <small id="toggleText">show more</small>
-              </a>
             </div>
           </div> 
         </div>
