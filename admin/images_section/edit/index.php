@@ -103,8 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <a class="btn bg-secondary-subtle fw-medium rounded-pill me-auto" href="redirect.php?back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/admin/images_section/'); ?>"><i class="bi bi-arrow-left"></i> back to section</a>
                   <a class="btn bg-secondary-subtle fw-medium rounded-pill ms-auto" href="all.php?id=<?php echo $image['id']; ?>&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/admin/images_section/'); ?>">view all image child</a>
                 </div>
-                <div class="row">
-                  <div class="col-md-4 pe-md-1">
+                <div class="row g-2">
+                  <div class="col-md-6">
                     <div class="position-relative">
                       <a data-bs-toggle="modal" data-bs-target="#originalImage">
                         <img src="/thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>" class="h-100 w-100 rounded shadow">
@@ -193,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </center>
                   </div>
                 </div>
-                <div class="col-md-8 ps-md-1">
+                <div class="col-md-6">
                   <div class="">
                     <form method="POST">
                       <div class="form-floating mb-2">
@@ -320,7 +320,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-transparent border-0 rounded-0">
           <div class="modal-body position-relative">
-            <img class="object-fit-contain h-100 w-100 rounded" src="../images/<?php echo $image['filename']; ?>">
+            <img class="object-fit-contain h-100 w-100 rounded" src="/images/<?php echo $image['filename']; ?>">
             <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
           </div>
         </div>

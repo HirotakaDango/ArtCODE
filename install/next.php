@@ -55,6 +55,46 @@ function saveImageAndThumbnail($image, $originalPath, $thumbnailPath) {
   imagedestroy($thumbnail);
 }
 
+// Function to generate and save child images
+function generateChildImages($mainImageId, $childCount = 10) {
+  global $db;
+
+  $width = 2500;
+  $height = 1400;
+
+  // Define directory for child images
+  $dateFolder = date('Y/m/d');
+  $childImageDir = '../images/' . $dateFolder . '/';
+  $thumbnailDir = '../thumbnails/' . $dateFolder . '/';
+
+  if (!is_dir($childImageDir)) {
+    mkdir($childImageDir, 0755, true);
+  }
+  if (!is_dir($thumbnailDir)) {
+    mkdir($thumbnailDir, 0755, true);
+  }
+
+  for ($i = 0; $i < $childCount; $i++) {
+    $image = createGradientImage($width, $height);
+
+    // Define paths
+    $fileName = uniqid('child_img_') . '.png';
+    $originalPath = $childImageDir . $fileName;
+    $thumbnailPath = $thumbnailDir . $fileName;
+
+    // Save image and thumbnail
+    saveImageAndThumbnail($image, $originalPath, $thumbnailPath);
+
+    // Insert metadata into the database
+    $stmt = $db->prepare('INSERT INTO image_child (filename, image_id, email, original_filename) VALUES (:filename, :image_id, :email, :original_filename)');
+    $stmt->bindValue(':filename', $dateFolder . '/' . $fileName, PDO::PARAM_STR);
+    $stmt->bindValue(':image_id', $mainImageId, PDO::PARAM_INT);
+    $stmt->bindValue(':email', $_SESSION['email'], PDO::PARAM_STR);
+    $stmt->bindValue(':original_filename', $fileName, PDO::PARAM_STR);
+    $stmt->execute();
+  }
+}
+
 // Check if there are any images in the database
 $query = 'SELECT COUNT(*) FROM images';
 $statement = $db->query($query);
@@ -65,22 +105,33 @@ if ($imageCount == 0) {
   $width = 2500;
   $height = 1400;
 
-  // Generate 24 images for illustration
-  for ($i = 0; $i < 24; $i++) {
+  // Generate 12 images for illustration
+  for ($i = 0; $i < 12; $i++) {
     // Generate a new gradient image
     $image = createGradientImage($width, $height);
 
     // Define paths
+    $dateFolder = date('Y/m/d');
+    $imageDir = '../images/' . $dateFolder . '/';
+    $thumbnailDir = '../thumbnails/' . $dateFolder . '/';
+
+    if (!is_dir($imageDir)) {
+      mkdir($imageDir, 0755, true);
+    }
+    if (!is_dir($thumbnailDir)) {
+      mkdir($thumbnailDir, 0755, true);
+    }
+
     $fileName = uniqid('img_') . '.png';
-    $originalPath = '../images/' . $fileName;
-    $thumbnailPath = '../thumbnails/' . $fileName;
+    $originalPath = $imageDir . $fileName;
+    $thumbnailPath = $thumbnailDir . $fileName;
 
     // Save image and thumbnail
     saveImageAndThumbnail($image, $originalPath, $thumbnailPath);
 
     // Insert metadata into the database
-    $stmt = $db->prepare('INSERT INTO images (filename, email, tags, title, imgdesc, date, type, artwork_type) VALUES (:filename, :email, :tags, :title, :imgdesc, :date, :type, :artwork_type)');
-    $stmt->bindValue(':filename', $fileName, PDO::PARAM_STR);
+    $stmt = $db->prepare('INSERT INTO images (filename, email, tags, title, imgdesc, date, type, artwork_type, original_filename) VALUES (:filename, :email, :tags, :title, :imgdesc, :date, :type, :artwork_type, :original_filename)');
+    $stmt->bindValue(':filename', $dateFolder . '/' . $fileName, PDO::PARAM_STR);
     $stmt->bindValue(':email', $_SESSION['email'], PDO::PARAM_STR);
     $stmt->bindValue(':tags', 'gradient, wallpaper, background', PDO::PARAM_STR);
     $stmt->bindValue(':title', 'Gradient Image ' . ($i + 1), PDO::PARAM_STR);
@@ -88,33 +139,43 @@ if ($imageCount == 0) {
     $stmt->bindValue(':date', date('Y-m-d H:i:s'), PDO::PARAM_STR);
     $stmt->bindValue(':type', 'safe', PDO::PARAM_STR);
     $stmt->bindValue(':artwork_type', 'illustration', PDO::PARAM_STR);
+    $stmt->bindValue(':original_filename', $fileName, PDO::PARAM_STR);
     $stmt->execute();
 
-    // Insert into image_child table
-    $imageId = $db->lastInsertId(); // Get the ID of the inserted image
-    $stmt = $db->prepare('INSERT INTO image_child (filename, image_id, email) VALUES (:filename, :image_id, :email)');
-    $stmt->bindValue(':filename', $fileName, PDO::PARAM_STR);
-    $stmt->bindValue(':image_id', $imageId, PDO::PARAM_INT);
-    $stmt->bindValue(':email', $_SESSION['email'], PDO::PARAM_STR);
-    $stmt->execute();
+    // Get the ID of the inserted image
+    $mainImageId = $db->lastInsertId();
+
+    // Generate and save child images
+    generateChildImages($mainImageId, 5);
   }
 
-  // Generate 24 images for manga
-  for ($i = 0; $i < 24; $i++) {
+  // Generate 12 images for manga
+  for ($i = 0; $i < 12; $i++) {
     // Generate a new gradient image
     $image = createGradientImage($width, $height);
 
     // Define paths
+    $dateFolder = date('Y/m/d');
+    $imageDir = '../images/' . $dateFolder . '/';
+    $thumbnailDir = '../thumbnails/' . $dateFolder . '/';
+
+    if (!is_dir($imageDir)) {
+      mkdir($imageDir, 0755, true);
+    }
+    if (!is_dir($thumbnailDir)) {
+      mkdir($thumbnailDir, 0755, true);
+    }
+
     $fileName = uniqid('img_') . '.png';
-    $originalPath = '../images/' . $fileName;
-    $thumbnailPath = '../thumbnails/' . $fileName;
+    $originalPath = $imageDir . $fileName;
+    $thumbnailPath = $thumbnailDir . $fileName;
 
     // Save image and thumbnail
     saveImageAndThumbnail($image, $originalPath, $thumbnailPath);
 
     // Insert metadata into the database
-    $stmt = $db->prepare('INSERT INTO images (filename, email, tags, title, imgdesc, date, type, artwork_type, episode_name) VALUES (:filename, :email, :tags, :title, :imgdesc, :date, :type, :artwork_type, :episode_name)');
-    $stmt->bindValue(':filename', $fileName, PDO::PARAM_STR);
+    $stmt = $db->prepare('INSERT INTO images (filename, email, tags, title, imgdesc, date, type, artwork_type, episode_name, original_filename) VALUES (:filename, :email, :tags, :title, :imgdesc, :date, :type, :artwork_type, :episode_name, :original_filename)');
+    $stmt->bindValue(':filename', $dateFolder . '/' . $fileName, PDO::PARAM_STR);
     $stmt->bindValue(':email', $_SESSION['email'], PDO::PARAM_STR);
     $stmt->bindValue(':tags', 'gradient, wallpaper, background', PDO::PARAM_STR);
     $stmt->bindValue(':title', 'Gradient Image ' . ($i + 25), PDO::PARAM_STR);
@@ -123,18 +184,17 @@ if ($imageCount == 0) {
     $stmt->bindValue(':type', 'safe', PDO::PARAM_STR);
     $stmt->bindValue(':artwork_type', 'manga', PDO::PARAM_STR);
     $stmt->bindValue(':episode_name', 'Gradient Image ' . ($i + 25), PDO::PARAM_STR);
+    $stmt->bindValue(':original_filename', $fileName, PDO::PARAM_STR);
     $stmt->execute();
 
-    // Insert into image_child table
-    $imageId = $db->lastInsertId(); // Get the ID of the inserted image
-    $stmt = $db->prepare('INSERT INTO image_child (filename, image_id, email) VALUES (:filename, :image_id, :email)');
-    $stmt->bindValue(':filename', $fileName, PDO::PARAM_STR);
-    $stmt->bindValue(':image_id', $imageId, PDO::PARAM_INT);
-    $stmt->bindValue(':email', $_SESSION['email'], PDO::PARAM_STR);
-    $stmt->execute();
+    // Get the ID of the inserted image
+    $mainImageId = $db->lastInsertId();
+
+    // Generate and save child images
+    generateChildImages($mainImageId, 5);
   }
 
-  echo "48 gradient images have been generated and uploaded.";
+  echo "48 gradient images with 10 child images each have been generated and uploaded.";
 }
 
 // Redirect to home

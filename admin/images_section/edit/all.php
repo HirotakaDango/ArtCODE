@@ -15,29 +15,20 @@ if (!isset($_SESSION['admin']['email'])) {
 }
 
 // Get the filename from the query string
-$filename = isset($_GET['id']) ? $_GET['id'] : null;
-
-if ($filename === null) {
-  // Handle the error if no id is provided
-  echo 'No image ID provided.';
-  exit;
-}
+$id = $_GET['id'];
 
 // Get the current image information from the database
 $stmt = $db->prepare("SELECT * FROM images WHERE id = :id");
-$stmt->bindValue(':id', $filename, SQLITE3_TEXT);
+$stmt->bindValue(':id', $id, SQLITE3_TEXT);
 $result = $stmt->execute();
 $image = $result->fetchArray(SQLITE3_ASSOC);
 
-if ($image === false) {
-  // Handle the error if the image is not found
-  echo 'Image not found.';
-  exit;
+if (!$image) {
+  die("Image not found.");
 }
 
-// Get the ID of the current image and the email of the owner
+// Get the ID of the current image
 $image_id = $image['id'];
-$email = $image['email'];
 
 // Get all child images associated with the current image from the "image_child" table
 $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :image_id");
@@ -47,13 +38,135 @@ $child_images = [];
 while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
   $child_images[] = $row;
 }
+
+function generateThumbnail($filePath, $thumbnailPath) {
+  // Ensure the source file exists
+  if (!file_exists($filePath)) {
+    error_log("Source file does not exist: " . $filePath);
+    return false;
+  }
+
+  // Get the image information
+  $image_info = getimagesize($filePath);
+  if (!$image_info) {
+    error_log("Unable to get image info for: " . $filePath);
+    return false;
+  }
+
+  $mime_type = $image_info['mime'];
+  $source = false;
+
+  // Create image resource from file
+  switch ($mime_type) {
+    case 'image/jpeg':
+      $source = imagecreatefromjpeg($filePath);
+      break;
+    case 'image/png':
+      $source = imagecreatefrompng($filePath);
+      break;
+    case 'image/gif':
+      $source = imagecreatefromgif($filePath);
+      break;
+    case 'image/webp':
+      $source = imagecreatefromwebp($filePath);
+      break;
+    case 'image/avif':
+      $source = imagecreatefromavif($filePath);
+      break;
+    default:
+      error_log("Unsupported image type: " . $mime_type);
+      return false;
+  }
+
+  if ($source === false) {
+    error_log("Failed to create image resource from: " . $filePath);
+    return false;
+  }
+
+  $original_width = imagesx($source);
+  $original_height = imagesy($source);
+  $thumbnail_width = 300;
+  $thumbnail_height = intval($thumbnail_width * $original_height / $original_width);
+
+  $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+  if ($thumbnail === false) {
+    error_log("Failed to create thumbnail resource");
+    imagedestroy($source);
+    return false;
+  }
+
+  // Preserve transparency for PNG and GIF
+  if ($mime_type == 'image/png' || $mime_type == 'image/gif') {
+    imagecolortransparent($thumbnail, imagecolorallocatealpha($thumbnail, 0, 0, 0, 127));
+    imagealphablending($thumbnail, false);
+    imagesavealpha($thumbnail, true);
+  }
+
+  // Copy and resize the original image
+  if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height)) {
+    error_log("Failed to resize image: " . $filePath);
+    imagedestroy($source);
+    imagedestroy($thumbnail);
+    return false;
+  }
+
+  // Save the thumbnail
+  $result = false;
+  switch (pathinfo($filePath, PATHINFO_EXTENSION)) {
+    case 'jpg':
+    case 'jpeg':
+      $result = imagejpeg($thumbnail, $thumbnailPath);
+      break;
+    case 'png':
+      $result = imagepng($thumbnail, $thumbnailPath);
+      break;
+    case 'gif':
+      $result = imagegif($thumbnail, $thumbnailPath);
+      break;
+    case 'webp':
+      $result = imagewebp($thumbnail, $thumbnailPath);
+      break;
+    case 'avif':
+      $result = imageavif($thumbnail, $thumbnailPath);
+      break;
+  }
+
+  if (!$result) {
+    error_log("Failed to save thumbnail: " . $thumbnailPath);
+  }
+
+  // Clean up resources
+  imagedestroy($source);
+  imagedestroy($thumbnail);
+
+  return $result;
+}
+
+// Generate thumbnails if they do not exist
+foreach ($child_images as $child_image) {
+  $file_path = "../../../images/" . $child_image['filename'];
+  $thumbnail_path = "../../../thumbnails/" . $child_image['filename'];
+
+  // Create the thumbnail directory if it doesn't exist
+  $thumbnailDir = dirname($thumbnail_path);
+  if (!is_dir($thumbnailDir)) {
+    mkdir($thumbnailDir, 0755, true);
+  }
+
+  // Check if the thumbnail exists
+  if (!file_exists($thumbnail_path)) {
+    if (!generateThumbnail($file_path, $thumbnail_path)) {
+      error_log("Error generating thumbnail for " . $child_image['filename']);
+    }
+  }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8">
-    <title>Edit <?php echo $image['title']; ?></title>
+    <title>All Images From <?php echo $image['title']; ?></title>
     <?php include('../../../bootstrapcss.php'); ?>
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" type="image/png" href="/icon/favicon.png">
@@ -75,40 +188,52 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                 <a class="btn bg-secondary-subtle fw-medium rounded-pill ms-auto" href="/admin/images_section/edit/?id=<?php echo $image['id']; ?>&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/admin/images_section/'); ?>">back to edit</a>
               </div>
               <?php
-                // Function to calculate the size of an image in MB
-                function getImageSizeInMB($filename) {
-                  return round(filesize($_SERVER['DOCUMENT_ROOT'] . '/images/' . $filename) / (1024 * 1024), 2);
+              // Function to calculate the size of an image in MB
+              function getImageSizeInMB($filePath) {
+                return round(filesize($filePath) / (1024 * 1024), 2);
+              }
+              
+              // Connect to SQLite database
+              $db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
+              
+              // Get the filename from the query string
+              $id = $_GET['id'];
+              
+              // Get the total size of images from 'images' table
+              $stmt = $db->prepare("SELECT * FROM images WHERE id = :id");
+              $stmt->bindValue(':id', $id, SQLITE3_TEXT);
+              $result = $stmt->execute();
+              $images = [];
+              while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                $images[] = $row;
+              }
+              
+              // Get the total size of images from 'image_child' table
+              $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :id");
+              $stmt->bindValue(':id', $id, SQLITE3_TEXT);
+              $result = $stmt->execute();
+              $image_childs = [];
+              while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                $image_childs[] = $row;
+              }
+              
+              $images_total_size = 0;
+              foreach ($images as $image) {
+                $filePath = '../../../images/' . $image['filename'];
+                if (file_exists($filePath)) {
+                  $images_total_size += getImageSizeInMB($filePath);
                 }
-          
-                // Get the total size of images from 'images' table
-                $stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-                $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
-                $result = $stmt->execute();
-                $images = [];
-                while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-                  $images[] = $row;
+              }
+              
+              $image_child_total_size = 0;
+              foreach ($image_childs as $image_child) {
+                $filePath = '../../../images/' . $image_child['filename'];
+                if (file_exists($filePath)) {
+                  $image_child_total_size += getImageSizeInMB($filePath);
                 }
-          
-                // Get the total size of images from 'image_child' table
-                $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :filename");
-                $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
-                $result = $stmt->execute();
-                $image_childs = [];
-                while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-                  $image_childs[] = $row;
-                }
-          
-                $images_total_size = 0;
-                foreach ($images as $image) {
-                  $images_total_size += getImageSizeInMB($image['filename']);
-                }
-          
-                $image_child_total_size = 0;
-                foreach ($image_childs as $image_child) {
-                  $image_child_total_size += getImageSizeInMB($image_child['filename']);
-                }
-          
-                $total_size = $images_total_size + $image_child_total_size;
+              }
+              
+              $total_size = $images_total_size + $image_child_total_size;
               ?>
               <?php foreach ($child_images as $child_image) : ?>
                 <?php if (empty($child_image['filename'])) : ?>
@@ -124,7 +249,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                   $file_info = stat($file_path);
                   $image_info = getimagesize($file_path);
                   $exif_data = [];
-                  
+          
                   // Check if the file is a supported image type before reading EXIF data
                   if ($image_info && $image_info['mime'] === 'image/jpeg') {
                     $exif_data = exif_read_data($file_path, 'IFD0', true);
@@ -133,47 +258,74 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                   <div class="row mb-4">
                     <div class="col-md-6">
                       <div class="position-relative">
-                        <img data-src="<?php echo $file_path; ?>" class="rounded-4 w-100 lazy-load" alt="<?php echo $image['title']; ?>">
+                        <a data-bs-toggle="modal" data-bs-target="#originalImage_<?php echo urlencode($child_image['id']); ?>"><img data-src="../../../thumbnails/<?php echo $child_image['filename']; ?>" class="rounded-4 w-100 lazy-load" alt="<?php echo $image['title']; ?>"></a>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="mt-3">
                         <h5 class="mb-3">Image Metadata</h5>
-                      
+          
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">Filename</label>
                           <div class="col-8">
                             <p class="form-control-plaintext fw-bold text-white"><?php echo $child_image['filename']; ?></p>
                           </div>
                         </div>
-                      
+          
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">File Size</label>
                           <div class="col-8">
                             <p class="form-control-plaintext fw-bold text-white"><?php echo number_format($file_info['size'] / (1024 * 1024), 2); ?> MB</p>
                           </div>
                         </div>
-                      
+          
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">Dimensions</label>
                           <div class="col-8">
                             <p class="form-control-plaintext fw-bold text-white"><?php echo $image_info[0] . 'x' . $image_info[1]; ?> pixels</p>
                           </div>
                         </div>
-                      
+          
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">MIME Type</label>
                           <div class="col-8">
                             <p class="form-control-plaintext fw-bold text-white"><?php echo $image_info['mime']; ?></p>
                           </div>
                         </div>
-            
+          
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">Creation Date</label>
                           <div class="col-8">
                             <p class="form-control-plaintext fw-bold text-white"><?php echo date("l, d F, Y", $file_info['ctime']); ?></p>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal fade" id="originalImage_<?php echo urlencode($child_image['id']); ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                      <div class="modal-content bg-transparent border-0 rounded-0">
+                        <div class="modal-body position-relative">
+                          <img class="object-fit-contain h-100 w-100 rounded lazy-load" data-src="../../../images/<?php echo $child_image['filename']; ?>">
+                          <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal fade" id="deleteImage_<?php echo urlencode($child_image['id']); ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content rounded-4 border-0 shadow">
+                        <div class="modal-body p-4 text-center">
+                          <h5 class="mb-0">Delete this image "<?php echo $child_image['filename']; ?>"?</h5>
+                          <p class="mb-0">This action can't be undone</p>
+                        </div>
+                        <form method="POST" action="delete_image_child.php">
+                          <div class="modal-footer flex-nowrap p-0">
+                            <input type="hidden" name="image_id" value="<?php echo $child_image['id']; ?>">
+                            <button type="submit" class="btn btn-lg btn-link fs-6 text-danger text-decoration-none col-6 py-3 m-0 rounded-0 border-end"><strong>Yes, delete</strong></button>
+                            <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
+                          </div>
+                        </form>
                       </div>
                     </div>
                   </div>

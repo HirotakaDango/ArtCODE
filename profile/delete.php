@@ -57,9 +57,15 @@ try {
     if (file_exists($child_image_path) && is_file($child_image_path)) {
       unlink($child_image_path);
     }
+
+    // Delete the child image's thumbnail if it exists and is a file
+    $child_thumbnail_path = '../thumbnails/' . $child_filename;
+    if (file_exists($child_thumbnail_path) && is_file($child_thumbnail_path)) {
+      unlink($child_thumbnail_path);
+    }
   }
 
-  // Delete the original image and thumbnail if they exist and are files
+  // Delete the original image and its thumbnail if they exist and are files
   $image_path = '../images/' . $filename;
   $thumbnail_path = '../thumbnails/' . $filename;
   if (file_exists($image_path) && is_file($image_path)) {
@@ -82,7 +88,7 @@ $byParam = isset($_GET['by']) ? $_GET['by'] : ''; // Default value if 'by' param
 $pageParam = isset($_GET['page']) ? $_GET['page'] : 1; // Default to page 1 if 'page' parameter is not set
 
 // Construct the URL with the current web and query parameters
-$redirectUrl = "http://{$_SERVER['HTTP_HOST']}/profile/?by=$byParam&page=$pageParam";
+$redirectUrl = "/profile/?by=$byParam&page=$pageParam";
 
 // Redirect the user to the new URL
 header("Location: $redirectUrl");

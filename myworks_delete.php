@@ -57,9 +57,15 @@ try {
     if (file_exists($child_image_path) && is_file($child_image_path)) {
       unlink($child_image_path);
     }
+
+    // Delete the child image's thumbnail if it exists and is a file
+    $child_thumbnail_path = 'thumbnails/' . $child_filename;
+    if (file_exists($child_thumbnail_path) && is_file($child_thumbnail_path)) {
+      unlink($child_thumbnail_path);
+    }
   }
 
-  // Delete the original image and thumbnail if they exist and are files
+  // Delete the original image and its thumbnail if they exist and are files
   $image_path = 'images/' . $filename;
   $thumbnail_path = 'thumbnails/' . $filename;
   if (file_exists($image_path) && is_file($image_path)) {

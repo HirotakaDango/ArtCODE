@@ -27,40 +27,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $image_files = $_FILES['image'];
 
+    // Determine today's date for folder structure
+    $dateFolder = date('Y/m/d');
+    $uploadDir = '../images/' . $dateFolder . '/';
+    $thumbnailDir = '../thumbnails/' . $dateFolder . '/';
+
+    // Create directories if they don't exist
+    if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0755, true);
+    }
+    if (!is_dir($thumbnailDir)) {
+      mkdir($thumbnailDir, 0755, true);
+    }
+
     // Loop through each uploaded file
     for ($i = 0; $i < count($image_files['name']); $i++) {
-      // Generate a unique file name for the random image
+      // Generate a unique file name for the child image
       $ext = pathinfo($image_files['name'][$i], PATHINFO_EXTENSION);
-      $filename = uniqid() . '.' . $ext;
+      $filename = $dateFolder . '/' . uniqid() . '.' . $ext;
 
-      // Save the random image
-      move_uploaded_file($image_files['tmp_name'][$i], '../images/' . $filename);
+      // Save the child image
+      move_uploaded_file($image_files['tmp_name'][$i], $uploadDir . basename($filename));
 
       // Determine the image type and generate the thumbnail
-      $image_info = getimagesize('../images/' . $filename);
+      $image_info = getimagesize($uploadDir . basename($filename));
       $mime_type = $image_info['mime'];
 
       switch ($mime_type) {
         case 'image/jpeg':
-          $source = imagecreatefromjpeg('../images/' . $filename);
+          $source = imagecreatefromjpeg($uploadDir . basename($filename));
           break;
         case 'image/png':
-          $source = imagecreatefrompng('../images/' . $filename);
+          $source = imagecreatefrompng($uploadDir . basename($filename));
           break;
         case 'image/gif':
-          $source = imagecreatefromgif('../images/' . $filename);
+          $source = imagecreatefromgif($uploadDir . basename($filename));
           break;
         case 'image/webp':
-          $source = imagecreatefromwebp('../images/' . $filename);
+          $source = imagecreatefromwebp($uploadDir . basename($filename));
           break;
         case 'image/avif':
-          $source = imagecreatefromavif('../images/' . $filename);
+          $source = imagecreatefromavif($uploadDir . basename($filename));
           break;
         case 'image/bmp':
-          $source = imagecreatefrombmp('../images/' . $filename);
+          $source = imagecreatefrombmp($uploadDir . basename($filename));
           break;
         case 'image/wbmp':
-          $source = imagecreatefromwbmp('../images/' . $filename);
+          $source = imagecreatefromwbmp($uploadDir . basename($filename));
           break;
         default:
           echo "Error: Unsupported image format.";
@@ -72,11 +85,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
       }
 
+      $original_width = imagesx($source);
+      $original_height = imagesy($source);
+      $ratio = $original_width / $original_height;
+      $thumbnail_width = 300;
+      $thumbnail_height = intval(300 / $ratio); // Convert float to integer
+
+      $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+
+      if ($thumbnail === false) {
+        echo "Error: Failed to create thumbnail.";
+        exit;
+      }
+
+      imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height);
+
+      switch ($ext) {
+        case 'jpg':
+        case 'jpeg':
+          imagejpeg($thumbnail, $thumbnailDir . basename($filename));
+          break;
+        case 'png':
+          imagepng($thumbnail, $thumbnailDir . basename($filename));
+          break;
+        case 'gif':
+          imagegif($thumbnail, $thumbnailDir . basename($filename));
+          break;
+        case 'webp':
+          imagewebp($thumbnail, $thumbnailDir . basename($filename));
+          break;
+        case 'avif':
+          imageavif($thumbnail, $thumbnailDir . basename($filename));
+          break;
+        case 'bmp':
+          imagebmp($thumbnail, $thumbnailDir . basename($filename));
+          break;
+        case 'wbmp': 
+          imagewbmp($thumbnail, $thumbnailDir . basename($filename));
+          break;
+        default:
+          echo "Error: Unsupported image format.";
+          exit;
+      }
+
       // Insert the new image into the "image_child" table with the associated image_id
-      $stmt = $db->prepare("INSERT INTO image_child (image_id, filename, email) VALUES (:image_id, :filename, :email)");
-      $stmt->bindParam(':image_id', $image_id);
-      $stmt->bindParam(':filename', $filename);
-      $stmt->bindParam(':email', $email);
+      $stmt = $db->prepare("INSERT INTO image_child (image_id, filename, original_filename, email) VALUES (:image_id, :filename, :original_filename, :email)");
+      $stmt->bindValue(':image_id', $image_id);
+      $stmt->bindValue(':filename', $filename);
+      $stmt->bindValue(':original_filename', basename($image_files['name'][$i]));
+      $stmt->bindValue(':email', $email);
 
       // Check for database insertion errors
       if (!$stmt->execute()) {

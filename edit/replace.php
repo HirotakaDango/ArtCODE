@@ -6,15 +6,15 @@ $db = new SQLite3('../database.sqlite');
 
 // Check if the user is logged in
 if (!isset($_SESSION['email'])) {
-  // Redirect to index.php if not logged in
   header("Location: ../index.php");
   exit;
 }
 
 // Function to delete previous images
 function deletePreviousImages($filename) {
-  $previousImage = '../images/' . $filename;
-  $previousThumbnail = '../thumbnails/' . $filename;
+  $dateFolder = date('Y/m/d');
+  $previousImage = '../images/' . $dateFolder . '/' . $filename;
+  $previousThumbnail = '../thumbnails/' . $dateFolder . '/' . $filename;
 
   if (file_exists($previousImage)) {
     unlink($previousImage);
@@ -29,51 +29,51 @@ function deletePreviousImages($filename) {
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
 
-  // Retrieve the email of the logged-in user
   $email = $_SESSION['email'];
-
-  // Select the image details using the image ID and the email of the logged-in user
   $stmt = $db->prepare('SELECT * FROM images WHERE id = :id AND email = :email');
-  $stmt->bindParam(':id', $id);
-  $stmt->bindParam(':email', $email);
+  $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+  $stmt->bindValue(':email', $email, SQLITE3_TEXT);
   $result = $stmt->execute();
-  $image = $result->fetchArray(SQLITE3_ASSOC); // Retrieve result as an associative array
+  $image = $result->fetchArray(SQLITE3_ASSOC);
 
-  // Check if the image exists and belongs to the logged-in user
   if (!$image) {
-    echo '<meta charset="UTF-8"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">';
+    echo '<meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">';
     exit();
   }
 } else {
-  // Redirect to the error page if the image ID is not specified
   header('Location: ?id=' . $id);
   exit();
 }
 
 // Handle image update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Check if a file was uploaded
   if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-    // Delete previous images
     if (!empty($image['filename'])) {
       deletePreviousImages($image['filename']);
     }
 
-    $uploadDir = '../images/';
-    $uploadFile = $uploadDir . basename($_FILES['image']['name']);
+    $dateFolder = date('Y/m/d');
+    $uploadDir = '../images/' . $dateFolder . '/';
+    $thumbnailDir = '../thumbnails/' . $dateFolder . '/';
+
+    // Create directories if they don't exist
+    if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0755, true);
+    }
+    if (!is_dir($thumbnailDir)) {
+      mkdir($thumbnailDir, 0755, true);
+    }
+
+    $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+    $filename = uniqid() . '.' . $ext;
+    $originalFilename = basename($_FILES['image']['name']);
+    $uploadFile = $uploadDir . $filename;
 
     // Move the uploaded file to the destination directory
     if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-      // Generate a unique file name for the random image
-      $ext = pathinfo($uploadFile, PATHINFO_EXTENSION);
-      $filename = uniqid() . '.' . $ext;
-
-      // Copy the original image to the "images" folder
-      copy($uploadFile, $uploadDir . $filename);
-
-      // Determine the image type and generate the thumbnail
+      // Generate thumbnail
       $image_info = getimagesize($uploadFile);
       $mime_type = $image_info['mime'];
       switch ($mime_type) {
@@ -115,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $thumbnail_height = intval(300 / $ratio);
 
       $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-
       if ($thumbnail === false) {
         echo "Error: Failed to create thumbnail.";
         exit;
@@ -127,25 +126,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       switch ($ext) {
         case 'jpg':
         case 'jpeg':
-          imagejpeg($thumbnail, '../thumbnails/' . $filename);
+          imagejpeg($thumbnail, $thumbnailDir . $filename);
           break;
         case 'png':
-          imagepng($thumbnail, '../thumbnails/' . $filename);
+          imagepng($thumbnail, $thumbnailDir . $filename);
           break;
         case 'gif':
-          imagegif($thumbnail, '../thumbnails/' . $filename);
+          imagegif($thumbnail, $thumbnailDir . $filename);
           break;
         case 'webp':
-          imagewebp($thumbnail, '../thumbnails/' . $filename);
+          imagewebp($thumbnail, $thumbnailDir . $filename);
           break;
         case 'avif':
-          imageavif($thumbnail, '../thumbnails/' . $filename);
+          imageavif($thumbnail, $thumbnailDir . $filename);
           break;
         case 'bmp':
-          imagebmp($thumbnail, '../thumbnails/' . $filename);
+          imagebmp($thumbnail, $thumbnailDir . $filename);
           break;
         case 'wbmp':
-          imagewbmp($thumbnail, '../thumbnails/' . $filename);
+          imagewbmp($thumbnail, $thumbnailDir . $filename);
           break;
         default:
           echo "Error: Unsupported image format.";
@@ -153,12 +152,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       // Update the image details in the database
-      $stmt = $db->prepare('UPDATE images SET filename = :filename WHERE id = :id');
-      $stmt->bindParam(':filename', $filename);
-      $stmt->bindParam(':id', $id);
+      $stmt = $db->prepare('UPDATE images SET filename = :filename, original_filename = :original_filename WHERE id = :id');
+      $stmt->bindValue(':filename', $dateFolder . '/' . $filename, SQLITE3_TEXT);
+      $stmt->bindValue(':original_filename', $originalFilename, SQLITE3_TEXT);
+      $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
       $stmt->execute();
 
-      // Redirect to the image details page after the update
       header('Location: ?id=' . $id);
       exit();
     } else {
@@ -167,15 +166,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } else {
     echo 'No file uploaded.';
   }
-}
-
-// Function to create a thumbnail
-function createThumbnail($filePath, $width, $height) {
-  $source = imagecreatefromstring(file_get_contents($filePath));
-  $thumbnail = imagecreatetruecolor($width, $height);
-  imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, imagesx($source), imagesy($source));
-
-  return $thumbnail;
 }
 ?>
 

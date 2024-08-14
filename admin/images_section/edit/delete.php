@@ -65,15 +65,23 @@ try {
         $child_id = $child_image_id['id'];
         $child_filename = $child_image_id['filename'];
 
+        // Define the path to the child images and thumbnails folder
+        $child_image_path = $imagesFolder . $child_filename;
+        $child_thumbnail_path = $thumbnailsFolder . $child_filename;
+
         // Delete corresponding records from the "image_child" table
         $stmt = $db->prepare("DELETE FROM image_child WHERE id = :child_id");
         $stmt->bindValue(':child_id', $child_id, SQLITE3_INTEGER);
         $stmt->execute();
 
         // Delete the child image if it exists and is a file
-        $child_image_path = $imagesFolder . $child_filename;
         if (file_exists($child_image_path) && is_file($child_image_path)) {
           unlink($child_image_path);
+        }
+
+        // Delete the child image thumbnail if it exists and is a file
+        if (file_exists($child_thumbnail_path) && is_file($child_thumbnail_path)) {
+          unlink($child_thumbnail_path);
         }
       }
 

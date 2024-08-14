@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Get the image ID from the form submission
   $image_id = $_POST['image_id'];
 
-  // Get the filename of the original image
+  // Get the filename of the original image and its thumbnail
   $stmt = $db->prepare("SELECT filename FROM image_child WHERE id = :image_id");
   $stmt->bindParam(':image_id', $image_id);
   $stmt->execute();
@@ -17,10 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($result) {
     $filename = $result['filename'];
 
+    // Define paths to the image and thumbnail
+    $image_path = '../images/' . $filename;
+    $thumbnail_path = '../thumbnails/' . $filename;
+
     // Delete the original file from the "images" folder
-    $file_path = '../images/' . $filename;
-    if (file_exists($file_path)) {
-      unlink($file_path);
+    if (file_exists($image_path)) {
+      unlink($image_path);
+    }
+
+    // Delete the thumbnail file from the "thumbnails" folder
+    if (file_exists($thumbnail_path)) {
+      unlink($thumbnail_path);
     }
   }
 

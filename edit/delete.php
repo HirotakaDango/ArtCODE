@@ -1,9 +1,5 @@
 <?php
-session_start();
-if (!isset($_SESSION['email'])) {
-  header("Location: ../session.php");
-  exit;
-}
+require_once('../auth.php');
 
 // Check if the image ID is provided in the POST request
 if (isset($_POST['id'])) {
@@ -76,6 +72,12 @@ if (isset($_POST['id'])) {
         $child_image_path = $imagesFolder . $child_filename;
         if (file_exists($child_image_path) && is_file($child_image_path)) {
           unlink($child_image_path);
+        }
+
+        // Delete the child image's thumbnail if it exists and is a file
+        $child_thumbnail_path = $thumbnailsFolder . $child_filename;
+        if (file_exists($child_thumbnail_path) && is_file($child_thumbnail_path)) {
+          unlink($child_thumbnail_path);
         }
       }
 

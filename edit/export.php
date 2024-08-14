@@ -115,7 +115,7 @@ $total_size = $images_total_size + $image_child_total_size;
     <div class="container">
       <a class="btn border-0 position-absolute top-0 start-0 m-2" href="/edit/?id=<?php echo $image['id']; ?>"><i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i></a>
       <div class="d-flex justify-content-center align-items-center vh-100">
-        <div class="card border-0 bg-body-tertiary p-4 rounded-4 w-100" style="max-width: 70%;">
+        <div class="card border-0 bg-body-tertiary p-4 rounded-4 w-100" style="max-width: 550px;">
           <h5>Download Batch</h5>
           <div class="row mb-2 mt-4">
             <label for="" class="col-3 col-form-label">Title</label>
@@ -150,7 +150,7 @@ $total_size = $images_total_size + $image_child_total_size;
   
           <!-- Button for downloading images -->
           <a id="downloadButton" class="btn btn-primary fw-bold rounded-4 w-100" href="#" onclick="downloadWithProgressBar(<?php echo htmlspecialchars($artworkId); ?>)">
-            <i class="bi bi-download text-stroke"></i> Download All Images
+            <i class="bi bi-download text-stroke"></i> Export Your Artwork
           </a>
   
           <!-- Progress bar container -->
