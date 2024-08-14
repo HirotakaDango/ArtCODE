@@ -5,11 +5,11 @@ require_once('../../auth.php');
 $db = new PDO('sqlite:../../database.sqlite');
 
 // Get the filename from the query string
-$filename = $_GET['artworkid'];
+$imageId = $_GET['artworkid'];
 
 // Get the current image information from the database
-$stmt = $db->prepare("SELECT * FROM images WHERE id = :filename ");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid ");
+$stmt->bindParam(':artworkid', $imageId);
 $stmt->execute();
 $image = $stmt->fetch();
 
@@ -115,13 +115,13 @@ if (isset($_POST['favorite'])) {
 }
 
 // Increment the view count for the image
-$stmt = $db->prepare("UPDATE images SET view_count = view_count + 1 WHERE id = :filename");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("UPDATE images SET view_count = view_count + 1 WHERE id = :artworkid");
+$stmt->bindParam(':artworkid', $imageId);
 $stmt->execute();
 
 // Get the updated image information from the database
-$stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-$stmt->bindParam(':filename', $filename);
+$stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid");
+$stmt->bindParam(':artworkid', $imageId);
 $stmt->execute();
 $image = $stmt->fetch();
 
@@ -181,24 +181,96 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
       }
       
     ?>
+    <!-- Share Modal -->
+    <main id="swup" class="transition-main">
+      <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content rounded-4 border-0">
+            <div class="card rounded-4 p-4">
+              <p class="text-start fw-bold">share to:</p>
+              <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+                <!-- Twitter -->
+                <a class="btn border-0" href="https://twitter.com/intent/tweet?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>">
+                  <i class="bi bi-twitter"></i>
+                </a>
+      
+                <!-- Line -->
+                <a class="btn border-0" href="https://social-plugins.line.me/lineit/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-line"></i>
+                </a>
+      
+                <!-- Email -->
+                <a class="btn border-0" href="mailto:?body=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>">
+                  <i class="bi bi-envelope-fill"></i>
+                </a>
+      
+                <!-- Reddit -->
+                <a class="btn border-0" href="https://www.reddit.com/submit?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-reddit"></i>
+                </a>
+      
+                <!-- Instagram -->
+                <a class="btn border-0" href="https://www.instagram.com/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-instagram"></i>
+                </a>
+      
+                <!-- Facebook -->
+                <a class="btn border-0" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-facebook"></i>
+                </a>
+              </div>
+              <!-- Second Social Media Section -->
+              <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+                <!-- WhatsApp -->
+                <a class="btn border-0" href="https://wa.me/?text=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-whatsapp"></i>
+                </a>
+      
+                <!-- Pinterest -->
+                <a class="btn border-0" href="https://pinterest.com/pin/create/button/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-pinterest"></i>
+                </a>
+      
+                <!-- LinkedIn -->
+                <a class="btn border-0" href="https://www.linkedin.com/shareArticle?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-linkedin"></i>
+                </a>
+      
+                <!-- Messenger -->
+                <a class="btn border-0" href="https://www.facebook.com/dialog/send?link=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-messenger"></i>
+                </a>
+      
+                <!-- Telegram -->
+                <a class="btn border-0" href="https://telegram.me/share/url?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-telegram"></i>
+                </a>
+      
+                <!-- Snapchat -->
+                <a class="btn border-0" href="https://www.snapchat.com/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-snapchat"></i>
+                </a>
+              </div>
+              <!-- End -->
+              <div class="input-group mb-2">
+                <input type="text" id="urlInput1" value="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" class="form-control border-2 fw-bold" readonly>
+                <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard1()">
+                  <i class="bi bi-clipboard-fill"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- End of Share Modal -->
     <script>
-      function shareImage(userId) {
-        // Compose the share URL
-        var shareUrl = 'image.php?artworkid=' + userId;
+      function copyToClipboard1() {
+        var urlInput1 = document.getElementById('urlInput1');
+        urlInput1.select();
+        urlInput1.setSelectionRange(0, 99999); // For mobile devices
 
-        // Check if the Share API is supported by the browser
-        if (navigator.share) {
-          navigator.share({
-          url: shareUrl
-        })
-          .then(() => console.log('Shared successfully.'))
-          .catch((error) => console.error('Error sharing:', error));
-        } else {
-          console.log('Share API is not supported in this browser.');
-          // Provide an alternative action for browsers that do not support the Share API
-          // For example, you can open a new window with the share URL
-          window.open(shareUrl, '_blank');
-        }
+        document.execCommand('copy');
       }
     </script>
     <?php include('../../bootstrapjs.php'); ?>

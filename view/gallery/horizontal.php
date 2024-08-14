@@ -37,19 +37,19 @@
         <?php endforeach; ?>
         <?php
           // Function to calculate the size of an image in MB
-          function getImageSizeInMB($filename) {
-            return round(filesize('../../images/' . $filename) / (1024 * 1024), 2);
+          function getImageSizeInMB($imageId) {
+            return round(filesize('../../images/' . $imageId) / (1024 * 1024), 2);
           }
 
           // Get the total size of images from 'images' table
-          $stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-          $stmt->bindParam(':filename', $filename);
+          $stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid");
+          $stmt->bindParam(':artworkid', $imageId);
           $stmt->execute();
           $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
           // Get the total size of images from 'image_child' table
-          $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :filename");
-          $stmt->bindParam(':filename', $filename);
+          $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :artworkid");
+          $stmt->bindParam(':artworkid', $imageId);
           $stmt->execute();
           $image_childs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
@@ -99,14 +99,14 @@
                 <div class="collapse mt-2 fw-bold" id="collapseDataImage">
                   <?php
                     // Get the total size of images from 'images' table
-                    $stmt = $db->prepare("SELECT * FROM images WHERE id = :filename");
-                    $stmt->bindParam(':filename', $filename);
+                    $stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid");
+                    $stmt->bindParam(':artworkid', $imageId);
                     $stmt->execute();
                     $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     // Get the total size of images from 'image_child' table
-                    $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :filename");
-                    $stmt->bindParam(':filename', $filename);
+                    $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :artworkid");
+                    $stmt->bindParam(':artworkid', $imageId);
                     $stmt->execute();
                     $image_childs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   
@@ -222,7 +222,7 @@
             <button class="me-auto border-0 btn rounded" id="option3" onclick="window.location.href='/image.php?artworkid=<?php echo $image['id']; ?>'">
               <i class="fs-4 bi bi-x text-stroke-2"></i>
             </button>
-            <button class="ms-auto me-1 border-0 btn rounded fw-bold" onclick="sharePage()"><i class="bi bi-share-fill text-stroke"></i> <small>share</small></button>
+            <button class="ms-auto me-1 border-0 btn rounded fw-bold" data-bs-toggle="modal" data-bs-target="#shareLink"><i class="bi bi-share-fill text-stroke"></i> <small>share</small></button>
           </div>
         </main>
         <div class="container-fluid mb-2 d-flex">

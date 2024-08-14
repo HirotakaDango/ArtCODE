@@ -168,7 +168,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           <p class="text-shadow col border-end border-4"><?php echo round($fileSize / 1024, 2); ?> KB</p>
                           <p class="text-shadow col border-end border-4"><?php echo $fileDate; ?></p>
                           <p class="text-shadow col border-end border-4"><?php echo $width; ?>x<?php echo $height; ?></p>
-                          <a class="text-decoration-none col" href="../../images/<?php echo $image['filename']; ?>" download>
+                          <a class="text-shadow text-decoration-none col" href="../../images/<?php echo $image['filename']; ?>" download>
                             Download
                           </a>
                         </div>
@@ -230,7 +230,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                               <p class="text-shadow mb-2 col border-end border-4"><?php echo round($fileSize / 1024, 2); ?> KB</p>
                               <p class="text-shadow mb-2 col border-end border-4"><?php echo $fileDate; ?></p>
                               <p class="text-shadow mb-2 col border-end border-4"><?php echo $width; ?>x<?php echo $height; ?></p>
-                              <a class="text-decoration-none mb-2 col" href="../../images/<?php echo $image['filename']; ?>" download>
+                              <a class="text-shadow text-decoration-none mb-2 col" href="../../images/<?php echo $image['filename']; ?>" download>
                                 Download
                               </a>
                             </div>
@@ -258,7 +258,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                               <p class="text-shadow col border-end border-4"><?php echo round($childFileSize / 1024, 2); ?> KB</p>
                               <p class="text-shadow col border-end border-4"><?php echo $childFileDate; ?></p>
                               <p class="text-shadow col border-end border-4"><?php echo $childWidth; ?>x<?php echo $childHeight; ?></p>
-                              <a class="text-decoration-none col" href="../../images/<?php echo $child_image['filename']; ?>" download>
+                              <a class="text-shadow text-decoration-none col" href="../../images/<?php echo $child_image['filename']; ?>" download>
                                 Download
                               </a>
                             </div>
@@ -320,7 +320,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                   <p class="text-shadow mb-2 col border-end border-4"><?php echo round($childFileSize / 1024, 2); ?> KB</p>
                                   <p class="text-shadow mb-2 col border-end border-4"><?php echo $childFileDate; ?></p>
                                   <p class="text-shadow mb-2 col border-end border-4"><?php echo $childWidth; ?>x<?php echo $childHeight; ?></p>
-                                  <a class="text-decoration-none mb-2 col" href="../../images/<?php echo $child_image['filename']; ?>" download>
+                                  <a class="text-shadow text-decoration-none mb-2 col" href="../../images/<?php echo $child_image['filename']; ?>" download>
                                     Download
                                   </a>
                                 </div>
@@ -379,7 +379,7 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <main id="swup" class="transition-main">
               <div class="d-flex">
                 <a class="me-auto border-0 btn rounded" id="option3" href="/image.php?artworkid=<?php echo $image['id']; ?>"><i class="fs-4 bi bi-x text-stroke-2"></i></a>
-                <button class="ms-auto me-1 border-0 btn rounded fw-bold" onclick="sharePage()"><i class="bi bi-share-fill text-stroke"></i> <small>share</small></button>
+                <button class="ms-auto me-1 border-0 btn rounded fw-bold" data-bs-toggle="modal" data-bs-target="#shareLink"><i class="bi bi-share-fill text-stroke"></i> <small>share</small></button>
               </div>
             </main>
             <div class="container-fluid mb-2 d-flex">
@@ -581,7 +581,98 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
       }
     </style>
+    <!-- Share Modal -->
+    <main id="swup" class="transition-main">
+      <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content rounded-4 border-0">
+            <div class="card rounded-4 p-4">
+              <p class="text-start fw-bold">share to:</p>
+              <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+                <!-- Twitter -->
+                <a class="btn border-0" href="https://twitter.com/intent/tweet?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>">
+                  <i class="bi bi-twitter"></i>
+                </a>
+      
+                <!-- Line -->
+                <a class="btn border-0" href="https://social-plugins.line.me/lineit/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-line"></i>
+                </a>
+      
+                <!-- Email -->
+                <a class="btn border-0" href="mailto:?body=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>">
+                  <i class="bi bi-envelope-fill"></i>
+                </a>
+      
+                <!-- Reddit -->
+                <a class="btn border-0" href="https://www.reddit.com/submit?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-reddit"></i>
+                </a>
+      
+                <!-- Instagram -->
+                <a class="btn border-0" href="https://www.instagram.com/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-instagram"></i>
+                </a>
+      
+                <!-- Facebook -->
+                <a class="btn border-0" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-facebook"></i>
+                </a>
+              </div>
+              <!-- Second Social Media Section -->
+              <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+                <!-- WhatsApp -->
+                <a class="btn border-0" href="https://wa.me/?text=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-whatsapp"></i>
+                </a>
+      
+                <!-- Pinterest -->
+                <a class="btn border-0" href="https://pinterest.com/pin/create/button/?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-pinterest"></i>
+                </a>
+      
+                <!-- LinkedIn -->
+                <a class="btn border-0" href="https://www.linkedin.com/shareArticle?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-linkedin"></i>
+                </a>
+      
+                <!-- Messenger -->
+                <a class="btn border-0" href="https://www.facebook.com/dialog/send?link=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-messenger"></i>
+                </a>
+      
+                <!-- Telegram -->
+                <a class="btn border-0" href="https://telegram.me/share/url?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-telegram"></i>
+                </a>
+      
+                <!-- Snapchat -->
+                <a class="btn border-0" href="https://www.snapchat.com/share?url=<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-snapchat"></i>
+                </a>
+              </div>
+              <!-- End -->
+              <div class="input-group mb-2">
+                <input type="text" id="urlInput1" value="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/image.php?artworkid=' . $image['id']; ?>" class="form-control border-2 fw-bold" readonly>
+                <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard1()">
+                  <i class="bi bi-clipboard-fill"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- End of Share Modal -->
     <script>
+      function copyToClipboard1() {
+        var urlInput1 = document.getElementById('urlInput1');
+        urlInput1.select();
+        urlInput1.setSelectionRange(0, 99999); // For mobile devices
+
+        document.execCommand('copy');
+      }
+
       var isButtonVisible = true; // Set the initial state to invisible
       var lastTapTime = 0;
 
@@ -642,21 +733,6 @@ $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
         });
       });
 
-      function sharePage() {
-        if (navigator.share) {
-          navigator.share({
-            title: document.title,
-            url: window.location.href
-          }).then(() => {
-            console.log('Page shared successfully.');
-          }).catch((error) => {
-            console.error('Error sharing page:', error);
-          });
-        } else {
-          window.open("?artworkid=<?php echo $image['id']; ?>", "_blank");
-        }
-      }
-      
       // Wait for the document to be fully loaded
       document.addEventListener("DOMContentLoaded", function () {
         // Check if the modal has been shown before

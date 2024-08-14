@@ -1,4 +1,4 @@
-        <div class="w-100 px-1 my-2">
+        <div class="w-100 px-1">
           <div class="<?php include('../rows_columns/row-cols.php'); echo $rows_columns; ?>">
             <?php foreach ($pagedResults as $image): ?>
               <div class="col">

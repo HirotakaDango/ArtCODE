@@ -371,6 +371,11 @@ if ($daily_view) {
                       </a>
                     </li>
                     <li>
+                      <a class="dropdown-item fw-bold" href="/view/manga/?artworkid=<?php echo $image['id']; ?>&page=1">
+                        <i class="bi bi-journals"></i> full manga view
+                      </a>
+                    </li>
+                    <li>
                       <a class="dropdown-item fw-bold" href="/view/carousel/?artworkid=<?php echo $image['id']; ?>">
                         <i class="bi bi-distribute-horizontal"></i> full carousel view
                       </a>

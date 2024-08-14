@@ -38,3 +38,8 @@
                   </ul>
                 </div>
               </div>
+              <div class="w-100 my-2">
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 fw-bold w-100" href="/similar_image_search/?image=/images/<?php echo urlencode($image['filename']); ?>">
+                  <small>find similar image</small>
+                </a>
+              </div>
