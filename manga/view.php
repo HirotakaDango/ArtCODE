@@ -93,7 +93,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
           <i class="bi bi-list text-stroke"></i> Menu
         </a>
       </div>
-      <div class="position-fixed start-0 end-0 z-2 d-none d-md-block">
+      <div class="position-absolute start-0 end-0 z-2 d-none d-md-block">
         <button class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" id="toggleHeaderBtn">Hide Header</button>
       </div>
       <div class="d-flex justify-content-center align-items-center vh-100-sm">

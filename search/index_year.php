@@ -1,4 +1,8 @@
 <?php
+// Calculate the first and last day of the current year
+$startOfYear = date('Y-01-01'); // First day of the year
+$endOfYear = date('Y-12-31');   // Last day of the year
+
 // Prepare the query to get the user's numpage
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
@@ -21,7 +25,11 @@ $searchTerm = trim(strtolower($searchTerm));
 $terms = array_map('trim', explode(',', $searchTerm));
 
 // Prepare the search query with placeholders for terms
-$query = "SELECT * FROM images WHERE 1=1";
+$query = "SELECT images.*, users.artist, users.pic, users.id AS user_id, COALESCE(SUM(daily.views), 0) AS views
+  FROM images
+  JOIN users ON images.email = users.email
+  LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfYear AND :endOfYear
+  WHERE 1=1";
 
 // Create an array to hold the conditions for partial word matches
 $conditions = array();
@@ -37,13 +45,16 @@ if (!empty($conditions)) {
   $query .= " AND (" . implode(' OR ', $conditions) . ")";
 }
 
+// Group by image to aggregate views
+$query .= " GROUP BY images.id";
+
 // Check if q (search term) is empty
 if (empty($searchTerm)) {
-  // If q is empty, order by view_count DESC
-  $query .= " ORDER BY view_count DESC";
+  // If q is empty, order by views DESC
+  $query .= " ORDER BY views DESC, images.id DESC";
 } else {
-  // Otherwise, order by view_count DESC
-  $query .= " ORDER BY view_count DESC";
+  // Otherwise, order by views DESC
+  $query .= " ORDER BY views DESC, images.id DESC";
 }
 
 // Prepare the SQL statement
@@ -59,6 +70,10 @@ foreach ($terms as $term) {
     }
   }
 }
+
+// Bind the start and end dates of the current year
+$statement->bindValue(':startOfYear', $startOfYear, SQLITE3_TEXT);
+$statement->bindValue(':endOfYear', $endOfYear, SQLITE3_TEXT);
 
 // Execute the query
 $result = $statement->execute();

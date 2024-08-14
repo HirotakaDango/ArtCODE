@@ -21,7 +21,11 @@ $searchTerm = trim(strtolower($searchTerm));
 $terms = array_map('trim', explode(',', $searchTerm));
 
 // Prepare the search query with placeholders for terms
-$query = "SELECT * FROM images WHERE 1=1";
+$query = "SELECT images.*, users.artist, users.pic, users.id AS user_id, COALESCE(daily.views, 0) AS views
+  FROM images
+  JOIN users ON images.email = users.email
+  LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+  WHERE 1=1";
 
 // Create an array to hold the conditions for partial word matches
 $conditions = array();
@@ -40,10 +44,10 @@ if (!empty($conditions)) {
 // Check if q (search term) is empty
 if (empty($searchTerm)) {
   // If q is empty, order by view_count DESC
-  $query .= " ORDER BY view_count DESC";
+  $query .= " ORDER BY views DESC, images.id DESC";
 } else {
   // Otherwise, order by view_count DESC
-  $query .= " ORDER BY view_count DESC";
+  $query .= " ORDER BY views DESC, images.id DESC";
 }
 
 // Prepare the SQL statement
@@ -59,6 +63,10 @@ foreach ($terms as $term) {
     }
   }
 }
+
+// Bind the current date for the daily views
+$currentDate = date('Y-m-d');
+$statement->bindValue(':currentDate', $currentDate, SQLITE3_TEXT);
 
 // Execute the query
 $result = $statement->execute();

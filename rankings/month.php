@@ -57,4 +57,4 @@ if (!$result) {
 }
 ?>
 
-<?php include('image_card_rankings.php') ?>
+<?php include('image_card_rankings.php'); ?>

@@ -1,4 +1,9 @@
 <?php
+// Calculate the first and last day of the current month
+$startOfMonth = date('Y-m-01'); // First day of the month
+$endOfMonth = date('Y-m-t');   // Last day of the month
+
+// Prepare and execute the query to count the total number of images with the specified character
 $stmt = $db->prepare("SELECT COUNT(*) FROM images WHERE REPLACE(characters, ' ', '') LIKE :characterWithoutSpaces ESCAPE '\\' OR REPLACE(characters, ' ', '') LIKE :character_start ESCAPE '\\' OR REPLACE(characters, ' ', '') LIKE :character_end ESCAPE '\\' OR characters = :character_exact");
 $stmt->bindValue(':characterWithoutSpaces', "{$characterWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':character_start', "%,{$characterWithoutSpaces}", SQLITE3_TEXT);
@@ -27,15 +32,23 @@ $stmt->bindValue(':character_end', "%,{$characterWithoutSpaces},%", SQLITE3_TEXT
 $stmt->bindValue(':character_exact', $character, SQLITE3_TEXT);
 $total = $stmt->execute()->fetchArray()[0];
 
-// Retrieve the images for the current page
-$stmt = $db->prepare("SELECT * FROM images WHERE REPLACE(characters, ' ', '') LIKE :characterWithoutSpaces ESCAPE '\\' OR REPLACE(characters, ' ', '') LIKE :character_start ESCAPE '\\' OR REPLACE(characters, ' ', '') LIKE :character_end ESCAPE '\\' OR characters = :character_exact ORDER BY view_count ASC LIMIT :limit OFFSET :offset");
+// Retrieve the images for the current page, sorted by monthly views and then by image ID
+$stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS user_id, COALESCE(SUM(daily.views), 0) AS views
+  FROM images
+  JOIN users ON images.email = users.email
+  LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfMonth AND :endOfMonth
+  WHERE REPLACE(characters, ' ', '') LIKE :characterWithoutSpaces ESCAPE '\\' OR REPLACE(characters, ' ', '') LIKE :character_start ESCAPE '\\' OR REPLACE(characters, ' ', '') LIKE :character_end ESCAPE '\\' OR characters = :character_exact
+  GROUP BY images.id
+  ORDER BY views DESC, images.id DESC LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':characterWithoutSpaces', "{$characterWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':character_start', "%,{$characterWithoutSpaces}", SQLITE3_TEXT);
 $stmt->bindValue(':character_end', "%,{$characterWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':character_exact', $character, SQLITE3_TEXT);
+$stmt->bindValue(':startOfMonth', $startOfMonth, SQLITE3_TEXT);
+$stmt->bindValue(':endOfMonth', $endOfMonth, SQLITE3_TEXT);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
-    <?php include('image_card_character.php')?>
+    <?php include('image_card_character.php') ?>

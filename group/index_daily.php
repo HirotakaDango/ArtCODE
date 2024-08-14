@@ -1,4 +1,8 @@
 <?php
+// Get the current date in YYYY-MM-DD format
+$currentDate = date('Y-m-d');
+
+// Prepare and execute the query to count the total number of images with the specified group
 $stmt = $db->prepare("SELECT COUNT(*) FROM images WHERE REPLACE(`group`, ' ', '') LIKE :groupWithoutSpaces ESCAPE '\\' OR REPLACE(`group`, ' ', '') LIKE :group_start ESCAPE '\\' OR REPLACE(`group`, ' ', '') LIKE :group_end ESCAPE '\\' OR `group` = :group_exact");
 $stmt->bindValue(':groupWithoutSpaces', "{$groupWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':group_start', "%,{$groupWithoutSpaces}", SQLITE3_TEXT);
@@ -27,15 +31,21 @@ $stmt->bindValue(':group_end', "%,{$groupWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':group_exact', $group, SQLITE3_TEXT);
 $total = $stmt->execute()->fetchArray()[0];
 
-// Retrieve the images for the current page
-$stmt = $db->prepare("SELECT * FROM images WHERE REPLACE(`group`, ' ', '') LIKE :groupWithoutSpaces ESCAPE '\\' OR REPLACE(`group`, ' ', '') LIKE :group_start ESCAPE '\\' OR REPLACE(`group`, ' ', '') LIKE :group_end ESCAPE '\\' OR `group` = :group_exact ORDER BY title DESC LIMIT :limit OFFSET :offset");
+// Retrieve the images for the current page, sorted by daily views and then by image ID
+$stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS user_id, COALESCE(daily.views, 0) AS views
+  FROM images
+  JOIN users ON images.email = users.email
+  LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+  WHERE REPLACE(`group`, ' ', '') LIKE :groupWithoutSpaces ESCAPE '\\' OR REPLACE(`group`, ' ', '') LIKE :group_start ESCAPE '\\' OR REPLACE(`group`, ' ', '') LIKE :group_end ESCAPE '\\' OR `group` = :group_exact
+  ORDER BY views DESC, images.id DESC LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':groupWithoutSpaces', "{$groupWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':group_start', "%,{$groupWithoutSpaces}", SQLITE3_TEXT);
 $stmt->bindValue(':group_end', "%,{$groupWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':group_exact', $group, SQLITE3_TEXT);
+$stmt->bindValue(':currentDate', $currentDate, SQLITE3_TEXT);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 $result = $stmt->execute();
 ?>
 
-    <?php include('image_card_group.php')?>
+    <?php include('image_card_group.php') ?>
