@@ -1,4 +1,7 @@
 <?php
+// Get the current date in YYYY-MM-DD format
+$currentDate = date('Y-m-d');
+
 // Prepare the query to get the user's numpage
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
@@ -21,8 +24,16 @@ $query = $db->prepare("SELECT COUNT(*) FROM images WHERE email = :email");
 $query->bindValue(':email', $email);
 $total = $query->execute()->fetchArray()[0];
 
-// Get all of the images uploaded by the current user
-$stmt = $db->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id WHERE images.email = :email GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
+// Get all of the images uploaded by the current user for the current day
+$stmt = $db->prepare("
+  SELECT images.*, COALESCE(daily.views, 0) AS views
+  FROM images
+  LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+  WHERE images.email = :email
+  ORDER BY views DESC, images.id DESC
+  LIMIT :limit OFFSET :offset
+");
+$stmt->bindValue(':currentDate', $currentDate);
 $stmt->bindValue(':email', $email);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);

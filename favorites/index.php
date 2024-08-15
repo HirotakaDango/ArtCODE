@@ -79,25 +79,32 @@ if (isset($_POST['favorite']) || isset($_POST['unfavorite'])) {
   </head>
   <body>
     <?php include('../header.php'); ?>
-    <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-images"></i> sort by
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="?by=newest&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=popular&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
-        <li><a href="?by=view&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
-        <li><a href="?by=least&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
-        <li><a href="?by=liked&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
-        <li><a href="?by=order_asc&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
-        <li><a href="?by=order_desc&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
-        <li><a href="?by=daily&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'daily') echo 'active'; ?>">daily</a></li>
-        <li><a href="?by=week&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'week') echo 'active'; ?>">week</a></li>
-        <li><a href="?by=month&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'month') echo 'active'; ?>">month</a></li>
-        <li><a href="?by=year&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'year') echo 'active'; ?>">year</a></li>
-      </ul> 
-    </div> 
+    <div class="container-fluid px-2 mb-2">
+      <div class="d-flex">
+        <div class="dropdown me-auto">
+          <button class="btn btn-sm fw-bold rounded-pill btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-images"></i> sort by
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="?by=newest&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+            <li><a href="?by=oldest&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+            <li><a href="?by=popular&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
+            <li><a href="?by=view&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
+            <li><a href="?by=least&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
+            <li><a href="?by=liked&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
+            <li><a href="?by=order_asc&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
+            <li><a href="?by=order_desc&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
+            <li><a href="?by=daily&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'daily') echo 'active'; ?>">daily</a></li>
+            <li><a href="?by=week&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'week') echo 'active'; ?>">week</a></li>
+            <li><a href="?by=month&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'month') echo 'active'; ?>">month</a></li>
+            <li><a href="?by=year&id=<?php echo $current_user_id; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'year') echo 'active'; ?>">year</a></li>
+          </ul> 
+        </div>
+        <a class="btn btn-sm fw-bold rounded-pill btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> ms-auto" href="/artist.php?id=<?php echo $_GET['id']; ?>">
+          <i class="bi bi-chevron-left text-stroke"></i> back
+        </a>
+      </div>
+    </div>
     <?php 
     if(isset($_GET['by'])){
       $sort = $_GET['by'];
@@ -146,11 +153,6 @@ if (isset($_POST['favorite']) || isset($_POST['unfavorite'])) {
     }
     
     ?>
-    <div style="position: fixed; bottom: 20px; right: 20px;">
-      <button class="btn btn-primary rounded-pill fw-bold btn-md" onclick="goBack()">
-        <i class="bi bi-chevron-left text-stroke"></i> back
-      </button>
-    </div> 
     <?php
       $totalPages = ceil($total / $limit);
       $prevPage = $page - 1;
@@ -293,11 +295,6 @@ if (isset($_POST['favorite']) || isset($_POST['unfavorite'])) {
 
       // Initial loading
       loadMoreImages();
-    </script>
-    <script>
-      function goBack() {
-        window.location.href = "../artist.php?id=<?php echo $current_user_id; ?>";
-      }
     </script>
     <?php include('../bootstrapjs.php'); ?>
   </body>
