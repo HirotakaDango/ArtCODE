@@ -9,15 +9,6 @@
                 <img class="img-thumbnail border-0 shadow rounded-circle mt-5" src="<?php echo !empty($pic) ? $pic : "../icon/profile.svg"; ?>" alt="Profile Picture" style="width: 120px; height: 120px;">
               </div>
               <h1 class="fw-bold text-center mt-2"><?php echo $artist; ?></h1>
-              <div class="d-flex justify-content-center my-4">
-                <form class="w-100 container-fluid" method="post">
-                  <?php if ($is_following): ?>
-                    <button class="btn btn-outline-dark btn-lg rounded-pill fw-medium w-100" type="submit" name="unfollow"><i class="bi bi-person-dash-fill"></i> <small>unfollow</small></button>
-                  <?php else: ?>
-                    <button class="btn btn-outline-dark btn-lg rounded-pill fw-medium w-100" type="submit" name="follow"><i class="bi bi-person-fill-add"></i> <small>follow</small></button>
-                  <?php endif; ?>
-                </form>
-              </div>
               <div class="d-flex justify-content-center align-item-center">
                 <div class="btn-group gap-2 mt-2" role="group" aria-label="Social Media Links">
                   <span>
