@@ -304,15 +304,8 @@ $fav_count = $fav_count->fetchColumn();
     
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
     <?php
-    $validTaggedFilters = [
-      'tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view',
-      'tagged_least', 'tagged_liked', 'tagged_order_asc', 'tagged_order_desc'
-    ];
-    $validHeaderPages = [
-      'header_artist_asc.php', 'header_artist_desc.php', 'header_artist_pop.php',
-      'header_artist_view.php', 'header_artist_least.php', 'header_artist_like.php',
-      'header_artist_order_asc.php', 'header_artist_order_desc.php'
-    ];
+    $validTaggedFilters = ['tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view', 'tagged_least', 'tagged_liked', 'tagged_order_asc', 'tagged_order_desc', 'tagged_daily', 'tagged_week', 'tagged_month', 'tagged_year'];
+    $validHeaderPages = ['header_artist_asc.php', 'header_artist_desc.php', 'header_artist_pop.php', 'header_artist_view.php', 'header_artist_least.php', 'header_artist_like.php', 'header_artist_order_asc.php', 'header_artist_order_desc.php', 'artist_daily.php', 'artist_week.php', 'artist_month.php', 'artist_year.php'];
     
     $isTagHidden = false;
     
@@ -340,12 +333,16 @@ $fav_count = $fav_count->fetchColumn();
         <li><a href="?id=<?php echo $id; ?>&by=liked&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=order_asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=order_desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=daily&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'daily') echo 'active'; ?>">daily</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=week&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'week') echo 'active'; ?>">week</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=month&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'month') echo 'active'; ?>">month</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=year&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'year') echo 'active'; ?>">year</a></li>
       </ul>
     </div> 
 
     <?php
-    $validFilters = ['oldest', 'newest', 'popular', 'view', 'least', 'liked', 'order_asc', 'order_desc'];
-    $validPages = ['artist_asc.php', 'artist_desc.php', 'artist_pop.php', 'artist_view.php', 'artist_least.php', 'artist_like.php', 'artist_order_asc.php', 'artist_order_desc.php'];
+    $validFilters = ['oldest', 'newest', 'popular', 'view', 'least', 'liked', 'order_asc', 'order_desc', 'daily', 'week', 'month', 'year'];
+    $validPages = ['artist_asc.php', 'artist_desc.php', 'artist_pop.php', 'artist_view.php', 'artist_least.php', 'artist_like.php', 'artist_order_asc.php', 'artist_order_desc.php', 'artist_daily.php', 'artist_week.php', 'artist_month.php', 'artist_year.php'];
     
     $isHidden = false;
     
@@ -373,91 +370,131 @@ $fav_count = $fav_count->fetchColumn();
         <li><a href="?id=<?php echo $id; ?>&by=tagged_liked&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_liked') echo 'active'; ?>">liked</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_order_asc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_order_asc') echo 'active'; ?>">from A to Z</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_order_desc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_order_desc') echo 'active'; ?>">from Z to A</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=tagged_daily&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_daily') echo 'active'; ?>">daily</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=tagged_week&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_week') echo 'active'; ?>">week</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=tagged_month&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_month') echo 'active'; ?>">month</a></li>
+        <li><a href="?id=<?php echo $id; ?>&by=tagged_year&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_year') echo 'active'; ?>">year</a></li>
       </ul>
     </div> 
-        <?php 
-        if(isset($_GET['by'])){
-          $sort = $_GET['by'];
- 
-          switch ($sort) {
-            case 'newest':
-            include "artist_desc.php";
-            break;
-            case 'oldest':
-            include "artist_asc.php";
-            break;
-            case 'popular':
-            include "artist_pop.php";
-            break;
-            case 'view':
-            include "artist_view.php";
-            break;
-            case 'least':
-            include "artist_least.php";
-            break;
-            case 'liked':
-            include "artist_like.php";
-            break;
-            case 'order_asc':
-            include "artist_order_asc.php";
-            break;
-            case 'order_desc':
-            include "artist_order_desc.php";
-            break;
+    <?php 
+    if(isset($_GET['by'])){
+      $sort = $_GET['by'];
 
-            case 'tagged_newest':
-            include "artist_tagged_desc.php";
-            break;
-            case 'tagged_oldest':
-            include "artist_tagged_asc.php";
-            break;
-            case 'tagged_popular':
-            include "artist_tagged_pop.php";
-            break;
-            case 'tagged_view':
-            include "artist_tagged_view.php";
-            break;
-            case 'tagged_least':
-            include "artist_tagged_least.php";
-            break;
-            case 'tagged_liked':
-            include "artist_tagged_like.php";
-            break;
-            case 'tagged_order_asc':
-            include "artist_tagged_order_asc.php";
-            break;
-            case 'tagged_order_desc':
-            include "artist_tagged_order_desc.php";
-            break;
+      switch ($sort) {
+        case 'newest':
+        include "artist_desc.php";
+        break;
+        case 'oldest':
+        include "artist_asc.php";
+        break;
+        case 'popular':
+        include "artist_pop.php";
+        break;
+        case 'view':
+        include "artist_view.php";
+        break;
+        case 'least':
+        include "artist_least.php";
+        break;
+        case 'liked':
+        include "artist_like.php";
+        break;
+        case 'order_asc':
+        include "artist_order_asc.php";
+        break;
+        case 'order_desc':
+        include "artist_order_desc.php";
+        break;
+        case 'daily':
+        include "artist_daily.php";
+        break;
+        case 'week':
+        include "artist_week.php";
+        break;
+        case 'month':
+        include "artist_month.php";
+        break;
+        case 'year':
+        include "artist_year.php";
+        break;
+
+        case 'tagged_newest':
+        include "artist_tagged_desc.php";
+        break;
+        case 'tagged_oldest':
+        include "artist_tagged_asc.php";
+        break;
+        case 'tagged_popular':
+        include "artist_tagged_pop.php";
+        break;
+        case 'tagged_view':
+        include "artist_tagged_view.php";
+        break;
+        case 'tagged_least':
+        include "artist_tagged_least.php";
+        break;
+        case 'tagged_liked':
+        include "artist_tagged_like.php";
+        break;
+        case 'tagged_order_asc':
+        include "artist_tagged_order_asc.php";
+        break;
+        case 'tagged_order_desc':
+        include "artist_tagged_order_desc.php";
+        break;
+        case 'tagged_daily':
+        include "artist_tagged_daily.php";
+        break;
+        case 'tagged_week':
+        include "artist_tagged_week.php";
+        break;
+        case 'tagged_month':
+        include "artist_tagged_month.php";
+        break;
+        case 'tagged_year':
+        include "artist_tagged_year.php";
+        break;
+      }
+    }
+    else {
+      include "artist_desc.php";
+    }
+    
+    ?>
+    <?php
+      $totalPages = ceil($total / $limit);
+      $prevPage = $page - 1;
+      $nextPage = $page + 1;
+    ?>
+    <div class="pagination d-flex gap-1 justify-content-center mt-3">
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+      <?php endif; ?>
+
+      <?php
+        // Calculate the range of page numbers to display
+        $startPage = max($page - 2, 1);
+        $endPage = min($page + 2, $totalPages);
+
+        // Display page numbers within the range
+        for ($i = $startPage; $i <= $endPage; $i++) {
+          if ($i === $page) {
+            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+          } else {
+            $by = isset($_GET['by']) ? urlencode($_GET['by']) : 'newest';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?id=' . $id . '&by=' . $by . '&page=' . $i . '">' . $i . '</a>';
           }
         }
-        else {
-          include "artist_desc.php";
-        }
-        
-        ?>
+      ?>
+
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+      <?php endif; ?>
+    </div>
     <div class="mt-5"></div>
     <?php include('share.php'); ?>
-    <script>
-      function shareImage(userId) {
-        // Compose the share URL
-        var shareUrl = '../image.php?artworkid=' + userId;
-
-        // Check if the Share API is supported by the browser
-        if (navigator.share) {
-          navigator.share({
-          url: shareUrl
-        })
-          .then(() => console.log('Shared successfully.'))
-          .catch((error) => console.error('Error sharing:', error));
-        } else {
-          console.log('Share API is not supported in this browser.');
-          // Provide an alternative action for browsers that do not support the Share API
-          // For example, you can open a new window with the share URL
-          window.open(shareUrl, '_blank');
-        }
-      }
-    </script>
     <script>
       let lazyloadImages = document.querySelectorAll(".lazy-load");
       let imageContainer = document.getElementById("image-container");
@@ -561,22 +598,6 @@ $fav_count = $fav_count->fetchColumn();
 
       // Initial loading
       loadMoreImages();
-    </script>
-    <script>
-      function sharePage() {
-        if (navigator.share) {
-          navigator.share({
-            title: document.title,
-            url: window.location.href
-          }).then(() => {
-            console.log('Page shared successfully.');
-          }).catch((error) => {
-            console.error('Error sharing page:', error);
-          });
-        } else {
-          console.log('Web Share API not supported.');
-        }
-      }
     </script>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
