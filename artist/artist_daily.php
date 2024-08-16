@@ -1,5 +1,9 @@
-<?php include('header_artist_like.php'); ?>
+<?php include('header_artist_daily.php'); ?>
 <?php
+// Get the current date in YYYY-MM-DD format
+$currentDate = date('Y-m-d');
+
+// Get the user's numpage
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindParam(':email', $email, PDO::PARAM_STR);
 $queryNum->execute();
@@ -17,34 +21,27 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
 // Get the total number of images for the selected user
-$query = $db->prepare('
-  SELECT COUNT(*) 
-  FROM images 
-  JOIN users ON images.email = users.email 
-  LEFT JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
-  WHERE users.id = :id AND favorites.id IS NOT NULL
-');
-$query->bindParam(':email', $email);
+$query = $db->prepare('SELECT COUNT(*) FROM images JOIN users ON images.email = users.email WHERE users.id = :id');
 $query->bindParam(':id', $id);
 $query->execute();
 $total = $query->fetchColumn();
 
-// Get all images for the selected user from the images table
-$query = $db->prepare('
-  SELECT images.* 
-  FROM images 
-  JOIN users ON images.email = users.email 
-  LEFT JOIN favorites ON images.id = favorites.image_id AND favorites.email = :email
-  WHERE users.id = :id AND favorites.id IS NOT NULL
-  ORDER BY images.id DESC 
+// Get all images for the selected user, sorted by daily views
+$query = $db->prepare("
+  SELECT images.*, COALESCE(daily.views, 0) AS views
+  FROM images
+  JOIN users ON images.email = users.email
+  LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+  WHERE users.id = :id
+  ORDER BY views DESC, images.id DESC
   LIMIT :limit OFFSET :offset
-');
+");
 $query->bindParam(':id', $id);
-$query->bindParam(':email', $email);
+$query->bindParam(':currentDate', $currentDate);
 $query->bindValue(':limit', $limit, PDO::PARAM_INT);
 $query->bindValue(':offset', $offset, PDO::PARAM_INT);
 $query->execute();
 $images = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-    <?php include('image_card_art_like.php'); ?>
+    <?php include('image_card_art_daily.php'); ?>

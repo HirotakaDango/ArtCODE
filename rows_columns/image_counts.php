@@ -19,6 +19,12 @@ if (isset($imageA['email'])) {
   $image_email = $imageP['email'];
 } elseif (isset($imageV['email'])) {
   $image_email = $imageV['email'];
+} elseif (isset($imageW['email'])) {
+  $image_email = $imageW['email'];
+} elseif (isset($imageM['email'])) {
+  $image_email = $imageM['email'];
+} elseif (isset($imageY['email'])) {
+  $image_email = $imageY['email'];
 }
 
 // Ensure $image_email is not empty before proceeding with the database query

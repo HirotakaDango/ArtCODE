@@ -62,44 +62,4 @@ if ($stmt->execute()) {
 }
 ?>
 
-    <?php include('image_card_art_order_desc.php'); ?>
-    <?php
-      $totalPages = ceil($total / $limit);
-      $prevPage = $page - 1;
-      $nextPage = $page + 1;
-    ?>
-    <div class="pagination d-flex gap-1 justify-content-center mt-3">
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_order_desc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-      <?php endif; ?>
-
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_order_desc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-      <?php endif; ?>
-
-      <?php
-        $tag = isset($_GET['tag']) ? 'tag=' . $_GET['tag'] . '&' : '';
-
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?id=' . $id . '&by=tagged_order_desc&' . $tag . 'page=' . $i . '">' . $i . '</a>';
-          }
-        }
-      ?>
-
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_order_desc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-      <?php endif; ?>
-
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=tagged_order_desc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-      <?php endif; ?>
-    </div>
-    <div class="mt-5"></div>
+    <?php include('image_card_art_tagged_order_desc.php'); ?>

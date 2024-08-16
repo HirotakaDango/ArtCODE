@@ -1,13 +1,13 @@
     <div class="w-100 px-1 my-2">
       <div class="<?php include('../rows_columns/row-cols.php'); echo $rows_columns; ?>">
-        <?php foreach ($images as $imageD): ?>
+        <?php foreach ($images as $imageY): ?>
           <div class="col">
             <div class="position-relative">
-              <a class="rounded ratio ratio-1x1" href="../image.php?artworkid=<?php echo $imageD['id']; ?>">
-                <img class="rounded shadow object-fit-cover lazy-load <?php echo ($imageD['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageD['filename']; ?>" alt="<?php echo $imageD['title']; ?>">
+              <a class="rounded ratio ratio-1x1" href="../image.php?artworkid=<?php echo $imageY['id']; ?>">
+                <img class="rounded shadow object-fit-cover lazy-load <?php echo ($imageY['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageY['filename']; ?>" alt="<?php echo $imageY['title']; ?>">
               </a> 
               <?php
-                $current_image_id = $imageD['id'];
+                $current_image_id = $imageY['id'];
                 
                 // Query to count main image from the images table
                 $stmt = $db->prepare("SELECT COUNT(*) as image_count FROM images WHERE id = :id");
@@ -34,25 +34,25 @@
                   </button>
                   <ul class="dropdown-menu">
                     <?php
-                      $is_favorited = $db->query("SELECT COUNT(*) FROM favorites WHERE email = '{$_SESSION['email']}' AND image_id = {$imageD['id']}")->fetchColumn();
+                      $is_favorited = $db->query("SELECT COUNT(*) FROM favorites WHERE email = '{$_SESSION['email']}' AND image_id = {$imageY['id']}")->fetchColumn();
                       if ($is_favorited) {
                     ?>
                       <form method="POST">
-                        <input type="hidden" name="image_id" value="<?php echo $imageD['id']; ?>">
+                        <input type="hidden" name="image_id" value="<?php echo $imageY['id']; ?>">
                         <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
                       </form>
                     <?php } else { ?>
                       <form method="POST">
-                        <input type="hidden" name="image_id" value="<?php echo $imageD['id']; ?>">
+                        <input type="hidden" name="image_id" value="<?php echo $imageY['id']; ?>">
                         <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
                       </form>
                     <?php } ?>
-                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageD['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
-                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageD['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageY['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
+                    <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageY['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                   </ul>
-                  <?php include('share_artist_order_desc.php'); ?>
+                  <?php include('share_artist_year.php'); ?>
 
-                  <?php include($_SERVER['DOCUMENT_ROOT'] . '/artist/components/card_image_order_desc.php'); ?>
+                  <?php include($_SERVER['DOCUMENT_ROOT'] . '/artist/components/card_image_year.php'); ?>
 
                 </div>
               </div>

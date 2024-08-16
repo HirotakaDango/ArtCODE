@@ -32,35 +32,3 @@ $images = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
     <?php include('image_card_art_desc.php'); ?>
-    <?php
-      $totalPages = ceil($total / $limit);
-      $prevPage = $page - 1;
-      $nextPage = $page + 1;
-    ?>
-    <div class="pagination d-flex gap-1 justify-content-center mt-3">
-      <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=newest&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=newest&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
-      <?php endif; ?>
-
-      <?php
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?id=' . $id . '&by=newest&page=' . $i . '">' . $i . '</a>';
-          }
-        }
-      ?>
-
-      <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=newest&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=newest&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
-      <?php endif; ?>
-    </div>
-    <div class="mt-5"></div>

@@ -50,9 +50,9 @@
                     <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageD['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
                     <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageD['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                   </ul>
-                  <?php include('share_artist_order_desc.php'); ?>
+                  <?php include('share_artist_desc.php'); ?>
 
-                  <?php include($_SERVER['DOCUMENT_ROOT'] . '/artist/components/card_image_order_desc.php'); ?>
+                  <?php include($_SERVER['DOCUMENT_ROOT'] . '/artist/components/card_image_desc.php'); ?>
 
                 </div>
               </div>
