@@ -4,8 +4,8 @@
 $currentDate = date('Y-m-d');
 
 // Calculate the start and end of the current month
-$startOfMonth = date('Y-m-01'); // First day of the current month
-$endOfMonth = date('Y-m-t');    // Last day of the current month
+$startOfMonth = date('Y-m-01');
+$endOfMonth = date('Y-m-t');
 
 // Prepare the query to get the number of pages
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
@@ -28,9 +28,9 @@ $offset = ($page - 1) * $limit;
 if (isset($_GET['tag'])) {
   $tag = $_GET['tag'];
 
-  // Modify the count query to consider the 'tag' parameter and the current week
+  // Count the total number of tagged images for the current month
   $query = $db->prepare("
-    SELECT COUNT(*) 
+    SELECT COUNT(DISTINCT images.id) 
     FROM images 
     JOIN users ON images.email = users.email 
     LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfMonth AND :endOfMonth 
@@ -43,13 +43,14 @@ if (isset($_GET['tag'])) {
   $query->execute();
   $total = $query->fetchColumn();
 
-  // Modify the fetch query to sort by daily.views
+  // Retrieve tagged images for the current month, aggregated by views
   $stmt = $db->prepare("
-    SELECT images.*, COALESCE(daily.views, 0) AS views 
+    SELECT images.*, COALESCE(SUM(daily.views), 0) AS views 
     FROM images 
     JOIN users ON images.email = users.email 
     LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfMonth AND :endOfMonth 
     WHERE users.id = :id AND images.tags LIKE :tagPattern 
+    GROUP BY images.id
     ORDER BY views DESC, images.id DESC 
     LIMIT :limit OFFSET :offset
   ");
@@ -59,10 +60,11 @@ if (isset($_GET['tag'])) {
   $stmt->bindParam(':endOfMonth', $endOfMonth);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
 } else {
-  // If the 'tag' parameter is not present, retrieve all images for the current week
+  // If the 'tag' parameter is not present, retrieve all images for the current month
   $query = $db->prepare("
-    SELECT COUNT(*) 
+    SELECT COUNT(DISTINCT images.id)
     FROM images 
     JOIN users ON images.email = users.email 
     LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfMonth AND :endOfMonth 
@@ -74,13 +76,14 @@ if (isset($_GET['tag'])) {
   $query->execute();
   $total = $query->fetchColumn();
 
-  // Fetch images and sort by daily.views
+  // Retrieve all images for the current month, aggregated by views
   $stmt = $db->prepare("
-    SELECT images.*, COALESCE(daily.views, 0) AS views 
+    SELECT images.*, COALESCE(SUM(daily.views), 0) AS views 
     FROM images 
     JOIN users ON images.email = users.email 
     LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfMonth AND :endOfMonth 
     WHERE users.id = :id 
+    GROUP BY images.id
     ORDER BY views DESC, images.id DESC 
     LIMIT :limit OFFSET :offset
   ");
