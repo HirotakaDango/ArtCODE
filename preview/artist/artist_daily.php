@@ -1,5 +1,8 @@
 <?php include('header_artist_daily.php'); ?>
 <?php
+// Get the current date in YYYY-MM-DD format
+$currentDate = date('Y-m-d');
+
 // Set the limit of images per page
 $limit = 12;
 

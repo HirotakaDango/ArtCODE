@@ -4,8 +4,8 @@
 $currentDate = date('Y-m-d');
 
 // Calculate the start and end of the current month
-$startOfMonth = date('Y-m-01'); // First day of the current month
-$endOfMonth = date('Y-m-t');    // Last day of the current month
+$startOfMonth = date('Y-m-01');
+$endOfMonth = date('Y-m-t');
 
 // Set the limit of images per page
 $limit = 12;

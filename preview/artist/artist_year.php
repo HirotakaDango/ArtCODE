@@ -4,8 +4,8 @@
 $currentDate = date('Y-m-d');
 
 // Calculate the start and end of the current year
-$startOfYear = date('Y-01-01'); // First day of the current year
-$endOfYear = date('Y-12-31');   // Last day of the current year
+$startOfYear = date('Y-01-01');
+$endOfYear = date('Y-12-31');
 
 // Set the limit of images per page
 $limit = 12;
