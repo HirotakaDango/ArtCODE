@@ -1,5 +1,9 @@
-<?php include('header_profile_pop.php'); ?>
+<?php include('header_profile_daily.php'); ?>
 <?php
+// Get the current date in YYYY-MM-DD format
+$currentDate = date('Y-m-d');
+
+// Get the user's numpage
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindParam(':email', $email, PDO::PARAM_STR);
 $queryNum->execute();
@@ -20,8 +24,12 @@ $offset = ($page - 1) * $limit;
 if (isset($_GET['tag'])) {
   $tag = $_GET['tag'];
 
-  // Modify your SQL queries to retrieve images with tags that contain the specified tag
-  $query = $db->prepare("SELECT COUNT(*) FROM images WHERE email = :email AND tags LIKE :tagPattern");
+  // Count the total number of tagged images
+  $query = $db->prepare("
+    SELECT COUNT(*) 
+    FROM images 
+    WHERE email = :email AND tags LIKE :tagPattern
+  ");
   $query->bindValue(':email', $email);
   $query->bindValue(':tagPattern', "%$tag%", PDO::PARAM_STR);
   if ($query->execute()) {
@@ -31,15 +39,28 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id WHERE images.email = :email AND images.tags LIKE :tagPattern GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
+  // Retrieve tagged images sorted by daily views
+  $stmt = $db->prepare("
+    SELECT images.*, COALESCE(daily.views, 0) AS views
+    FROM images
+    LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+    WHERE images.email = :email AND images.tags LIKE :tagPattern
+    ORDER BY views DESC, images.id DESC
+    LIMIT :limit OFFSET :offset
+  ");
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':tagPattern', "%$tag%", PDO::PARAM_STR);
+  $stmt->bindParam(':currentDate', $currentDate);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 
 } else {
-  // If the 'tag' parameter is not present, retrieve all images
-  $query = $db->prepare("SELECT COUNT(*) FROM images WHERE email = :email");
+  // Count the total number of images
+  $query = $db->prepare("
+    SELECT COUNT(*)
+    FROM images
+    WHERE email = :email
+  ");
   $query->bindValue(':email', $email);
   if ($query->execute()) {
     $total = $query->fetchColumn();
@@ -48,8 +69,17 @@ if (isset($_GET['tag'])) {
     echo "Error executing the query.";
   }
 
-  $stmt = $db->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id WHERE images.email = :email GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
+  // Retrieve all images sorted by daily views
+  $stmt = $db->prepare("
+    SELECT images.*, COALESCE(daily.views, 0) AS views
+    FROM images
+    LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+    WHERE images.email = :email
+    ORDER BY views DESC, images.id DESC
+    LIMIT :limit OFFSET :offset
+  ");
   $stmt->bindValue(':email', $email);
+  $stmt->bindParam(':currentDate', $currentDate);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 }
@@ -63,4 +93,4 @@ if ($stmt->execute()) {
 }
 ?>
 
-    <?php include('image_card_pro_tagged_pop.php'); ?>
+    <?php include('image_card_pro_tagged_daily.php'); ?>

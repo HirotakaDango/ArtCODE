@@ -1,5 +1,9 @@
-<?php include('header_profile_pop.php'); ?>
+<?php include('header_profile_daily.php'); ?>
 <?php
+// Get the current date in YYYY-MM-DD format
+$currentDate = date('Y-m-d');
+
+// Get the user's numpage
 $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
 $queryNum->bindParam(':email', $email, PDO::PARAM_STR);
 $queryNum->execute();
@@ -26,18 +30,26 @@ if ($query->execute()) {
   echo "Error executing the query.";
 }
 
-// Get all of the images uploaded by the current user
-$stmt = $db->prepare("SELECT images.*, COUNT(favorites.id) AS favorite_count FROM images LEFT JOIN favorites ON images.id = favorites.image_id WHERE images.email = :email GROUP BY images.id ORDER BY favorite_count DESC LIMIT :limit OFFSET :offset");
-$stmt->bindValue(':email', $email);
-$stmt->bindValue(':limit', $limit, PDO::PARAM_INT); // Use PDO constant for integer
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT); // Use PDO constant for integer
-if ($stmt->execute()) {
+// Get all of the images uploaded by the current user, sorted by daily views
+$query = $db->prepare("
+  SELECT images.*, COALESCE(daily.views, 0) AS views
+  FROM images
+  LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+  WHERE images.email = :email
+  ORDER BY views DESC, images.id DESC
+  LIMIT :limit OFFSET :offset
+");
+$query->bindValue(':email', $email);
+$query->bindParam(':currentDate', $currentDate);
+$query->bindValue(':limit', $limit, PDO::PARAM_INT);
+$query->bindValue(':offset', $offset, PDO::PARAM_INT);
+if ($query->execute()) {
   // Fetch the results as an associative array
-  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $results = $query->fetchAll(PDO::FETCH_ASSOC);
 } else {
   // Handle the query execution error
   echo "Error executing the query.";
 }
 ?>
 
-    <?php include('image_card_pro_pop.php'); ?>
+    <?php include('image_card_pro_daily.php'); ?>
