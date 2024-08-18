@@ -304,8 +304,8 @@ $fav_count = $fav_count->fetchColumn();
     
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
     <?php
-    $validTaggedFilters = ['tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view', 'tagged_least', 'tagged_liked', 'tagged_order_asc', 'tagged_order_desc', 'tagged_daily', 'tagged_week', 'tagged_month', 'tagged_year'];
-    $validHeaderPages = ['header_artist_asc.php', 'header_artist_desc.php', 'header_artist_pop.php', 'header_artist_view.php', 'header_artist_least.php', 'header_artist_like.php', 'header_artist_order_asc.php', 'header_artist_order_desc.php', 'artist_daily.php', 'artist_week.php', 'artist_month.php', 'artist_year.php'];
+    $validTaggedFilters = ['tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view', 'tagged_least', 'tagged_order_asc', 'tagged_order_desc', 'tagged_daily', 'tagged_week', 'tagged_month', 'tagged_year'];
+    $validHeaderPages = ['artist_tagged_asc.php', 'artist_tagged_desc.php', 'artist_tagged_pop.php', 'artist_tagged_view.php', 'artist_tagged_least.php', 'artist_tagged_order_asc.php', 'artist_tagged_order_desc.php', 'artist_tagged_daily.php', 'artist_tagged_week.php', 'artist_tagged_month.php', 'artist_tagged_year.php'];
     
     $isTagHidden = false;
     
@@ -330,7 +330,6 @@ $fav_count = $fav_count->fetchColumn();
         <li><a href="?id=<?php echo $id; ?>&by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=least&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
-        <li><a href="?id=<?php echo $id; ?>&by=liked&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=order_asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=order_desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=daily&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'daily') echo 'active'; ?>">daily</a></li>
@@ -341,8 +340,8 @@ $fav_count = $fav_count->fetchColumn();
     </div> 
 
     <?php
-    $validFilters = ['oldest', 'newest', 'popular', 'view', 'least', 'liked', 'order_asc', 'order_desc', 'daily', 'week', 'month', 'year'];
-    $validPages = ['artist_asc.php', 'artist_desc.php', 'artist_pop.php', 'artist_view.php', 'artist_least.php', 'artist_like.php', 'artist_order_asc.php', 'artist_order_desc.php', 'artist_daily.php', 'artist_week.php', 'artist_month.php', 'artist_year.php'];
+    $validFilters = ['oldest', 'newest', 'popular', 'view', 'least', 'order_asc', 'order_desc', 'daily', 'week', 'month', 'year'];
+    $validPages = ['artist_asc.php', 'artist_desc.php', 'artist_pop.php', 'artist_view.php', 'artist_least.php', 'artist_order_asc.php', 'artist_order_desc.php', 'artist_daily.php', 'artist_week.php', 'artist_month.php', 'artist_year.php'];
     
     $isHidden = false;
     
@@ -367,7 +366,6 @@ $fav_count = $fav_count->fetchColumn();
         <li><a href="?id=<?php echo $id; ?>&by=tagged_popular&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_popular') echo 'active'; ?>">popular</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_view&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_view') echo 'active'; ?>">most viewed</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_least&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_least') echo 'active'; ?>">least viewed</a></li>
-        <li><a href="?id=<?php echo $id; ?>&by=tagged_liked&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_liked') echo 'active'; ?>">liked</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_order_asc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_order_asc') echo 'active'; ?>">from A to Z</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_order_desc&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_order_desc') echo 'active'; ?>">from Z to A</a></li>
         <li><a href="?id=<?php echo $id; ?>&by=tagged_daily&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_daily') echo 'active'; ?>">daily</a></li>
@@ -395,9 +393,6 @@ $fav_count = $fav_count->fetchColumn();
         break;
         case 'least':
         include "artist_least.php";
-        break;
-        case 'liked':
-        include "artist_like.php";
         break;
         case 'order_asc':
         include "artist_order_asc.php";
@@ -433,9 +428,6 @@ $fav_count = $fav_count->fetchColumn();
         case 'tagged_least':
         include "artist_tagged_least.php";
         break;
-        case 'tagged_liked':
-        include "artist_tagged_like.php";
-        break;
         case 'tagged_order_asc':
         include "artist_tagged_order_asc.php";
         break;
@@ -468,29 +460,43 @@ $fav_count = $fav_count->fetchColumn();
     ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <?php
+          $prevPageUrl = http_build_query(array_merge($_GET, ['page' => 1]));
+          $prevUrl = "?$prevPageUrl";
+          $prevPageUrl = http_build_query(array_merge($_GET, ['page' => $prevPage]));
+          $prevPageUrl = "?$prevPageUrl";
+        ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $prevUrl; ?>"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $prevPageUrl; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
-
+    
       <?php
         // Calculate the range of page numbers to display
         $startPage = max($page - 2, 1);
         $endPage = min($page + 2, $totalPages);
-
+    
         // Display page numbers within the range
         for ($i = $startPage; $i <= $endPage; $i++) {
+          $queryParams = array_merge($_GET, ['page' => $i]);
+          $pageUrl = http_build_query($queryParams);
+          $url = "?$pageUrl";
           if ($i === $page) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
-            $by = isset($_GET['by']) ? urlencode($_GET['by']) : 'newest';
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?id=' . $id . '&by=' . $by . '&page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="' . $url . '">' . $i . '</a>';
           }
         }
       ?>
-
+    
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
-        <a class="btn btn-sm btn-primary fw-bold" href="?id=<?php echo $id; ?>&by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <?php
+          $nextPageUrl = http_build_query(array_merge($_GET, ['page' => $nextPage]));
+          $nextPageUrl = "?$nextPageUrl";
+          $lastPageUrl = http_build_query(array_merge($_GET, ['page' => $totalPages]));
+          $lastPageUrl = "?$lastPageUrl";
+        ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $nextPageUrl; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $lastPageUrl; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>

@@ -1,94 +1,102 @@
 <?php
-// Calculate the start and end of the current week (Monday to Sunday)
-$startOfWeek = date('Y-m-d', strtotime('monday this week'));
-$endOfWeek = date('Y-m-d', strtotime('sunday this week'));
-
-// Prepare the query to get the user's numpage
-$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
-$queryNum->bindValue(':email', $email, SQLITE3_TEXT); // Assuming $email is the email you want to search for
-$resultNum = $queryNum->execute();
-$user = $resultNum->fetchArray(SQLITE3_ASSOC);
-
-$numpage = isset($user['numpage']) ? $user['numpage'] : 50;
-
 // Determine the number of items per page
-$itemsPerPage = empty($numpage) ? PHP_INT_MAX : $numpage;
+$itemsPerPage = 12;
 
 $yearFilter = isset($_GET['year']) ? $_GET['year'] : 'all';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $itemsPerPage;
 
-// Prepare the search term by removing leading/trailing spaces and converting to lowercase
-$searchTerm = trim(strtolower($searchTerm));
+if (isset($_GET['q'])) {
+  $searchTerm = $_GET['q'];
 
-// Split the search term by comma to handle multiple tags or titles
-$terms = array_map('trim', explode(',', $searchTerm));
+  // Prepare the search term by removing leading/trailing spaces and converting to lowercase
+  $searchTerm = trim(strtolower($searchTerm));
 
-// Prepare the search query with placeholders for terms
-$query = "SELECT images.*, users.artist, users.pic, users.id AS user_id, COALESCE(SUM(daily.views), 0) AS views
-  FROM images
-  JOIN users ON images.email = users.email
-  LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfWeek AND :endOfWeek
-  WHERE 1=1";
+  // Split the search term by comma to handle multiple tags or titles
+  $terms = array_map('trim', explode(',', $searchTerm));
 
-// Create an array to hold the conditions for partial word matches
-$conditions = array();
+  // Prepare the search query with placeholders for terms
+  $query = "SELECT DISTINCT images.*
+            FROM images
+            LEFT JOIN favorites ON images.id = favorites.image_id
+            WHERE favorites.email = :email
+            AND (";
 
-// Add conditions for tags and titles
-foreach ($terms as $index => $term) {
-  if (!empty($term)) {
-    $conditions[] = "(LOWER(tags) LIKE ? OR LOWER(title) LIKE ? OR LOWER(characters) LIKE ? OR LOWER(parodies) LIKE ? OR LOWER(`group`) LIKE ?)";
-  }
-}
+  // Create an array to hold the conditions for partial word matches
+  $conditions = array();
 
-if (!empty($conditions)) {
-  $query .= " AND (" . implode(' OR ', $conditions) . ")";
-}
-
-// Group by image to aggregate views
-$query .= " GROUP BY images.id";
-
-// Check if q (search term) is empty
-if (empty($searchTerm)) {
-  // If q is empty, order by views DESC
-  $query .= " ORDER BY views DESC, images.id DESC";
-} else {
-  // Otherwise, order by views DESC
-  $query .= " ORDER BY views DESC, images.id DESC";
-}
-
-// Prepare the SQL statement
-$statement = $db->prepare($query);
-
-// Bind the terms as parameters with wildcard matching for tags and titles
-$paramIndex = 1;
-foreach ($terms as $term) {
-  if (!empty($term)) {
-    $wildcardTerm = "%$term%";
-    for ($i = 0; $i < 5; $i++) {
-      $statement->bindValue($paramIndex++, $wildcardTerm, SQLITE3_TEXT);
+  // Add conditions for tags and titles
+  foreach ($terms as $index => $term) {
+    if (!empty($term)) {
+      $conditions[] = "(LOWER(tags) LIKE :tag$index OR LOWER(title) LIKE :title$index OR LOWER(characters) LIKE :characters$index OR LOWER(parodies) LIKE :parodies$index or LOWER(`group`) LIKE :group$index)";
     }
   }
-}
 
-// Bind the start and end dates of the current week
-$statement->bindValue(':startOfWeek', $startOfWeek, SQLITE3_TEXT);
-$statement->bindValue(':endOfWeek', $endOfWeek, SQLITE3_TEXT);
+  // Combine all conditions using OR
+  if (!empty($conditions)) {
+    $query .= implode(' OR ', $conditions) . ")";
+  } else {
+    // If no search terms are provided, close the parenthesis
+    $query .= "1=1)";
+  }
 
-// Execute the query
-$result = $statement->execute();
+  // Order by ID in descending order
+  $query .= " ORDER BY images.id DESC";
 
-// Retrieve all images and filter by year if necessary
-$resultArray = array();
-while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-  $imageYear = date('Y', strtotime($row['date']));
-  if ($yearFilter === 'all' || strtolower($imageYear) === $yearFilter) {
+  // Prepare the SQL statement
+  $statement = $db->prepare($query);
+
+  // Bind the terms as parameters with wildcard matching for tags and titles
+  $paramIndex = 1;
+  foreach ($terms as $term) {
+    if (!empty($term)) {
+      $wildcardTerm = "%$term%";
+      for ($i = 0; $i < 5; $i++) {
+        $statement->bindValue($paramIndex++, $wildcardTerm, SQLITE3_TEXT);
+      }
+    }
+  }
+
+  // Bind email for favorites
+  $statement->bindValue(':email', $email, SQLITE3_TEXT);
+
+  // Execute the query
+  $result = $statement->execute();
+
+  // Filter the images by year if a year value is provided
+  if (!empty($yearFilter) && $yearFilter !== 'all') {
+    $filteredImages = array();
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+      $imageYear = date('Y', strtotime($row['date']));
+      if (strtolower($imageYear) === $yearFilter) {
+        $filteredImages[] = $row;
+      }
+    }
+    $resultArray = $filteredImages;
+  } else {
+    // Retrieve all images
+    $resultArray = array();
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+      $resultArray[] = $row;
+    }
+  }
+
+  // Count the number of images found
+  $numImages = count($resultArray);
+} else {
+  // Retrieve all images if no search term is provided
+  $query = "SELECT images.*, COUNT(favorites.id) AS favorite_count 
+            FROM images 
+            LEFT JOIN favorites ON images.id = favorites.image_id 
+            GROUP BY images.id 
+            ORDER BY favorite_count DESC";
+  $result = $db->query($query);
+  $resultArray = array();
+  while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
     $resultArray[] = $row;
   }
+  $numImages = count($resultArray);
 }
-
-// Count the number of images found
-$numImages = count($resultArray);
 
 // Calculate total pages
 $totalPages = ceil($numImages / $itemsPerPage);
@@ -155,4 +163,4 @@ $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
         </div>
       </div>
     </div>
-    <?php include('image_card_search.php'); ?>
+    <?php include('image_card_search_preview.php'); ?>

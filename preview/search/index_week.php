@@ -1,4 +1,8 @@
 <?php
+// Calculate the start and end of the current week (Monday to Sunday)
+$startOfWeek = date('Y-m-d', strtotime('monday this week'));
+$endOfWeek = date('Y-m-d', strtotime('sunday this week'));
+
 // Determine the number of items per page
 $itemsPerPage = 12;
 
@@ -13,12 +17,16 @@ $searchTerm = trim(strtolower($searchTerm));
 $terms = array_map('trim', explode(',', $searchTerm));
 
 // Prepare the search query with placeholders for terms
-$query = "SELECT * FROM images WHERE 1=1";
+$query = "SELECT images.*, users.artist, users.pic, users.id AS user_id, COALESCE(SUM(daily.views), 0) AS views
+  FROM images
+  JOIN users ON images.email = users.email
+  LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfWeek AND :endOfWeek
+  WHERE 1=1";
 
 // Create an array to hold the conditions for partial word matches
 $conditions = array();
 
-// Add conditions for tags, titles, characters, parodies, and group
+// Add conditions for tags and titles
 foreach ($terms as $index => $term) {
   if (!empty($term)) {
     $conditions[] = "(LOWER(tags) LIKE ? OR LOWER(title) LIKE ? OR LOWER(characters) LIKE ? OR LOWER(parodies) LIKE ? OR LOWER(`group`) LIKE ?)";
@@ -29,13 +37,16 @@ if (!empty($conditions)) {
   $query .= " AND (" . implode(' OR ', $conditions) . ")";
 }
 
+// Group by image to aggregate views
+$query .= " GROUP BY images.id";
+
 // Check if q (search term) is empty
 if (empty($searchTerm)) {
-  // If q is empty, order by id DESC
-  $query .= " ORDER BY id DESC";
+  // If q is empty, order by views DESC
+  $query .= " ORDER BY views DESC, images.id DESC";
 } else {
-  // Otherwise, order by id DESC
-  $query .= " ORDER BY id DESC";
+  // Otherwise, order by views DESC
+  $query .= " ORDER BY views DESC, images.id DESC";
 }
 
 // Prepare the SQL statement
@@ -51,6 +62,10 @@ foreach ($terms as $term) {
     }
   }
 }
+
+// Bind the start and end dates of the current week
+$statement->bindValue(':startOfWeek', $startOfWeek, SQLITE3_TEXT);
+$statement->bindValue(':endOfWeek', $endOfWeek, SQLITE3_TEXT);
 
 // Execute the query
 $result = $statement->execute();
@@ -74,7 +89,7 @@ $totalPages = ceil($numImages / $itemsPerPage);
 $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
 ?>
 
-    <div class="w-100 px-1">
+    <div class="container-fluid">
       <div class="mb-2">
         <form action="" method="GET">
           <div class="input-group">
@@ -90,14 +105,14 @@ $resultArray = array_slice($resultArray, $offset, $itemsPerPage);
             <select name="year" class="form-control fw-bold" onchange="this.form.submit()">
               <option value="all" <?php echo ($yearFilter === 'all') ? 'selected' : ''; ?>>All Years</option>
               <?php
-              // Fetch distinct years from the "date" column in the images table
-              $yearsQuery = "SELECT DISTINCT strftime('%Y', date) AS year FROM images";
-              $yearsResult = $db->query($yearsQuery);
-              while ($yearRow = $yearsResult->fetchArray(SQLITE3_ASSOC)) {
-                $year = $yearRow['year'];
-                $selected = ($year == $yearFilter) ? 'selected' : '';
-                echo '<option value="' . $year . '"' . $selected . '>' . $year . '</option>';
-              }
+                // Fetch distinct years from the "date" column in the images table
+                $yearsQuery = "SELECT DISTINCT strftime('%Y', date) AS year FROM images";
+                $yearsResult = $db->query($yearsQuery);
+                while ($yearRow = $yearsResult->fetchArray(SQLITE3_ASSOC)) {
+                  $year = $yearRow['year'];
+                  $selected = ($year == $yearFilter) ? 'selected' : '';
+                  echo '<option value="' . $year . '"' . $selected . '>' . $year . '</option>';
+                }
               ?>
             </select>
             <input type="hidden" name="q" value="<?php echo isset($searchTerm) ? $searchTerm : ''; ?>">

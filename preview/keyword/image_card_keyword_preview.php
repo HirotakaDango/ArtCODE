@@ -1,4 +1,4 @@
-    <div class="w-100 px-2 mb-2">
+    <div class="w-100 px-1">
       <div class="<?php include($_SERVER['DOCUMENT_ROOT'] . '/rows_columns/row-cols.php'); echo $rows_columns; ?>">
         <?php foreach ($images as $image): ?>
           <div class="col">

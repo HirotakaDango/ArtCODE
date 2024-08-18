@@ -1,25 +1,23 @@
 <?php
-// Connect to the SQLite database
-$db = new PDO('sqlite:' . $_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
+// Establish a connection to the SQLite database
+$db = new SQLite3('../../database.sqlite');
 
 $searchTerm = $_GET['q'];
 $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
-    <meta charset="UTF-8">
-    <title>Search <?php echo $_GET['q']; ?></title>
-    <?php include('../../bootstrapcss.php'); ?>
-    <link rel="stylesheet" href="/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo $_GET['q']; ?></title>
     <link rel="icon" type="image/png" href="/icon/favicon.png">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
     <?php include('../header_preview.php'); ?>
-    <div class="dropdown mt-2">
+    <div class="dropdown">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
@@ -32,6 +30,10 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
         <li><a href="?by=liked&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'liked') echo 'active'; ?>">liked</a></li>
         <li><a href="?by=order_asc&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
         <li><a href="?by=order_desc&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
+        <li><a href="?by=daily&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'daily') echo 'active'; ?>">daily</a></li>
+        <li><a href="?by=week&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'week') echo 'active'; ?>">week</a></li>
+        <li><a href="?by=month&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'month') echo 'active'; ?>">month</a></li>
+        <li><a href="?by=year&year=<?php echo isset($_GET['year']) ? $_GET['year'] : 'all'; ?>&q=<?php echo $searchTerm; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'year') echo 'active'; ?>">year</a></li>
       </ul> 
     </div> 
     <?php 
@@ -54,14 +56,23 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
         case 'least':
         include "index_least.php";
         break;
-        case 'liked':
-        include "index_like.php";
-        break;
         case 'order_asc':
         include "index_order_asc.php";
         break;
         case 'order_desc':
         include "index_order_desc.php";
+        break;
+        case 'daily':
+        include "index_daily.php";
+        break;
+        case 'week':
+        include "index_week.php";
+        break;
+        case 'month':
+        include "index_month.php";
+        break;
+        case 'year':
+        include "index_year.php";
         break;
       }
     }
@@ -70,47 +81,79 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
     }
     
     ?>
-    <?php
-      $totalPages = ceil($numImages / $limit);
-      $prevPage = $page - 1;
-      $nextPage = $page + 1;
-    ?>
     <div class="pagination d-flex gap-1 justify-content-center mt-3">
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=1"><i class="bi text-stroke bi-chevron-double-left"></i></a>
       <?php endif; ?>
 
       <?php if ($page > 1): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $prevPage; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page - 1; ?>"><i class="bi text-stroke bi-chevron-left"></i></a>
       <?php endif; ?>
 
       <?php
-        // Get the sorting parameter from the URL, default to 'newest' if not set
-        $sortBy = isset($_GET['by']) ? $_GET['by'] : 'newest';
-    
-        // Calculate the range of page numbers to display
-        $startPage = max($page - 2, 1);
-        $endPage = min($page + 2, $totalPages);
-    
-        // Display page numbers within the range
-        for ($i = $startPage; $i <= $endPage; $i++) {
-          if ($i === $page) {
-            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
-          } else {
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=' . $sortBy . '&q=' . $searchTerm . '&year=' . $yearFilter . '&page=' . $i . '">' . $i . '</a>';
-          }
+      // Calculate the range of page numbers to display
+      $startPage = max($page - 2, 1);
+      $endPage = min($page + 2, $totalPages);
+
+      // Display page numbers within the range
+      for ($i = $startPage; $i <= $endPage; $i++) {
+        if ($i === $page) {
+          echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+        } else {
+          echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=' . $by . '&q=' . $searchTerm . '&year=' . $yearFilter . '&page=' . $i . '">' . $i . '</a>';
         }
+      }
       ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $nextPage; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $page + 1; ?>"><i class="bi text-stroke bi-chevron-right"></i></a>
       <?php endif; ?>
 
       <?php if ($page < $totalPages): ?>
-        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo isset($_GET['by']) ? $_GET['by'] : 'newest'; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
+        <a class="btn btn-sm btn-primary fw-bold" href="?by=<?php echo $by; ?>&q=<?php echo $searchTerm; ?>&year=<?php echo $yearFilter; ?>&page=<?php echo $totalPages; ?>"><i class="bi text-stroke bi-chevron-double-right"></i></a>
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>
+    <style>
+      .text-stroke {
+        -webkit-text-stroke: 1px;
+      }
+
+      .text-shadow {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+      }
+      
+      .overlay {
+        position: relative;
+        display: flex;
+        flex-direction: column; /* Change to column layout */
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Adjust background color and opacity */
+        text-align: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 0.5rem;
+      }
+
+      .overlay i {
+        font-size: 48px; /* Adjust icon size */
+        position: absolute;
+        bottom: 45%;
+      }
+
+      .overlay span {
+        font-size: 18px; /* Adjust text size */
+        margin-top: 35px; /* Add spacing between icon and text */
+      }
+      
+      .rounded-custom {
+        border-radius: 0.5rem;
+      }
+    </style>
     <script>
       let lazyloadImages = document.querySelectorAll(".lazy-load");
       let imageContainer = document.getElementById("image-container");
@@ -142,7 +185,7 @@ $by = isset($_GET['by']) ? $_GET['by'] : 'newest';
           
               // Add overlay with icon and text
               let overlay = document.createElement("div");
-              overlay.classList.add("overlay", "rounded");
+              overlay.classList.add("overlay", "rounded-custom");
               let icon = document.createElement("i");
               icon.classList.add("bi", "bi-eye-slash-fill", "text-white");
               overlay.appendChild(icon);

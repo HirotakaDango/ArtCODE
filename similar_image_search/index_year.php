@@ -1,8 +1,4 @@
 <?php
-require_once('../auth.php');
-
-$email = $_SESSION['email'];
-
 // Calculate the first and last day of the current year
 $startOfYear = date('Y-01-01'); // First day of the year
 $endOfYear = date('Y-12-31');   // Last day of the year

@@ -1,8 +1,4 @@
 <?php
-require_once('../auth.php');
-
-$email = $_SESSION['email'];
-
 // Get the start and end of the current week (Monday to Sunday)
 $startOfWeek = date('Y-m-d', strtotime('monday this week'));
 $endOfWeek = date('Y-m-d', strtotime('sunday this week'));

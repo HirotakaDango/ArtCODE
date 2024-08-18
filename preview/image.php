@@ -588,6 +588,11 @@ if ($daily_view) {
                   </ul>
                 </div>
               </div>
+              <div class="w-100 my-2">
+                <a class="btn btn-dark rounded-4 fw-bold w-100" href="/preview/similar_image_search/?image=/images/<?php echo urlencode($image['filename']); ?>">
+                  <small>find similar image</small>
+                </a>
+              </div>
               <div class="btn-group w-100" role="group" aria-label="Basic example">
                 <button class="btn btn-dark fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
                   <i class="bi bi-share-fill"></i> <small>share</small>

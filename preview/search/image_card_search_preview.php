@@ -1,40 +1,40 @@
-    <div class="w-100 px-2 mb-2">
-      <div class="<?php include($_SERVER['DOCUMENT_ROOT'] . '/rows_columns/row-cols.php'); echo $rows_columns; ?>">
-        <?php foreach ($resultArray  as $image): ?>
+    <div class="w-100 px-1 my-2">
+      <div class="<?php include('../../rows_columns/row-cols.php'); echo $rows_columns; ?>">
+        <?php foreach ($resultArray as $image): ?>
           <div class="col">
             <div class="position-relative">
               <a class="rounded ratio ratio-1x1" href="/image.php?artworkid=<?php echo $image['id']; ?>">
                 <img class="rounded shadow object-fit-cover lazy-load <?php echo ($image['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="/thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
-              </a>
+              </a> 
               <?php
                 $current_image_id = $image['id'];
                 
                 // Query to count main image from the images table
                 $stmt = $db->prepare("SELECT COUNT(*) as image_count FROM images WHERE id = :id");
-                $stmt->bindValue(':id', $current_image_id, PDO::PARAM_INT);
-                try {
-                  $stmt->execute();
-                  $imageCountRow = $stmt->fetch(PDO::FETCH_ASSOC);
+                $stmt->bindValue(':id', $current_image_id, SQLITE3_INTEGER);
+                $imageCountQuery = $stmt->execute();
+                if ($imageCountQuery) {
+                  $imageCountRow = $imageCountQuery->fetchArray(SQLITE3_ASSOC);
                   $imageCount = $imageCountRow ? $imageCountRow['image_count'] : 0;
-                } catch (PDOException $e) {
+                } else {
                   $imageCount = 0;
                 }
             
                 // Query to count associated images from the image_child table
                 $stmt = $db->prepare("SELECT COUNT(*) as child_image_count FROM image_child WHERE image_id = :image_id");
-                $stmt->bindValue(':image_id', $current_image_id, PDO::PARAM_INT);
-                try {
-                  $stmt->execute();
-                  $childImageCountRow = $stmt->fetch(PDO::FETCH_ASSOC);
+                $stmt->bindValue(':image_id', $current_image_id, SQLITE3_INTEGER);
+                $childImageCountQuery = $stmt->execute();
+                if ($childImageCountQuery) {
+                  $childImageCountRow = $childImageCountQuery->fetchArray(SQLITE3_ASSOC);
                   $childImageCount = $childImageCountRow ? $childImageCountRow['child_image_count'] : 0;
-                } catch (PDOException $e) {
+                } else {
                   $childImageCount = 0;
                 }
             
                 // Total count of main images and associated images
                 $totalImagesCount = $imageCount + $childImageCount;
               ?>
-              <?php include($_SERVER['DOCUMENT_ROOT'] . '/rows_columns/image_counts.php'); ?>
+              <?php include('../../rows_columns/image_counts.php'); ?>
               <div class="position-absolute top-0 start-0">
                 <div class="dropdown">
                   <button class="btn border-0 p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -47,7 +47,7 @@
                   <?php include('share_search_preview.php'); ?>
                   
                   <?php include('card_image_search_preview.php'); ?>
-                  
+                
                 </div>
               </div>
             </div>

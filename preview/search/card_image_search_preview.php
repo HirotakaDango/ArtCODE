@@ -119,37 +119,32 @@
                                     <p class="text-center fw-medium mt-2">Metadata Information</p>
                                     <?php
                                       $total_image_size = 0; // Initialize a variable to keep track of the total image size
-                                    
+    
                                       // Define the base URL for your images
                                       $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/images/';
-                                      
+                                    
                                       // Define the local file system path to the image folder
                                       $image_folder_path = $_SERVER['DOCUMENT_ROOT'] . '/images/';
-                                    
-                                      // Database connection using PDO
-                                      $dsn = 'sqlite:' . $_SERVER['DOCUMENT_ROOT'] . '/database.sqlite';
-                                      $db = new PDO($dsn);
-                                      
-                                      // Assuming $image contains the main image data (id and filename)
+    
+                                      // Calculate and display image size and dimensions for the main image
                                       $image_path = $image_folder_path . $image['filename'];
                                       $image_size = round(filesize($image_path) / (1024 * 1024), 2);
                                       $total_image_size += $image_size;
                                       list($width, $height) = getimagesize($image_path);
-                                    
                                       echo "<div class='mb-3 row'>
                                               <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Image ID</label>
-                                              <div class='col-sm-8'>
-                                                <input type='text' class='form-control-plaintext fw-bold' id='' value='" . $image['id'] . "' readonly>
-                                              </div>
+                                                <div class='col-sm-8'>
+                                                  <input type='text' class='form-control-plaintext fw-bold' id='' value='" . $image['id'] . "' readonly>
+                                                </div>
                                             </div>";
-                                    
+                  
                                       echo "<div class='mb-3 row'>
                                               <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Data Size</label>
                                               <div class='col-sm-8'>
                                                 <input type='text' class='form-control-plaintext fw-bold' id='' value='{$image_size} MB' readonly>
                                               </div>
                                             </div>";
-                                    
+                  
                                       echo "<div class='mb-3 row'>
                                               <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Dimensions</label>
                                               <div class='col-sm-8'>
@@ -157,25 +152,23 @@
                                               </div>
                                             </div>";
                                       echo "<p class='text-start fw-medium'><a class='text-decoration-none' href='" . $base_url . $image['filename'] . "'>View original image</a></p>";
-                                    
-                                      // Fetch child images using PDO
-                                      $stmt = $db->prepare("SELECT filename FROM image_child WHERE image_id = ?");
-                                      $stmt->execute([$image['id']]);
-                                      
-                                      while ($child_image = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            
+                                      // Assuming you have a separate query to fetch child images
+                                      $child_images_result = $db->query("SELECT filename FROM image_child WHERE image_id = " . $image['id']);
+    
+                                      while ($child_image = $child_images_result->fetchArray()) {
                                         $child_image_path = $image_folder_path . $child_image['filename'];
                                         $child_image_size = round(filesize($child_image_path) / (1024 * 1024), 2);
                                         $total_image_size += $child_image_size;
                                         list($child_width, $child_height) = getimagesize($child_image_path);
-                                        
                                         echo "<hr>";
                                         echo "<div class='mb-3 row'>
                                                 <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Data Size</label>
                                                 <div class='col-sm-8'>
                                                   <input type='text' class='form-control-plaintext fw-bold' id='' value='{$child_image_size} MB' readonly>
                                                 </div>
-                                              </div>";
-                                    
+                                               </div>";
+                
                                         echo "<div class='mb-3 row'>
                                                 <label for='' class='col-sm-4 col-form-label text-nowrap fw-medium'>Dimensions</label>
                                                 <div class='col-sm-8'>
@@ -184,7 +177,7 @@
                                               </div>";
                                         echo "<p class='text-start fw-medium'><a class='text-decoration-none' href='" . $base_url . $child_image['filename'] . "'>View original child image</a></p>";
                                       }
-                                    
+    
                                       // Display the total image size after processing all images
                                       echo "<hr>";
                                       echo "<div class='mb-3 row'>
@@ -192,7 +185,7 @@
                                               <div class='col-sm-8'>
                                                 <input type='text' class='form-control-plaintext fw-bold' id='' value='{$total_image_size} MB' readonly>
                                               </div>
-                                            </div>";
+                                             </div>";
                                     ?>
                                   </div>
                                 </div>
@@ -226,7 +219,7 @@
                                           $tag = trim($tag);
                                           if (!empty($tag)) {
                                             ?>
-                                            <a href="/preview/keyword/?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/tagged_images.php?tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-tag-fill"></i> <?php echo htmlspecialchars($tag); ?>
                                             </a>
                                             <?php
@@ -248,7 +241,7 @@
                                           $character = trim($character);
                                           if (!empty($character)) {
                                             ?>
-                                            <a href="/preview/keyword/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/character/?character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($character); ?>
                                             </a>
                                             <?php
@@ -268,7 +261,7 @@
                                           $parody = trim($parody);
                                           if (!empty($parody)) {
                                             ?>
-                                            <a href="/preview/keyword/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/parody/?parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-journal"></i> <?php echo htmlspecialchars($parody); ?>
                                             </a>
                                             <?php
@@ -288,7 +281,7 @@
                                           $group = trim($group);
                                           if (!empty($group)) {
                                             ?>
-                                            <a href="/preview/keyword/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
+                                            <a href="/group/?group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
                                               <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($group); ?>
                                             </a>
                                             <?php

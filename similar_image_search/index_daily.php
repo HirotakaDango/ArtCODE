@@ -1,8 +1,4 @@
 <?php
-require_once('../auth.php');
-
-$email = $_SESSION['email'];
-
 // Get the current date in YYYY-MM-DD format
 $currentDate = date('Y-m-d');
 

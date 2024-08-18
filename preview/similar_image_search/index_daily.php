@@ -1,7 +1,6 @@
 <?php
-// Get the start and end of the current month
-$startOfMonth = date('Y-m-01'); // First day of the month
-$endOfMonth = date('Y-m-t');   // Last day of the month
+// Get the current date in YYYY-MM-DD format
+$currentDate = date('Y-m-d');
 
 if (!empty($imageUrl)) {
   $imageBase64 = urlToBase64($_SERVER['DOCUMENT_ROOT'] . parse_url($imageUrl, PHP_URL_PATH));
@@ -9,19 +8,15 @@ if (!empty($imageUrl)) {
   if ($imageBase64 === false) {
     $displayMessage = 'Sorry, image not found. Make sure to use the first image parent!';
   } else {
-    // Retrieve images ordered by monthly views
-    $stmt = $db->prepare("
-      SELECT images.*, users.artist, users.pic, users.id AS user_id, COALESCE(SUM(daily.views), 0) AS views
+    // Retrieve images ordered by daily views
+    $stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS user_id, COALESCE(daily.views, 0) AS views
       FROM images
       JOIN users ON images.email = users.email
-      LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfMonth AND :endOfMonth
-      GROUP BY images.id, users.artist, users.pic, users.id
-      ORDER BY views DESC, images.id DESC
-    ");
+      LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+      ORDER BY views DESC, images.id DESC");
 
     // Bind parameters and execute query
-    $stmt->bindValue(':startOfMonth', $startOfMonth, PDO::PARAM_STR);
-    $stmt->bindValue(':endOfMonth', $endOfMonth, PDO::PARAM_STR);
+    $stmt->bindValue(':currentDate', $currentDate, PDO::PARAM_STR);
 
     try {
       $stmt->execute();
@@ -47,18 +42,8 @@ if (!empty($imageUrl)) {
       }
     }
 
-    // Get user's numpage setting
-    $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
-    $queryNum->bindValue(':email', $email, PDO::PARAM_STR);
-    if ($queryNum->execute()) {
-      $user = $queryNum->fetch(PDO::FETCH_ASSOC);
-      $numpage = isset($user['numpage']) ? (int)$user['numpage'] : 50;
-    } else {
-      $numpage = 50;
-    }
-    
     // Pagination
-    $limit = $numpage;
+    $limit = 12;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $offset = ($page - 1) * $limit;
 

@@ -46,19 +46,9 @@ if (!empty($imageUrl)) {
         }
       }
     }
-
-    // Get user's numpage setting
-    $queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
-    $queryNum->bindValue(':email', $email, PDO::PARAM_STR);
-    if ($queryNum->execute()) {
-      $user = $queryNum->fetch(PDO::FETCH_ASSOC);
-      $numpage = isset($user['numpage']) ? (int)$user['numpage'] : 50;
-    } else {
-      $numpage = 50;
-    }
     
     // Pagination
-    $limit = $numpage;
+    $limit = 12;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $offset = ($page - 1) * $limit;
 
