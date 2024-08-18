@@ -10,30 +10,65 @@ if (!$db) {
   die("Connection failed: " . $db->lastErrorMsg());
 }
 
-// Get artworkid, display, and option parameters from query string
+// Get artworkid, display, option, artwork_type, type, and uid parameters from query string
 $artworkId = isset($_GET['artworkid']) ? intval($_GET['artworkid']) : 0;
 $display = isset($_GET['display']) ? $_GET['display'] : '';
 $option = isset($_GET['option']) ? $_GET['option'] : '';
+$artworkType = isset($_GET['artwork_type']) ? $_GET['artwork_type'] : '';
+$type = isset($_GET['type']) ? $_GET['type'] : '';
+$uid = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
 
 if ($display === 'all_images') {
-  // Query to retrieve all image details from the 'images' table
-  $queryAllImages = $db->query("
-      SELECT id, filename, tags, title, imgdesc, link, date, view_count, type, episode_name, artwork_type, `group`, categories, language, parodies, characters, original_filename
+  // Prepare the base query for all images with user join
+  $queryAllImagesSql = "
+      SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename
       FROM images
-  ");
+      INNER JOIN users ON users.email = images.email
+  ";
+
+  // Add the WHERE clause to filter by user ID, artwork_type, and type if provided
+  $conditions = [];
+  if ($uid) {
+    $conditions[] = "users.id = :uid";
+  }
+  if ($artworkType) {
+    $conditions[] = "images.artwork_type = :artworkType";
+  }
+  if ($type) {
+    $conditions[] = "images.type = :type";
+  }
+  if ($conditions) {
+    $queryAllImagesSql .= " WHERE " . implode(" AND ", $conditions);
+  }
+
+  $queryAllImages = $db->prepare($queryAllImagesSql);
+
+  if ($uid) {
+    $queryAllImages->bindValue(':uid', $uid, SQLITE3_INTEGER);
+  }
+  if ($artworkType) {
+    $queryAllImages->bindValue(':artworkType', $artworkType, SQLITE3_TEXT);
+  }
+  if ($type) {
+    $queryAllImages->bindValue(':type', $type, SQLITE3_TEXT);
+  }
+
+  $resultAllImages = $queryAllImages->execute();
 
   $allImagesData = [];
-  while ($row = $queryAllImages->fetchArray(SQLITE3_ASSOC)) {
+  while ($row = $resultAllImages->fetchArray(SQLITE3_ASSOC)) {
     $imageId = $row['id'];
-    
+
     if ($option === 'image_child') {
-      // Query to retrieve related image_child records for each image
+      // Query to retrieve related image_child records with user join for each image
       $queryImageChild = $db->prepare("
-          SELECT id, filename, image_id, original_filename
+          SELECT image_child.id, image_child.filename, image_child.image_id, image_child.original_filename
           FROM image_child
-          WHERE image_id = :imageId
+          INNER JOIN users ON users.email = image_child.email
+          WHERE image_child.image_id = :imageId AND users.id = :uid
       ");
       $queryImageChild->bindValue(':imageId', $imageId, SQLITE3_INTEGER);
+      $queryImageChild->bindValue(':uid', $uid, SQLITE3_INTEGER);
       $resultImageChild = $queryImageChild->execute();
 
       $imageChildData = [];
@@ -56,28 +91,32 @@ if ($display === 'all_images') {
     die("Invalid artwork ID");
   }
 
-  // Query to retrieve image details from the 'images' table based on artworkId
+  // Query to retrieve image details from the 'images' table with user join based on artworkId
   $queryImage = $db->prepare("
-      SELECT id, filename, tags, title, imgdesc, link, date, view_count, type, episode_name, artwork_type, `group`, categories, language, parodies, characters, original_filename
+      SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename
       FROM images
-      WHERE id = :artworkid
+      INNER JOIN users ON users.email = images.email
+      WHERE images.id = :artworkid AND users.id = :uid
   ");
   $queryImage->bindValue(':artworkid', $artworkId, SQLITE3_INTEGER);
+  $queryImage->bindValue(':uid', $uid, SQLITE3_INTEGER);
   $resultImage = $queryImage->execute();
 
   $imageData = $resultImage->fetchArray(SQLITE3_ASSOC);
 
   if (!$imageData) {
-    die("Image not found");
+    die("Image not found or does not belong to the specified user");
   }
 
-  // Query to retrieve related image_child records with all details
+  // Query to retrieve related image_child records with user join
   $queryImageChild = $db->prepare("
-      SELECT id, filename, image_id, original_filename
+      SELECT image_child.id, image_child.filename, image_child.image_id, image_child.original_filename
       FROM image_child
-      WHERE image_id = :artworkid
+      INNER JOIN users ON users.email = image_child.email
+      WHERE image_child.image_id = :artworkid AND users.id = :uid
   ");
   $queryImageChild->bindValue(':artworkid', $artworkId, SQLITE3_INTEGER);
+  $queryImageChild->bindValue(':uid', $uid, SQLITE3_INTEGER);
   $resultImageChild = $queryImageChild->execute();
 
   $imageChildData = [];
