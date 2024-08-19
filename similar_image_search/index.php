@@ -125,7 +125,7 @@ $dropdownStyle = empty($imageUrl) ? 'display: none;' : '';
         include "index_least.php";
         break;
         case 'liked':
-        include "index_liked.php";
+        include "index_like.php";
         break;
         case 'order_asc':
         include "index_order_asc.php";
