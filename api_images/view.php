@@ -208,8 +208,8 @@ if ($artworkId > 0) {
                 </div>
               </div>
                 <div class="btn-group w-100 gap-2 mt-2">
-                  <a href="view.php?artworkid=<?php echo $artworkId; ?>" class="btn border-0 fw-medium w-50">View All Images</a>
-                  <a href="index.php" class="btn border-0 fw-medium w-50">Back to Gallery</a>
+                  <a href="view.php?artworkid=<?php echo $artworkId; ?>&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>" class="btn border-0 fw-medium w-50">View All Images</a>
+                  <a href="redirect.php?back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>" class="btn border-0 fw-medium w-50">Back to Gallery</a>
                 </div>
               <?php endif; ?>
             </div>
@@ -218,7 +218,7 @@ if ($artworkId > 0) {
         <div class="mt-5"></div>
       <?php else: ?>
         <div class="w-100">
-          <a href="view.php?artworkid=<?php echo $artworkId; ?>&display=info" class="btn border-0 position-fixed top-0 start-0"><i class="bi bi-chevron-left fs-5" style="-webkit-text-stroke: 2px;"></i></a>
+          <a href="view.php?artworkid=<?php echo $artworkId; ?>&display=info&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>" class="btn border-0 position-fixed top-0 start-0"><i class="bi bi-chevron-left fs-5" style="-webkit-text-stroke: 2px;"></i></a>
           <?php if (!empty($allImages)): ?>
             <?php foreach ($allImages as $image): ?>
               <img src="<?php echo $baseUrl . '/' . $image; ?>" class="w-100 vh-100 object-fit-contain" alt="Image">

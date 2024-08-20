@@ -23,6 +23,7 @@ $character = isset($_GET['character']) ? $_GET['character'] : '';
 $parody = isset($_GET['parody']) ? $_GET['parody'] : '';
 $tag = isset($_GET['tag']) ? $_GET['tag'] : '';
 $group = isset($_GET['group']) ? $_GET['group'] : '';
+$search = isset($_GET['search']) ? $_GET['search'] : ''; // New search parameter
 
 // Define the sorting order
 $sortOptions = [
@@ -37,10 +38,10 @@ $sortOptions = [
 $sortOrder = isset($sortOptions[$sortBy]) ? $sortOptions[$sortBy] : $sortOptions['newest'];
 
 if ($display === 'all_images') {
-  // Prepare the base query for all images with user join and favorite count
+  // Base query
   $queryAllImagesSql = "
     SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename,
-           COALESCE(favorites_count, 0) AS favorites_count
+         COALESCE(favorites_count, 0) AS favorites_count
     FROM images
     INNER JOIN users ON users.email = images.email
     LEFT JOIN (
@@ -50,7 +51,7 @@ if ($display === 'all_images') {
     ) AS favorites ON images.id = favorites.image_id
   ";
 
-  // Add conditions to filter by user ID, artwork_type, type, characters, parodies, tags, and group
+  // Add conditions to filter by user ID, artwork_type, type, characters, parodies, tags, group, title, and search term
   $conditions = [];
   if ($uid) {
     $conditions[] = "users.id = :uid";
@@ -73,6 +74,9 @@ if ($display === 'all_images') {
   if ($group) {
     $conditions[] = "images.`group` = :group";
   }
+  if ($search) {
+    $conditions[] = "(images.title LIKE :search OR images.tags LIKE :search OR images.characters LIKE :search OR images.parodies LIKE :search)";
+  }
   if ($conditions) {
     $queryAllImagesSql .= " WHERE " . implode(" AND ", $conditions);
   }
@@ -83,7 +87,7 @@ if ($display === 'all_images') {
   if ($rankings) {
     $startDate = '';
     $endDate = '';
-    $dateFormat = 'YYYY-MM-DD'; // Adjust according to your SQLite date format
+    $dateFormat = 'Y-m-d'; // Adjust according to your SQLite date format
 
     switch ($rankings) {
       case 'daily':
@@ -92,7 +96,7 @@ if ($display === 'all_images') {
         break;
       case 'weekly':
         $startDate = date('Y-m-d', strtotime('monday this week'));
-        $endDate = date('Y-m-d');
+        $endDate = date($dateFormat);
         break;
       case 'monthly':
         $startDate = date('Y-m-01');
@@ -108,7 +112,7 @@ if ($display === 'all_images') {
 
     $queryAllImagesSql = "
       SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename,
-             COALESCE(SUM(daily.views), 0) AS views
+         COALESCE(SUM(daily.views), 0) AS views
       FROM images
       INNER JOIN users ON users.email = images.email
       LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startDate AND :endDate
@@ -122,6 +126,7 @@ if ($display === 'all_images') {
     ";
   }
 
+  // Prepare and bind parameters
   $queryAllImages = $db->prepare($queryAllImagesSql);
 
   if ($uid) {
@@ -145,6 +150,9 @@ if ($display === 'all_images') {
   if ($group) {
     $queryAllImages->bindValue(':group', $group, SQLITE3_TEXT);
   }
+  if ($search) {
+    $queryAllImages->bindValue(':search', "%$search%", SQLITE3_TEXT);
+  }
   if ($rankings) {
     $queryAllImages->bindValue(':startDate', $startDate, SQLITE3_TEXT);
     $queryAllImages->bindValue(':endDate', $endDate, SQLITE3_TEXT);
@@ -154,6 +162,22 @@ if ($display === 'all_images') {
 
   $allImagesData = [];
   while ($row = $resultAllImages->fetchArray(SQLITE3_ASSOC)) {
+    // Only include images of the requested type if specified
+    if ($artworkType && $row['artwork_type'] !== $artworkType) {
+      continue;
+    }
+    if ($search && !(
+      strpos($row['title'], $search) !== false ||
+      strpos($row['tags'], $search) !== false ||
+      strpos($row['characters'], $search) !== false ||
+      strpos($row['parodies'], $search) !== false
+    )) {
+      continue;
+    }
+    if ($type === 'nsfw' && $row['type'] !== 'nsfw') {
+      continue;
+    }
+
     $imageId = $row['id'];
 
     if ($option === 'image_child') {
@@ -179,9 +203,19 @@ if ($display === 'all_images') {
     $allImagesData[] = $row;
   }
 
-  // Output all images with optional image_child as JSON
-  header('Content-Type: application/json');
-  echo json_encode(['images' => $allImagesData], JSON_PRETTY_PRINT);
+  if ($uid && empty($allImagesData)) {
+    // No images found for the specified user ID
+    header('Content-Type: application/json');
+    echo json_encode(['images' => []], JSON_PRETTY_PRINT);
+  } else if (empty($allImagesData)) {
+    // No images found matching the criteria
+    header('Content-Type: application/json');
+    echo json_encode(['message' => 'No images found matching the criteria.'], JSON_PRETTY_PRINT);
+  } else {
+    // Output all images with optional image_child as JSON
+    header('Content-Type: application/json');
+    echo json_encode(['images' => $allImagesData], JSON_PRETTY_PRINT);
+  }
 
 } else {
   if ($artworkId <= 0) {
@@ -202,6 +236,11 @@ if ($display === 'all_images') {
 
   if (!$imageData) {
     die("Image not found");
+  }
+
+  // Check if the type matches and if it is NSFW
+  if ($type === 'nsfw' && $imageData['type'] !== 'nsfw') {
+    die("NSFW content not allowed");
   }
 
   // Query to retrieve related image_child records

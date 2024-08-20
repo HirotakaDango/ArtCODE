@@ -127,6 +127,7 @@
                 <li><strong>parody</strong> (string): Filters images by parodies. Provide parody names to filter the results. For example, <code>Parody 1</code> will filter images related to "Parody 1".</li>
                 <li><strong>tag</strong> (string): Filters images by tags. Provide tag names to filter the results. For example, <code>tag1</code> will filter images tagged with "tag1".</li>
                 <li><strong>group</strong> (string): Filters images by groups. Provide group names to filter the results. For example, <code>Group 1</code> will filter images associated with "Group 1".</li>
+                <li><strong>search</strong> (string): Searches for images based on a keyword. This parameter allows you to search for images that match the specified keyword in their title, description, or tags.</li>
               </ul>
             </div>
           </div>
@@ -138,12 +139,52 @@
 
           <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
             <div class="card-body">
-              <h5 class="card-title">Example 1: Retrieve All Manga Images</h5>
+              <h5 class="card-title">Example 1: Retrieve All Images</h5>
               <p class="card-text">
-                <code>GET <?php echo $_SERVER['HTTP_HOST']; ?>/api.php?display=all_images&artwork_type=manga</code>
+                <code>GET <?php echo $_SERVER['HTTP_HOST']; ?>/api.php?display=all_images</code>
               </p>
-              <p>This request retrieves all images classified as manga. The <code>artwork_type</code> parameter is set to <code>manga</code> to filter the results to only include manga-type images.</p>
-              <p><strong>Use Case:</strong> This is useful when you need to load all manga images for a dedicated manga gallery page on a website or application.</p>
+              <p>This example demonstrates how to retrieve a list of all images available in the database. The response will include all image entries and their metadata.</p>
+              <pre><code>
+              {
+                {
+                  "images": [
+                    {
+                      "id": 1,
+                      "title": "Image 1",
+                      "description": "A description of Image 1",
+                      "tags": ["tag1", "tag2"],
+                      "url": "http://example.com/image1.jpg"
+                    },
+                    ...
+                  ]
+                }
+              }
+              </code></pre>
+            </div>
+          </div>
+
+          <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Example 2: Search for Images</h5>
+              <p class="card-text">
+                <code>GET <?php echo $_SERVER['HTTP_HOST']; ?>/api.php?search={keyword}</code>
+              </p>
+              <p>This example demonstrates how to search for images using a keyword. The API will return images that match the keyword in their title, description, or tags.</p>
+              <pre><code>
+              {
+                {
+                  "images": [
+                    {
+                      "id": 2,
+                      "title": "Search Result Image",
+                      "description": "A description of the search result image",
+                      "tags": ["search", "result"],
+                      "url": "http://example.com/search-result-image.jpg"
+                    },
+                    ...
+                }
+              }
+              </code></pre>
             </div>
           </div>
 
@@ -155,9 +196,21 @@
               </p>
               <p>This request retrieves all images classified as safe and includes child images associated with those images. The <code>option</code> parameter is set to <code>image_child</code>, and the <code>type</code> parameter is set to <code>safe</code>.</p>
               <p><strong>Use Case:</strong> Use this endpoint when you need to display all safe images, including any child images, for content filtering or categorization purposes.</p>
+              <pre><code>
+              {
+                {
+                "request": "GET /api.php?display=all_images&option=image_child&type=safe",
+                "description": "Retrieves all images classified as safe and includes child images.",
+                "parameters": {
+                  "display": "all_images",
+                  "option": "image_child",
+                  "type": "safe"
+                }
+              }
+              </code></pre>
             </div>
           </div>
-
+          
           <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
             <div class="card-body">
               <h5 class="card-title">Example 3: Retrieve All Images by User ID</h5>
@@ -166,9 +219,20 @@
               </p>
               <p>This request retrieves all images associated with the user whose ID is 1. The <code>uid</code> parameter is used to filter the images by the specified user ID.</p>
               <p><strong>Use Case:</strong> This is useful for user profile pages where you want to show all images uploaded by a specific user.</p>
+              <pre><code>
+              {
+                {
+                "request": "GET /api.php?display=all_images&uid=1",
+                "description": "Retrieves all images associated with the user whose ID is 1.",
+                "parameters": {
+                  "display": "all_images",
+                  "uid": 1
+                }
+              }
+              </code></pre>
             </div>
           </div>
-
+          
           <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
             <div class="card-body">
               <h5 class="card-title">Example 4: Retrieve a Specific Image by ID</h5>
@@ -177,9 +241,19 @@
               </p>
               <p>This request retrieves detailed information about the image with ID 123. The <code>artworkid</code> parameter specifies the unique ID of the image you want to retrieve.</p>
               <p><strong>Use Case:</strong> Use this endpoint when displaying a detailed view of a specific image, such as in a detail page or a modal.</p>
+              <pre><code>
+              {
+                {
+                "request": "GET /api.php?artworkid=123",
+                "description": "Retrieves detailed information about the image with ID 123.",
+                "parameters": {
+                  "artworkid": 123
+                }
+              }
+              </code></pre>
             </div>
           </div>
-
+          
           <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
             <div class="card-body">
               <h5 class="card-title">Example 5: Retrieve Images by Character</h5>
@@ -188,9 +262,20 @@
               </p>
               <p>This request retrieves all images that feature "Character 1". The <code>character</code> parameter is set to the name of the character you want to filter by.</p>
               <p><strong>Use Case:</strong> Useful for filtering images to show only those featuring a specific character, such as in a fan gallery or character-themed page.</p>
+              <pre><code>
+              {
+                {
+                "request": "GET /api.php?display=all_images&character=Character%201",
+                "description": "Retrieves all images that feature 'Character 1'.",
+                "parameters": {
+                  "display": "all_images",
+                  "character": "Character 1"
+                }
+              }
+              </code></pre>
             </div>
           </div>
-
+          
           <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
             <div class="card-body">
               <h5 class="card-title">Example 6: Retrieve Images by Parody</h5>
@@ -199,9 +284,20 @@
               </p>
               <p>This request retrieves all images related to "Parody 1". The <code>parody</code> parameter filters the results to include only images associated with the specified parody.</p>
               <p><strong>Use Case:</strong> Ideal for showcasing all images related to a particular parody, which can be useful for thematic collections or galleries.</p>
+              <pre><code>
+              {
+                {
+                "request": "GET /api.php?display=all_images&parody=Parody%201",
+                "description": "Retrieves all images related to 'Parody 1'.",
+                "parameters": {
+                  "display": "all_images",
+                  "parody": "Parody 1"
+                }
+              }
+              </code></pre>
             </div>
           </div>
-
+          
           <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
             <div class="card-body">
               <h5 class="card-title">Example 7: Retrieve Images by Tag</h5>
@@ -210,9 +306,20 @@
               </p>
               <p>This request retrieves all images that are tagged with "tag1". The <code>tag</code> parameter is used to filter images based on specific tags.</p>
               <p><strong>Use Case:</strong> Use this endpoint when you need to display images that share common tags, such as for thematic sorting or tag-based filtering.</p>
+              <pre><code>
+              {
+                {
+                "request": "GET /api.php?display=all_images&tag=tag1",
+                "description": "Retrieves all images that are tagged with 'tag1'.",
+                "parameters": {
+                  "display": "all_images",
+                  "tag": "tag1"
+                }
+              }
+              </code></pre>
             </div>
           </div>
-
+          
           <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
             <div class="card-body">
               <h5 class="card-title">Example 8: Retrieve Images by Group</h5>
@@ -221,6 +328,39 @@
               </p>
               <p>This request retrieves all images that belong to "Group 1". The <code>group</code> parameter filters the results based on the group to which the images are associated.</p>
               <p><strong>Use Case:</strong> Useful for organizing and displaying images that belong to specific groups, such as collections or series.</p>
+              <pre><code>
+              {
+                {
+                "request": "GET /api.php?display=all_images&group=Group%201",
+                "description": "Retrieves all images that belong to 'Group 1'.",
+                "parameters": {
+                  "display": "all_images",
+                  "group": "Group 1"
+                }
+              }
+              </code></pre>
+            </div>
+          </div>
+          
+          <div class="card rounded-4 bg-body-tertiary border-0 shadow mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Example 9: Retrieve Images by Search</h5>
+              <p class="card-text">
+                <code>GET <?php echo $_SERVER['HTTP_HOST']; ?>/api.php?display=all_images&search=Search%201</code>
+              </p>
+              <p>This request retrieves all images that match the search term "Search 1". The <code>search</code> parameter filters the results based on the search query.</p>
+              <p><strong>Use Case:</strong> Useful for organizing and displaying images based on search queries, such as title, tags, groups, characters, or parodies.</p>
+              <pre><code>
+              {
+                {
+                "request": "GET /api.php?display=all_images&search=Search%201",
+                "description": "Retrieves all images that match the search term 'Search 1'.",
+                "parameters": {
+                  "display": "all_images",
+                  "search": "Search 1"
+                }
+              }
+              </code></pre>
             </div>
           </div>
 

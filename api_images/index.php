@@ -3,6 +3,7 @@ include 'connect.php';
 
 // Retrieve and sanitize parameters
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$search = isset($_GET['search']) ? $_GET['search'] : ''; // Updated to handle search as string
 $display = isset($_GET['display']) ? urlencode($_GET['display']) : 'all_images';
 $sortBy = isset($_GET['sortby']) ? urlencode($_GET['sortby']) : 'newest';
 $artworkType = isset($_GET['artwork_type']) ? urlencode($_GET['artwork_type']) : '';
@@ -12,6 +13,7 @@ $parody = isset($_GET['parody']) ? urlencode($_GET['parody']) : '';
 $tag = isset($_GET['tag']) ? urlencode($_GET['tag']) : '';
 $group = isset($_GET['group']) ? urlencode($_GET['group']) : '';
 $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
+$rankings = isset($_GET['rankings']) ? urlencode($_GET['rankings']) : ''; // Include rankings in the API URL
 
 // Construct API URL with encoded parameters
 $apiUrl = $baseUrl . '/api.php';
@@ -24,6 +26,8 @@ if ($character) $apiUrl .= "&character=$character";
 if ($parody) $apiUrl .= "&parody=$parody";
 if ($tag) $apiUrl .= "&tag=$tag";
 if ($group) $apiUrl .= "&group=$group";
+if ($rankings) $apiUrl .= "&rankings=$rankings";
+if ($search) $apiUrl .= "&search=" . urlencode($search); // Include search in the API URL
 
 // Fetch and decode JSON data
 $jsonData = @file_get_contents($apiUrl);
@@ -45,6 +49,7 @@ if ($display === 'info') {
 
   $allImages = $data['images'];
 
+  // Handle pagination
   $totalImages = count($allImages);
   $imagesPerPage = 18;
   $totalPages = ceil($totalImages / $imagesPerPage);
@@ -68,9 +73,11 @@ if ($display === 'info') {
   </head>
   <body>
     <?php include('navbar.php'); ?>
-    <button type="button" class="position-fixed z-3 bottom-0 end-0 m-2 btn btn-dark rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#settingsModal">
-      settings
-    </button>
+    <div class="my-2">
+      <button type="button" class="btn bg-body-tertiary ms-2 border-0 rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#settingsModal">
+        <i class="bi bi-filter-left"></i> filter
+      </button>
+    </div>
     <div class="w-100 px-1 mt-1">
       <!-- Image Grid -->
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-1">
@@ -78,7 +85,7 @@ if ($display === 'info') {
           <?php foreach ($currentPageImages as $image): ?>
             <div class="col">
               <div class="card border-0 rounded-4">
-                <a href="view.php?artworkid=<?php echo $image['id']; ?>&display=info">
+                <a href="view.php?artworkid=<?php echo $image['id']; ?>&display=info&back=<?php echo urlencode('http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>">
                   <div class="ratio ratio-1x1">
                     <img data-src="<?php echo $baseUrl; ?>/thumbnails/<?php echo $image['filename']; ?>" class="rounded object-fit-cover lazy-load" alt="<?php echo $image['title']; ?>">
                   </div>
@@ -148,6 +155,10 @@ if ($display === 'info') {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <form action="" method="get" class="modal-body border-0">
+            <input type="hidden" name="display" class="form-control bg-body-tertiary border-0" placeholder="Display" value="<?php echo $display; ?>">
+            <div class="mb-2">
+              <input type="text" name="search" class="form-control bg-body-tertiary border-0" placeholder="Search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>">
+            </div>
             <div class="mb-2">
               <select name="sortby" class="form-select bg-body-tertiary border-0">
                 <option value="newest" <?php echo $sortBy === 'newest' ? 'selected' : ''; ?>>Newest</option>
@@ -158,10 +169,29 @@ if ($display === 'info') {
               </select>
             </div>
             <div class="mb-2">
-              <input type="text" name="artwork_type" class="form-control bg-body-tertiary border-0" placeholder="Artwork Type" value="<?php echo htmlspecialchars($artworkType); ?>">
+              <select name="rankings" class="form-select bg-body-tertiary border-0">
+                <option value="" <?php echo empty($rankings) ? 'selected' : ''; ?>>No Ranking</option>
+                <option value="daily" <?php echo $rankings === 'daily' ? 'selected' : ''; ?>>Daily</option>
+                <option value="weekly" <?php echo $rankings === 'weekly' ? 'selected' : ''; ?>>Weekly</option>
+                <option value="monthly" <?php echo $rankings === 'monthly' ? 'selected' : ''; ?>>Monthly</option>
+                <option value="yearly" <?php echo $rankings === 'yearly' ? 'selected' : ''; ?>>Yearly</option>
+              </select>
             </div>
             <div class="mb-2">
-              <input type="text" name="type" class="form-control bg-body-tertiary border-0" placeholder="Type" value="<?php echo $type; ?>">
+              <select name="artwork_type" class="form-select bg-body-tertiary border-0">
+                <option value="" <?php echo empty($rankings) ? 'selected' : ''; ?>>No Artwork Type</option>
+                <option value="illustration" <?php echo $artworkType === 'illustration' ? 'selected' : ''; ?>>Illustration</option>
+                <option value="manga" <?php echo $artworkType === 'manga' ? 'selected' : ''; ?>>Manga</option>
+                <!-- Add more options as needed -->
+              </select>
+            </div>
+            <div class="mb-2">
+              <select name="type" class="form-select bg-body-tertiary border-0">
+                <option value="" <?php echo empty($rankings) ? 'selected' : ''; ?>>No Type</option>
+                <option value="safe" <?php echo $type === 'safe' ? 'selected' : ''; ?>>Safe</option>
+                <option value="nsfw" <?php echo $type === 'nsfw' ? 'selected' : ''; ?>>NSFW</option>
+                <!-- Add more options as needed -->
+              </select>
             </div>
             <div class="mb-2">
               <input type="text" name="tag" class="form-control bg-body-tertiary border-0" placeholder="Tag" value="<?php echo $tag; ?>">
