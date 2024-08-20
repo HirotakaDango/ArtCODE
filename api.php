@@ -10,60 +10,245 @@ if (!$db) {
   die("Connection failed: " . $db->lastErrorMsg());
 }
 
-// Query to retrieve images from the 'images' table along with artist info
-$queryImages = "SELECT i.id, i.filename, i.tags, i.title, i.imgdesc, i.view_count, u.artist, u.id as userId
-                FROM images AS i
-                LEFT JOIN users AS u ON i.email = u.email
-                ORDER BY i.id DESC";
-$resultImages = $db->query($queryImages);
+// Get query parameters
+$artworkId = isset($_GET['artworkid']) ? intval($_GET['artworkid']) : 0;
+$display = isset($_GET['display']) ? $_GET['display'] : '';
+$option = isset($_GET['option']) ? $_GET['option'] : '';
+$artworkType = isset($_GET['artwork_type']) ? $_GET['artwork_type'] : '';
+$type = isset($_GET['type']) ? $_GET['type'] : '';
+$uid = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
+$sortBy = isset($_GET['sortby']) ? $_GET['sortby'] : 'newest'; // Default sorting
+$rankings = isset($_GET['rankings']) ? $_GET['rankings'] : ''; // Rankings parameter
+$character = isset($_GET['character']) ? $_GET['character'] : '';
+$parody = isset($_GET['parody']) ? $_GET['parody'] : '';
+$tag = isset($_GET['tag']) ? $_GET['tag'] : '';
+$group = isset($_GET['group']) ? $_GET['group'] : '';
 
-$images = [];
-while ($row = $resultImages->fetchArray(SQLITE3_ASSOC)) {
-  $images[] = [
-    'id' => $row['id'],
-    'filename' => $row['filename'],
-    'tags' => $row['tags'],
-    'title' => $row['title'],
-    'imgdesc' => $row['imgdesc'],
-    'view_count' => $row['view_count'], 
-    'artist' => $row['artist'],
-    'userId' => $row['userId']
-  ];
+// Define the sorting order
+$sortOptions = [
+  'newest' => 'images.id DESC',
+  'oldest' => 'images.id ASC',
+  'popular' => 'favorites_count DESC',
+  'view' => 'images.view_count DESC',
+  'least' => 'images.view_count ASC'
+];
+
+// Default sort order if not specified
+$sortOrder = isset($sortOptions[$sortBy]) ? $sortOptions[$sortBy] : $sortOptions['newest'];
+
+if ($display === 'all_images') {
+  // Prepare the base query for all images with user join and favorite count
+  $queryAllImagesSql = "
+    SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename,
+           COALESCE(favorites_count, 0) AS favorites_count
+    FROM images
+    INNER JOIN users ON users.email = images.email
+    LEFT JOIN (
+      SELECT image_id, COUNT(*) AS favorites_count
+      FROM favorites
+      GROUP BY image_id
+    ) AS favorites ON images.id = favorites.image_id
+  ";
+
+  // Add conditions to filter by user ID, artwork_type, type, characters, parodies, tags, and group
+  $conditions = [];
+  if ($uid) {
+    $conditions[] = "users.id = :uid";
+  }
+  if ($artworkType) {
+    $conditions[] = "images.artwork_type = :artworkType";
+  }
+  if ($type) {
+    $conditions[] = "images.type = :type";
+  }
+  if ($character) {
+    $conditions[] = "images.characters LIKE :character";
+  }
+  if ($parody) {
+    $conditions[] = "images.parodies LIKE :parody";
+  }
+  if ($tag) {
+    $conditions[] = "images.tags LIKE :tag";
+  }
+  if ($group) {
+    $conditions[] = "images.`group` = :group";
+  }
+  if ($conditions) {
+    $queryAllImagesSql .= " WHERE " . implode(" AND ", $conditions);
+  }
+
+  // Add sorting
+  $queryAllImagesSql .= " ORDER BY " . $sortOrder;
+
+  if ($rankings) {
+    $startDate = '';
+    $endDate = '';
+    $dateFormat = 'YYYY-MM-DD'; // Adjust according to your SQLite date format
+
+    switch ($rankings) {
+      case 'daily':
+        $startDate = date($dateFormat);
+        $endDate = $startDate;
+        break;
+      case 'weekly':
+        $startDate = date('Y-m-d', strtotime('monday this week'));
+        $endDate = date('Y-m-d');
+        break;
+      case 'monthly':
+        $startDate = date('Y-m-01');
+        $endDate = date('Y-m-t');
+        break;
+      case 'yearly':
+        $startDate = date('Y-01-01');
+        $endDate = date('Y-12-31');
+        break;
+      default:
+        die("Invalid ranking period");
+    }
+
+    $queryAllImagesSql = "
+      SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename,
+             COALESCE(SUM(daily.views), 0) AS views
+      FROM images
+      INNER JOIN users ON users.email = images.email
+      LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startDate AND :endDate
+      LEFT JOIN (
+        SELECT image_id, COUNT(*) AS favorites_count
+        FROM favorites
+        GROUP BY image_id
+      ) AS favorites ON images.id = favorites.image_id
+      GROUP BY images.id
+      ORDER BY views DESC, images.id DESC
+    ";
+  }
+
+  $queryAllImages = $db->prepare($queryAllImagesSql);
+
+  if ($uid) {
+    $queryAllImages->bindValue(':uid', $uid, SQLITE3_INTEGER);
+  }
+  if ($artworkType) {
+    $queryAllImages->bindValue(':artworkType', $artworkType, SQLITE3_TEXT);
+  }
+  if ($type) {
+    $queryAllImages->bindValue(':type', $type, SQLITE3_TEXT);
+  }
+  if ($character) {
+    $queryAllImages->bindValue(':character', "%$character%", SQLITE3_TEXT);
+  }
+  if ($parody) {
+    $queryAllImages->bindValue(':parody', "%$parody%", SQLITE3_TEXT);
+  }
+  if ($tag) {
+    $queryAllImages->bindValue(':tag', "%$tag%", SQLITE3_TEXT);
+  }
+  if ($group) {
+    $queryAllImages->bindValue(':group', $group, SQLITE3_TEXT);
+  }
+  if ($rankings) {
+    $queryAllImages->bindValue(':startDate', $startDate, SQLITE3_TEXT);
+    $queryAllImages->bindValue(':endDate', $endDate, SQLITE3_TEXT);
+  }
+
+  $resultAllImages = $queryAllImages->execute();
+
+  $allImagesData = [];
+  while ($row = $resultAllImages->fetchArray(SQLITE3_ASSOC)) {
+    $imageId = $row['id'];
+
+    if ($option === 'image_child') {
+      // Query to retrieve related image_child records with user join for each image
+      $queryImageChild = $db->prepare("
+        SELECT image_child.id, image_child.filename, image_child.image_id, image_child.original_filename
+        FROM image_child
+        INNER JOIN users ON users.email = image_child.email
+        WHERE image_child.image_id = :imageId
+      ");
+      $queryImageChild->bindValue(':imageId', $imageId, SQLITE3_INTEGER);
+      $resultImageChild = $queryImageChild->execute();
+
+      $imageChildData = [];
+      while ($childRow = $resultImageChild->fetchArray(SQLITE3_ASSOC)) {
+        $imageChildData[] = $childRow;
+      }
+
+      // Append image_child data to the current image record
+      $row['image_child'] = $imageChildData;
+    }
+
+    $allImagesData[] = $row;
+  }
+
+  // Output all images with optional image_child as JSON
+  header('Content-Type: application/json');
+  echo json_encode(['images' => $allImagesData], JSON_PRETTY_PRINT);
+
+} else {
+  if ($artworkId <= 0) {
+    die("Invalid artwork ID");
+  }
+
+  // Query to retrieve image details from the 'images' table with user join based on artworkId
+  $queryImage = $db->prepare("
+    SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename, users.id AS uid, users.artist AS artist_name
+    FROM images
+    INNER JOIN users ON users.email = images.email
+    WHERE images.id = :artworkid
+  ");
+  $queryImage->bindValue(':artworkid', $artworkId, SQLITE3_INTEGER);
+  $resultImage = $queryImage->execute();
+
+  $imageData = $resultImage->fetchArray(SQLITE3_ASSOC);
+
+  if (!$imageData) {
+    die("Image not found");
+  }
+
+  // Query to retrieve related image_child records
+  $queryImageChild = $db->prepare("
+    SELECT image_child.id, image_child.filename, image_child.image_id, image_child.original_filename
+    FROM image_child
+    INNER JOIN users ON users.email = image_child.email
+    WHERE image_child.image_id = :artworkid
+  ");
+  $queryImageChild->bindValue(':artworkid', $artworkId, SQLITE3_INTEGER);
+  $resultImageChild = $queryImageChild->execute();
+
+  $imageChildData = [];
+  while ($row = $resultImageChild->fetchArray(SQLITE3_ASSOC)) {
+    $imageChildData[] = $row;
+  }
+
+  // Retrieve favorites count for the image
+  $queryFavoritesCount = $db->prepare("
+    SELECT COUNT(*) AS count
+    FROM favorites
+    WHERE image_id = :artworkid
+  ");
+  $queryFavoritesCount->bindValue(':artworkid', $artworkId, SQLITE3_INTEGER);
+  $resultFavoritesCount = $queryFavoritesCount->execute();
+  $favoritesCountRow = $resultFavoritesCount->fetchArray(SQLITE3_ASSOC);
+  $favoritesCount = $favoritesCountRow['count'];
+
+  // Check the display parameter and prepare the appropriate response
+  if ($display === 'info') {
+    // Detailed information response
+    $response = [
+      'images' => array_merge([$imageData], $imageChildData),
+      'favorites_count' => $favoritesCount // Add favorites count here
+    ];
+  } else {
+    // Basic information response
+    $response = [
+      'image' => '/images/' . $imageData['filename'],
+      'image_child' => array_map(function($img) {
+        return '/images/' . $img['filename'];
+      }, $imageChildData)
+    ];
+  }
+
+  // Output the response as JSON
+  header('Content-Type: application/json');
+  echo json_encode($response, JSON_PRETTY_PRINT);
 }
-
-// Query to retrieve images from 'image_child' based on image IDs from 'images'
-$imageIds = implode(', ', array_column($images, 'id')); // Get a comma-separated list of image IDs
-$queryImageChild = "SELECT * FROM image_child WHERE image_id IN ($imageIds)";
-$resultImageChild = $db->query($queryImageChild);
-
-$imageChildData = [];
-while ($row = $resultImageChild->fetchArray(SQLITE3_ASSOC)) {
-  $imageChildData[] = [
-    'id' => $row['id'],
-    'filename' => $row['filename'],
-    'image_id' => $row['image_id']
-  ];
-}
-
-// Retrieve favorites count for each image
-$favoritesCounts = [];  // To store image_id => favorites count pairs
-$queryFavoritesCount = "SELECT image_id, COUNT(*) AS count FROM favorites GROUP BY image_id";
-$resultFavoritesCount = $db->query($queryFavoritesCount);
-
-while ($row = $resultFavoritesCount->fetchArray(SQLITE3_ASSOC)) {
-  $imageId = $row['image_id'];
-  $favoritesCount = $row['count'];
-  $favoritesCounts[$imageId] = $favoritesCount;
-}
-
-// Add favorites count to the images array
-foreach ($images as &$image) {
-  $imageId = $image['id'];
-  $image['favorites_count'] = isset($favoritesCounts[$imageId]) ? $favoritesCounts[$imageId] : 0;
-}
-
-// Output the updated images array with favorites counts
-header('Content-Type: application/json');
-echo json_encode(['images' => $images, 'image_child' => $imageChildData], JSON_PRETTY_PRINT);
-
 ?>
