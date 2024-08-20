@@ -1,3 +1,9 @@
 <?php
+// Base URL for the web server
 
-$baseUrl = "http://imagi.rf.gd";
+// default web url destination
+$baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+
+// current web url destination
+// $web = "http://your_website.com";
+?>
