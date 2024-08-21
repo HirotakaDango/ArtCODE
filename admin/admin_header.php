@@ -36,12 +36,15 @@
                 </button>
                 <div class="collapse show" id="images-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="/admin/images_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All</a></li>
+                    <li><a href="/admin/images_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All Images</a></li>
+                    <li><a href="/admin/images_section/users/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All Users</a></li>
                     <li><a href="/admin/images_section/similar_image_search/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Similar Search</a></li>
                     <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a></li>
+                    <li><a href="/admin/images_section/rankings/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Rankings</a></li>
                     <li><a href="/admin/images_section/keywords/tags/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tags</a></li>
                     <li><a href="/admin/images_section/keywords/groups/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Groups</a></li>
                     <li><a href="/admin/images_section/keywords/parodies/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Parodies</a></li>
+                    <li><a href="/admin/images_section/keywords/characters/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Characters</a></li>
                   </ul>
                 </div>
               </li>

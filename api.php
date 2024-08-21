@@ -41,7 +41,7 @@ if ($display === 'all_images') {
   // Base query
   $queryAllImagesSql = "
     SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename,
-         COALESCE(favorites_count, 0) AS favorites_count
+           COALESCE(favorites_count, 0) AS favorites_count
     FROM images
     INNER JOIN users ON users.email = images.email
     LEFT JOIN (
@@ -112,7 +112,7 @@ if ($display === 'all_images') {
 
     $queryAllImagesSql = "
       SELECT images.id, images.filename, images.tags, images.title, images.imgdesc, images.link, images.date, images.view_count, images.type, images.episode_name, images.artwork_type, images.`group`, images.categories, images.language, images.parodies, images.characters, images.original_filename,
-         COALESCE(SUM(daily.views), 0) AS views
+             COALESCE(SUM(daily.views), 0) AS views
       FROM images
       INNER JOIN users ON users.email = images.email
       LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startDate AND :endDate
@@ -178,6 +178,15 @@ if ($display === 'all_images') {
       continue;
     }
 
+    // Calculate image size in MB
+    $imagePath = 'images/' . $row['filename'];
+    if (file_exists($imagePath)) {
+      $imageSize = filesize($imagePath) / (1024 * 1024); // Size in MB
+    } else {
+      $imageSize = 0;
+    }
+    $row['size_mb'] = number_format($imageSize, 2); // Format size to 2 decimal places
+
     $imageId = $row['id'];
 
     if ($option === 'image_child') {
@@ -192,12 +201,27 @@ if ($display === 'all_images') {
       $resultImageChild = $queryImageChild->execute();
 
       $imageChildData = [];
+      $totalSize = $imageSize;
+      $totalCount = 1; // Count the main image
+
       while ($childRow = $resultImageChild->fetchArray(SQLITE3_ASSOC)) {
+        $childImagePath = 'images/' . $childRow['filename'];
+        if (file_exists($childImagePath)) {
+          $childImageSize = filesize($childImagePath) / (1024 * 1024); // Size in MB
+        } else {
+          $childImageSize = 0;
+        }
+        $childRow['size_mb'] = number_format($childImageSize, 2); // Format size to 2 decimal places
+        $totalSize += $childImageSize;
+        $totalCount++;
+
         $imageChildData[] = $childRow;
       }
 
       // Append image_child data to the current image record
       $row['image_child'] = $imageChildData;
+      $row['total_size_mb'] = number_format($totalSize, 2); // Format total size to 2 decimal places
+      $row['total_count'] = $totalCount;
     }
 
     $allImagesData[] = $row;
@@ -238,6 +262,15 @@ if ($display === 'all_images') {
     die("Image not found");
   }
 
+  // Calculate image size in MB
+  $imagePath = 'images/' . $imageData['filename'];
+  if (file_exists($imagePath)) {
+    $imageSize = filesize($imagePath) / (1024 * 1024); // Size in MB
+  } else {
+    $imageSize = 0;
+  }
+  $imageData['size_mb'] = number_format($imageSize, 2); // Format size to 2 decimal places
+
   // Check if the type matches and if it is NSFW
   if ($type === 'nsfw' && $imageData['type'] !== 'nsfw') {
     die("NSFW content not allowed");
@@ -254,7 +287,20 @@ if ($display === 'all_images') {
   $resultImageChild = $queryImageChild->execute();
 
   $imageChildData = [];
+  $totalSize = $imageSize;
+  $totalCount = 1; // Count the main image
+
   while ($row = $resultImageChild->fetchArray(SQLITE3_ASSOC)) {
+    $childImagePath = 'images/' . $row['filename'];
+    if (file_exists($childImagePath)) {
+      $childImageSize = filesize($childImagePath) / (1024 * 1024); // Size in MB
+    } else {
+      $childImageSize = 0;
+    }
+    $row['size_mb'] = number_format($childImageSize, 2); // Format size to 2 decimal places
+    $totalSize += $childImageSize;
+    $totalCount++;
+
     $imageChildData[] = $row;
   }
 
@@ -274,15 +320,25 @@ if ($display === 'all_images') {
     // Detailed information response
     $response = [
       'images' => array_merge([$imageData], $imageChildData),
-      'favorites_count' => $favoritesCount // Add favorites count here
+      'favorites_count' => $favoritesCount, // Add favorites count here
+      'total_size_mb' => number_format($totalSize, 2), // Format total size to 2 decimal places
+      'total_count' => $totalCount
     ];
   } else {
     // Basic information response
     $response = [
-      'image' => '/images/' . $imageData['filename'],
+      'image' => [
+        'url' => '/images/' . $imageData['filename'],
+        'size_mb' => $imageData['size_mb']
+      ],
       'image_child' => array_map(function($img) {
-        return '/images/' . $img['filename'];
-      }, $imageChildData)
+        return [
+          'url' => '/images/' . $img['filename'],
+          'size_mb' => $img['size_mb']
+        ];
+      }, $imageChildData),
+      'total_size_mb' => number_format($totalSize, 2), // Format total size to 2 decimal places
+      'total_count' => $totalCount
     ];
   }
 
