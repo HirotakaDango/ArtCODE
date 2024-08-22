@@ -501,6 +501,22 @@ $fav_count = $fav_count->fetchColumn();
     </div>
     <div class="mt-5"></div>
     <?php include('share.php'); ?>
+    <style>
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      @media only screen and (min-width: 767px) {
+        .rounded-min-5 {
+          border-radius: 1.6rem;
+        }
+      }
+        
+      .button-group button {
+        white-space: nowrap; /* Prevent wrapping of button text */
+      }
+    </style>
     <script>
       let lazyloadImages = document.querySelectorAll(".lazy-load");
       let imageContainer = document.getElementById("image-container");

@@ -8,7 +8,7 @@
         <a class="text-dark navbar-brand fw-bold" href="/">
           ArtCODE
         </a>
-        <div class="position-absolute top-50 start-50 translate-middle d-none d-md-block" style="padding-bottom: 0.1em;">
+        <div class="position-absolute top-50 start-50 translate-middle d-none d-md-block text-nowrap" style="padding-bottom: 0.1em;">
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/home/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/">Home</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/similar_image_search/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/similar_image_search/">Similar Image Search</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/scrolls/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/scrolls/">Scrolls</a>
@@ -16,6 +16,7 @@
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis" href="/manga/">Manga</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/music/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/music/">Music</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/search/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a>
+          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseKeywords">Keywords</a>
         </div>
         <div class="dropdown nav-right">
           <div class="btn-group gap-1">
@@ -68,6 +69,20 @@
                   <span class="d-md-none d-lg-inline d-lg-none">Music</span>
                 </a>
               </div>
+              <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 mt-2 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/novel/') !== false) echo 'opacity-75 shadow'; ?>" data-bs-toggle="collapse" href="#collapseKeywords" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <span class="d-md-none d-lg-inline d-lg-none">Keywords</span>
+              </a>
+              <div class="collapse mt-2" id="collapseKeywords">
+                <div class="card card-body rounded-4 border-0 bg-body-tertiary">
+                  <div class="btn-group-vertical gap-2">
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/tags/">Tags</a>
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/characters/">Characters</a>
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/parodies/">Parodies</a>
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/groups/">Groups</a>
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/users">Users</a>
+                  </div>
+                </div>
+              </div>
             </ul>
             <!-- end -->
           </div>
@@ -75,6 +90,27 @@
       </div>
     </nav>
     <br><br>
+    <div class="modal fade" id="modalCollapseKeywords" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-4 border-0">
+          <div class="d-flex position-relative">
+            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Keywords</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+          </div>
+          <div class="modal-body">
+            <div class="card-body">
+              <div class="btn-group-vertical gap-2">
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/tags/">Tags</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/characters/">Characters</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/parodies/">Parodies</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/groups/">Groups</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/users">Users</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content bg-transparent border-0">

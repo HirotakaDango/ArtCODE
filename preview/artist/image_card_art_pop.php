@@ -33,20 +33,6 @@
                     <i class="bi bi-three-dots-vertical text-white link-body-emphasis fs-5" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"></i>
                   </button>
                   <ul class="dropdown-menu">
-                    <?php
-                      $is_favorited = $db->query("SELECT COUNT(*) FROM favorites WHERE email = '{$_SESSION['email']}' AND image_id = {$imageP['id']}")->fetchColumn();
-                      if ($is_favorited) {
-                    ?>
-                      <form method="POST">
-                        <input type="hidden" name="image_id" value="<?php echo $imageP['id']; ?>">
-                        <li><button type="submit" class="dropdown-item fw-bold" name="unfavorite"><i class="bi bi-heart-fill"></i> <small>unfavorite</small></button></li>
-                      </form>
-                    <?php } else { ?>
-                      <form method="POST">
-                        <input type="hidden" name="image_id" value="<?php echo $imageP['id']; ?>">
-                        <li><button type="submit" class="dropdown-item fw-bold" name="favorite"><i class="bi bi-heart"></i> <small>favorite</small></button></li>
-                      </form>
-                    <?php } ?>
                     <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#shareImage<?php echo $imageP['id']; ?>"><i class="bi bi-share-fill"></i> <small>share</small></button></li>
                     <li><button class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $imageP['id']; ?>"><i class="bi bi-info-circle-fill"></i> <small>info</small></button></li>
                   </ul>
