@@ -219,45 +219,45 @@ if ($row) {
       </ul> 
     </div> 
     <?php include '../contents/home/tags_group.php'; ?>
-        <?php 
-        if(isset($_GET['by'])){
-          $sort = $_GET['by'];
- 
-          switch ($sort) {
-            case 'newest':
-            include "index_desc.php";
-            break;
-            case 'oldest':
-            include "index_asc.php";
-            break;
-            case 'popular':
-            include "index_pop.php";
-            break;
-            case 'view':
-            include "index_view.php";
-            break;
-            case 'least':
-            include "index_least.php";
-            break;
-            case 'liked':
-            include "index_like.php";
-            break;
-            case 'top':
-            include "top.php";
-            break;
-            case 'order_asc':
-            include "index_order_asc.php";
-            break;
-            case 'order_desc':
-            include "index_order_desc.php";
-            break;
-          }
-        }
-        else {
-          include "index_desc.php";
-        }
-        
-        ?>
+    <?php 
+    if(isset($_GET['by'])){
+      $sort = $_GET['by'];
+
+      switch ($sort) {
+        case 'newest':
+        include "index_desc.php";
+        break;
+        case 'oldest':
+        include "index_asc.php";
+        break;
+        case 'popular':
+        include "index_pop.php";
+        break;
+        case 'view':
+        include "index_view.php";
+        break;
+        case 'least':
+        include "index_least.php";
+        break;
+        case 'liked':
+        include "index_like.php";
+        break;
+        case 'top':
+        include "top.php";
+        break;
+        case 'order_asc':
+        include "index_order_asc.php";
+        break;
+        case 'order_desc':
+        include "index_order_desc.php";
+        break;
+      }
+    }
+    else {
+      include "index_desc.php";
+    }
+    
+    ?>
     <?php
     // Check if 'by' is set to 'top' and skip pagination if so
     if (isset($_GET['by']) && $_GET['by'] == 'top') {
