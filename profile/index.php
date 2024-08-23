@@ -359,6 +359,7 @@ $fav_count = $fav_row['num_favorites'];
     <?php include('profile_header.php'); ?>
     <?php include('contact_header.php'); ?>
     <?php include('most_popular_profile.php'); ?>
+    <?php include('all_tags_header.php'); ?>
 
     <h6 class="container-fluid fw-bold"><i class="bi bi-images"></i> All <?php echo $artist; ?>'s Images</h6>
     <?php
