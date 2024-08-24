@@ -104,22 +104,22 @@ if ($artworkId > 0) {
                     }
                   }
                 </script>
-              <div class="my-2 row">
+              <div class="my-2 row align-items-center">
                 <label for="views" class="col-3 col-form-label text-nowrap">Artist</label>
                 <div class="col-9">
-                  <h6 class="form-control-plaintext pt-1" id="views"><a class="text-decoration-none" href="index.php?uid=1"><?php echo $artworkData['images'][0]['artist_name']; ?></a></h6>
+                  <h6 class="form-control-plaintext" id="views"><a class="btn border-0 p-0 fw-medium" href="index.php?uid=1"><?php echo $artworkData['images'][0]['artist_name']; ?></a></h6>
                 </div>
               </div>
-              <div class="my-2 row">
+              <div class="my-2 row align-items-center">
                 <label for="views" class="col-3 col-form-label text-nowrap">Views</label>
                 <div class="col-9">
-                  <h6 class="form-control-plaintext pt-1" id="views"><?php echo $artworkData['images'][0]['view_count']; ?></h6>
+                  <h6 class="form-control-plaintext" id="views"><?php echo $artworkData['images'][0]['view_count']; ?></h6>
                 </div>
               </div>
-              <div class="mb-2 row">
+              <div class="mb-2 row align-items-center">
                 <label for="favorites" class="col-3 col-form-label text-nowrap">Favorites</label>
                 <div class="col-9">
-                  <h6 class="form-control-plaintext pt-1" id="favorites"><?php echo $artworkData['favorites_count']; ?></h6>
+                  <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['favorites_count']; ?></h6>
                 </div>
               </div>
               <div class="card shadow border-0 rounded-4 bg-body-tertiary mt-3">
@@ -221,7 +221,7 @@ if ($artworkId > 0) {
           <a href="view.php?artworkid=<?php echo $artworkId; ?>&display=info&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>" class="btn border-0 position-fixed top-0 start-0"><i class="bi bi-chevron-left fs-5" style="-webkit-text-stroke: 2px;"></i></a>
           <?php if (!empty($allImages)): ?>
             <?php foreach ($allImages as $image): ?>
-              <img src="<?php echo $baseUrl . '/' . $image; ?>" class="w-100 vh-100 object-fit-contain" alt="Image">
+              <img src="<?php echo $baseUrl . '/' . $image['url']; ?>" class="w-100 vh-100 object-fit-contain" alt="Image">
             <?php endforeach; ?>
           <?php else: ?>
             <p>No images found.</p>
@@ -229,6 +229,43 @@ if ($artworkId > 0) {
         </div>
       <?php endif; ?>
     </div>
-    <script type="module" src="mode.js"></script>
+    <script>
+      // Get the theme toggle button, icon element, and html element
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const htmlElement = document.documentElement;
+
+      // Check if the user's preference is stored in localStorage
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        htmlElement.setAttribute('data-bs-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+      }
+
+      // Add an event listener to the theme toggle button
+      themeToggle.addEventListener('click', () => {
+        // Toggle the theme
+        const currentTheme = htmlElement.getAttribute('data-bs-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+        // Apply the new theme
+        htmlElement.setAttribute('data-bs-theme', newTheme);
+        updateThemeIcon(newTheme);
+
+        // Store the user's preference in localStorage
+        localStorage.setItem('theme', newTheme);
+      });
+
+      // Function to update the theme icon
+      function updateThemeIcon(theme) {
+        if (theme === 'dark') {
+          themeIcon.classList.remove('bi-moon-fill');
+          themeIcon.classList.add('bi-sun-fill');
+        } else {
+          themeIcon.classList.remove('bi-sun-fill');
+          themeIcon.classList.add('bi-moon-fill');
+        }
+      }
+    </script>
   </body>
 </html>
