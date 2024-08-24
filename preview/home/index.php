@@ -159,10 +159,11 @@ if ($row) {
     <?php
     // Get the current page number from the query parameter, defaulting to 1 if not set
     $pageNumber = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $display = isset($_GET['display']) ? $_GET['display'] : '';
     ?>
     
-    <!-- Conditionally include sections based on the page number -->
-    <?php if ($pageNumber === 1): ?>
+    <!-- Conditionally include sections based on the page number and mobile display -->
+    <?php if ($pageNumber === 1 && $display !== 'mobile'): ?>
       <div class="d-none d-md-block">
         <?php include('best/index.php'); ?>
       </div>
@@ -170,20 +171,52 @@ if ($row) {
         <?php include('best_manga/index.php'); ?>
       </div>
     <?php endif; ?>
+
+    <!-- Conditionally include sections based on the page number and desktop display -->
+    <?php if ($pageNumber === 1 && $display !== 'desktop'): ?>
+      <div class="d-md-none">
+        <?php include('best_mobile/index.php'); ?>
+      </div>
+      <div class="d-md-none">
+        <?php include('best_manga_mobile/index.php'); ?>
+      </div>
+    <?php endif; ?>
+
+    <?php include('tags_group.php'); ?>
+    <h3 class="px-2 mt-3 fw-bold">Discover</h3>
     <div class="dropdown">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by
       </button>
       <ul class="dropdown-menu">
-        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=popular&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'popular') echo 'active'; ?>">popular</a></li>
-        <li><a href="?by=view&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'view') echo 'active'; ?>">most viewed</a></li>
-        <li><a href="?by=least&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'least') echo 'active'; ?>">least viewed</a></li>
-        <li><a href="?by=order_asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
-        <li><a href="?by=order_desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
-      </ul> 
-    </div> 
+        <?php
+        // Get current query parameters, excluding 'by' and 'page'
+        $queryParams = array_diff_key($_GET, array('by' => '', 'page' => ''));
+        
+        // Define sorting options and labels
+        $sortOptions = [
+          'newest' => 'newest',
+          'oldest' => 'oldest',
+          'popular' => 'popular',
+          'view' => 'most viewed',
+          'least' => 'least viewed',
+          'liked' => 'liked',
+          'order_asc' => 'from A to Z',
+          'order_desc' => 'from Z to A',
+          'top' => 'top images'
+        ];
+    
+        // Loop through each sort option
+        foreach ($sortOptions as $key => $label) {
+          // Determine if the current option is active
+          $activeClass = (!isset($_GET['by']) && $key === 'newest') || (isset($_GET['by']) && $_GET['by'] === $key) ? 'active' : '';
+          
+          // Generate the dropdown item with the appropriate active class
+          echo '<li><a href="?' . http_build_query(array_merge($queryParams, ['by' => $key, 'page' => isset($_GET['page']) ? $_GET['page'] : '1'])) . '" class="dropdown-item fw-bold ' . $activeClass . '">' . $label . '</a></li>';
+        }
+        ?>
+      </ul>
+    </div>
     <?php 
     if(isset($_GET['by'])){
       $sort = $_GET['by'];
@@ -278,6 +311,38 @@ if ($row) {
     ?>
     <div class="mt-5"></div>
     <script>
+      function adjustDisplay() {
+        const bestElement = document.querySelector('.best');
+        const bestMangaElement = document.querySelector('.best_manga');
+        const isMobile = window.innerWidth <= 767;
+      
+        // Extract current display mode from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentDisplay = urlParams.get('display');
+      
+        if (isMobile && currentDisplay !== 'mobile') {
+          // Redirect to mobile view if not already on mobile view
+          window.location.href = "http://myray.rf.gd/preview/home/?page=1&display=mobile";
+        } else if (!isMobile && currentDisplay !== 'desktop') {
+          // Redirect to desktop view if not already on desktop view
+          window.location.href = "http://myray.rf.gd/preview/home/?page=1&display=desktop";
+        }
+    
+        // Update visibility based on the current display mode
+        if (isMobile) {
+          if (bestElement) bestElement.style.display = 'none';
+          if (bestMangaElement) bestMangaElement.style.display = 'none';
+        } else {
+          if (bestElement) bestElement.style.display = 'block';
+          if (bestMangaElement) bestMangaElement.style.display = 'block';
+        }
+      }
+    
+      // Adjust on page load
+      window.addEventListener('load', adjustDisplay);
+      // Adjust on window resize
+      window.addEventListener('resize', adjustDisplay);
+
       let lazyloadImages = document.querySelectorAll(".lazy-load");
       let imageContainer = document.getElementById("image-container");
 

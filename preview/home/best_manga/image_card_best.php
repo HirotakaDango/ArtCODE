@@ -3,8 +3,8 @@
   <div class="position-relative w-100 h-100 d-flex align-items-center justify-content-center">
     <div class="container-fluid px-5">
       <div id="imageCarouselManga" class="carousel slide" data-bs-ride="carousel">
-        <h5 class="fw-bold text-dark">Popular Manga</h5>
-        <h6 class="text-dark fw-bold small">
+        <h5 class="fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">Popular Manga</h5>
+        <h6 class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold small">
           These manga are displayed based on their view counts from <?php $timeManga = isset($_GET['time']) ? $_GET['time'] : 'day'; echo $timeManga === 'alltime' ? 'all time' : "this $timeManga"; ?>. The more views a manga has, the higher its ranking in this list.
         </h6>
         <div class="carousel-inner">
@@ -70,7 +70,7 @@
                         <img class="rounded-circle object-fit-cover border border-1" width="40" height="40" src="/<?php echo !empty($userPicManga) ? $userPicManga : 'icon/profile.svg'; ?>" alt="Profile Picture" style="margin-top: -2px;">
                         <div class="ms-2">
                           <div class="fw-bold text-truncate" style="max-width: 140px;"><?php echo $image_episodeManga; ?></div>
-                          <a class="fw-medium text-decoration-none text-dark link-body-emphasis small" href="#" type="button" data-bs-toggle="modal" data-bs-target="#userModalBestManga-<?php echo $user_idManga; ?>"><?php echo $artist_nameManga; ?></a>
+                          <a class="fw-medium text-decoration-none text-dark link-body-emphasis small text-truncate" style="max-width: 140px;" href="#" type="button" data-bs-toggle="modal" data-bs-target="#userModalBestManga-<?php echo $user_idManga; ?>"><?php echo $artist_nameManga; ?></a>
                         </div>
                       </div>
                     </div>
