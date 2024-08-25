@@ -8,14 +8,14 @@ $offset = ($page - 1) * $recordsPerPage;
 // Get the search parameter from the URL
 $searchQuery = isset($_GET['q']) ? $_GET['q'] : null;
 
-// Fetch music records with user information and filter by search query if provided
+// Fetch novel records with user information and filter by search query if provided
 $query = "SELECT novel.*, users.id AS user_id, users.pic, users.artist 
           FROM novel 
           LEFT JOIN users ON novel.email = users.email";
 
-// If search query is provided, filter by album or title
+// If search query is provided, filter by title or tags
 if (!empty($searchQuery)) {
-  $query .= " WHERE novel.title LIKE :searchQuery";
+  $query .= " WHERE novel.title LIKE :searchQuery OR novel.tags LIKE :searchQuery";
 }
 
 $query .= " ORDER BY novel.id ASC LIMIT :limit OFFSET :offset";
@@ -36,8 +36,16 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
   $rows[] = $row;
 }
 
-// Calculate total pages for the logged-in user
-$total = $db->querySingle("SELECT COUNT(*) FROM novel WHERE email = '$email'");
+// Calculate total pages for the search query
+$totalQuery = "SELECT COUNT(*) FROM novel";
+if (!empty($searchQuery)) {
+  $totalQuery .= " WHERE title LIKE :searchQuery OR tags LIKE :searchQuery";
+}
+$totalStmt = $db->prepare($totalQuery);
+if (!empty($searchQuery)) {
+  $totalStmt->bindValue(':searchQuery', "%$searchQuery%", SQLITE3_TEXT);
+}
+$total = $totalStmt->execute()->fetchArray(SQLITE3_NUM)[0];
 $totalPages = ceil($total / $recordsPerPage);
 $prevPage = $page - 1;
 $nextPage = $page + 1;

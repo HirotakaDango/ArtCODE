@@ -8,15 +8,15 @@ $offset = ($page - 1) * $recordsPerPage;
 // Get the search parameter from the URL
 $searchQuery = isset($_GET['q']) ? $_GET['q'] : null;
 
-// Fetch music records with user information and filter by search query if provided
+// Fetch novel records with user information, favorites count, and filter by search query if provided
 $query = "SELECT novel.*, users.id AS user_id, users.pic, users.artist, COUNT(favorites_novel.novel_id) AS favorites_count
           FROM novel 
           LEFT JOIN users ON novel.email = users.email 
           LEFT JOIN favorites_novel ON novel.id = favorites_novel.novel_id";
 
-// If search query is provided, filter by title
+// If search query is provided, filter by title or tags
 if (!empty($searchQuery)) {
-  $query .= " WHERE novel.title LIKE :searchQuery";
+  $query .= " WHERE novel.title LIKE :searchQuery OR novel.tags LIKE :searchQuery";
 }
 
 $query .= " GROUP BY novel.id 
@@ -40,8 +40,16 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
   $rows[] = $row;
 }
 
-// Calculate total pages for the logged-in user
-$total = $db->querySingle("SELECT COUNT(DISTINCT novel.id) FROM novel LEFT JOIN favorites_novel ON novel.id = favorites_novel.novel_id WHERE novel.email = '$email'");
+// Calculate total pages for the search query
+$totalQuery = "SELECT COUNT(DISTINCT novel.id) FROM novel LEFT JOIN favorites_novel ON novel.id = favorites_novel.novel_id";
+if (!empty($searchQuery)) {
+  $totalQuery .= " WHERE novel.title LIKE :searchQuery OR novel.tags LIKE :searchQuery";
+}
+$totalStmt = $db->prepare($totalQuery);
+if (!empty($searchQuery)) {
+  $totalStmt->bindValue(':searchQuery', "%$searchQuery%", SQLITE3_TEXT);
+}
+$total = $totalStmt->execute()->fetchArray(SQLITE3_NUM)[0];
 $totalPages = ceil($total / $recordsPerPage);
 $prevPage = $page - 1;
 $nextPage = $page + 1;

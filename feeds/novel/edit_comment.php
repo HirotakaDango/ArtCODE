@@ -57,18 +57,17 @@ try {
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container-fluid mt-2">
+    <?php include('header.php'); ?>
+    <div class="container mt-3 mb-5">
       <form method="post">
-        <div class="mb-3">
-          <textarea class="form-control" id="comment" name="comment" rows="10" oninput="stripHtmlTags(this)" required><?php echo strip_tags($comment['comment']); ?></textarea>
+        <div class="mb-2">
+          <textarea class="form-control border-0 bg-body-tertiary rounded-4 shadow" id="comment" name="comment" rows="13" oninput="stripHtmlTags(this)" required><?php echo strip_tags($comment['comment']); ?></textarea>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold">Save</button>
+        <div class="btn-group w-100 gap-2">
+          <button class="btn btn-secondary w-50 fw-bold rounded-4" onclick="goBack()">Cancel</button>
+          <button type="submit" class="btn btn-primary w-50 fw-bold rounded-4">Save</button>
+        </div>
       </form>
-    </div>
-    <div class="d-none-sm position-fixed top-50 start-0 translate-middle-y">
-      <button class="btn btn-primary rounded-pill rounded-start-0 fw-bold btn-md ps-1" onclick="goBack()">
-        <i class="bi bi-arrow-left-circle-fill"></i>
-      </button>
     </div>
     <script>
       function goBack() {

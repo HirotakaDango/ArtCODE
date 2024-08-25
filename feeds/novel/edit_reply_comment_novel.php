@@ -50,26 +50,24 @@ if (isset($_GET['reply_id'])) {
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
-    <title>Reply Section</title>
+    <title>Edit Comment</title>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="../../icon/favicon.png">
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <div class="container-fluid mt-3">
-      <h1 class="text-center fw-bold">Edit Reply</h1>
+    <?php include('header.php'); ?>
+    <div class="container mt-3 mb-5">
       <form method="post">
-        <div class="mb-3">
-          <textarea class="form-control" id="reply" name="reply" rows="15" oninput="stripHtmlTags(this)" required><?php echo strip_tags($reply['reply']); ?></textarea>
+        <div class="mb-2">
+          <textarea class="form-control border-0 bg-body-tertiary rounded-4 shadow" id="reply" name="reply" rows="13" oninput="stripHtmlTags(this)" required><?php echo strip_tags($reply['reply']); ?></textarea>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold">Save</button>
+        <div class="btn-group w-100 gap-2">
+          <button class="btn btn-secondary w-50 fw-bold rounded-4" onclick="goBack()">Cancel</button>
+          <button type="submit" class="btn btn-primary w-50 fw-bold rounded-4">Save</button>
+        </div>
       </form>
-    </div>
-    <div class="d-none-sm position-fixed top-50 start-0 translate-middle-y">
-      <button class="btn btn-primary rounded-pill rounded-start-0 fw-bold btn-md ps-1" onclick="goBack()">
-        <i class="bi bi-arrow-left-circle-fill"></i>
-      </button>
     </div>
     <script>
       function goBack() {

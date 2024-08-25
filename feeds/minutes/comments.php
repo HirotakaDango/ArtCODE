@@ -153,7 +153,7 @@ $total_pages = ceil($total_comments / $comments_per_page);
         <div class="modal-content rounded-4 border-0 bg-transparent">
           <div class="modal-body px-1">
             <form class="form-control border-0 bg-transparent shadow p-0" action="" method="POST">
-              <textarea type="text" class="form-control fw-medium bg-body-tertiary border-0 rounded-4 rounded-bottom-0 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 400px; max-height: 800px;" name="comment" placeholder="Post your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" required></textarea>
+              <textarea type="text" class="form-control fw-medium bg-body-tertiary border-0 rounded-4 rounded-bottom-0 focus-ring focus-ring-dark" style="height: 400px; max-height: 800px;" name="comment" placeholder="Post your comment..." aria-label="Type a message..." aria-describedby="basic-addon2" required></textarea>
               <button class="w-100 btn btn-primary rounded-4 rounded-top-0" type="submit"><i class="bi bi-send-fill"></i></button>
             </form>
           </div>
@@ -175,7 +175,7 @@ $total_pages = ceil($total_comments / $comments_per_page);
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "icon/bg.png";
+      const defaultPlaceholder = "/icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {

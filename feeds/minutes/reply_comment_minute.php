@@ -138,7 +138,7 @@ $commentName = $commentResult['comment'];
         ?>
     <nav class="navbar fixed-bottom navbar-expand justify-content-center">
       <div class="container">
-        <button type="button" class="w-100 btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">post your reply</button>
+        <button type="button" class="w-100 btn btn-light fw-bold rounded-3" data-bs-toggle="modal" data-bs-target="#comments">post your reply</button>
       </div>
     </nav>
     <div class="modal fade" id="comments" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -146,7 +146,7 @@ $commentName = $commentResult['comment'];
         <div class="modal-content rounded-4 border-0 bg-transparent">
           <div class="modal-body px-1">
             <form class="form-control border-0 bg-transparent shadow p-0" action="" method="POST">
-              <textarea type="text" class="form-control fw-medium bg-body-tertiary border-0 rounded-4 rounded-bottom-0 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" style="height: 400px; max-height: 800px;" name="reply" id="reply" placeholder="Post your reply..." aria-label="Type a message..." aria-describedby="basic-addon2" required></textarea>
+              <textarea type="text" class="form-control fw-medium bg-body-tertiary border-0 rounded-4 rounded-bottom-0 focus-ring focus-ring-dark" style="height: 400px; max-height: 800px;" name="reply" id="reply" placeholder="Post your reply..." aria-label="Type a message..." aria-describedby="basic-addon2" required></textarea>
               <input type="hidden" name="reply_comment_id" value="<?= $comment['id'] ?>">
               <button class="w-100 btn btn-primary rounded-4 rounded-top-0" type="submit"><i class="bi bi-send-fill"></i></button>
             </form>
@@ -165,7 +165,7 @@ $commentName = $commentResult['comment'];
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "icon/bg.png";
+      const defaultPlaceholder = "/icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {
