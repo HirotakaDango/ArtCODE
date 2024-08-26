@@ -44,7 +44,7 @@
         <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-4">
           <div class="d-flex">
             <button id="themeToggle" class="btn border-0 fw-bold mt-3 ms-auto">
-              <i id="themeIcon" class="bi"></i>
+              <i id="themeIcon" class="bi bi-sun-fill"></i>
             </button>
           </div>
           <h1 class="mt-3 mb-4">API Documentation</h1>
