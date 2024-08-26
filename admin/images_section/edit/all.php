@@ -268,37 +268,45 @@ foreach ($child_images as $child_image) {
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">Filename</label>
                           <div class="col-8">
-                            <p class="form-control-plaintext fw-bold text-white"><?php echo $child_image['filename']; ?></p>
+                            <input type="text" readonly class="form-control-plaintext fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" value="<?php echo $child_image['filename']; ?>">
                           </div>
                         </div>
           
+                        <div class="mb-2 row">
+                          <label class="col-4 col-form-label text-nowrap fw-medium">Original</label>
+                          <div class="col-8">
+                            <input type="text" readonly class="form-control-plaintext fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" value="<?php echo $child_image['original_filename']; ?>">
+                          </div>
+                        </div>
+                        
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">File Size</label>
                           <div class="col-8">
-                            <p class="form-control-plaintext fw-bold text-white"><?php echo number_format($file_info['size'] / (1024 * 1024), 2); ?> MB</p>
+                            <input type="text" readonly class="form-control-plaintext fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" value="<?php echo number_format($file_info['size'] / (1024 * 1024), 2); ?> MB">
                           </div>
                         </div>
-          
+                        
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">Dimensions</label>
                           <div class="col-8">
-                            <p class="form-control-plaintext fw-bold text-white"><?php echo $image_info[0] . 'x' . $image_info[1]; ?> pixels</p>
+                            <input type="text" readonly class="form-control-plaintext fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" value="<?php echo $image_info[0] . 'x' . $image_info[1]; ?> pixels">
                           </div>
                         </div>
-          
+                        
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">MIME Type</label>
                           <div class="col-8">
-                            <p class="form-control-plaintext fw-bold text-white"><?php echo $image_info['mime']; ?></p>
+                            <input type="text" readonly class="form-control-plaintext fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" value="<?php echo $image_info['mime']; ?>">
                           </div>
                         </div>
-          
+                        
                         <div class="mb-2 row">
                           <label class="col-4 col-form-label text-nowrap fw-medium">Creation Date</label>
                           <div class="col-8">
-                            <p class="form-control-plaintext fw-bold text-white"><?php echo date("l, d F, Y", $file_info['ctime']); ?></p>
+                            <input type="text" readonly class="form-control-plaintext fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" value="<?php echo date("l, d F, Y", $file_info['ctime']); ?>">
                           </div>
                         </div>
+
                       </div>
                     </div>
                   </div>
