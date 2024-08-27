@@ -1,5 +1,5 @@
 <?php
-// admin/images_section/index.php
+// admin/images_section/keyword/index.php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/auth_admin.php');
 requireAdmin();
 
