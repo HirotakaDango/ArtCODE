@@ -64,7 +64,7 @@ At ArtCODE, we envision a world where every artist has a platform to showcase th
    - Ensure `mod_rewrite` is enabled for Apache users.
 
 3. **Set Up Database**:
-   - Locate the `config/database.sqlite` file.
+   - Locate the `database.sqlite` file.
    - Ensure write permissions are set correctly.
 
 4. **Enable SQLite Extension**:
