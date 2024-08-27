@@ -93,10 +93,18 @@ try {
         $stmt->execute();
         
         // Insert the new user
-        $stmt = $db->prepare("INSERT INTO users (email, password, artist) VALUES (:email, :password, :artist)");
+        $stmt = $db->prepare("INSERT INTO users (email, password, artist, page, region) VALUES (:email, :password, :artist, :page, :region)");
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->bindValue(':password', $password, PDO::PARAM_STR); // Store plain password (consider hashing passwords for security)
         $stmt->bindValue(':artist', $artist, PDO::PARAM_STR);
+        $stmt->bindValue(':page', 12, PDO::PARAM_INT); // Setting the page number to 12
+        $stmt->bindValue(':region', 'Japan', PDO::PARAM_STR); // Setting the region to Japan
+        $stmt->execute();
+
+        // Insert into episode table
+        $stmt = $db->prepare("INSERT INTO episode (email, episode_name) VALUES (:email, :episode_name)");
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        $stmt->bindValue(':episode_name', 'Gradient Image', PDO::PARAM_STR); // Inserting episode name
         $stmt->execute();
 
         // Directly log in the user

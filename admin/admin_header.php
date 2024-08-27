@@ -85,6 +85,11 @@
                   </ul>
                 </div>
               </li>
+              <li class="mb-1">
+                <a class="ms-3 btn d-inline-flex align-items-center rounded border-0 link-body-emphasis fw-medium" href="/admin/update/">
+                  Update
+                </a>
+              </li>
               <li class="border-top my-3"></li>
               <li class="mb-1">
                 <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">

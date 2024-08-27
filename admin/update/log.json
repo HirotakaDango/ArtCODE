@@ -1,0 +1,38 @@
+[
+    {
+        "timestamp": "2024-08-27T14:25:36+00:00",
+        "message": "Started update process"
+    },
+    {
+        "timestamp": "2024-08-27T14:25:37+00:00",
+        "message": "Deleted: /var/www/html/index.php"
+    },
+    {
+        "timestamp": "2024-08-27T14:25:37+00:00",
+        "message": "Deleted: /var/www/html/css/styles.css"
+    },
+    {
+        "timestamp": "2024-08-27T14:25:38+00:00",
+        "message": "Removed directory: /var/www/html/images"
+    },
+    {
+        "timestamp": "2024-08-27T14:25:40+00:00",
+        "message": "Extracted zip file"
+    },
+    {
+        "timestamp": "2024-08-27T14:25:41+00:00",
+        "message": "Copied: /var/www/html/index.php"
+    },
+    {
+        "timestamp": "2024-08-27T14:25:41+00:00",
+        "message": "Copied: /var/www/html/css/styles.css"
+    },
+    {
+        "timestamp": "2024-08-27T14:25:42+00:00",
+        "message": "Removed excluded file: /var/www/html/images/forbidden.php"
+    },
+    {
+        "timestamp": "2024-08-27T14:25:43+00:00",
+        "message": "Update completed successfully"
+    }
+]
