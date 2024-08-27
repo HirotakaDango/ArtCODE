@@ -195,7 +195,7 @@ $db->close();
       </div>
       <div id="preview-container" class="mb-2"></div>
       <div class="caard container">
-        <div id="drop-zone" class="drop-zone fw-bold mb-2 rounded-3 border-4 text-center">
+        <div id="drop-zone" class="drop-zone fw-medium mb-2 rounded-3 border-4 text-center">
           <div class="d-flex flex-column align-items-center">
             <div class="mb-4 mt-2">
               <i class="bi bi-filetype-png me-4 display-4"></i>
@@ -203,7 +203,7 @@ $db->close();
               <i class="bi bi-filetype-gif display-4"></i>
             </div>
             <label for="file-ip-1">
-              <input class="form-control mb-2 border rounded-3 fw-bold border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
+              <input class="form-control mb-2 border rounded-3 fw-medium border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
               <p style="word-break: break-word;" class="badge bg-dark text-wrap" style="font-size: 15px;">Drag and drop files here</p>
               <p><small><i class="bi bi-info-circle-fill"></i> type of extension you can upload: jpg, jpeg, png, gif</small></p>
               <div class="total-size"></div>
@@ -378,7 +378,7 @@ $db->close();
         }
     
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'upload.php');
+        xhr.open('POST', '');
         xhr.upload.addEventListener('progress', function(e) {
           var percent = Math.round((e.loaded / e.total) * 100);
           progressBar.style.width = percent + '%';
