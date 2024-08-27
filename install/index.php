@@ -93,11 +93,11 @@ try {
         $stmt->execute();
         
         // Insert the new user
-        $stmt = $db->prepare("INSERT INTO users (email, password, artist, page, region) VALUES (:email, :password, :artist, :page, :region)");
+        $stmt = $db->prepare("INSERT INTO users (email, password, artist, numpage, region) VALUES (:email, :password, :artist, :numpage, :region)");
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->bindValue(':password', $password, PDO::PARAM_STR); // Store plain password (consider hashing passwords for security)
         $stmt->bindValue(':artist', $artist, PDO::PARAM_STR);
-        $stmt->bindValue(':page', 12, PDO::PARAM_INT); // Setting the page number to 12
+        $stmt->bindValue(':numpage', 12, PDO::PARAM_INT); // Setting the page number to 12
         $stmt->bindValue(':region', 'Japan', PDO::PARAM_STR); // Setting the region to Japan
         $stmt->execute();
 

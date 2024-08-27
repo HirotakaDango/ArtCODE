@@ -360,10 +360,10 @@ if ($row) {
       
         if (isMobile && currentDisplay !== 'mobile') {
           // Redirect to mobile view if not already on mobile view
-          window.location.href = "http://myray.rf.gd/home/?page=1&display=mobile";
+          window.location.href = "/home/?page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>&display=mobile";
         } else if (!isMobile && currentDisplay !== 'desktop') {
           // Redirect to desktop view if not already on desktop view
-          window.location.href = "http://myray.rf.gd/home/?page=1&display=desktop";
+          window.location.href = "/home/?page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>&display=desktop";
         }
     
         // Update visibility based on the current display mode
