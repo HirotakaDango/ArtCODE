@@ -281,22 +281,6 @@ $db->close();
       .drag-over {
         border-color: #000;
       }
-
-      .scrollable-div {
-        overflow: auto;
-        scrollbar-width: thin;  /* For Firefox */
-        -ms-overflow-style: none;  /* For Internet Explorer and Edge */
-        scrollbar-color: transparent transparent;  /* For Chrome, Safari, and Opera */
-      }
-
-      .scrollable-div::-webkit-scrollbar {
-        width: 0;
-        background-color: transparent;
-      }
-      
-      .scrollable-div::-webkit-scrollbar-thumb {
-        background-color: transparent;
-      }
     </style>
     <script>
       var dropZone = document.getElementById('drop-zone');
@@ -305,91 +289,108 @@ $db->close();
       var progressBarContainer = document.getElementById('progress-bar-container');
       var progressBar = document.getElementById('progress-bar');
       var uploadButton = document.getElementById('upload-button');
-  
+    
       dropZone.addEventListener('dragover', function(e) {
         e.preventDefault();
         dropZone.classList.add('drag-over');
       });
-  
+    
       dropZone.addEventListener('dragleave', function(e) {
         e.preventDefault();
         dropZone.classList.remove('drag-over');
       });
-  
+    
       dropZone.addEventListener('drop', function(e) {
         e.preventDefault();
         dropZone.classList.remove('drag-over');
         var files = e.dataTransfer.files;
-        fileInput.files = files;
         handleFiles(files);
       });
-  
+    
       fileInput.addEventListener('change', function(e) {
         var files = e.target.files;
         handleFiles(files);
       });
-  
+    
       function handleFiles(files) {
-        var fileCount = files.length;
-        var message = fileCount > 1 ? fileCount + ' images selected' : files[0].name;
+        // Convert FileList to an array and sort by filename
+        var filesArray = Array.from(files).sort(function(a, b) {
+          return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+        });
+    
+        // Update the input with the sorted files
+        updateFileInput(filesArray);
+    
+        var fileCount = filesArray.length;
+        var message = fileCount > 1 ? fileCount + ' images selected' : filesArray[0].name;
         var messageElement = dropZone.querySelector('p');
         messageElement.textContent = message;
-  
+    
         var existingTotalSizeElement = dropZone.querySelector('.total-size');
         if (existingTotalSizeElement) {
           existingTotalSizeElement.remove();
         }
-  
+    
         var totalSize = 0;
-  
-        for (var i = 0; i < files.length; i++) {
-          var fileSize = files[i].size;
+    
+        for (var i = 0; i < filesArray.length; i++) {
+          var fileSize = filesArray[i].size;
           totalSize += fileSize;
         }
-  
+    
         var totalSizeInMB = totalSize / (1024 * 1024);
         var totalSizeText = Math.round(totalSizeInMB * 100) / 100 + ' MB';
-  
+    
         var totalSizeContainer = document.createElement('div');
         totalSizeContainer.classList.add('total-size');
-  
+    
         var totalSizeLabel = document.createElement('small');
-        totalSizeLabel.classList.add('fw-bold');
+        totalSizeLabel.classList.add('fw-medium');
         totalSizeLabel.textContent = 'Total Images Size: ' + totalSizeText;
-  
+    
         totalSizeContainer.appendChild(totalSizeLabel);
         dropZone.appendChild(totalSizeContainer);
-  
-        showPreview(files);
+    
+        showPreview(filesArray);
       }
-  
+    
+      function updateFileInput(sortedFiles) {
+        var dataTransfer = new DataTransfer();
+        
+        sortedFiles.forEach(file => {
+          dataTransfer.items.add(file);
+        });
+    
+        fileInput.files = dataTransfer.files;
+      }
+    
       uploadForm.addEventListener('submit', function(e) {
         e.preventDefault();
         var files = fileInput.files;
         uploadFiles(files);
       });
-  
+    
       function uploadFiles(files) {
         var formData = new FormData(uploadForm);
-  
+    
         for (var i = 0; i < files.length; i++) {
           formData.append('image[]', files[i]);
         }
-  
+    
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '');
+        xhr.open('POST', 'upload.php');
         xhr.upload.addEventListener('progress', function(e) {
           var percent = Math.round((e.loaded / e.total) * 100);
           progressBar.style.width = percent + '%';
           progressBar.textContent = percent + '%';
         });
-  
+    
         xhr.onreadystatechange = function() {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             progressBarContainer.style.display = 'none';
             uploadButton.style.display = 'block';
             uploadButton.disabled = false;
-  
+    
             if (xhr.status === 200) {
               showSuccessMessage();
             } else {
@@ -397,7 +398,7 @@ $db->close();
             }
           }
         };
-  
+    
         xhr.send(formData);
         progressBarContainer.style.display = 'block';
         uploadButton.style.display = 'none';
@@ -451,8 +452,8 @@ $db->close();
       
         var goToProfileButton = document.createElement('a');
         goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
-        goToProfileButton.textContent = 'Go to Artwork';
-        goToProfileButton.href = '../image.php?artworkid=<?php echo $image['id']; ?>';
+        goToProfileButton.textContent = 'Go to Profile';
+        goToProfileButton.href = '../profile.php';
       
         buttonGroup.appendChild(goToHomeButton);
         buttonGroup.appendChild(goToProfileButton);
@@ -546,67 +547,59 @@ $db->close();
       function showPreview(files) {
         var container = document.getElementById("preview-container");
         container.innerHTML = "";
-  
+
+        // Add Bootstrap row classes to the container
+        container.className = "row g-1 container-fluid mx-auto mb-3";
+
         if (window.innerWidth >= 768) {
-          container.style.display = "flex";
-          container.style.flexWrap = "wrap";  // Added flexWrap property
-          container.style.justifyContent = "center";
-          container.style.gridGap = "2px";
-          container.style.marginRight = "3px";
-          container.style.marginLeft = "3px";
+          container.classList.add("row-cols-6");
         } else {
-          container.style.display = "grid";
-          container.style.gridTemplateColumns = "repeat(auto-fit, minmax(150px, 1fr))";
-          container.style.gridGap = "2px";
-          container.style.justifyContent = "center";
-          container.style.marginRight = "3px";
-          container.style.marginLeft = "3px";
+          container.classList.add(files.length > 1 ? "row-cols-2" : "row-col-1");
         }
-  
+
+        var html = '';
+
         for (var i = 0; i < files.length; i++) {
-          var imgContainer = document.createElement("div");
-          imgContainer.classList.add("position-relative", "d-inline-block");
-  
-          var img = document.createElement("img");
-          img.style.width = window.innerWidth >= 768 ? "150px" : "100%";
-          img.style.height = window.innerWidth >= 768 ? "150px" : (files.length > 1 ? "200px" : "400px");
-          img.classList.add("rounded", "object-fit-cover", "shadow");
-          img.src = URL.createObjectURL(files[i]);
-  
+          var imgSrc = URL.createObjectURL(files[i]);
           var fileSize = files[i].size / (1024 * 1024); // Convert to MB
           var fileSizeRounded = Math.round(fileSize * 100) / 100; // Round to 2 decimal places
           var fileSizeText = fileSizeRounded + " MB";
-  
-          var fileSizeBadge = document.createElement("span");
-          fileSizeBadge.classList.add("badge", "rounded-1", "opacity-75", "bg-dark", "position-absolute", "bottom-0", "start-0", "mb-1", "ms-1", "fw-bold");
-          fileSizeBadge.textContent = fileSizeText;
-  
-          var infoButton = document.createElement("button");
-          infoButton.classList.add("btn", "btn-sm", "opacity-75", "btn-dark", "position-absolute", "top-0", "end-0", "mt-1", "me-1");
-          infoButton.innerHTML = '<i class="bi bi-info-circle-fill"></i>';
-  
-          // Store the file object as a custom property on the info button
-          infoButton.file = files[i];
-  
-          imgContainer.appendChild(img);
-          imgContainer.appendChild(fileSizeBadge);
-          imgContainer.appendChild(infoButton);
-          container.appendChild(imgContainer);
-  
-          // Add click event listener to each image
-          img.addEventListener("click", function () {
-            // Get the metadata and display it in the modal
-            displayMetadata(this.file);
-          });
-  
-          // Add click event listener to info button
-          infoButton.addEventListener("click", function () {
-            // Get the metadata from the custom file property and display it in the modal
-            displayMetadata(this.file);
-          });
+
+          html += `
+            <div class="col">
+              <div class="position-relative">
+                <div class="ratio ratio-1x1">
+                  <img src="${imgSrc}" class="w-100 rounded object-fit-cover shadow">
+                </div>
+                <span class="badge rounded-1 opacity-75 bg-dark position-absolute bottom-0 start-0 m-2 fw-medium">
+                  ${fileSizeText}
+                </span>
+                <button class="btn btn-sm opacity-75 btn-dark position-absolute top-0 end-0 m-2">
+                  <i class="bi bi-info-circle-fill"></i>
+                </button>
+              </div>
+            </div>`;
         }
+
+        container.innerHTML = html;
+
+        // Add click event listeners after the HTML has been inserted
+        var images = container.querySelectorAll('img');
+        var infoButtons = container.querySelectorAll('button');
+
+        images.forEach((img, index) => {
+          img.addEventListener("click", function () {
+            displayMetadata(files[index]);
+          });
+        });
+
+        infoButtons.forEach((button, index) => {
+          button.addEventListener("click", function () {
+            displayMetadata(files[index]);
+          });
+        });
       }
-  
+
       function displayMetadata(file) {
         var metadataContainer = document.getElementById("metadata-container");
         metadataContainer.innerHTML = "";
@@ -622,7 +615,6 @@ $db->close();
         img.src = URL.createObjectURL(file);
         img.classList.add('rounded', 'mb-3');
         img.style.width = '100%'; // Set width to 100%
-        img.style.height = '100%'; // Maintain aspect ratio
         metadataContainer.appendChild(img);
 
         // Image Name

@@ -306,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </a>
               </div>
               <div class="btn-group w-100 mb-2">
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50" href="../profile.php">Back to Profile</a>
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50" href="redirect.php?back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/profile.php'); ?>">Back to Profile</a>
                 <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50" href="../image.php?artworkid=<?php echo $image['id']; ?>">Back to Artwork</a>
               </div>
               <a class="btn w-100 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium" href="export.php?artworkid=<?php echo $image['id']; ?>">Export Your Artwork</a>

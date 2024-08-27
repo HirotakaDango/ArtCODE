@@ -83,9 +83,8 @@ try {
   throw $e;
 }
 
-// Redirect to profile.php with the 'by' and 'page' parameters
-$pageParam = isset($_GET['page']) ? $_GET['page'] : 1; // Default to page 1 if 'page' parameter is not set
-$byParam = isset($_GET['by']) ? $_GET['by'] : 'newest';
-header("Location: myworks.php?by=$byParam&page=$pageParam");
+// Redirect to myworks.php with the 'by' and 'page' parameters
+$back = isset($_GET['back']) ? $_GET['back'] : 'myworks.php';
+header("Location: $back");
 exit;
 ?>
