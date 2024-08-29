@@ -214,21 +214,21 @@ $db->close();
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content rounded-4 shadow border-0">
               <div class="modal-header border-0">
-                <h1 class="modal-title fw-bold fs-5" id="exampleModalLabel">Upload</h1>
+                <h1 class="modal-title fw-medium fs-5" id="exampleModalLabel">Upload</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body scrollable-div">
                 <form id="upload-form" enctype="multipart/form-data">
-                  <button class="btn btn-lg btn-primary fw-bold w-100" id="upload-button" type="submit">UPLOAD</button>
+                  <button class="btn btn-lg btn-primary fw-medium w-100" id="upload-button" type="submit">UPLOAD</button>
                 </form>
-                <div id="progress-bar-container" class="progress fw-bold" style="height: 45px; display: none;">
+                <div id="progress-bar-container" class="progress fw-medium" style="height: 45px; display: none;">
                   <div id="progress-bar" class="progress-bar progress-bar progress-bar-animated" style="height: 45px;" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <button type="button" class="mb-2 btn btn-primary w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#uploadModal">
+        <button type="button" class="mb-2 btn btn-primary w-100 fw-medium" data-bs-toggle="modal" data-bs-target="#uploadModal">
           UPLOAD
         </button>
         <div class="d-flex align-items-center justify-content-center">
@@ -242,7 +242,7 @@ $db->close();
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div class="modal-content rounded-4 shadow border-0">
           <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold" id="metadataModalLabel">Image Metadata</h5>
+            <h5 class="modal-title fw-medium" id="metadataModalLabel">Image Metadata</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body scrollable-div">
