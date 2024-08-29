@@ -198,34 +198,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <form method="POST">
                       <div class="form-floating mb-2">
                         <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" value="<?php echo $image['title']; ?>" name="title" placeholder="Image title" maxlength="500" required>  
-                        <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter title for your image</label>
+                        <label for="floatingInput" class="text-light fw-medium">Enter title for your image</label>
                       </div>
                       <div class="form-floating mb-2">
                         <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" value="<?php echo $image['tags']; ?>" name="tags" placeholder="Image tag" maxlength="500" required>
-                        <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter tag for your image</label>
+                        <label for="floatingInput" class="text-light fw-medium">Enter tag for your image</label>
                       </div>
                       <div class="form-floating mb-2">
                         <textarea class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" oninput="stripHtmlTags(this)" type="text" value="<?php echo $image['imgdesc']; ?>" name="imgdesc" placeholder="Image description" maxlength="5000" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
-                        <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter description for your image</label>
+                        <label for="floatingInput" class="text-light fw-medium">Enter description for your image</label>
                       </div>
                       <h6 class="fw-medium mb-2 mt-4">Group is optional, to displaying group names for <a class="text-decoration-none fw-medium" href="/manga/?group=">manga section only!</a></h6>
                       <div class="form-floating mb-2">
                         <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" value="<?php echo $image['group']; ?>" name="group" placeholder="Image group" maxlength="4500">  
-                        <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter group for your image</label>
+                        <label for="floatingInput" class="text-light fw-medium">Enter group for your image</label>
                       </div>
                       <h6 class="fw-medium mb-2 mt-4">Characters is optional, to displaying character names for <a class="text-decoration-none fw-medium" href="/manga/?character=">manga section only!</a></h6>
                       <div class="form-floating mb-2">
                         <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" value="<?php echo $image['characters']; ?>" name="characters" placeholder="Image characters" maxlength="4500">
-                        <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter characters for your image</label>
+                        <label for="floatingInput" class="text-light fw-medium">Enter characters for your image</label>
                       </div>
                       <h6 class="fw-medium mb-2 mt-4">Parodies is optional, to displaying fiction names for <a class="text-decoration-none fw-medium" href="/manga/?parody=">manga section only!</a></h6>
                       <div class="form-floating mb-4">
                         <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" value="<?php echo $image['parodies']; ?>" name="parodies" placeholder="Image parodies" maxlength="4500">
-                        <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter parodies for your image</label>
+                        <label for="floatingInput" class="text-light fw-medium">Enter parodies for your image</label>
                       </div>
                       <div class="form-floating mb-2">
                         <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" value="<?php echo $image['episode_name']; ?>" readonly>
-                        <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Episode name</label>
+                        <label for="floatingInput" class="text-light fw-medium">Episode name</label>
                       </div>
                       <div class="form-floating mb-2">
                         <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium py-0 text-start" name="episode_name">
@@ -293,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       </div>
                       <div class="form-floating mb-2">
                         <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" value="<?php echo $image['link']; ?>" name="link" placeholder="Image link" maxlength="300"> 
-                        <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter link for your image</label>
+                        <label for="floatingInput" class="text-light fw-medium">Enter link for your image</label>
                       </div>
                       <div class="btn-group gap-2 w-100">
                         <button type="button" class="btn btn-light fw-medium w-100 mb-2 rounded" data-bs-toggle="modal" data-bs-target="#deleteImage">
