@@ -121,7 +121,7 @@ if (isset($_POST['login'])) {
     // Store the email in the session for future use
     $_SESSION['email'] = $email;
 
-    // Redirect the user to the homepage
+    // Redirect the user to the tutorials
     header("Location: /tutorials/");
     exit;
   }

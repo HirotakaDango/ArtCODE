@@ -219,25 +219,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium py-0 text-start" name="episode_name">
                   <option class="form-control" value="">Make it empty to add your own episode:</option>
                   <?php
-                    // Connect to the SQLite database
-                    $db = new SQLite3('../database.sqlite');
-
-                    // Get the email of the current user
-                    $email = $_SESSION['email'];
-
-                    // Retrieve the list of albums created by the current user
-                    $stmt = $db->prepare('SELECT * FROM episode WHERE email = :email ORDER BY id DESC');
+                    // Retrieve the list of episode names from the images table where the email matches
+                    $stmt = $db->prepare('SELECT DISTINCT episode_name FROM images WHERE email = :email ORDER BY episode_name DESC');
                     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
                     $results = $stmt->execute();
-
-                    // Loop through each episode and create an option in the dropdown list
+                
+                    // Loop through each episode name and create an option in the dropdown list
                     while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
-                      $episode_name = $row['episode_name'];
-                      $id = $row['id'];
+                      $episode_name = htmlspecialchars($row['episode_name']);
                       $selected = ($image['episode_name'] === $episode_name) ? 'selected' : '';
-                      echo '<option value="' . htmlspecialchars($episode_name) . '" ' . $selected . '>' . htmlspecialchars($episode_name) . '</option>';
+                      echo '<option value="' . $episode_name . '" ' . $selected . '>' . $episode_name . '</option>';
                     }
-
+                
+                    // Close the database connection
                     $db->close();
                   ?>
                 </select>
