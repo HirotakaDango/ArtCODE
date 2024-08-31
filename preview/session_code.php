@@ -40,8 +40,9 @@ if (isset($_POST['login'])) {
       $stmt->bindValue(':email', $email, SQLITE3_TEXT);
       $stmt->execute();
     
-      // Redirect the user to the URL from `tourl`
-      header("Location: " . urldecode($toUrl));
+      // Redirect the user to the URL from `tourl` or to ../index.php if `tourl` is empty
+      $redirectUrl = empty($toUrl) ? '../index.php' : urldecode($toUrl);
+      header("Location: " . $redirectUrl);
       exit;
     } else {
       echo '
@@ -121,8 +122,8 @@ if (isset($_POST['login'])) {
     // Store the email in the session for future use
     $_SESSION['email'] = $email;
 
-    // Redirect the user to the homepage
-    header("Location: ../regrg.php");
+    // Redirect the user to the tutorials
+    header("Location: /tutorials/");
     exit;
   }
 } else {

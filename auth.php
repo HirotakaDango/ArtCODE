@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// Connect to the SQLite database
+$db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
+
 $toUrl = 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 if (!isset($_SESSION['email'])) {
@@ -8,13 +11,13 @@ if (!isset($_SESSION['email'])) {
   if (isset($_COOKIE['remember'])) {
     // Retrieve the user's email and token from the cookie
     $cookieData = json_decode($_COOKIE['remember'], true);
-        
+    
     if ($cookieData && isset($cookieData['email']) && isset($cookieData['token'])) {
       $email = $cookieData['email'];
       $token = $cookieData['token'];
 
       // Validate the user's session
-      $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+      $stmt = $defaultDB->prepare("SELECT * FROM users WHERE email = :email");
       $stmt->bindValue(':email', $email, SQLITE3_TEXT);
       $result = $stmt->execute();
       $user = $result->fetchArray();
@@ -25,7 +28,7 @@ if (!isset($_SESSION['email'])) {
 
         // Generate a new token and update the database
         $newToken = bin2hex(random_bytes(32));
-        $stmt = $db->prepare("UPDATE users SET token = :newToken WHERE email = :email");
+        $stmt = $defaultDB->prepare("UPDATE users SET token = :newToken WHERE email = :email");
         $stmt->bindValue(':newToken', $newToken, SQLITE3_TEXT);
         $stmt->bindValue(':email', $email, SQLITE3_TEXT);
         $stmt->execute();
@@ -37,10 +40,24 @@ if (!isset($_SESSION['email'])) {
     }
   }
 
-  // If the user is still not authenticated, redirect to the login page
-  if (!isset($_SESSION['email'])) {
-    $url = "http://" . $_SERVER['HTTP_HOST'] . "/session.php?tourl=" . urlencode($toUrl); // Construct the absolute URL
-    header("Location: $url");
+  // If the user is still not authenticated, check if they are trying to access a protected page
+  $protectedPages = ['full_view.php', 'simple_view.php', 'view.php', 'simplest_view.php'];
+  $urlPath = parse_url($toUrl, PHP_URL_PATH);
+  $page = basename($urlPath);
+
+  if (in_array($page, $protectedPages)) {
+    // Extract the artwork ID from the query parameters
+    parse_str(parse_url($toUrl, PHP_URL_QUERY), $queryParams);
+    $artworkId = isset($queryParams['artworkid']) ? $queryParams['artworkid'] : '';
+
+    // Redirect to the preview image page
+    $redirectUrl = "preview/image.php?artworkid=" . urlencode($artworkId);
+    header("Location: $redirectUrl");
+    exit;
+  } else {
+    // Redirect to the login page with the current URL
+    $loginUrl = "http://" . $_SERVER['HTTP_HOST'] . "/session.php?tourl=" . urlencode($toUrl);
+    header("Location: $loginUrl");
     exit;
   }
 }

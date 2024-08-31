@@ -40,8 +40,9 @@ if (isset($_POST['login'])) {
       $stmt->bindValue(':email', $email, SQLITE3_TEXT);
       $stmt->execute();
     
-      // Redirect the user to the URL from `tourl`
-      header("Location: " . urldecode($toUrl));
+      // Redirect the user to the URL from `tourl` or to ../index.php if `tourl` is empty
+      $redirectUrl = empty($toUrl) ? '../index.php' : urldecode($toUrl);
+      header("Location: " . $redirectUrl);
       exit;
     } else {
       echo '

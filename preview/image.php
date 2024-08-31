@@ -4,6 +4,7 @@ $db = new PDO('sqlite:../database.sqlite');
 
 // Get the filename from the query string
 $artworkId = $_GET['artworkid'];
+$toUrl = 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 // Get the current image information from the database
 $stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid ");
@@ -276,6 +277,7 @@ if ($daily_view) {
                   </div>
                   <div class="modal-body p-5 pt-0">
                     <form class="" action="session_code.php" method="post">
+                      <input type="hidden" name="tourl" value="<?php echo urlencode(isset($_GET['tourl']) ? $_GET['tourl'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>">
                       <div class="form-floating mb-3">
                         <input type="email" class="form-control rounded-3" name="email" id="floatingInput" placeholder="name@example.com" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" required>
                         <label class="fw-bold" for="floatingInput">Email address</label>
@@ -300,6 +302,7 @@ if ($daily_view) {
                   </div>
                   <div class="modal-body p-5 pt-0">
                     <form class="" action="session_code.php" method="post">
+                      <input type="hidden" name="tourl" value="<?php echo urlencode(isset($_GET['tourl']) ? $_GET['tourl'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>">
                       <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-3" name="artist" id="floatingInput" placeholder="name" maxlength="40" pattern="^[a-zA-Z0-9_@.-]+$" required>
                         <label class="fw-bold" for="floatingInput">Name</label>
