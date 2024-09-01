@@ -86,7 +86,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
             <div class="col-md-8">
               <h1 class="mb-4 fw-bold mt-4 mt-md-0"><?php echo $episode_name; ?></h1>
               <div class="mb-4">
-                <p class="text-white shadowed-text small fw-medium" style="word-break: break-word;">
+                <p class="text-white shadowed-text fw-medium" style="word-break: break-word;">
                   <?php
                     if (!empty($first_cover['imgdesc'])) {
                       $messageText = $first_cover['imgdesc'];
@@ -153,36 +153,36 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                   }
                 </script>
               </div>
-              <div class="mb-2 row">
-                <label for="artist" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Artist</h6></label>
+              <div class="mb-2 row align-items-center">
+                <label for="artist" class="col-3 col-form-label text-nowrap fw-medium">Artist</label>
                 <div class="col-9">
                   <div class="btn-group">
-                    <a href="index.php?artist=<?php echo urlencode($artist_name); ?>&uid=<?php echo $user_id; ?>" class="btn btn-sm small bg-secondary-subtle fw-bold"><?php echo $artist_name; ?></a>
-                    <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold" disabled><?php echo $artistImageCount; ?></a>
+                    <a href="index.php?artist=<?php echo urlencode($artist_name); ?>&uid=<?php echo $user_id; ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $artist_name; ?></a>
+                    <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo $artistImageCount; ?></a>
                   </div>
                 </div>
               </div>
               <?php if (isset($groupCounts) && !empty($groupCounts)): ?>
-                <div class="mb-2 row">
-                  <label for="artist" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Group</h6></label>
+                <div class="mb-2 row align-items-center">
+                  <label for="artist" class="col-3 col-form-label text-nowrap fw-medium">Group</label>
                   <div class="col-9">
                     <div class="btn-group">
-                      <a href="index.php?group=<?php echo urlencode($groupName); ?>" class="btn btn-sm small bg-secondary-subtle fw-bold"><?php echo $groupName; ?></a>
-                      <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold" disabled><?php echo $groupCount; ?></a>
+                      <a href="index.php?group=<?php echo urlencode($groupName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $groupName; ?></a>
+                      <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo $groupCount; ?></a>
                     </div>
                   </div>
                 </div>
               <?php endif; ?>
               <?php if (isset($parodies) && !empty($parodies)): ?>
-                <div class="mb-2 row">
-                  <label for="parodies" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Parodies</h6></label>
+                <div class="mb-2 row align-items-center">
+                  <label for="parodies" class="col-3 col-form-label text-nowrap fw-medium">Parodies</label>
                   <div class="col-9">
                     <?php foreach($parodies as $parody => $count): ?>
                       <div class="btn-group mb-2 me-1">
-                        <a href="index.php?parody=<?php echo urlencode($parody); ?>" class="btn btn-sm small bg-secondary-subtle fw-bold">
+                        <a href="index.php?parody=<?php echo urlencode($parody); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">
                           <?php echo $parody; ?>
                         </a>
-                        <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold">
+                        <a href="#" class="btn btn-sm bg-body-tertiary fw-bold">
                           <?php echo $count; ?>
                         </a>
                       </div>
@@ -191,15 +191,15 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                 </div>
               <?php endif; ?>
               <?php if (isset($characters) && !empty($characters)): ?>
-                <div class="mb-2 row">
-                  <label for="characters" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">characters</h6></label>
+                <div class="mb-2 row align-items-center">
+                  <label for="characters" class="col-3 col-form-label text-nowrap fw-medium">characters</label>
                   <div class="col-9">
                     <?php foreach($characters as $character => $count): ?>
                       <div class="btn-group mb-2 me-1">
-                        <a href="index.php?character=<?php echo urlencode($character); ?>" class="btn btn-sm small bg-secondary-subtle fw-bold">
+                        <a href="index.php?character=<?php echo urlencode($character); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">
                           <?php echo $character; ?>
                         </a>
-                        <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold">
+                        <a href="#" class="btn btn-sm bg-body-tertiary fw-bold">
                           <?php echo $count; ?>
                         </a>
                       </div>
@@ -207,15 +207,15 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                   </div>
                 </div>
               <?php endif; ?>
-              <div class="mb-2 row">
-                <label for="tags" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Tags</h6></label>
+              <div class="mb-2 row align-items-center">
+                <label for="tags" class="col-3 col-form-label text-nowrap fw-medium">Tags</label>
                 <div class="col-9">
                   <?php foreach($tags as $tag => $count): ?>
                     <div class="btn-group mb-2 me-1">
-                      <a href="index.php?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm small bg-secondary-subtle fw-bold">
+                      <a href="index.php?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">
                         <?php echo $tag; ?>
                       </a>
-                      <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold">
+                      <a href="#" class="btn btn-sm bg-body-tertiary fw-bold">
                         <?php echo $count; ?>
                       </a>
                     </div>
@@ -223,49 +223,49 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                 </div>
               </div>
               <?php if (isset($categoriesCount) && !empty($categoriesCount)): ?>
-                <div class="mb-2 row">
-                  <label for="artist" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Category</h6></label>
+                <div class="mb-2 row align-items-center">
+                  <label for="artist" class="col-3 col-form-label text-nowrap fw-medium">Category</label>
                   <div class="col-9">
                     <div class="btn-group">
-                      <a href="index.php?categories=<?php echo urlencode($categoriesName); ?>" class="btn btn-sm small bg-secondary-subtle fw-bold"><?php echo $categoriesName; ?></a>
-                      <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold" disabled><?php echo $categoriesCount; ?></a>
+                      <a href="index.php?categories=<?php echo urlencode($categoriesName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $categoriesName; ?></a>
+                      <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo $categoriesCount; ?></a>
                     </div>
                   </div>
                 </div>
               <?php endif; ?>
               <?php if (isset($languageCount) && !empty($languageCount)): ?>
-                <div class="mb-2 row">
-                  <label for="artist" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Language</h6></label>
+                <div class="mb-2 row align-items-center">
+                  <label for="artist" class="col-3 col-form-label text-nowrap fw-medium">Language</label>
                   <div class="col-9">
                     <div class="btn-group">
-                      <a href="index.php?language=<?php echo urlencode($languageName); ?>" class="btn btn-sm small bg-secondary-subtle fw-bold"><?php echo $languageName; ?></a>
-                      <a href="#" class="btn btn-sm small bg-body-tertiary fw-bold" disabled><?php echo $languageCount; ?></a>
+                      <a href="index.php?language=<?php echo urlencode($languageName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $languageName; ?></a>
+                      <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo $languageCount; ?></a>
                     </div>
                   </div>
                 </div>
               <?php endif; ?>
-              <div class="mb-2 row">
-                <label for="works" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Works</h6></label>
+              <div class="mb-2 row align-items-center">
+                <label for="works" class="col-3 col-form-label text-nowrap fw-medium">Works</label>
                 <div class="col-9">
-                  <h6 class="form-control-plaintext pt-1 small fw-bold" id="works"><?php echo count($images); ?></h6>
+                  <h6 class="form-control-plaintext fw-bold" id="works"><?php echo count($images); ?></h6>
                 </div>
               </div>
-              <div class="mb-2 row">
-                <label for="pages" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Pages</h6></label>
+              <div class="mb-2 row align-items-center">
+                <label for="pages" class="col-3 col-form-label text-nowrap fw-medium">Pages</label>
                 <div class="col-9">
-                  <h6 class="form-control-plaintext pt-1 small fw-bold" id="pages"><?php echo $total_count; ?></h6>
+                  <h6 class="form-control-plaintext fw-bold" id="pages"><?php echo $total_count; ?></h6>
                 </div>
               </div>
-              <div class="mb-2 row">
-                <label for="views" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Views</h6></label>
+              <div class="mb-2 row align-items-center">
+                <label for="views" class="col-3 col-form-label text-nowrap fw-medium">Views</label>
                 <div class="col-9">
-                  <h6 class="form-control-plaintext pt-1 small fw-bold" id="views"><?php echo $total_view_count; ?></h6>
+                  <h6 class="form-control-plaintext fw-bold" id="views"><?php echo $total_view_count; ?></h6>
                 </div>
               </div>
-              <div class="mb-2 row">
-                <label for="date" class="col-3 col-form-label text-nowrap fw-medium"><h6 class="small">Date</h6></label>
+              <div class="mb-2 row align-items-center">
+                <label for="date" class="col-3 col-form-label text-nowrap fw-medium">Date</label>
                 <div class="col-9">
-                  <h6 class="form-control-plaintext pt-1 small fw-bold" id="date"><?php echo date("l, d F, Y", strtotime($latest_cover['date'])); ?></h6>
+                  <h6 class="form-control-plaintext fw-bold" id="date"><?php echo date("l, d F, Y", strtotime($latest_cover['date'])); ?></h6>
                 </div>
               </div>
               <?php
