@@ -14,7 +14,7 @@
                       $queryParams = array_merge($_GET, ['tag' => $tag]);
                       $tagUrl = '?' . http_build_query($queryParams);
                       ?>
-                      <a href="<?php echo $tagUrl; ?>" class="btn btn-sm fw-medium btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill">
+                      <a href="<?php echo $tagUrl; ?>" class="btn btn-sm fw-medium btn-dark rounded-pill">
                         <?php echo htmlspecialchars($tag); ?>
                       </a>
                       <?php

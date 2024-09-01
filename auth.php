@@ -2,7 +2,7 @@
 session_start();
 
 // Connect to the SQLite database
-$db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
+$defaultDB = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
 
 $toUrl = 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
@@ -17,7 +17,7 @@ if (!isset($_SESSION['email'])) {
       $token = $cookieData['token'];
 
       // Validate the user's session
-      $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+      $stmt = $defaultDB->prepare("SELECT * FROM users WHERE email = :email");
       $stmt->bindValue(':email', $email, SQLITE3_TEXT);
       $result = $stmt->execute();
       $user = $result->fetchArray();
@@ -28,7 +28,7 @@ if (!isset($_SESSION['email'])) {
 
         // Generate a new token and update the database
         $newToken = bin2hex(random_bytes(32));
-        $stmt = $db->prepare("UPDATE users SET token = :newToken WHERE email = :email");
+        $stmt = $defaultDB->prepare("UPDATE users SET token = :newToken WHERE email = :email");
         $stmt->bindValue(':newToken', $newToken, SQLITE3_TEXT);
         $stmt->bindValue(':email', $email, SQLITE3_TEXT);
         $stmt->execute();

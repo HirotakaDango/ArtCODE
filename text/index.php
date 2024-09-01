@@ -10,18 +10,27 @@ $email = $_SESSION['email'];
 $db->exec('CREATE TABLE IF NOT EXISTS texts (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, tags TEXT, date DATETIME, view_count INTEGER DEFAULT 0)');
 $db->exec('CREATE TABLE IF NOT EXISTS text_favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, text_id INTEGER NOT NULL, email TEXT NOT NULL, FOREIGN KEY (text_id) REFERENCES texts(id))');
 
+// Retrieve user ID from the `users` table based on email
+$stmt2 = $db->prepare("SELECT id FROM users WHERE email = :email");
+$stmt2->bindValue(':email', $email, SQLITE3_TEXT);  // Corrected variable binding
+$result2 = $stmt2->execute();
+$row2 = $result2->fetchArray(SQLITE3_ASSOC);
+$user_id2 = $row2['id'] ?? null; // Handle case where user ID might not be found
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Sanitize and validate input
   $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $tags = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
-  $email = $_SESSION['email'];
+
+  // Convert newlines to <br> tags
+  $content = nl2br($content);
 
   // Get current datetime
   $datetime = date('Y/m/d');
 
-  // Insert data into the database
+  // Insert data into the `texts` table
   $stmt = $db->prepare('INSERT INTO texts (email, title, content, tags, date) VALUES (:email, :title, :content, :tags, :date)');
   $stmt->bindValue(':email', $email, SQLITE3_TEXT);
   $stmt->bindValue(':title', $title, SQLITE3_TEXT);
@@ -31,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt->execute();
 
   // Redirect to avoid form resubmission
-  header("Location: {$_SERVER['REQUEST_URI']}");
+  header("Location: /text/?uid=" . $user_id2);
   exit;
 }
 
@@ -161,7 +170,7 @@ $tagFilter = isset($_GET['tag']) ? filter_input(INPUT_GET, 'tag', FILTER_SANITIZ
                 <textarea class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary vh-100" type="text" name="content" id="content" placeholder="Enter description for your image" required></textarea>
                 <label for="content" class="fw-medium">Enter description</label>
               </div>
-              <button type="submit" class="btn btn-primary w-100 fw-medium">Upload</button>
+              <button type="submit" class="btn btn-primary w-100 fw-medium">UPLOAD</button>
             </form>
           </div>
         </div>

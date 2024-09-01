@@ -1,10 +1,10 @@
 <?php
-require_once('../auth.php');
-
 // Connect to the SQLite database
-$db = new SQLite3('../database.sqlite');
+$db = new SQLite3('../../database.sqlite');
 
-$email = $_SESSION['email'];
+// Create tables if not exist
+$db->exec('CREATE TABLE IF NOT EXISTS texts (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, tags TEXT, date DATETIME, view_count INTEGER DEFAULT 0)');
+$db->exec('CREATE TABLE IF NOT EXISTS text_favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, text_id INTEGER NOT NULL, email TEXT NOT NULL, FOREIGN KEY (text_id) REFERENCES texts(id))');
 
 // Get current search and tag parameters
 $searchQuery = isset($_GET['q']) ? filter_input(INPUT_GET, 'q', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW) : '';
@@ -12,7 +12,7 @@ $tagFilter = isset($_GET['tag']) ? filter_input(INPUT_GET, 'tag', FILTER_SANITIZ
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,15 +23,15 @@ $tagFilter = isset($_GET['tag']) ? filter_input(INPUT_GET, 'tag', FILTER_SANITIZ
       } elseif (isset($_GET['tag'])) {
         echo 'Tag: "' . $_GET['tag'] . '"';
       } else {
-        echo 'Favorites';
+        echo 'Text';
       }
       ?>
     </title>
     <link rel="icon" type="image/png" href="/icon/favicon.png">
-    <?php include('../bootstrapcss.php'); ?>
+    <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
-    <?php include('../header.php'); ?>
+    <?php include('../header_preview.php'); ?>
     <div class="container-fluid mt-2">
       <form method="get" action="/text/" class="mb-2 pb-1">
         <div class="input-group">
@@ -41,7 +41,7 @@ $tagFilter = isset($_GET['tag']) ? filter_input(INPUT_GET, 'tag', FILTER_SANITIZ
       </form>
     </div>
     <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         sort by
       </button>
       <ul class="dropdown-menu">
@@ -77,30 +77,33 @@ $tagFilter = isset($_GET['tag']) ? filter_input(INPUT_GET, 'tag', FILTER_SANITIZ
 
       switch ($sort) {
         case 'newest':
-        include "favorite_desc.php";
+        include "index_desc.php";
         break;
         case 'oldest':
-        include "favorite_asc.php";
+        include "index_asc.php";
         break;
         case 'popular':
-        include "favorite_pop.php";
+        include "index_pop.php";
         break;
         case 'view':
-        include "favorite_view.php";
+        include "index_view.php";
         break;
         case 'least':
-        include "favorite_least.php";
+        include "index_least.php";
+        break;
+        case 'liked':
+        include "index_like.php";
         break;
         case 'order_asc':
-        include "favorite_order_asc.php";
+        include "index_order_asc.php";
         break;
         case 'order_desc':
-        include "favorite_order_desc.php";
+        include "index_order_desc.php";
         break;
       }
     }
     else {
-      include "favorite_desc.php";
+      include "index_desc.php";
     }
     
     ?>
@@ -142,6 +145,6 @@ $tagFilter = isset($_GET['tag']) ? filter_input(INPUT_GET, 'tag', FILTER_SANITIZ
       <?php endif; ?>
     </div>
     <div class="mt-5"></div>
-    <?php include('../bootstrapjs.php'); ?>
+    <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>

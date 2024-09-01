@@ -28,9 +28,9 @@ if (!$result || $result['email'] !== $email) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['update'])) {
     // Sanitize and update the text
-    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW) ?: $result['title'];
-    $tags = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW) ?: $result['tags'];
-    $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW) ?: $result['content'];
+    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING) ?: $result['title'];
+    $tags = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_STRING) ?: $result['tags'];
+    $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_STRING) ?: $result['content'];
 
     // Convert newlines to <br> tags
     $content = nl2br($content);
@@ -46,11 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
 
     if ($stmt->execute()) {
-      header('Location: view.php?id=' . $id);
-      exit();
+      echo json_encode(['status' => 'success']);
     } else {
-      echo 'Failed to update text.';
+      echo json_encode(['status' => 'error', 'message' => 'Failed to update text.']);
     }
+    exit();
   } elseif (isset($_POST['delete'])) {
     // Delete the text
     $stmt = $db->prepare('
@@ -77,6 +77,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Edit <?php echo $result['title']; ?></title>
     <link rel="icon" type="image/png" href="/icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#save-button').click(function(e) {
+          e.preventDefault();
+          saveContent();
+        });
+
+        $(document).keydown(function(e) {
+          if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            saveContent();
+          }
+        });
+
+        function saveContent() {
+          $.ajax({
+            url: window.location.href,
+            type: 'POST',
+            data: {
+              update: true,
+              title: $('#title').val(),
+              tags: $('#tags').val(),
+              content: $('#content').val()
+            },
+            success: function(response) {
+              const result = JSON.parse(response);
+              if (result.status === 'success') {
+                alert('Changes saved successfully!');
+              } else {
+                alert('Failed to save changes: ' + result.message);
+              }
+            },
+            error: function() {
+              alert('An error occurred while saving.');
+            }
+          });
+        }
+      });
+    </script>
   </head>
   <body>
     <?php include('../header.php'); ?>
@@ -141,8 +181,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <label for="content" class="fw-medium">Enter description</label>
         </div>
         <div class="btn-group w-100 gap-2">
-          <button type="submit" name="update" class="btn btn-primary fw-medium w-50 rounded">Update</button>
-          <button type="submit" name="delete" class="btn btn-danger fw-medium w-50 rounded" onclick="return confirm('Are you sure you want to delete <?php echo $result['title']; ?>?')">Delete</button>
+          <button type="submit" name="update" class="btn btn-primary fw-medium w-50 rounded" id="save-button">UPDATE</button>
+          <button type="submit" name="delete" class="btn btn-danger fw-medium w-50 rounded" onclick="return confirm('Are you sure you want to delete <?php echo $result['title']; ?>?')">DELETE</button>
         </div>
       </form>
     </div>
