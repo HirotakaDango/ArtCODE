@@ -17,7 +17,7 @@ if (!isset($_SESSION['email'])) {
       $token = $cookieData['token'];
 
       // Validate the user's session
-      $stmt = $defaultDB->prepare("SELECT * FROM users WHERE email = :email");
+      $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
       $stmt->bindValue(':email', $email, SQLITE3_TEXT);
       $result = $stmt->execute();
       $user = $result->fetchArray();
@@ -28,7 +28,7 @@ if (!isset($_SESSION['email'])) {
 
         // Generate a new token and update the database
         $newToken = bin2hex(random_bytes(32));
-        $stmt = $defaultDB->prepare("UPDATE users SET token = :newToken WHERE email = :email");
+        $stmt = $db->prepare("UPDATE users SET token = :newToken WHERE email = :email");
         $stmt->bindValue(':newToken', $newToken, SQLITE3_TEXT);
         $stmt->bindValue(':email', $email, SQLITE3_TEXT);
         $stmt->execute();
@@ -40,12 +40,17 @@ if (!isset($_SESSION['email'])) {
     }
   }
 
-  // If the user is still not authenticated, check if they are trying to access a protected page
-  $protectedPages = ['full_view.php', 'simple_view.php', 'view.php', 'simplest_view.php'];
-  $urlPath = parse_url($toUrl, PHP_URL_PATH);
-  $page = basename($urlPath);
+  // Check if the user is trying to access a protected page
+  $protectedPages = [
+    $_SERVER['DOCUMENT_ROOT'] . '/full_view.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/simple_view.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/view.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/simplest_view.php'
+  ];
+  $currentFilePath = realpath(__FILE__);
+  $requestedFilePath = realpath($_SERVER['DOCUMENT_ROOT'] . parse_url($toUrl, PHP_URL_PATH));
 
-  if (in_array($page, $protectedPages)) {
+  if (in_array($requestedFilePath, $protectedPages)) {
     // Extract the artwork ID from the query parameters
     parse_str(parse_url($toUrl, PHP_URL_QUERY), $queryParams);
     $artworkId = isset($queryParams['artworkid']) ? $queryParams['artworkid'] : '';
