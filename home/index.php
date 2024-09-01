@@ -74,9 +74,7 @@ if (isset($_POST['favorite'])) {
   }
   
   // Redirect to the same page with the appropriate sorting parameter
-  $page = isset($_GET['page']) ? $_GET['page'] : 1; // check if page is set, default to 1
-  $by = isset($_GET['by']) ? $_GET['by'] : 'newest'; // check if by is set, default to newest
-  header('Location: ?by=' . $by . '&page=' . $page);
+  header("Location: {$_SERVER['REQUEST_URI']}");
   exit(); 
   
 } elseif (isset($_POST['unfavorite'])) {
@@ -84,9 +82,7 @@ if (isset($_POST['favorite'])) {
   $db->exec("DELETE FROM favorites WHERE email = '$email' AND image_id = $image_id");
 
   // Redirect to the same page with the appropriate sorting parameter
-  $page = isset($_GET['page']) ? $_GET['page'] : 1; // check if page is set, default to 1
-  $by = isset($_GET['by']) ? $_GET['by'] : 'newest'; // check if by is set, default to newest
-  header('Location: ?by=' . $by . '&page=' . $page);
+  header("Location: {$_SERVER['REQUEST_URI']}");
   exit();
 }
 
