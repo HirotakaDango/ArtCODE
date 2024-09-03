@@ -15,7 +15,7 @@
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/scrolls/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/scrolls/">Scrolls</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/gallerium/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/gallerium/">Gallerium</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis" href="/manga/">Manga</a>
-          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/music/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/music/">Music</a>
+          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/music/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseMusic">Music</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/search/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseKeywords">Keywords</a>
         </div>
@@ -69,10 +69,26 @@
                   <i class="bi bi-journals fs-5"></i>
                   <span class="d-lg-inline">Manga</span>
                 </a>
-                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/music/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/preview/music/">
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/music/') !== false) echo 'opacity-75 shadow'; ?>" data-bs-toggle="collapse" href="#collapseMusic" role="button" aria-expanded="false" aria-controls="collapseExample">
                   <i class="bi bi-vinyl-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none">Music</span>
                 </a>
+              </div>
+              <div class="collapse mt-2" id="collapseMusic">
+                <div class="card card-body rounded-4 border-0 bg-body-tertiary">
+                  <div class="btn-group-vertical gap-2">
+                    <h6 class="fw-bold text-start">Music</h6>
+                    <form action="/preview/music/" method="GET" class="my-3 w-100">
+                      <div class="input-group">
+                        <input type="text" name="q" class="form-control text-lowercase fw-bold rounded-end-0 rounded-4 border-0 bg-body-secondary" placeholder="Search title and artist">
+                        <button type="submit" class="btn bg-body-secondary link-body-emphasis border-0 rounded-start-0 rounded-4"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
+                      </div>
+                    </form>
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/music/?mode=lists&by=newest_lists">Home</a>
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/music/all_artist.php?mode=lists&by=desc_lists">Artists</a>
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/music/all_album.php?mode=lists&by=desc_lists">Albums</a>
+                  </div>
+                </div>
               </div>
               <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 mt-2 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/novel/') !== false) echo 'opacity-75 shadow'; ?>" data-bs-toggle="collapse" href="#collapseKeywords" role="button" aria-expanded="false" aria-controls="collapseExample">
                 <span class="d-md-none d-lg-inline d-lg-none">Keywords</span>
@@ -124,6 +140,31 @@
               <input class="form-control rounded-start-4 border-0 bg-body-tertiary focus-ring focus-ring-light" name="q" type="search" placeholder="Search tags or title (e.g: white, sky)" aria-label="Search">
               <button class="btn rounded-end-4 border-0 bg-body-tertiary" type="submit"><i class="bi bi-search"></i></button>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modalCollapseMusic" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-4 border-0">
+          <div class="d-flex position-relative">
+            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Music</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+          </div>
+          <div class="modal-body">
+            <div class="card-body">
+              <form action="/preview/music/" method="GET" class="mb-3">
+                <div class="input-group">
+                  <input type="text" name="q" class="form-control text-lowercase fw-bold rounded-end-0 rounded-4 border-0 bg-body-tertiary" placeholder="Search title and artist">
+                  <button type="submit" class="btn bg-body-tertiary link-body-emphasis border-0 rounded-start-0 rounded-4"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
+                </div>
+              </form>
+              <div class="btn-group-vertical gap-2">
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/music/?mode=lists&by=newest_lists">Home</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/music/all_artist.php?mode=lists&by=desc_lists">Artists</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/music/all_album.php?mode=lists&by=desc_lists">Albums</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
