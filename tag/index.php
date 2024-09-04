@@ -154,7 +154,7 @@ if (isset($_POST['favorite'])) {
             echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
           } else {
             $by = isset($_GET['by']) ? urlencode($_GET['by']) : 'newest';
-            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=' . $by . 'view&' . $tag . 'page=' . $i . '">' . $i . '</a>';
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="?by=' . $by . '&' . $tag . 'page=' . $i . '">' . $i . '</a>';
           }
         }
       ?>
