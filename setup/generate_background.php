@@ -63,7 +63,7 @@ if (empty($current_pic)) {
   $stmt->execute();
 }
 
-header('Location: set_region.php');
+header('Location: generate_pages.php');
 exit();
 
 $db = null; // Close the PDO connection

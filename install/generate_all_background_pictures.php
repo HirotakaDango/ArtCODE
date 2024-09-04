@@ -70,7 +70,7 @@ foreach ($users as $user) {
   $stmt->execute();
 }
 
-header('Location: /home/');
+header('Location: generate_all_pages.php');
 exit();
 
 $db = null; // Close the PDO connection

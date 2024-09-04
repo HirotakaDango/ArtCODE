@@ -24,11 +24,33 @@ $image = $stmt->fetch();
 $image_id = $image['id'];
 $email = $image['email'];
 
+// Prepare the query to get the user's numpage
+$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindParam(':email', $email, PDO::PARAM_STR);
+$queryNum->execute();
+$user = $queryNum->fetch(PDO::FETCH_ASSOC);
+
+$numpage = $user['numpage'];
+
+// Pagination settings
+$imagesPerPage = empty($numpage) ? 50 : $numpage;
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$start = ($page - 1) * $imagesPerPage;
+
 // Get all child images associated with the current image from the "image_child" table
-$stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :image_id");
+$stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :image_id LIMIT :start, :limit");
 $stmt->bindParam(':image_id', $image_id);
+$stmt->bindValue(':start', $start, PDO::PARAM_INT);
+$stmt->bindValue(':limit', $imagesPerPage, PDO::PARAM_INT);
 $stmt->execute();
 $child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Count the total number of child images
+$stmt = $db->prepare("SELECT COUNT(*) FROM image_child WHERE image_id = :image_id");
+$stmt->bindParam(':image_id', $image_id);
+$stmt->execute();
+$totalImages = $stmt->fetchColumn();
+$totalPages = ceil($totalImages / $imagesPerPage);
 
 function generateThumbnail($filePath, $thumbnailPath) {
   // Ensure the source file exists
@@ -171,29 +193,29 @@ foreach ($child_images as $child_image) {
       function getImageSizeInMB($id) {
         return round(filesize('../images/' . $id) / (1024 * 1024), 2);
       }
-  
+
       // Get the total size of images from 'images' table
       $stmt = $db->prepare("SELECT * FROM images WHERE id = :id");
       $stmt->bindParam(':id', $id);
       $stmt->execute();
       $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  
+
       // Get the total size of images from 'image_child' table
       $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :id");
       $stmt->bindParam(':id', $id);
       $stmt->execute();
       $image_childs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  
+
       $images_total_size = 0;
       foreach ($images as $image) {
         $images_total_size += getImageSizeInMB($image['filename']);
       }
-  
+
       $image_child_total_size = 0;
       foreach ($image_childs as $image_child) {
         $image_child_total_size += getImageSizeInMB($image_child['filename']);
       }
-  
+
       $total_size = $images_total_size + $image_child_total_size;
       ?>
       <?php foreach ($child_images as $child_image) : ?>
@@ -210,7 +232,7 @@ foreach ($child_images as $child_image) {
           $file_info = stat($file_path);
           $image_info = getimagesize($file_path);
           $exif_data = [];
-  
+
           // Check if the file is a supported image type before reading EXIF data
           if ($image_info && $image_info['mime'] === 'image/jpeg') {
             $exif_data = exif_read_data($file_path, 'IFD0', true);
@@ -225,14 +247,14 @@ foreach ($child_images as $child_image) {
             <div class="col-md-6">
               <div class="mt-3">
                 <h5 class="mb-3">Image Metadata</h5>
-  
+
                 <div class="mb-2 row">
                   <label class="col-4 col-form-label text-nowrap fw-medium">Filename</label>
                   <div class="col-8">
                     <input type="text" readonly class="form-control-plaintext fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" value="<?php echo $child_image['filename']; ?>">
                   </div>
                 </div>
-  
+
                 <div class="mb-2 row">
                   <label class="col-4 col-form-label text-nowrap fw-medium">Original</label>
                   <div class="col-8">
@@ -267,11 +289,11 @@ foreach ($child_images as $child_image) {
                     <input type="text" readonly class="form-control-plaintext fw-bold text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" value="<?php echo date("l, d F, Y", $file_info['ctime']); ?>">
                   </div>
                 </div>
-  
-                <a href="replace_image_child.php?id=<?php echo urlencode($_GET['id']); ?>&child_id=<?php echo urlencode($child_image['id']); ?>" class="btn btn-sm mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium">
+
+                <a href="replace_image_child.php?id=<?php echo urlencode($_GET['id']); ?>&child_id=<?php echo urlencode($child_image['id']); ?>&page=<?php echo $_GET['page']; ?>" class="btn btn-sm mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium">
                   Replace Image
                 </a>
-  
+
                 <button type="button" class="btn btn-sm mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium" data-bs-toggle="modal" data-bs-target="#deleteImage_<?php echo urlencode($child_image['id']); ?>">
                   Delete
                 </button>
@@ -308,6 +330,48 @@ foreach ($child_images as $child_image) {
         <?php endif; ?>
       <?php endforeach; ?>
     </div>
+
+    <div class="pagination d-flex gap-1 justify-content-center mt-3">
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => 1])); ?>">
+          <i class="bi text-stroke bi-chevron-double-left"></i>
+        </a>
+      <?php endif; ?>
+
+      <?php if ($page > 1): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>">
+          <i class="bi text-stroke bi-chevron-left"></i>
+        </a>
+      <?php endif; ?>
+
+      <?php
+        // Calculate the range of page numbers to display
+        $startPage = max($page - 2, 1);
+        $endPage = min($page + 2, $totalPages);
+
+        // Display page numbers within the range
+        for ($i = $startPage; $i <= $endPage; $i++) {
+          if ($i === $page) {
+            echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+          } else {
+            echo '<a class="btn btn-sm btn-primary fw-bold" href="' . $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => $i])) . '">' . $i . '</a>';
+          }
+        }
+      ?>
+
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>">
+          <i class="bi text-stroke bi-chevron-right"></i>
+        </a>
+      <?php endif; ?>
+
+      <?php if ($page < $totalPages): ?>
+        <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => $totalPages])); ?>">
+          <i class="bi text-stroke bi-chevron-double-right"></i>
+        </a>
+      <?php endif; ?>
+    </div>
+    <div class="mt-5"></div>
     <style>
       .text-shadow {
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
@@ -318,7 +382,7 @@ foreach ($child_images as $child_image) {
       let imageContainer = document.getElementById("image-container");
 
       // Set the default placeholder image
-      const defaultPlaceholder = "../../icon/bg.png";
+      const defaultPlaceholder = "/icon/bg.png";
 
       if ("IntersectionObserver" in window) {
         let imageObserver = new IntersectionObserver(function(entries, observer) {

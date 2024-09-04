@@ -313,29 +313,35 @@ $db->close();
       });
     
       function handleFiles(files) {
-        // Convert FileList to an array and sort by filename
         var filesArray = Array.from(files).sort(function(a, b) {
           return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
         });
     
-        // Update the input with the sorted files
+        // Limit to 20 files and 20MB
+        if (filesArray.length > 20) {
+          alert('You can only upload up to 20 images.');
+          return;
+        }
+    
+        var totalSize = filesArray.reduce(function(sum, file) {
+          return sum + file.size;
+        }, 0);
+    
+        if (totalSize > 20 * 1024 * 1024) {
+          alert('Total file size cannot exceed 20MB.');
+          return;
+        }
+    
         updateFileInput(filesArray);
     
         var fileCount = filesArray.length;
-        var message = fileCount > 1 ? fileCount + ' images selected' : filesArray[0].name;
+        var message = fileCount + '/20 images selected';
         var messageElement = dropZone.querySelector('p');
         messageElement.textContent = message;
     
         var existingTotalSizeElement = dropZone.querySelector('.total-size');
         if (existingTotalSizeElement) {
           existingTotalSizeElement.remove();
-        }
-    
-        var totalSize = 0;
-    
-        for (var i = 0; i < filesArray.length; i++) {
-          var fileSize = filesArray[i].size;
-          totalSize += fileSize;
         }
     
         var totalSizeInMB = totalSize / (1024 * 1024);
@@ -346,7 +352,7 @@ $db->close();
     
         var totalSizeLabel = document.createElement('small');
         totalSizeLabel.classList.add('fw-medium');
-        totalSizeLabel.textContent = 'Total Images Size: ' + totalSizeText;
+        totalSizeLabel.textContent = 'Total Size: ' + totalSizeText;
     
         totalSizeContainer.appendChild(totalSizeLabel);
         dropZone.appendChild(totalSizeContainer);
@@ -356,11 +362,9 @@ $db->close();
     
       function updateFileInput(sortedFiles) {
         var dataTransfer = new DataTransfer();
-        
         sortedFiles.forEach(file => {
           dataTransfer.items.add(file);
         });
-    
         fileInput.files = dataTransfer.files;
       }
     
@@ -564,12 +568,16 @@ $db->close();
           var fileSize = files[i].size / (1024 * 1024); // Convert to MB
           var fileSizeRounded = Math.round(fileSize * 100) / 100; // Round to 2 decimal places
           var fileSizeText = fileSizeRounded + " MB";
-
+          var fileName = files[i].name;
+        
+          // Truncate filename to 20 characters with ellipsis if necessary
+          var truncatedFileName = fileName.length > 20 ? fileName.substring(0, 17) + '...' : fileName;
+        
           html += `
             <div class="col">
               <div class="position-relative">
                 <div class="ratio ratio-1x1">
-                  <img src="${imgSrc}" class="w-100 rounded object-fit-cover shadow">
+                  <img src="${imgSrc}" class="w-100 rounded object-fit-cover shadow rounded-bottom-0">
                 </div>
                 <span class="badge rounded-1 opacity-75 bg-dark position-absolute bottom-0 start-0 m-2 fw-medium">
                   ${fileSizeText}
@@ -578,6 +586,9 @@ $db->close();
                   <i class="bi bi-info-circle-fill"></i>
                 </button>
               </div>
+              <span class="badge rounded-1 bg-body-tertiary rounded-top-0 w-100 p-3">
+                ${truncatedFileName}
+              </span>
             </div>`;
         }
 

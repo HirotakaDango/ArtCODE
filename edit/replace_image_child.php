@@ -25,13 +25,19 @@ function deletePreviousImages($filename) {
   }
 }
 
-// Retrieve image details
-if (isset($_GET['id'])) {
+// Retrieve image details with title from images table
+if (isset($_GET['id']) && isset($_GET['child_id'])) {
   $id = $_GET['id'];
+  $child_id = $_GET['child_id'];
 
   $email = $_SESSION['email'];
-  $stmt = $db->prepare('SELECT * FROM images WHERE id = :id AND email = :email');
-  $stmt->bindValue(':id', $id);
+  $stmt = $db->prepare('
+    SELECT ic.*, i.title 
+    FROM image_child ic
+    JOIN images i ON ic.image_id = i.id
+    WHERE ic.id = :child_id AND ic.email = :email
+  ');
+  $stmt->bindValue(':child_id', $child_id);
   $stmt->bindValue(':email', $email);
   $result = $stmt->execute();
   $image = $result->fetchArray(SQLITE3_ASSOC);
@@ -43,7 +49,8 @@ if (isset($_GET['id'])) {
     exit();
   }
 } else {
-  header('Location: ?id=' . $id);
+  // Redirect if id or child_id is missing
+  header('Location: all.php?id=' . urlencode($id) . '&child_id=' . urlencode($child_id) . '&page=' . urlencode($_GET['page']));
   exit();
 }
 
@@ -58,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $uploadDir = '../images/' . $dateFolder . '/';
     $thumbnailDir = '../thumbnails/' . $dateFolder . '/';
 
+    // Create directories if they don't exist
     if (!is_dir($uploadDir)) {
       mkdir($uploadDir, 0755, true);
     }
@@ -65,11 +73,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       mkdir($thumbnailDir, 0755, true);
     }
 
-    $uploadFile = $uploadDir . basename($_FILES['image']['name']);
-    $ext = pathinfo($uploadFile, PATHINFO_EXTENSION);
+    $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
     $filename = uniqid() . '.' . $ext;
     $originalFilename = basename($_FILES['image']['name']);
+    $uploadFile = $uploadDir . $filename;
 
+    // Move the uploaded file to the destination directory
     if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
       // Generate thumbnail
       $image_info = getimagesize($uploadFile);
@@ -120,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height);
 
+      // Save the thumbnail
       switch ($ext) {
         case 'jpg':
         case 'jpeg':
@@ -149,13 +159,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       // Update the image details in the database
-      $stmt = $db->prepare('UPDATE images SET filename = :filename, original_filename = :original_filename WHERE id = :id');
-      $stmt->bindValue(':filename', $filename);
-      $stmt->bindValue(':original_filename', $originalFilename);
-      $stmt->bindValue(':id', $id);
+      $stmt = $db->prepare('UPDATE image_child SET filename = :filename, original_filename = :original_filename WHERE id = :child_id');
+      $stmt->bindValue(':filename', $dateFolder . '/' . $filename, SQLITE3_TEXT);
+      $stmt->bindValue(':original_filename', $originalFilename, SQLITE3_TEXT);
+      $stmt->bindValue(':child_id', $child_id, SQLITE3_INTEGER);
       $stmt->execute();
 
-      header('Location: ?id=' . $id);
+      header('Location: all.php?id=' . urlencode($id) . '&child_id=' . urlencode($child_id) . '&page=' . urlencode($_GET['page']));
       exit();
     } else {
       echo 'Error uploading file.';
@@ -217,7 +227,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       function showPreview(event) {
         var fileInput = event.target;
         var previewContainer = document.getElementById("file-preview-container");
-        var coverImage = document.getElementById("coverImage");
 
         if (fileInput.files.length > 0) {
           var img = document.createElement("img");
@@ -229,13 +238,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           previewContainer.innerHTML = "";
           previewContainer.appendChild(img);
         } else {
-          // Show the existing cover image
-          <?php if (!empty($image['filename'])): ?>
-            previewContainer.innerHTML = '<img src="../images/<?php echo $dateFolder . '/' . $image['filename']; ?>" style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover">';
-          <?php else: ?>
-            // If no file is selected, show the default content
+          // Show the existing cover image or default content if no file is selected
+          var currentImage = "<?php echo !empty($image['filename']) ? '../thumbnails/' . htmlspecialchars($image['filename']) : ''; ?>";
+          if (currentImage) {
+            previewContainer.innerHTML = '<img src="' + currentImage + '" style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover">';
+          } else {
             previewContainer.innerHTML = '<div class="text-center"><h6><i class="bi bi-image fs-1"></i></h6><h6>Your image cover here!</h6></div>';
-          <?php endif; ?>
+          }
         }
       }
     </script>

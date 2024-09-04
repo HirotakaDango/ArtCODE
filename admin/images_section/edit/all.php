@@ -4,40 +4,63 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/auth_admin.php');
 requireAdmin();
 
 // Connect to SQLite database
-$db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
+$db = new PDO('sqlite:' . $_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Check if the user is logged in
-session_start();
 if (!isset($_SESSION['admin']['email'])) {
   // Redirect to index.php if not logged in
   header("Location: /admin/");
   exit;
 }
 
+$email = $_SESSION['admin']['email']; // Get the logged-in user's email
+
 // Get the filename from the query string
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Get the current image information from the database
 $stmt = $db->prepare("SELECT * FROM images WHERE id = :id");
-$stmt->bindValue(':id', $id, SQLITE3_TEXT);
-$result = $stmt->execute();
-$image = $result->fetchArray(SQLITE3_ASSOC);
+$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+$stmt->execute();
+$image = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$image) {
-  die("Image not found.");
+  // Handle case where image is not found
+  echo "Image not found.";
+  exit;
 }
 
-// Get the ID of the current image
+// Get the ID of the current image and the email of the owner
 $image_id = $image['id'];
 
+// Prepare the query to get the user's numpage
+$queryNum = $db->prepare('SELECT numpage FROM users WHERE email = :email');
+$queryNum->bindParam(':email', $email, PDO::PARAM_STR);
+$queryNum->execute();
+$user = $queryNum->fetch(PDO::FETCH_ASSOC);
+
+$numpage = $user['numpage'];
+
+// Pagination settings
+$imagesPerPage = empty($numpage) ? 50 : $numpage;
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$start = ($page - 1) * $imagesPerPage;
+
 // Get all child images associated with the current image from the "image_child" table
-$stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :image_id");
-$stmt->bindValue(':image_id', $image_id, SQLITE3_TEXT);
-$result = $stmt->execute();
-$child_images = [];
-while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-  $child_images[] = $row;
-}
+$stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :image_id LIMIT :start, :imagesPerPage");
+$stmt->bindParam(':image_id', $image_id, PDO::PARAM_INT);
+$stmt->bindValue(':start', $start, PDO::PARAM_INT);
+$stmt->bindValue(':imagesPerPage', $imagesPerPage, PDO::PARAM_INT);
+$stmt->execute();
+$child_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Count the total number of child images
+$stmt = $db->prepare("SELECT COUNT(*) FROM image_child WHERE image_id = :image_id");
+$stmt->bindParam(':image_id', $image_id, PDO::PARAM_INT);
+$stmt->execute();
+$totalImages = $stmt->fetchColumn();
+$totalPages = ceil($totalImages / $imagesPerPage);
 
 function generateThumbnail($filePath, $thumbnailPath) {
   // Ensure the source file exists
@@ -340,6 +363,47 @@ foreach ($child_images as $child_image) {
                 <?php endif; ?>
               <?php endforeach; ?>
             </div>
+            <div class="pagination d-flex gap-1 justify-content-center mt-3">
+              <?php if ($page > 1): ?>
+                <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => 1])); ?>">
+                  <i class="bi text-stroke bi-chevron-double-left"></i>
+                </a>
+              <?php endif; ?>
+        
+              <?php if ($page > 1): ?>
+                <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>">
+                  <i class="bi text-stroke bi-chevron-left"></i>
+                </a>
+              <?php endif; ?>
+        
+              <?php
+                // Calculate the range of page numbers to display
+                $startPage = max($page - 2, 1);
+                $endPage = min($page + 2, $totalPages);
+        
+                // Display page numbers within the range
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                  if ($i === $page) {
+                    echo '<span class="btn btn-sm btn-primary active fw-bold">' . $i . '</span>';
+                  } else {
+                    echo '<a class="btn btn-sm btn-primary fw-bold" href="' . $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => $i])) . '">' . $i . '</a>';
+                  }
+                }
+              ?>
+        
+              <?php if ($page < $totalPages): ?>
+                <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>">
+                  <i class="bi text-stroke bi-chevron-right"></i>
+                </a>
+              <?php endif; ?>
+        
+              <?php if ($page < $totalPages): ?>
+                <a class="btn btn-sm btn-primary fw-bold" href="<?php echo $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge($_GET, ['page' => $totalPages])); ?>">
+                  <i class="bi text-stroke bi-chevron-double-right"></i>
+                </a>
+              <?php endif; ?>
+            </div>
+            <div class="mt-5"></div>
           </div>
         </div>
       </div>

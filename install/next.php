@@ -146,7 +146,7 @@ if ($imageCount == 0) {
     $mainImageId = $db->lastInsertId();
 
     // Generate and save child images
-    generateChildImages($mainImageId, 5);
+    generateChildImages($mainImageId, 4);
   }
 
   // Generate 12 images for manga
@@ -191,7 +191,7 @@ if ($imageCount == 0) {
     $mainImageId = $db->lastInsertId();
 
     // Generate and save child images
-    generateChildImages($mainImageId, 5);
+    generateChildImages($mainImageId, 4);
   }
 
   echo "48 gradient images with 10 child images each have been generated and uploaded.";

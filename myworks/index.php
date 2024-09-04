@@ -177,58 +177,59 @@ $fav_count = $fav_result->fetchArray()[0];
         <li><a href="?by=tagged_month&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_month') echo 'active'; ?>">month</a></li>
         <li><a href="?by=tagged_year&tag=<?php echo isset($_GET['tag']) ? $_GET['tag'] : ''; ?>&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'tagged_year') echo 'active'; ?>">year</a></li>
       </ul>
-    </div>  
+    </div>
+    <?php include('all_tags_header.php'); ?>
     <div class="overflow-x-auto container-fluid p-1 mb-2 hide-scrollbar" style="white-space: nowrap; overflow: auto;">
       <a href="?by=<?php echo isset($_GET['by']) ? str_replace('tagged_', '', $_GET['by']) : 'newest'; ?>&page=<?= isset($_GET['page']) ? htmlspecialchars($_GET['page']) : '1'; ?>" class="fw-medium btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill">all images</a>
       <?php
       try {
     
         // SQL query to get the most popular tags and their counts based on the user's email
-        $queryTags = "SELECT SUBSTR(tags, 1, INSTR(tags, ',') - 1) as first_tag, COUNT(*) as tag_count 
-                      FROM images 
-                      WHERE tags LIKE :pattern AND email = :email 
-                      GROUP BY first_tag 
-                      ORDER BY tag_count ASC 
-                      LIMIT 100";
+        $queryTagsMyworks = "SELECT SUBSTR(tags, 1, INSTR(tags, ',') - 1) as first_tag, COUNT(*) as tag_count 
+                            FROM images 
+                            WHERE tags LIKE :patternMyworks AND email = :email 
+                            GROUP BY first_tag 
+                            ORDER BY tag_count ASC 
+                            LIMIT 100";
     
         // Prepare the SQL statement
-        $stmt = $db->prepare($queryTags);
+        $stmtMyworks = $db->prepare($queryTagsMyworks);
     
         // Bind the parameters
-        $pattern = "%,%";
-        $stmt->bindValue(':pattern', $pattern, SQLITE3_TEXT);
+        $patternMyworks = "%,%";
+        $stmtMyworks->bindValue(':patternMyworks', $patternMyworks, SQLITE3_TEXT);
         
         $email = $_SESSION['email']; // Use the user's email
-        $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+        $stmtMyworks->bindValue(':email', $email, SQLITE3_TEXT);
     
         // Execute the query
-        $result = $stmt->execute();
+        $resultMyworks = $stmtMyworks->execute();
     
         // Fetch the results into an array
-        $tags = [];
-        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-          $tags[] = $row;
+        $tagsMyworks = [];
+        while ($rowMyworks = $resultMyworks->fetchArray(SQLITE3_ASSOC)) {
+          $tagsMyworks[] = $rowMyworks;
         }
         
-      } catch (Exception $e) {
+      } catch (Exception $eMyworks) {
         // Handle any database connection or query errors
-        $errorMessage = "Error: " . $e->getMessage();
+        $errorMessageMyworks = "Error: " . $eMyworks->getMessage();
       }
       ?>
-      <?php if (isset($errorMessage)): ?>
+      <?php if (isset($errorMessageMyworks)): ?>
         <div class="alert alert-danger">
-          <?= htmlspecialchars($errorMessage) ?>
+          <?= htmlspecialchars($errorMessageMyworks) ?>
         </div>
       <?php endif; ?>
     
-      <?php if (!empty($tags)): ?>
-        <?php foreach ($tags as $row): ?>
+      <?php if (!empty($tagsMyworks)): ?>
+        <?php foreach ($tagsMyworks as $rowMyworks): ?>
           <?php
-            $firstTag = htmlspecialchars($row['first_tag']);
-            $tagCount = htmlspecialchars($row['tag_count']);
+            $firstTagMyworks = htmlspecialchars($rowMyworks['first_tag']);
+            $tagCountMyworks = htmlspecialchars($rowMyworks['tag_count']);
           ?>
-          <a class="fw-medium btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill" style="margin-right: 2px;" href="?by=<?php echo isset($_GET['by']) ? (strpos($_GET['by'], 'tagged_') === false ? 'tagged_' . $_GET['by'] : $_GET['by']) : 'newest'; ?>&tag=<?= urlencode($firstTag) ?>">
-            <i class="bi bi-tags-fill"></i> <?= $firstTag ?>
+          <a class="fw-medium btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill" style="margin-right: 2px;" href="?by=<?php echo isset($_GET['by']) ? (strpos($_GET['by'], 'tagged_') === false ? 'tagged_' . $_GET['by'] : $_GET['by']) : 'newest'; ?>&tag=<?= urlencode($firstTagMyworks) ?>">
+            <i class="bi bi-tags-fill"></i> <?= $firstTagMyworks ?>
           </a>
         <?php endforeach; ?>
       <?php endif; ?>
