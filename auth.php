@@ -66,4 +66,53 @@ if (!isset($_SESSION['email'])) {
     exit;
   }
 }
+
+// Check if the user is logged in
+if (isset($_SESSION['email'])) {
+
+  // Get the user's email
+  $email = $_SESSION['email'];
+
+  // Connect to the SQLite database
+  $db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . '/database.sqlite');
+
+  // Prepare the SQL statement to check the 'verified' status
+  $stmt = $db->prepare('SELECT verified FROM users WHERE email = :email');
+  $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+  $result = $stmt->execute();
+
+  // Fetch the result
+  $row = $result->fetchArray(SQLITE3_ASSOC);
+  $verified = $row ? $row['verified'] : null;
+
+  // List of restricted upload pages
+  $restrictedUploadPages = [
+    $_SERVER['DOCUMENT_ROOT'] . '/upload/',
+    $_SERVER['DOCUMENT_ROOT'] . '/import/',
+    $_SERVER['DOCUMENT_ROOT'] . '/feeds/music/upload.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/feeds/minutes/upload.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/feeds/novel/upload.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/feeds/novel/upload_chapter.php',
+  ];
+
+  // Get the current script's path
+  $currentPage = $_SERVER['SCRIPT_FILENAME'];
+
+  // Check if the user is trying to access a restricted upload page
+  foreach ($restrictedUploadPages as $restrictedPage) {
+    if (strpos($currentPage, $restrictedPage) !== false) {
+      // If the user is not verified, redirect to the verification page
+      if (empty($verified) || strtolower($verified) === 'no') {
+        header('Location: /verification/');
+        exit();
+      }
+    }
+  }
+
+  $db->close();
+
+} else {
+  // If the user is not logged in, you can redirect them to a login page or handle it differently
+  die('User not logged in.');
+}
 ?>

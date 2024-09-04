@@ -30,7 +30,7 @@ if ($row === false || $row['numpage'] === null) {
 }
 
 // Redirect to a confirmation page or wherever you need
-header('Location: welcome.php');
+header('Location: generate_verification_code.php');
 exit();
 
 $db = null; // Close the PDO connection

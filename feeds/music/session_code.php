@@ -2,15 +2,16 @@
 session_start();
 
 // Connect to the SQLite database
-$db = new SQLite3('../../database.sqlite');
+$db = new SQLite3('../database.sqlite');
 
 // Create the users table if it doesn't exist
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other, region TEXT, joined DATETIME, born DATETIME, numpage TEXT, display TEXT, message_1 TEXT, message_2 TEXT, message_3 TEXT, message_4 TEXT)");
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other TEXT, region TEXT, joined DATETIME, born DATETIME, numpage TEXT, display TEXT, message_1 TEXT, message_2 TEXT, message_3 TEXT, message_4 TEXT, mode TEXT, verified TEXT, verification_code TEXT)");
 $stmt->execute();
- 
+
 if (isset($_POST['login'])) {
   $email = filter_var($_POST['email'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $password = filter_var($_POST['password'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
+  $toUrl = filter_var($_POST['tourl'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
 
   // Check if the email and password fields are not empty
   if (empty($email) || empty($password)) {
@@ -39,8 +40,9 @@ if (isset($_POST['login'])) {
       $stmt->bindValue(':email', $email, SQLITE3_TEXT);
       $stmt->execute();
     
-      // Redirect the user to the homepage
-      header("Location: ../music/?mode=lists&by=newest_lists");
+      // Redirect the user to the URL from `tourl` or to /feeds/music/ if `tourl` is empty
+      $redirectUrl = empty($toUrl) ? '/feeds/music/' : urldecode($toUrl);
+      header("Location: " . $redirectUrl);
       exit;
     } else {
       echo '
@@ -120,8 +122,8 @@ if (isset($_POST['login'])) {
     // Store the email in the session for future use
     $_SESSION['email'] = $email;
 
-    // Redirect the user to the homepage
-    header("Location: ../../regrg.php");
+    // Redirect the user to the tutorials
+    header("Location: /tutorials/");
     exit;
   }
 } else {
@@ -154,7 +156,7 @@ if (isset($_POST['login'])) {
         session_destroy();
         setcookie('session_id', '', time() - 3600, '/');
         setcookie('token', '', time() - 3600, '/');
-        header("Location: login.php");
+        header("Location: /session.php");
         exit;
       }
     }

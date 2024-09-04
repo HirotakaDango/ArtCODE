@@ -89,16 +89,26 @@ try {
         }
 
         // Create a user table if it does not exist
-        $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other TEXT, region TEXT, joined DATETIME, born DATETIME, numpage TEXT, display TEXT, message_1 TEXT, message_2 TEXT, message_3 TEXT, message_4 TEXT, mode TEXT)");
+        $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, artist TEXT, pic TEXT, desc TEXT, bgpic TEXT, token TEXT, twitter TEXT, pixiv TEXT, other TEXT, region TEXT, joined DATETIME, born DATETIME, numpage TEXT, display TEXT, message_1 TEXT, message_2 TEXT, message_3 TEXT, message_4 TEXT, mode TEXT, verified TEXT, verification_code TEXT)");
         $stmt->execute();
         
+        // Function to generate a unique verification code
+        function generateVerificationCode($length = 20) {
+          return bin2hex(random_bytes($length / 2)); // Generates a secure random string
+        }
+        
+        // Generate a unique verification code
+        $verificationCode = generateVerificationCode();
+        
         // Insert the new user
-        $stmt = $db->prepare("INSERT INTO users (email, password, artist, numpage, region) VALUES (:email, :password, :artist, :numpage, :region)");
+        $stmt = $db->prepare("INSERT INTO users (email, password, artist, numpage, region, verified, verification_code) VALUES (:email, :password, :artist, :numpage, :region, :verified, :verification_code)");
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->bindValue(':password', $password, PDO::PARAM_STR); // Store plain password (consider hashing passwords for security)
         $stmt->bindValue(':artist', $artist, PDO::PARAM_STR);
         $stmt->bindValue(':numpage', 12, PDO::PARAM_INT); // Setting the page number to 12
         $stmt->bindValue(':region', 'Japan', PDO::PARAM_STR); // Setting the region to Japan
+        $stmt->bindValue(':verified', 'yes', PDO::PARAM_STR); // Setting the verified status to 'yes'
+        $stmt->bindValue(':verification_code', $verificationCode, PDO::PARAM_STR); // Setting the verification code
         $stmt->execute();
 
         // Insert into episode table
