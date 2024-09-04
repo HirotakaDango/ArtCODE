@@ -577,7 +577,7 @@ $db->close();
             <div class="col">
               <div class="position-relative">
                 <div class="ratio ratio-1x1">
-                  <img src="${imgSrc}" class="w-100 rounded object-fit-cover shadow rounded-bottom-0">
+                  <img src="${imgSrc}" class="w-100 rounded object-fit-cover rounded-bottom-0">
                 </div>
                 <span class="badge rounded-1 opacity-75 bg-dark position-absolute bottom-0 start-0 m-2 fw-medium">
                   ${fileSizeText}
@@ -586,7 +586,7 @@ $db->close();
                   <i class="bi bi-info-circle-fill"></i>
                 </button>
               </div>
-              <span class="badge rounded-1 bg-body-tertiary rounded-top-0 w-100 p-3">
+              <span class="badge rounded-1 bg-body-secondary rounded-top-0 w-100 p-3 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
                 ${truncatedFileName}
               </span>
             </div>`;

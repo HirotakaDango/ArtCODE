@@ -142,7 +142,7 @@ require_once('../auth.php');
                     </div>
                     <div class="col-md-6 ps-md-1">
                       <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="language" aria-label="Large select example" required>
-                        <option value="None" selected>None</option>
+                        <option>Choose Language</option>
                         <option value="English">English</option>
                         <option value="Japanese">Japanese</option>
                         <option value="Chinese">Chinese</option>
@@ -151,6 +151,7 @@ require_once('../auth.php');
                         <option value="Indonesian">Indonesian</option>
                         <option value="Spanish">Spanish</option>
                         <option value="Other">Other</option>
+                        <option value="None">None</option>
                       </select>
                     </div>
                   </div>
@@ -516,7 +517,7 @@ require_once('../auth.php');
             <div class="col">
               <div class="position-relative">
                 <div class="ratio ratio-1x1">
-                  <img src="${imgSrc}" class="w-100 rounded object-fit-cover shadow rounded-bottom-0">
+                  <img src="${imgSrc}" class="w-100 rounded object-fit-cover rounded-bottom-0">
                 </div>
                 <span class="badge rounded-1 opacity-75 bg-dark position-absolute bottom-0 start-0 m-2 fw-medium">
                   ${fileSizeText}
@@ -525,7 +526,7 @@ require_once('../auth.php');
                   <i class="bi bi-info-circle-fill"></i>
                 </button>
               </div>
-              <span class="badge rounded-1 bg-body-tertiary rounded-top-0 w-100 p-3">
+              <span class="badge rounded-1 bg-body-secondary rounded-top-0 w-100 p-3 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
                 ${truncatedFileName}
               </span>
             </div>`;
