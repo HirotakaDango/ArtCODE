@@ -50,7 +50,7 @@ require_once('../auth.php');
           </div>
         </div>
         <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
             <div class="modal-content rounded-4 shadow border-0">
               <div class="modal-header border-0">
                 <h1 class="modal-title fw-medium fs-5" id="exampleModalLabel">Upload</h1>
@@ -59,34 +59,35 @@ require_once('../auth.php');
               <div class="modal-body">
                 <form id="upload-form" enctype="multipart/form-data">
                   <div class="form-floating mb-2">
-                    <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
+                    <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" name="title" id="title" placeholder="Enter title for your image" maxlength="500" required>  
                     <label for="title" class="fw-medium">Enter title for your image</label>
                   </div>
                   <div class="form-floating mb-2">
-                    <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="500" required>  
+                    <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" name="tags" id="tags" placeholder="Enter tags for your image" maxlength="500" required>  
                     <label for="tags" class="fw-medium">Enter tags for your image</label>
                   </div>
                   <div class="form-floating mb-2">
-                    <textarea class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="5000" style="height: 200px;" required></textarea>
+                    <textarea class="form-control rounded-3 fw-medium border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" name="imgdesc" id="imgdesc" placeholder="Enter description for your image" maxlength="5000" style="height: 200px;" required></textarea>
                     <label for="imgdesc" class="fw-medium">Enter description</label>
                   </div>
-                  <h6 class="fw-medium mb-2 mt-4">Group is optional, to displaying group names for <a class="text-decoration-none fw-medium" href="/manga/?group=">manga section only!</a></h6>
+                  <h6 class="fw-medium mb-2 mt-4">Group is optional, to displaying group names for <a class="text-decoration-none fw-medium" target="_blank" href="/manga/?group=">manga section only!</a></h6>
                   <div class="form-floating mb-2">
-                    <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="group" id="group" placeholder="Enter group for your image" maxlength="4500">  
+                    <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" name="group" id="group" placeholder="Enter group for your image" maxlength="4500">  
                     <label for="group" class="fw-medium">Enter group for your image</label>
                   </div>
-                  <h6 class="fw-medium mb-2 mt-4">Characters is optional, to displaying character names for <a class="text-decoration-none fw-medium" href="/manga/?character=">manga section only!</a></h6>
+                  <h6 class="fw-medium mb-2 mt-4">Characters is optional, to displaying character names for <a class="text-decoration-none fw-medium" target="_blank" href="/manga/?character=">manga section only!</a></h6>
                   <div class="form-floating mb-2">
-                    <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="characters" id="characters" placeholder="Enter characters for your image" maxlength="4500">  
+                    <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" name="characters" id="characters" placeholder="Enter characters for your image" maxlength="4500">  
                     <label for="characters" class="fw-medium">Enter characters for your image</label>
                   </div>
-                  <h6 class="fw-medium mb-2 mt-4">Parodies is optional, to displaying fiction names for <a class="text-decoration-none fw-medium" href="/manga/?parody=">manga section only!</a></h6>
+                  <h6 class="fw-medium mb-2 mt-4">Parodies is optional, to displaying fiction names for <a class="text-decoration-none fw-medium" target="_blank" href="/manga/?parody=">manga section only!</a></h6>
                   <div class="form-floating mb-4">
-                    <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="parodies" id="parodies" placeholder="Enter parodies for your image" maxlength="4500">  
+                    <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" name="parodies" id="parodies" placeholder="Enter parodies for your image" maxlength="4500">  
                     <label for="parodies" class="fw-medium">Enter parodies for your image</label>
                   </div>
-                  <div class="form-floating mb-2">
-                    <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium py-0 text-start" name="episode_name">
+                  <h6 class="fw-medium mb-2 mt-4">Episode name is optional, to displaying manga title names for <a class="text-decoration-none fw-medium" target="_blank" href="/manga/">manga section only!</a></h6>
+                  <div class="form-floating mb-4">
+                    <select class="form-select border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium py-0 text-start" name="episode_name">
                       <option class="form-control" value="">Add episode:</option>
                       <?php
                         // Connect to the SQLite database
@@ -111,23 +112,23 @@ require_once('../auth.php');
                       ?>
                     </select>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6 pe-md-1">
-                      <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="artwork_type" aria-label="Large select example" required>
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <select class="form-select border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium mb-2" style="height: 58px;" name="artwork_type" aria-label="Large select example" required>
                         <option value="illustration" selected>Illustration</option>
                         <option value="manga">Manga</option>
                       </select>
                     </div>
-                    <div class="col-md-6 ps-md-1">
-                      <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="type" aria-label="Large select example" required>
+                    <div class="col-md-6">
+                      <select class="form-select border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium mb-2" style="height: 58px;" name="type" aria-label="Large select example" required>
                         <option value="safe" selected>Safe For Works</option>
                         <option value="nsfw">NSFW/R-18</option>
                       </select>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6 pe-md-1">
-                      <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="categories" aria-label="Large select example" required>
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <select class="form-select border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium mb-2" style="height: 58px;" name="categories" aria-label="Large select example" required>
                         <option value="artworks/illustrations" selected>artworks/illustrations</option>
                         <option value="3DCG">3DCG</option>
                         <option value="real">real</option>
@@ -140,8 +141,8 @@ require_once('../auth.php');
                         <option value="doujinshi">doujinshi</option>
                       </select>
                     </div>
-                    <div class="col-md-6 ps-md-1">
-                      <select class="form-select border-0 bg-body-tertiary shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="language" aria-label="Large select example" required>
+                    <div class="col-md-6">
+                      <select class="form-select border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium mb-2" style="height: 58px;" name="language" aria-label="Large select example" required>
                         <option>Choose Language</option>
                         <option value="English">English</option>
                         <option value="Japanese">Japanese</option>
@@ -156,7 +157,7 @@ require_once('../auth.php');
                     </div>
                   </div>
                   <div class="form-floating mb-2">
-                    <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
+                    <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary shadow focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" name="link" id="link" placeholder="Enter link for your image" maxlength="300">  
                     <label for="link" class="fw-medium">Enter link for your image</label>
                   </div>
                   <button class="btn btn-lg btn-primary fw-medium w-100" id="upload-button" type="submit">UPLOAD</button>
@@ -164,6 +165,7 @@ require_once('../auth.php');
                 <div id="progress-bar-container" class="progress fw-medium" style="height: 45px; display: none;">
                   <div id="progress-bar" class="progress-bar progress-bar-animated" style="height: 45px;" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
+                <div id="progress-info" class="mt-2 fw-medium"></div>
               </div>
             </div>
           </div>
@@ -179,7 +181,7 @@ require_once('../auth.php');
     <div class="mt-5"></div>
     <!-- Metadata Modal -->
     <div class="modal fade" id="metadataModal" tabindex="-1" aria-labelledby="metadataModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content rounded-4 shadow border-0">
           <div class="modal-header border-0">
             <h5 class="modal-title fw-medium" id="metadataModalLabel">Image Metadata</h5>
@@ -228,6 +230,7 @@ require_once('../auth.php');
       var uploadForm = document.getElementById('upload-form');
       var progressBarContainer = document.getElementById('progress-bar-container');
       var progressBar = document.getElementById('progress-bar');
+      var progressInfo = document.getElementById('progress-info');
       var uploadButton = document.getElementById('upload-button');
     
       dropZone.addEventListener('dragover', function(e) {
@@ -316,25 +319,51 @@ require_once('../auth.php');
     
       function uploadFiles(files) {
         var formData = new FormData(uploadForm);
-    
         for (var i = 0; i < files.length; i++) {
           formData.append('image[]', files[i]);
         }
-    
+      
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'upload.php');
+      
+        var startTime;
+        var totalBytes = 0;
+        var uploadedBytes = 0;
+        var progressInfo = document.getElementById('progress-info');
+      
         xhr.upload.addEventListener('progress', function(e) {
-          var percent = Math.round((e.loaded / e.total) * 100);
-          progressBar.style.width = percent + '%';
-          progressBar.textContent = percent + '%';
+          if (e.lengthComputable) {
+            if (!startTime) {
+              startTime = Date.now();
+              totalBytes = e.total;
+            }
+            uploadedBytes = e.loaded;
+      
+            var percent = Math.round((uploadedBytes / totalBytes) * 100);
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+      
+            var elapsedTime = (Date.now() - startTime) / 1000; // in seconds
+            var uploadSpeed = uploadedBytes / elapsedTime / 1024; // kb/s
+            var remainingBytes = totalBytes - uploadedBytes;
+            var estimatedTimeLeft = (remainingBytes / (uploadSpeed * 1024)).toFixed(1); // in seconds
+      
+            progressInfo.innerHTML = `
+              Upload Speed: ${uploadSpeed.toFixed(1)} kb/s<br>
+              Time Left: ${Math.max(0, Math.ceil(estimatedTimeLeft))} s
+            `;
+          }
         });
-    
+      
         xhr.onreadystatechange = function() {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             progressBarContainer.style.display = 'none';
             uploadButton.style.display = 'block';
             uploadButton.disabled = false;
-    
+      
+            // Hide progress info
+            progressInfo.style.display = 'none';
+      
             if (xhr.status === 200) {
               showSuccessMessage();
             } else {
@@ -342,12 +371,13 @@ require_once('../auth.php');
             }
           }
         };
-    
+      
         xhr.send(formData);
         progressBarContainer.style.display = 'block';
         uploadButton.style.display = 'none';
+        progressInfo.style.display = 'block'; // Show progress info during upload
       }
-
+    
       function showSuccessMessage() {
         // Hide the modal
         var uploadModal = document.getElementById('uploadModal');
@@ -364,7 +394,7 @@ require_once('../auth.php');
         toast.setAttribute('aria-atomic', 'true');
       
         var toastHeader = document.createElement('div');
-        toastHeader.classList.add('toast-header');
+        toastHeader.classList.add('toast-header', 'border-0');
       
         var toastTitle = document.createElement('strong');
         toastTitle.classList.add('me-auto');
@@ -392,7 +422,7 @@ require_once('../auth.php');
         var goToHomeButton = document.createElement('a');
         goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToHomeButton.textContent = 'Go to Home';
-        goToHomeButton.href = '../?by=newest';
+        goToHomeButton.href = '/';
       
         var goToProfileButton = document.createElement('a');
         goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
@@ -445,7 +475,7 @@ require_once('../auth.php');
         toast.setAttribute('aria-atomic', 'true');
       
         var toastHeader = document.createElement('div');
-        toastHeader.classList.add('toast-header');
+        toastHeader.classList.add('toast-header', 'border-0');
       
         var toastTitle = document.createElement('strong');
         toastTitle.classList.add('me-auto');
@@ -487,22 +517,22 @@ require_once('../auth.php');
         var toastElement = new bootstrap.Toast(toast);
         toastElement.show();
       }
-
+    
       function showPreview(files) {
         var container = document.getElementById("preview-container");
         container.innerHTML = "";
-
+    
         // Add Bootstrap row classes to the container
         container.className = "row g-1 container-fluid mx-auto mb-3";
-
+    
         if (window.innerWidth >= 768) {
           container.classList.add("row-cols-6");
         } else {
           container.classList.add(files.length > 1 ? "row-cols-2" : "row-col-1");
         }
-
+    
         var html = '';
-
+    
         for (var i = 0; i < files.length; i++) {
           var imgSrc = URL.createObjectURL(files[i]);
           var fileSize = files[i].size / (1024 * 1024); // Convert to MB
@@ -514,93 +544,173 @@ require_once('../auth.php');
           var truncatedFileName = fileName.length > 20 ? fileName.substring(0, 17) + '...' : fileName;
         
           html += `
-            <div class="col">
-              <div class="position-relative">
-                <div class="ratio ratio-1x1">
-                  <img src="${imgSrc}" class="w-100 rounded object-fit-cover rounded-bottom-0">
-                </div>
-                <span class="badge rounded-1 opacity-75 bg-dark position-absolute bottom-0 start-0 m-2 fw-medium">
-                  ${fileSizeText}
-                </span>
-                <button class="btn btn-sm opacity-75 btn-dark position-absolute top-0 end-0 m-2">
-                  <i class="bi bi-info-circle-fill"></i>
-                </button>
+            <div class="col position-relative">
+              <div class="ratio ratio-1x1">
+                <img src="${imgSrc}" class="w-100 rounded object-fit-cover rounded-bottom-0">
               </div>
-              <span class="badge rounded-1 bg-body-secondary rounded-top-0 w-100 p-3 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
-                ${truncatedFileName}
-              </span>
+              <button class="btn btn-sm border-0 position-absolute top-0 end-0 m-1" id="remove-image-${i}" data-index="${i}">
+                <i class="bi bi-x-lg text-danger" style="-webkit-text-stroke: 1.5px;"></i>
+              </button>
+              <div class="rounded-1 d-flex align-items-center bg-body-secondary rounded-top-0 w-100 p-3 pb-2 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
+                <div class="my-auto">
+                  <h6 class="fw-medium small">${truncatedFileName}</h6>
+                  <h6 class="fw-medium small">${fileSizeText}</h6>
+                  <button class="btn btn-sm fw-medium border-0 p-0 m-0" id="view-info-${i}" data-index="${i}">
+                    view more info
+                  </button>
+                </div>
+              </div>
             </div>`;
         }
-
+    
         container.innerHTML = html;
-
+    
         // Add click event listeners after the HTML has been inserted
-        var images = container.querySelectorAll('img');
-        var infoButtons = container.querySelectorAll('button');
-
-        images.forEach((img, index) => {
-          img.addEventListener("click", function () {
+        var infoButtons = container.querySelectorAll('button[id^="view-info-"]');
+        infoButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            var index = parseInt(this.getAttribute('data-index'), 10);
             displayMetadata(files[index]);
           });
         });
-
-        infoButtons.forEach((button, index) => {
-          button.addEventListener("click", function () {
-            displayMetadata(files[index]);
+    
+        // Add event listener for remove buttons
+        var removeButtons = container.querySelectorAll('button[id^="remove-image-"]');
+        removeButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            var index = parseInt(this.getAttribute('data-index'), 10);
+            removeFile(index);
           });
         });
       }
-
+    
+      function removeFile(index) {
+        var files = Array.from(fileInput.files);
+        files.splice(index, 1); // Remove file at index
+        updateFileInput(files); // Update the file input with the new file list
+        showPreview(files); // Update the preview
+    
+        // Update file count message
+        var fileCount = files.length;
+        var message = fileCount + '/20 images selected';
+        var messageElement = dropZone.querySelector('p');
+        messageElement.textContent = message;
+    
+        // Recalculate and update total size
+        var totalSize = files.reduce(function(sum, file) {
+          return sum + file.size;
+        }, 0);
+    
+        var existingTotalSizeElement = dropZone.querySelector('.total-size');
+        if (existingTotalSizeElement) {
+          existingTotalSizeElement.remove();
+        }
+    
+        var totalSizeInMB = totalSize / (1024 * 1024);
+        var totalSizeText = Math.round(totalSizeInMB * 100) / 100 + ' MB';
+    
+        var totalSizeContainer = document.createElement('div');
+        totalSizeContainer.classList.add('total-size');
+    
+        var totalSizeLabel = document.createElement('small');
+        totalSizeLabel.classList.add('fw-medium');
+        totalSizeLabel.textContent = 'Total Size: ' + totalSizeText;
+    
+        totalSizeContainer.appendChild(totalSizeLabel);
+        dropZone.appendChild(totalSizeContainer);
+      }
+    
       function displayMetadata(file) {
         var metadataContainer = document.getElementById("metadata-container");
         metadataContainer.innerHTML = "";
-  
+    
         var fileName = file.name;
         var fileSize = file.size / (1024 * 1024); // Convert to MB
         var fileSizeRounded = Math.round(fileSize * 100) / 100; // Round to 2 decimal places
         var fileSizeText = fileSizeRounded + " MB";
         var fileType = file.type;
-
+    
+        // Create row for image
+        var imgRow = document.createElement('div');
+        imgRow.classList.add('row', 'g-4');
+    
+        // Image column
+        var imgCol = document.createElement('div');
+        imgCol.classList.add('col-md-6');
+    
         // Image
         var img = new Image();
         img.src = URL.createObjectURL(file);
-        img.classList.add('rounded', 'mb-3');
-        img.style.width = '100%'; // Set width to 100%
-        metadataContainer.appendChild(img);
-
+        img.classList.add('rounded', 'mb-3', 'mb-md-0', 'w-100', 'shadow');
+        imgCol.appendChild(img);
+        imgRow.appendChild(imgCol);
+    
+        // Metadata column
+        var metadataCol = document.createElement('div');
+        metadataCol.classList.add('col-md-6');
+    
         // Image Name
         var fileNameElement = createMetadataElement('Image Name', fileName);
-        metadataContainer.appendChild(fileNameElement);
-
+        metadataCol.appendChild(fileNameElement);
+    
         // Image Size
         var fileSizeElement = createMetadataElement('Image Size', fileSizeText);
-        metadataContainer.appendChild(fileSizeElement);
-
+        metadataCol.appendChild(fileSizeElement);
+    
         // Image Type
         var fileTypeElement = createMetadataElement('Image Type', fileType);
-        metadataContainer.appendChild(fileTypeElement);
-
+        metadataCol.appendChild(fileTypeElement);
+    
         // Image Date
         var imageDateElement = createMetadataElement('Image Date', formatDate(file.lastModifiedDate));
-        metadataContainer.appendChild(imageDateElement);
-
+        metadataCol.appendChild(imageDateElement);
+    
         // Image Resolution
-        var img = new Image();
-        img.src = URL.createObjectURL(file);
-        img.onload = function () {
-          var imageResolutionElement = createMetadataElement('Image Resolution', this.naturalWidth + 'x' + this.naturalHeight);
-          metadataContainer.appendChild(imageResolutionElement);
+        var imgResolutionElement = document.createElement('div');
+        imgResolutionElement.classList.add('mb-3', 'row', 'g-2');
+    
+        var resolutionLabel = document.createElement('label');
+        resolutionLabel.classList.add('col-sm-4', 'col-form-label', 'text-nowrap', 'fw-medium');
+        resolutionLabel.innerText = 'Image Resolution';
+        imgResolutionElement.appendChild(resolutionLabel);
+    
+        var resolutionValue = document.createElement('div');
+        resolutionValue.classList.add('col-sm-8');
+        var resolutionInput = document.createElement('input');
+        resolutionInput.classList.add('form-control-plaintext', 'fw-medium');
+        resolutionInput.type = 'text';
+        resolutionInput.readOnly = true;
+        resolutionValue.appendChild(resolutionInput);
+        imgResolutionElement.appendChild(resolutionValue);
+    
+        metadataCol.appendChild(imgResolutionElement);
+    
+        // Load image resolution
+        var imgForResolution = new Image();
+        imgForResolution.src = URL.createObjectURL(file);
+        imgForResolution.onload = function () {
+          resolutionInput.value = this.naturalWidth + 'x' + this.naturalHeight;
         };
-
+    
+        // Append metadata column to row
+        imgRow.appendChild(metadataCol);
+    
+        // Append row to container
+        metadataContainer.appendChild(imgRow);
+    
+        // Show Modal
+        var modal = new bootstrap.Modal(document.getElementById("metadataModal"));
+        modal.show();
+    
         function createMetadataElement(label, value) {
           var div = document.createElement('div');
-          div.classList.add('mb-3', 'row');
-
+          div.classList.add('mb-3', 'row', 'g-2');
+    
           var labelElement = document.createElement('label');
           labelElement.classList.add('col-sm-4', 'col-form-label', 'text-nowrap', 'fw-medium');
           labelElement.innerText = label;
           div.appendChild(labelElement);
-
+    
           var valueElement = document.createElement('div');
           valueElement.classList.add('col-sm-8');
           var inputElement = document.createElement('input');
@@ -610,130 +720,14 @@ require_once('../auth.php');
           inputElement.readOnly = true;
           valueElement.appendChild(inputElement);
           div.appendChild(valueElement);
-
-          return div;
-        }
-
-        // JFIF Version
-        var jfifVersionElement = createMetadataElementAsync('JFIF Version', function(callback) {
-          getJfifVersion(file, function(jfifVersion) {
-            callback('JFIF Version' + jfifVersion);
-          });
-        });
-        metadataContainer.appendChild(jfifVersionElement);
-
-        // PNG Version
-        var pngVersionElement = createMetadataElementAsync('PNG Version', function(callback) {
-          getPngVersion(file, function(pngVersion) {
-            callback('PNG Version' + pngVersion);
-          });
-        });
-        metadataContainer.appendChild(pngVersionElement);
-
-        // GIF Version
-        var gifVersionElement = createMetadataElementAsync('GIF Version', function(callback) {
-          getGifVersion(file, function(gifVersion) {
-            callback('GIF Version' + gifVersion);
-          });
-        });
-        metadataContainer.appendChild(gifVersionElement);
-
-        // Show Modal
-        var modal = new bootstrap.Modal(document.getElementById("metadataModal"));
-        modal.show();
-
-        function createMetadataElementAsync(label, valueCallback) {
-          var div = document.createElement('div');
-          div.classList.add('mb-3', 'row');
-
-          var labelElement = document.createElement('label');
-          labelElement.classList.add('col-sm-4', 'col-form-label', 'text-nowrap', 'fw-medium');
-          labelElement.innerText = label;
-          div.appendChild(labelElement);
-
-          var valueElement = document.createElement('div');
-          valueElement.classList.add('col-sm-8');
-          var inputElement = document.createElement('input');
-          inputElement.classList.add('form-control-plaintext', 'fw-medium');
-          inputElement.type = 'text';
-
-          // Call the valueCallback to get the asynchronous value
-          valueCallback(function(value) {
-            inputElement.value = value;
-          });
-
-          inputElement.readOnly = true;
-          valueElement.appendChild(inputElement);
-          div.appendChild(valueElement);
-
+    
           return div;
         }
       }
-  
+    
       function formatDate(date) {
         var options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
         return date.toLocaleDateString(undefined, options);
-      }
-  
-      function getJfifVersion(file, callback) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var view = new DataView(e.target.result);
-          if (view.getUint16(0, false) !== 0xFFD8) {
-            callback("Not a valid JPEG file.");
-            return;
-          }
-  
-          var offset = 2;
-          var marker;
-          while (offset < view.byteLength) {
-            marker = view.getUint16(offset, false);
-            if (marker === 0xFFE0) {
-              if (view.getUint32(offset + 4, false) === 0x4A464946) {
-                var majorVersion = view.getUint8(offset + 9);
-                var minorVersion = view.getUint8(offset + 10);
-                callback(majorVersion + "." + minorVersion);
-                return;
-              }
-            }
-            offset += 2 + view.getUint16(offset + 2, false);
-          }
-  
-          callback("Unknown");
-        };
-        reader.readAsArrayBuffer(file);
-      }
-
-      function getPngVersion(file, callback) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var view = new DataView(e.target.result);
-          var signature = view.getUint32(0, false);
-          if (signature !== 0x89504E47) {
-            callback("Not a valid PNG file.");
-            return;
-          }
-    
-          var version = view.getUint8(4) + "." + view.getUint8(5) + "." + view.getUint8(6);
-          callback(version);
-        };
-        reader.readAsArrayBuffer(file);
-      }
-
-      function getGifVersion(file, callback) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var view = new DataView(e.target.result);
-          var signature = String.fromCharCode.apply(null, new Uint8Array(view.buffer, 0, 6));
-          if (signature !== "GIF87a" && signature !== "GIF89a") {
-            callback("Not a valid GIF file.");
-            return;
-          }
-
-          var version = signature.substring(3);
-          callback(version);
-        };
-        reader.readAsArrayBuffer(file);
       }
     </script>
     <?php include('../bootstrapjs.php'); ?>
