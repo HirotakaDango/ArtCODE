@@ -86,6 +86,17 @@
                 </div>
               </li>
               <li class="mb-1">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#users-collapse" aria-expanded="true">
+                  Users
+                </button>
+                <div class="collapse show" id="users-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="/admin/users_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All</a></li>
+                    <li><a href="/admin/users_section/emails/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Emails</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="mb-1">
                 <a class="ms-3 btn d-inline-flex align-items-center rounded border-0 link-body-emphasis fw-medium" href="/admin/update/">
                   Update
                 </a>

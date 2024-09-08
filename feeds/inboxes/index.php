@@ -46,41 +46,44 @@ $totalCount = $totalRow['count'];
       <form method="get" class="mb-4">
         <div class="input-group w-100">
           <input type="text" class="form-control border-0 bg-body-tertiary rounded-start-4 focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" name="search" value="<?php echo $search; ?>" placeholder="Search by title or content">
-          <button class="btn bg-body-tertiary rounded-end-4" type="submit"><i class="bi bi-search"></i></button>
+          <button class="btn border-0 bg-body-tertiary rounded-end-4" type="submit"><i class="bi bi-search"></i></button>
         </div>
       </form>
     </div>
-    <div class="dropdown container">
-      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        sort by
-      </button>
-      <ul class="dropdown-menu">
-        <?php
-        // Get current query parameters, excluding 'by' and 'page'
-        $queryParams = array_diff_key($_GET, array('by' => '', 'page' => ''));
+    <div class="container d-flex justify-content-between">
+      <div class="dropdown">
+        <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          sort by
+        </button>
+        <ul class="dropdown-menu">
+          <?php
+          // Get current query parameters, excluding 'by' and 'page'
+          $queryParams = array_diff_key($_GET, array('by' => '', 'page' => ''));
         
-        // Define sorting options and labels
-        $sortOptions = [
-          'newest' => 'newest',
-          'oldest' => 'oldest',
-          'date_newest' => 'newest by date',
-          'date_oldest' => 'oldest by date',
-          'order_asc' => 'from A to Z',
-          'order_desc' => 'from Z to A',
-          'read' => 'already read',
-          'noread' => 'not read'
-        ];
+          // Define sorting options and labels
+          $sortOptions = [
+            'newest' => 'newest',
+            'oldest' => 'oldest',
+            'date_newest' => 'newest by date',
+            'date_oldest' => 'oldest by date',
+            'order_asc' => 'from A to Z',
+            'order_desc' => 'from Z to A',
+            'read' => 'read',
+            'unread' => 'unread'
+          ];
     
-        // Loop through each sort option
-        foreach ($sortOptions as $key => $label) {
-          // Determine if the current option is active
-          $activeClass = (!isset($_GET['by']) && $key === 'newest') || (isset($_GET['by']) && $_GET['by'] === $key) ? 'active' : '';
+          // Loop through each sort option
+          foreach ($sortOptions as $key => $label) {
+            // Determine if the current option is active
+            $activeClass = (!isset($_GET['by']) && $key === 'newest') || (isset($_GET['by']) && $_GET['by'] === $key) ? 'active' : '';
           
-          // Generate the dropdown item with the appropriate active class
-          echo '<li><a href="?' . http_build_query(array_merge($queryParams, ['by' => $key, 'page' => isset($_GET['page']) ? $_GET['page'] : '1'])) . '" class="dropdown-item fw-bold ' . $activeClass . '">' . $label . '</a></li>';
-        }
-        ?>
-      </ul>
+            // Generate the dropdown item with the appropriate active class
+            echo '<li><a href="?' . http_build_query(array_merge($queryParams, ['by' => $key, 'page' => isset($_GET['page']) ? $_GET['page'] : '1'])) . '" class="dropdown-item fw-bold ' . $activeClass . '">' . $label . '</a></li>';
+          }
+          ?>
+        </ul>
+      </div>
+      <button class="btn btn-sm fw-bold rounded-pill mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" onclick="window.location.reload();">Refresh Page</button>
     </div>
     <?php 
     if(isset($_GET['by'])){
@@ -108,7 +111,7 @@ $totalCount = $totalRow['count'];
         case 'read':
         include "index_read.php";
         break;
-        case 'noread':
+        case 'unread':
         include "index_not_read.php";
         break;
       }
