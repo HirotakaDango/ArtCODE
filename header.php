@@ -70,13 +70,13 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 <a class="btn border-0 position-absolute end-0 bottom-0" href="/easter-egg/" style="opacity:0;" target="_blank">click me!</a>
               </div>
             </div>
-            <div class="btn-group mt-2 mb-1 w-100 container gap-2" role="group" aria-label="Basic example">
-              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'follower.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/follower.php?id=<?php echo $user_id1; ?>"><i class="bi bi-people-fill"></i> <?php echo $num_followers1 ?> <small>followers</small></a>
-              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'following.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/following.php?id=<?php echo $user_id1; ?>"><i class="bi bi-person-fill"></i> <?php echo $num_following1 ?> <small>following</small></a>
+            <div class="btn-group my-2 w-100 container gap-2" role="group" aria-label="Basic example">
+              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'follower.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/follower.php?id=<?php echo $user_id1; ?>"><?php echo $num_followers1 ?> <small>followers</small></a>
+              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'following.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/following.php?id=<?php echo $user_id1; ?>"><?php echo $num_following1 ?> <small>following</small></a>
             </div>
             <div class="btn-group mb-3 w-100 container gap-2" role="group" aria-label="Basic example">
-              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'myworks.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php"><i class="bi bi-images"></i> <?php echo $count1; ?> <small>images</small></a>
-              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php"><i class="bi bi-heart-fill"></i> <?php echo $fav_count1;?> <small>favorites</small></a> 
+              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'myworks.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/myworks.php"><?php echo $count1; ?> <small>images</small></a>
+              <a class="btn btn-sm btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if(basename($_SERVER['PHP_SELF']) == 'favorite.php') echo 'active' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/favorite.php"><?php echo $fav_count1;?> <small>favorites</small></a> 
             </div>
             <div class="w-100 container mt-2">
               <a class="w-100 btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded w-50 fw-bold <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/quicknote/') !== false) echo 'active'; ?>" href="/quicknote/">
@@ -129,7 +129,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             </div>
           </ul>
         </div> 
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="navbar" aria-labelledby="navbarLabel">
+        <div class="offcanvas offcanvas-start w-100" tabindex="-1" id="navbar" aria-labelledby="navbarLabel">
           <div class="offcanvas-header">
             <a class="text-decoration-none link-body-emphasis link-light" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>"><h5 class="offcanvas-title fw-bold" id="navbarLabel">ArtCODE</h5></a>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -144,10 +144,46 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </div>
                 <div id="suggestions1"></div>
               </form>
-              <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 mt-2 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
-                <i class="bi bi-house-fill fs-5"></i>
-                <span class="d-md-none d-lg-inline d-lg-none">Home</span>
-              </a>
+
+              <div class="btn-group gap-2 w-100 mt-2">
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
+                  <i class="bi bi-house-fill fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none">Home</span>
+                </a>
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis position-relative rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/inboxes/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/inboxes/">
+                  <div class="position-relative">
+                    <i class="bi bi-envelope-fill fs-5"></i>
+                    <div class="position-absolute top-0 start-100 mt-1 translate-middle">
+                      <span class="badge rounded-pill bg-danger" id="unread-count"></span>
+                      <span class="visually-hidden">unread messages</span>
+                    </div>
+                    <script>
+                      function updateUnreadCount() {
+                        fetch('/inboxes.php')  // Ensure the correct path to inboxes.php
+                          .then(response => response.json())
+                          .then(data => {
+                            const unreadElement = document.getElementById('unread-count');
+                            if (unreadElement) {
+                              unreadElement.textContent = data.unread_count > 0 ? 
+                                (data.unread_count >= 1e12 ? (data.unread_count / 1e12).toFixed(1) + 't' : 
+                                data.unread_count >= 1e9 ? (data.unread_count / 1e9).toFixed(1) + 'b' : 
+                                data.unread_count >= 1e6 ? (data.unread_count / 1e6).toFixed(1) + 'm' : 
+                                data.unread_count >= 1e3 ? (data.unread_count / 1e3).toFixed(1) + 'k' : data.unread_count) : '';
+                            }
+                          })
+                          .catch(error => console.error('Error fetching unread count:', error));
+                      }
+                
+                      // Fetch unread count every 10 seconds
+                      setInterval(updateUnreadCount, 10000);  // Fetch every 10 seconds
+                
+                      // Fetch the count immediately when the page loads
+                      document.addEventListener('DOMContentLoaded', updateUnreadCount);
+                    </script>
+                  </div>
+                  <span class="d-md-none d-lg-inline d-lg-none">Inboxes</span>
+                </a>
+              </div>
               <div class="btn-group gap-2 w-100 mt-2">
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/upload/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
                   <i class="bi bi-cloud-arrow-up-fill fs-5"></i>
@@ -368,12 +404,47 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false">
                     More
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 400px;">
+                  <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 450px;">
                     <div class="container-fluid px-3 overflow-auto">
-                      <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 mt-2 fw-bold p-3 w-100 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/similar_image_search/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/similar_image_search/">
-                        <i class="bi bi-search fs-5"></i>
-                        <span class="d-lg-inline">Similar Image Search</span>
-                      </a>
+                      <div class="btn-group gap-2 w-100 mt-2">
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/similar_image_search/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/similar_image_search/">
+                          <i class="bi bi-search fs-5"></i>
+                          <span class="d-lg-inline">Similar Image Search</span>
+                        </a>
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/inboxes/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/inboxes/">
+                          <div class="position-relative">
+                            <i class="bi bi-envelope-fill fs-5"></i>
+                            <div class="position-absolute top-0 start-100 mt-1 translate-middle">
+                              <span class="badge rounded-pill bg-danger" id="unread-count-Desktop"></span>
+                              <span class="visually-hidden">unread messages</span>
+                            </div>
+                            <script>
+                              function updateUnreadCountDesktop() {
+                                fetch('/inboxes.php')  // Ensure the correct path to inboxes.php
+                                  .then(response => response.json())
+                                  .then(dataDesktop => {
+                                    const unreadElementDesktop = document.getElementById('unread-count-Desktop');
+                                    if (unreadElementDesktop) {
+                                      unreadElementDesktop.textContent = dataDesktop.unread_count > 0 ? 
+                                        (dataDesktop.unread_count >= 1e12 ? (dataDesktop.unread_count / 1e12).toFixed(1) + 't' : 
+                                        dataDesktop.unread_count >= 1e9 ? (dataDesktop.unread_count / 1e9).toFixed(1) + 'b' : 
+                                        dataDesktop.unread_count >= 1e6 ? (dataDesktop.unread_count / 1e6).toFixed(1) + 'm' : 
+                                        dataDesktop.unread_count >= 1e3 ? (dataDesktop.unread_count / 1e3).toFixed(1) + 'k' : dataDesktop.unread_count) : '';
+                                    }
+                                  })
+                                  .catch(errorDesktop => console.error('Error fetching unread count:', errorDesktop));
+                              }
+                        
+                              // Fetch unread count every 10 seconds
+                              setInterval(updateUnreadCountDesktop, 10000);  // Fetch every 10 seconds
+                        
+                              // Fetch the count immediately when the page loads
+                              document.addEventListener('DOMContentLoaded', updateUnreadCountDesktop);
+                            </script>
+                          </div>
+                          <span class="d-lg-inline">Inboxes</span>
+                        </a>
+                      </div>
                       <div class="btn-group gap-2 w-100 mt-2">
                         <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/notes/') !== false) echo 'opacity-75 shadow'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseNotes">
                           <i class="bi bi-journal-text fs-5"></i>
