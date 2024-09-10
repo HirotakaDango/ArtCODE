@@ -290,7 +290,7 @@ foreach ($child_images as $child_image) {
                   </div>
                 </div>
 
-                <a href="replace_image_child.php?id=<?php echo urlencode($_GET['id']); ?>&child_id=<?php echo urlencode($child_image['id']); ?>&page=<?php echo $_GET['page']; ?>" class="btn btn-sm mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium">
+                <a href="replace_image_child.php?id=<?php echo urlencode($_GET['id']); ?>&child_id=<?php echo urlencode($child_image['id']); ?>&page=<?php echo isset($_GET['page']) ? urlencode($_GET['page']) : '1'; ?>" class="btn btn-sm mt-3 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill fw-medium">
                   Replace Image
                 </a>
 
