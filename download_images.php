@@ -95,7 +95,7 @@ $total_size = $images_total_size + $image_child_total_size;
     <div class="container">
       <a class="btn border-0 position-absolute top-0 start-0 m-2" href="/image.php?artworkid=<?php echo $image['id']; ?>"><i class="bi bi-chevron-left" style="-webkit-text-stroke: 2px;"></i></a>
       <div class="d-flex justify-content-center align-items-center vh-100">
-        <div class="card border-0 bg-body-tertiary p-4 rounded-4 w-100" style="max-width: 70%;">
+        <div class="card border-0 bg-body-tertiary p-4 rounded-4 w-100" style="max-width: 550px;">
           <h5>Download Batch</h5>
           <div class="row mb-2 mt-4">
             <label for="" class="col-3 col-form-label">Title</label>

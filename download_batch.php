@@ -43,14 +43,26 @@ $artist = $image_info['artist'];
 
 // Create a ZIP file name based on the title
 $zip_filename = $title . '_image_id_' . $id . '_by_' . $artist . '.zip';
- 
+
 if ($zip->open($zip_filename, ZipArchive::CREATE) === true) {
+  $counter = 1; // Start counter for renaming
+
   foreach ($all_images as $image_filename) {
     $image_path = "images/{$image_filename}";
+
     if (file_exists($image_path)) {
-      $zip->addFile($image_path, $image_filename);
+      // Determine the new filename
+      $file_extension = pathinfo($image_filename, PATHINFO_EXTENSION);
+      $new_filename = $counter . '.' . $file_extension;
+
+      // Add the file to the ZIP archive with the new name
+      $zip->addFile($image_path, $new_filename);
+
+      // Increment the counter for the next image
+      $counter++;
     }
   }
+  
   $zip->close();
 
   // Send the ZIP file for download
