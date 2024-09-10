@@ -4,6 +4,16 @@ require_once('../../auth.php');
 // Connect to the SQLite database
 $db = new SQLite3('../../database.sqlite');
 
+$db->exec("CREATE TABLE IF NOT EXISTS inboxes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    title TEXT NOT NULL,
+    post TEXT NOT NULL,
+    to_email TEXT NOT NULL,
+    read TEXT NOT NULL DEFAULT 'no',
+    date TEXT DEFAULT CURRENT_TIMESTAMP
+)");
+
 $email = $_SESSION['email'];
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
