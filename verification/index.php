@@ -62,7 +62,7 @@ if (isset($_GET['v'])) {
             <div class="card-body">
               <h5 class="card-title fw-bold">Enter Your Verification Code</h5>
               <h6 class="small mb-4">You need to verify your account to upload your media. We implement this to prevent spamming from unverified accounts.</h6>
-              <h6 class="small mb-4">check your <a class="text-decoration-none" target="_blank" href="/feeds/inboxes/">inboxes</a> to get verification code. Note: this will take times to get verification code!</h6>
+              <h6 class="small mb-4">Check your <a class="text-decoration-none" target="_blank" href="/feeds/inboxes/">inboxes</a> to get verification code. Note: this will take times to get verification code!</h6>
               <form action="" method="get">
                 <div class="form-group">
                   <input type="text" id="verificationCode" name="v" class="form-control border-0 fw-medium" placeholder="Verification Code" required>
