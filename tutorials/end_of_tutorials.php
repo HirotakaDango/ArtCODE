@@ -30,7 +30,7 @@
               </p>
             </div>
             <div class="d-flex">
-              <a class="ms-auto link-primary text-decoration-none" href="/home/">Let's navigate the home page</a>
+              <a class="ms-auto link-primary text-decoration-none" href="/setup/">Let's navigate the setup page</a>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@
               </p>
             </div>
             <br>
-            <a class="position-absolute end-0 bottom-0 m-3 link-primary text-decoration-none" href="/home/">Let's navigate the home page</a>
+            <a class="position-absolute end-0 bottom-0 m-3 link-primary text-decoration-none" href="/setup/">Let's navigate the setup page</a>
           </div>
         </div>
       </div>
