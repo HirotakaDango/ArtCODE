@@ -554,7 +554,7 @@ require_once('../auth.php');
               <div class="rounded-1 d-flex align-items-center bg-body-secondary rounded-top-0 w-100 p-3 pb-2 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
                 <div class="my-auto">
                   <h6 class="fw-medium small">${truncatedFileName}</h6>
-                  <h6 class="fw-medium small">${fileSizeText}</h6>
+                  <h6 class="fw-medium small pb-0 mb-0">${fileSizeText}</h6>
                   <button class="btn btn-sm fw-medium border-0 p-0 m-0" id="view-info-${i}" data-index="${i}">
                     view more info
                   </button>
