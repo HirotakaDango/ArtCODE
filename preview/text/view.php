@@ -96,7 +96,7 @@ if ($result) {
           $tag = trim($tag);
           if (!empty($tag)) {
             ?>
-            <a href="?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm fw-medium btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill">
+            <a href="/preview/text/?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm fw-medium btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill">
               <?php echo $tag; ?>
             </a>
             <?php

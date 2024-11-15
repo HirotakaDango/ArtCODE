@@ -69,6 +69,11 @@ if (isset($_POST['favorite'])) {
     <title><?php echo $result['title']; ?></title>
     <link rel="icon" type="image/png" href="/icon/favicon.png">
     <?php include('../bootstrapcss.php'); ?>
+    <style>
+      .text-view-none {
+        display: none;
+      }
+    </style>
   </head>
   <body>
     <?php include('../header.php'); ?>
@@ -144,7 +149,7 @@ if (isset($_POST['favorite'])) {
           $tag = trim($tag);
           if (!empty($tag)) {
             ?>
-            <a href="?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm fw-medium btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill">
+            <a href="/text/?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm fw-medium btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill">
               <?php echo $tag; ?>
             </a>
             <?php

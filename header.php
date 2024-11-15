@@ -668,7 +668,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         </div>
       </div>
     </div>
-    <button id="scrollButton" class="btn fw-bold btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill <?= (basename($_SERVER['PHP_SELF']) === 'album.php' || basename($_SERVER['PHP_SELF']) === 'list_favorite.php' || basename($_SERVER['PHP_SELF']) === 'forum.php') ? 'd-none' : ''; ?> d-md-none d-lg-none position-fixed bottom-0 end-0 m-3 z-3" data-bs-toggle="modal" data-bs-target="#navModal">
+    <button id="scrollButton" class="text-view-none btn fw-bold btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-pill <?= (basename($_SERVER['PHP_SELF']) === 'album.php' || basename($_SERVER['PHP_SELF']) === 'list_favorite.php' || basename($_SERVER['PHP_SELF']) === 'forum.php') ? 'd-none' : ''; ?> d-md-none d-lg-none position-fixed bottom-0 end-0 m-3 z-3" data-bs-toggle="modal" data-bs-target="#navModal">
       <i class="fa-solid fa-bars small"></i> menu
     </button>
     <!-- Nav Modal -->

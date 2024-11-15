@@ -79,34 +79,46 @@ $email = $_SESSION['email'];
       const exportBtn = document.getElementById('exportBtn');
       const importBtn = document.getElementById('importBtn');
       const importInput = document.getElementById('importInput');
-    
+
       let notes = {};
       let currentNote = null;
       let autoSaveTimeout = null;
-    
+
+      function htmlSpecialChars(str) {
+        return str.replace(/[&<>"']/g, function(match) {
+          switch (match) {
+            case '&': return '&amp;';
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '"': return '&quot;';
+            case "'": return '&#039;';
+          }
+        });
+      }
+
       function loadNotes() {
         const savedNotes = localStorage.getItem('notes');
         if (savedNotes) {
           notes = JSON.parse(savedNotes);
         }
       }
-    
+
       function saveNotes() {
         localStorage.setItem('notes', JSON.stringify(notes));
       }
-    
+
       function saveNote() {
         if (currentNote) {
           notes[currentNote].content = noteContent.value;
           notes[currentNote].title = noteContent.value.split('\n')[0] || 'Untitled';
           notes[currentNote].date = new Date().toISOString();
           saveNotes();
-          noteTitle.textContent = notes[currentNote].title;
+          noteTitle.textContent = htmlSpecialChars(notes[currentNote].title); // escaping title
           noteDate.textContent = new Date(notes[currentNote].date).toLocaleDateString('en-US');
           updateNoteList();
         }
       }
-    
+
       function createNote() {
         const noteId = Date.now().toString();
         notes[noteId] = {
@@ -118,7 +130,7 @@ $email = $_SESSION['email'];
         saveNotes();
         showSingleNote();
       }
-    
+
       function deleteNote() {
         if (currentNote) {
           if (confirm('Are you sure you want to delete this note?')) {
@@ -129,7 +141,7 @@ $email = $_SESSION['email'];
           }
         }
       }
-    
+
       function deleteNoteFromList(noteId) {
         if (confirm('Are you sure you want to delete this note?')) {
           delete notes[noteId];
@@ -140,24 +152,24 @@ $email = $_SESSION['email'];
           }
         }
       }
-    
+
       function showAllNotes() {
         allNotesView.style.display = 'block';
         singleNoteView.style.display = 'none';
         currentNote = null;
         updateNoteList();
       }
-    
+
       function showSingleNote() {
         allNotesView.style.display = 'none';
         singleNoteView.style.display = 'block';
         if (currentNote) {
-          noteTitle.textContent = notes[currentNote].title;
+          noteTitle.textContent = htmlSpecialChars(notes[currentNote].title); // escaping title
           noteDate.textContent = new Date(notes[currentNote].date).toLocaleDateString('en-US');
           noteContent.value = notes[currentNote].content;
         }
       }
-    
+
       function updateNoteList() {
         noteList.innerHTML = '';
         const query = searchInput.value.toLowerCase();
@@ -168,11 +180,11 @@ $email = $_SESSION['email'];
           const dateB = new Date(b[1].date);
           return sortSelect.value === 'newest' ? dateB - dateA : dateA - dateB;
         });
-    
+
         for (const [noteId, note] of sortedNotes) {
           const noteElem = document.createElement('a');
           noteElem.innerHTML = `
-            <h6 class="text-wrap">${note.title}</h6>
+            <h6 class="text-wrap">${htmlSpecialChars(note.title)}</h6> <!-- escaping title -->
             <small class="text-muted">${new Date(note.date).toLocaleDateString('en-US')}</small>
             <button class="btn border-0 btn-sm delete-btn"><i class="bi bi-trash3-fill link-body-emphasis"></i></button>
           `;
@@ -192,7 +204,7 @@ $email = $_SESSION['email'];
           noteList.appendChild(noteElem);
         }
       }
-    
+
       function exportNotes() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes));
         const downloadAnchorNode = document.createElement('a');
@@ -202,7 +214,7 @@ $email = $_SESSION['email'];
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
       }
-    
+
       function importNotes(event) {
         const file = event.target.files[0];
         if (file) {
@@ -221,9 +233,9 @@ $email = $_SESSION['email'];
           reader.readAsText(file);
         }
       }
-    
+
       loadNotes();
-    
+
       newNoteBtn.addEventListener('click', createNote);
       deleteSingleBtn.addEventListener('click', deleteNote);
       backBtn.addEventListener('click', showAllNotes);
@@ -236,9 +248,9 @@ $email = $_SESSION['email'];
       exportBtn.addEventListener('click', exportNotes);
       importBtn.addEventListener('click', () => importInput.click());
       importInput.addEventListener('change', importNotes);
-    
+
       showAllNotes();
-    
+
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js')
           .then(registration => {
@@ -248,5 +260,6 @@ $email = $_SESSION['email'];
           });
       }
     </script>
+    <?php include('../bootstrapjs.php'); ?>
   </body>
 </html>
