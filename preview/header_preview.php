@@ -100,7 +100,7 @@
                     <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/characters/">Characters</a>
                     <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/parodies/">Parodies</a>
                     <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/groups/">Groups</a>
-                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/users">Users</a>
+                    <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/users/">Users</a>
                   </div>
                 </div>
               </div>
@@ -125,7 +125,7 @@
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/characters/">Characters</a>
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/parodies/">Parodies</a>
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/groups/">Groups</a>
-                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/users">Users</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/preview/users/">Users</a>
               </div>
             </div>
           </div>
