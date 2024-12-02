@@ -28,6 +28,9 @@
         case 'order_desc':
         include "index_order_desc.php";
         break;
+        case 'top':
+        include "top.php";
+        break;
       }
     }
     else {
