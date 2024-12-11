@@ -5,20 +5,81 @@
               <div class="card-body">
                 <h5 class="fw-bold text-truncate mb-3" style="max-width: auto;"><?php echo $row['title']; ?></h5>
                 <?php
+                // Get the email from the texts table
+                $email = $row['email']; // Email from the texts table
+                
+                // Assuming you have a database connection $db
+                $stmt = $db->prepare("SELECT id, artist FROM users WHERE email = :email");
+                $stmt->bindValue(':email', $email, SQLITE3_TEXT); // Bind the email parameter
+                $userResult = $stmt->execute();
+                $user = $userResult->fetchArray(SQLITE3_ASSOC);
+                
+                // If the user is found, retrieve the user ID and artist name
+                if ($user) {
+                  $userId = $user['id'];
+                  $artistName = $user['artist'];
+                  echo "<h6 class='fw-medium text-truncate mb-3' style='max-width: auto;'>Author: <a class='btn border-0 p-0 pb-1 m-0 fw-medium' href='/preview/text/?uid=$userId'>$artistName</a></h6>";
+                } else {
+                  echo "<h6 class='fw-medium text-truncate mb-3' style='max-width: auto;'>Author: Unknown</h6>";
+                }
+                ?>
+                <?php
                 if (!empty($row['tags'])) {
                   $tags = explode(',', $row['tags']);
+                  $tagCount = 0; // Counter for the number of tags processed
+                  $displayedTags = []; // Array to store tags that are displayed
+                
                   foreach ($tags as $tag) {
                     $tag = trim($tag);
                     if (!empty($tag)) {
-                      // Merge the current query parameters with the new tag parameter
-                      $queryParams = array_merge($_GET, ['tag' => $tag]);
-                      $tagUrl = '?' . http_build_query($queryParams);
-                      ?>
-                      <a href="<?php echo $tagUrl; ?>" class="btn btn-sm fw-medium btn-dark rounded-pill">
-                        <?php echo htmlspecialchars($tag); ?>
-                      </a>
-                      <?php
+                      $tagCount++; // Increment the tag counter
+                      if ($tagCount <= 5) {
+                        // Merge the current query parameters with the new tag parameter
+                        $queryParams = array_merge($_GET, ['tag' => $tag]);
+                        $tagUrl = '?' . http_build_query($queryParams);
+                        $displayedTags[] = '<a href="' . $tagUrl . '" style="margin: 0.2em;" class="btn btn-sm fw-medium btn-dark rounded-pill"><i class="bi bi-tag-fill"></i> ' . $tag . '</a>';
+                      }
                     }
+                  }
+                
+                  // Output the displayed tags
+                  foreach ($displayedTags as $tagLink) {
+                    echo $tagLink;
+                  }
+                
+                  // If there are more than 5 tags, display the "View All Tags" button
+                  if ($tagCount > 5) {
+                    ?>
+                    <!-- Button trigger modal -->
+                    <button type="button" style="margin: 0.2em; margin-left: -2px;" class="btn btn-sm fw-medium btn-dark rounded-pill" data-bs-toggle="modal" data-bs-target="#tagsModal">
+                      <i class="bi bi-tags-fill"></i> all tags
+                    </button>
+                
+                    <!-- Modal -->
+                    <div class="modal fade" id="tagsModal" tabindex="-1" aria-labelledby="tagsModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content rounded-4">
+                          <div class="modal-header border-0">
+                            <h1 class="modal-title fs-5" id="tagsModalLabel">All Tags from <?php echo $row['title']; ?></h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <?php
+                            // Display all tags in the modal
+                            foreach ($tags as $tag) {
+                              $tag = trim($tag);
+                              if (!empty($tag)) {
+                                $queryParams = array_merge($_GET, ['tag' => $tag]);
+                                $tagUrl = '?' . http_build_query($queryParams);
+                                echo '<a href="' . $tagUrl . '" style="margin: 0.2em;" class="btn btn-sm fw-medium btn-dark rounded-pill"><i class="bi bi-tag-fill"></i> ' . $tag . '</a>';
+                              }
+                            }
+                            ?>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <?php
                   }
                 } else {
                   echo "<p class='text-muted'>No tags available.</p>";
@@ -49,7 +110,7 @@
                     echo "Sorry, no text...";
                   }
                   ?>
-                  <a class="link-body-emphasis text-decoration-none position-absolute start-0 bottom-0 m-3" href="view.php?id=<?php echo $row['id']; ?>">Read more</a>
+                  <a class="link-body-emphasis text-decoration-none position-absolute start-0 bottom-0 m-3 fw-bold" href="view.php?id=<?php echo $row['id']; ?>&uid=<?php echo $userId; ?>">Read more</a>
                 </div>
               </div>
             </div>
