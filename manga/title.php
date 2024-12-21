@@ -178,7 +178,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                   <label for="parodies" class="col-3 col-form-label text-nowrap fw-medium">Parodies</label>
                   <div class="col-9">
                     <?php foreach($parodies as $parody => $count): ?>
-                      <div class="btn-group mb-2 me-1">
+                      <div class="btn-group m-1">
                         <a href="./?parody=<?php echo urlencode($parody); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">
                           <?php echo $parody; ?>
                         </a>
@@ -192,10 +192,10 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               <?php endif; ?>
               <?php if (isset($characters) && !empty($characters)): ?>
                 <div class="mb-2 row align-items-center">
-                  <label for="characters" class="col-3 col-form-label text-nowrap fw-medium">characters</label>
+                  <label for="characters" class="col-3 col-form-label text-nowrap fw-medium">Characters</label>
                   <div class="col-9">
                     <?php foreach($characters as $character => $count): ?>
-                      <div class="btn-group mb-2 me-1">
+                      <div class="btn-group m-1">
                         <a href="./?character=<?php echo urlencode($character); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">
                           <?php echo $character; ?>
                         </a>
@@ -211,7 +211,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                 <label for="tags" class="col-3 col-form-label text-nowrap fw-medium">Tags</label>
                 <div class="col-9">
                   <?php foreach($tags as $tag => $count): ?>
-                    <div class="btn-group mb-2 me-1">
+                    <div class="btn-group m-1">
                       <a href="./?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">
                         <?php echo $tag; ?>
                       </a>
@@ -342,11 +342,11 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
             <?php foreach ($images as $image) : ?>
               <div class="col">
                 <div class="card border-0 bg-body-tertiary shadow h-100 rounded-4">
-                  <a class="text-decoration-none link-body-emphasis" href="view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $image['userid']; ?>&id=<?php echo $image['id']; ?>&page=1">
+                  <a class="text-decoration-none link-body-emphasis" href="preview.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $image['userid']; ?>&id=<?php echo $image['id']; ?>&page=1">
                     <div class="row g-0">
                       <div class="col-4">
-                        <div class="ratio ratio-1x1 rounded-4">
-                          <img class="object-fit-cover lazy-load h-100 w-100 rounded-start-4" data-src="<?= $web . '/thumbnails/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
+                        <div class="ratio ratio-1x1 rounded-top-4 rounded-bottom-0">
+                          <img class="object-fit-cover lazy-load h-100 w-100 rounded-top-4 rounded-end-0 rounded-bottom-0" data-src="<?= $web . '/thumbnails/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
                         </div>
                       </div>
                       <div class="col-8">
@@ -359,6 +359,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
                       </div>
                     </div>
                   </a>
+                  <a class="btn p-2 w-100 btn-dark rounded-bottom-4 rounded-top-0 fw-bold" href="view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $image['userid']; ?>&id=<?php echo $image['id']; ?>&page=1">read</a>
                 </div>
               </div>
             <?php endforeach; ?>

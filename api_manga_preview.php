@@ -2,11 +2,10 @@
 // api_manga_view.php
 header('Content-Type: application/json');
 try {
-  // Check if title, id, and page parameters are provided
-  if (isset($_GET['title']) && isset($_GET['id']) && isset($_GET['page'])) {
+  // Check if title, id parameters are provided
+  if (isset($_GET['title']) && isset($_GET['id'])) {
     $episode_name = $_GET['title'];
     $image_id = $_GET['id'];
-    $page = $_GET['page'];
     
     // Connect to the SQLite database
     $db = new PDO('sqlite:database.sqlite');
@@ -88,7 +87,7 @@ try {
     // Output response as JSON
     echo json_encode($response, JSON_PRETTY_PRINT);
   } else {
-    echo json_encode(['error' => 'Missing title, id, or page parameter']);
+    echo json_encode(['error' => 'Missing title or id parameter']);
   }
 } catch (PDOException $e) {
   echo json_encode(['error' => $e->getMessage()]);
