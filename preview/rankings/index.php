@@ -38,6 +38,7 @@ if ($row) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rankings</title>
     <link rel="icon" type="image/png" href="/icon/favicon.png">
+    <link rel="stylesheet" href="../../style.css">
     <?php include('../../bootstrapcss.php'); ?>
   </head>
   <body>
