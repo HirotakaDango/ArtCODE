@@ -105,32 +105,32 @@ if ($artworkId > 0) {
                   }
                 </script>
               <div class="my-2 row align-items-center">
-                <label for="views" class="col-3 col-form-label text-nowrap">Artist</label>
-                <div class="col-9">
+                <label for="views" class="col-md-3 col-4 col-form-label text-nowrap">Artist</label>
+                <div class="col-md-9 col-8">
                   <h6 class="form-control-plaintext" id="views"><a class="btn border-0 p-0 fw-medium" href="./?uid=1"><?php echo $artworkData['images'][0]['artist_name']; ?></a></h6>
                 </div>
               </div>
               <div class="my-2 row align-items-center">
-                <label for="views" class="col-3 col-form-label text-nowrap">Views</label>
-                <div class="col-9">
+                <label for="views" class="col-md-3 col-4 col-form-label text-nowrap">Views</label>
+                <div class="col-md-9 col-8">
                   <h6 class="form-control-plaintext" id="views"><?php echo $artworkData['images'][0]['view_count']; ?></h6>
                 </div>
               </div>
               <div class="mb-2 row align-items-center">
-                <label for="favorites" class="col-3 col-form-label text-nowrap">Favorites</label>
-                <div class="col-9">
+                <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Favorites</label>
+                <div class="col-md-9 col-8">
                   <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['favorites_count']; ?></h6>
                 </div>
               </div>
               <div class="mb-2 row align-items-center">
-                <label for="favorites" class="col-3 col-form-label text-nowrap">Total Images</label>
-                <div class="col-9">
+                <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Total Images</label>
+                <div class="col-md-9 col-8">
                   <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['total_count']; ?></h6>
                 </div>
               </div>
               <div class="mb-2 row align-items-center">
-                <label for="favorites" class="col-3 col-form-label text-nowrap">Total Size</label>
-                <div class="col-9">
+                <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Total Size</label>
+                <div class="col-md-9 col-8">
                   <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['total_size_mb']; ?> MB</h6>
                 </div>
               </div>
@@ -235,7 +235,7 @@ if ($artworkId > 0) {
             <?php foreach ($allImages as $image): ?>
               <div class="position-relative">
                 <img data-src="<?php echo $baseUrl . '/' . $image['url']; ?>" class="w-100 vh-100 object-fit-contain lazy-load" alt="Image">
-                <a class="position-absolute bottom-0 start-50 btn p-0 translate-middle border-0 fw-bold" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);" href="<?php echo $baseUrl . '/' . $image['url']; ?>" download><i class="bi bi-download" style="-webkit-text-stroke: 1px;"></i> download (<?php echo $image['size_mb']; ?> MB | <?php echo $image['resolution']; ?>)</a>
+                <a class="text-nowrap position-absolute bottom-0 start-50 btn p-0 translate-middle border-0 fw-bold" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);" href="<?php echo $baseUrl . '/' . $image['url']; ?>" download><i class="bi bi-download" style="-webkit-text-stroke: 1px;"></i> download (<?php echo $image['size_mb']; ?> MB | <?php echo $image['resolution']; ?>)</a>
               </div>
             <?php endforeach; ?>
           <?php else: ?>
