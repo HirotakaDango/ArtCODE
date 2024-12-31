@@ -262,20 +262,24 @@ if ($display === 'all_images') {
     die("Image not found");
   }
 
-  // Calculate image size in MB
+// Calculate image size in MB and resolution
   $imagePath = 'images/' . $imageData['filename'];
   if (file_exists($imagePath)) {
     $imageSize = filesize($imagePath) / (1024 * 1024); // Size in MB
+    $imageInfo = getimagesize($imagePath); // Get resolution
+    $imageResolution = $imageInfo ? "{$imageInfo[0]}x{$imageInfo[1]}" : 'Unknown';
   } else {
     $imageSize = 0;
+    $imageResolution = 'Unknown';
   }
   $imageData['size_mb'] = number_format($imageSize, 2); // Format size to 2 decimal places
-
+  $imageData['resolution'] = $imageResolution; // Add resolution
+  
   // Check if the type matches and if it is NSFW
   if ($type === 'nsfw' && $imageData['type'] !== 'nsfw') {
     die("NSFW content not allowed");
   }
-
+  
   // Query to retrieve related image_child records
   $queryImageChild = $db->prepare("
     SELECT image_child.id, image_child.filename, image_child.image_id, image_child.original_filename
@@ -285,25 +289,29 @@ if ($display === 'all_images') {
   ");
   $queryImageChild->bindValue(':artworkid', $artworkId, SQLITE3_INTEGER);
   $resultImageChild = $queryImageChild->execute();
-
+  
   $imageChildData = [];
   $totalSize = $imageSize;
   $totalCount = 1; // Count the main image
-
+  
   while ($row = $resultImageChild->fetchArray(SQLITE3_ASSOC)) {
     $childImagePath = 'images/' . $row['filename'];
     if (file_exists($childImagePath)) {
       $childImageSize = filesize($childImagePath) / (1024 * 1024); // Size in MB
+      $childImageInfo = getimagesize($childImagePath); // Get resolution
+      $childImageResolution = $childImageInfo ? "{$childImageInfo[0]}x{$childImageInfo[1]}" : 'Unknown';
     } else {
       $childImageSize = 0;
+      $childImageResolution = 'Unknown';
     }
     $row['size_mb'] = number_format($childImageSize, 2); // Format size to 2 decimal places
+    $row['resolution'] = $childImageResolution; // Add resolution
     $totalSize += $childImageSize;
     $totalCount++;
-
+  
     $imageChildData[] = $row;
   }
-
+  
   // Retrieve favorites count for the image
   $queryFavoritesCount = $db->prepare("
     SELECT COUNT(*) AS count
@@ -314,7 +322,7 @@ if ($display === 'all_images') {
   $resultFavoritesCount = $queryFavoritesCount->execute();
   $favoritesCountRow = $resultFavoritesCount->fetchArray(SQLITE3_ASSOC);
   $favoritesCount = $favoritesCountRow['count'];
-
+  
   // Check the display parameter and prepare the appropriate response
   if ($display === 'info') {
     // Detailed information response
@@ -329,12 +337,14 @@ if ($display === 'all_images') {
     $response = [
       'image' => [
         'url' => '/images/' . $imageData['filename'],
-        'size_mb' => $imageData['size_mb']
+        'size_mb' => $imageData['size_mb'],
+        'resolution' => $imageData['resolution']
       ],
       'image_child' => array_map(function($img) {
         return [
           'url' => '/images/' . $img['filename'],
-          'size_mb' => $img['size_mb']
+          'size_mb' => $img['size_mb'],
+          'resolution' => $img['resolution']
         ];
       }, $imageChildData),
       'total_size_mb' => number_format($totalSize, 2), // Format total size to 2 decimal places

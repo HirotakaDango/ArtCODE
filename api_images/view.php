@@ -55,7 +55,7 @@ if ($artworkId > 0) {
           <div class="row">
             <div class="col-md-6">
               <?php if (isset($artworkData['images'][0]['filename'])): ?>
-                <img src="<?php echo $baseUrl . '/images/' . $artworkData['images'][0]['filename']; ?>" class="w-100 mb-3 rounded-4" alt="Artwork Image">
+                <a href="view.php?artworkid=<?php echo $artworkId; ?>&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>"><img src="<?php echo $baseUrl . '/images/' . $artworkData['images'][0]['filename']; ?>" class="w-100 mb-3 rounded-4" alt="Artwork Image"></a>
               <?php endif; ?>
             </div>
             <div class="col-md-6">
@@ -69,7 +69,7 @@ if ($artworkId > 0) {
 
                   $formattedText = preg_replace_callback($pattern, function ($matches) {
                     $url = $matches[0];
-                    return '<a href="' . $url . '">' . $url . '</a>';
+                    return '<a class="text-break" href="' . $url . '">' . $url . '</a>';
                   }, $messageTextWithoutTags);
 
                   $charLimit = 400; // Set your character limit
@@ -122,6 +122,18 @@ if ($artworkId > 0) {
                   <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['favorites_count']; ?></h6>
                 </div>
               </div>
+              <div class="mb-2 row align-items-center">
+                <label for="favorites" class="col-3 col-form-label text-nowrap">Total Images</label>
+                <div class="col-9">
+                  <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['total_count']; ?></h6>
+                </div>
+              </div>
+              <div class="mb-2 row align-items-center">
+                <label for="favorites" class="col-3 col-form-label text-nowrap">Total Size</label>
+                <div class="col-9">
+                  <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['total_size_mb']; ?> MB</h6>
+                </div>
+              </div>
               <div class="card shadow border-0 rounded-4 bg-body-tertiary mt-3">
                 <div class="card-body">
                   <!-- Tags -->
@@ -135,7 +147,7 @@ if ($artworkId > 0) {
                         if (!empty($tag)) {
                           ?>
                           <a href="index.php?display=all_images&tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
-                            <i class="bi bi-tag-fill"></i> <?php echo htmlspecialchars($tag); ?>
+                            <i class="bi bi-tag-fill"></i> <?php echo urlencode($tag); ?>
                           </a>
                           <?php
                         }
@@ -157,7 +169,7 @@ if ($artworkId > 0) {
                         if (!empty($character)) {
                           ?>
                           <a href="index.php?display=all_images&character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
-                            <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($character); ?>
+                            <i class="bi bi-person-fill"></i> <?php echo urlencode($character); ?>
                           </a>
                           <?php
                         }
@@ -177,7 +189,7 @@ if ($artworkId > 0) {
                         if (!empty($parody)) {
                           ?>
                           <a href="index.php?display=all_images&parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
-                            <i class="bi bi-journal"></i> <?php echo htmlspecialchars($parody); ?>
+                            <i class="bi bi-journal"></i> <?php echo urlencode($parody); ?>
                           </a>
                           <?php
                         }
@@ -197,7 +209,7 @@ if ($artworkId > 0) {
                         if (!empty($group)) {
                           ?>
                           <a href="index.php?display=all_images&group=<?php echo urlencode($group); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
-                            <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($group); ?>
+                            <i class="bi bi-person-fill"></i> <?php echo urlencode($group); ?>
                           </a>
                           <?php
                         }
@@ -218,10 +230,13 @@ if ($artworkId > 0) {
         <div class="mt-5"></div>
       <?php else: ?>
         <div class="w-100">
-          <a href="view.php?artworkid=<?php echo $artworkId; ?>&display=info&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>" class="btn border-0 position-fixed top-0 start-0"><i class="bi bi-chevron-left fs-5" style="-webkit-text-stroke: 2px;"></i></a>
+          <a href="view.php?artworkid=<?php echo $artworkId; ?>&display=info&back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php'); ?>" class="btn border-0 position-fixed top-0 start-0 z-3"><i class="bi bi-chevron-left fs-5" style="-webkit-text-stroke: 2px;"></i></a>
           <?php if (!empty($allImages)): ?>
             <?php foreach ($allImages as $image): ?>
-              <img src="<?php echo $baseUrl . '/' . $image['url']; ?>" class="w-100 vh-100 object-fit-contain" alt="Image">
+              <div class="position-relative">
+                <img src="<?php echo $baseUrl . '/' . $image['url']; ?>" class="w-100 vh-100 object-fit-contain" alt="Image">
+                <a class="position-absolute bottom-0 start-50 btn p-0 translate-middle border-0 fw-bold" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);" href="<?php echo $baseUrl . '/' . $image['url']; ?>" download><i class="bi bi-download" style="-webkit-text-stroke: 1px;"></i> download (<?php echo $image['size_mb']; ?> MB | <?php echo $image['resolution']; ?>)</a>
+              </div>
             <?php endforeach; ?>
           <?php else: ?>
             <p>No images found.</p>

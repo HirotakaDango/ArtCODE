@@ -226,7 +226,10 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
           <main id="swup" class="transition-main"><h6 class="pt-1 small"><?php echo $currentPage . ' / ' . $totalPages; ?></h6></main>
         </a>
       </div>
-      <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Title</a></h2>
+      <div class="btn-group container gap-3 mb-3 d-md-none">
+        <a class="btn w-50 rounded bg-body-tertiary link-body-emphasis fw-bold" href="preview.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Preview</a>
+        <a class="btn w-50 rounded bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Title</a>
+      </div>
       <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis fw-bold" href="<?php echo $web; ?>/download_images.php?artworkid=<?php echo $_GET['id']; ?>">Download Batch</a></h2>
     </div>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
@@ -288,13 +291,17 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               </div>
             </div>
             <div class="container my-3">
+              <main id="swup" class="transition-main "><a class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" href="<?= $imageSource; ?>" download>Download Current Image</a></main>
+            </div>
+            <div class="container my-3">
               <a class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" href="<?php echo $web; ?>/download_images.php?artworkid=<?php echo $_GET['id']; ?>">Download Batch</a>
             </div>
             <div class="container my-3">
               <button type="button" class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" data-bs-dismiss="offcanvas">Close Menu</button>
             </div>
-            <div class="container my-3">
-              <a class="btn w-100 bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Title</a>
+            <div class="btn-group container gap-3">
+              <a class="btn w-50 rounded bg-body-tertiary link-body-emphasis fw-bold" href="preview.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Preview</a>
+              <a class="btn w-50 rounded bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Title</a>
             </div>
           </div>
         </div>
