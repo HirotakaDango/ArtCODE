@@ -107,7 +107,7 @@ if ($artworkId > 0) {
               <div class="my-2 row align-items-center">
                 <label for="views" class="col-3 col-form-label text-nowrap">Artist</label>
                 <div class="col-9">
-                  <h6 class="form-control-plaintext" id="views"><a class="btn border-0 p-0 fw-medium" href="index.php?uid=1"><?php echo $artworkData['images'][0]['artist_name']; ?></a></h6>
+                  <h6 class="form-control-plaintext" id="views"><a class="btn border-0 p-0 fw-medium" href="./?uid=1"><?php echo $artworkData['images'][0]['artist_name']; ?></a></h6>
                 </div>
               </div>
               <div class="my-2 row align-items-center">
@@ -234,7 +234,7 @@ if ($artworkId > 0) {
           <?php if (!empty($allImages)): ?>
             <?php foreach ($allImages as $image): ?>
               <div class="position-relative">
-                <img src="<?php echo $baseUrl . '/' . $image['url']; ?>" class="w-100 vh-100 object-fit-contain" alt="Image">
+                <img data-src="<?php echo $baseUrl . '/' . $image['url']; ?>" class="w-100 vh-100 object-fit-contain lazy-load" alt="Image">
                 <a class="position-absolute bottom-0 start-50 btn p-0 translate-middle border-0 fw-bold" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);" href="<?php echo $baseUrl . '/' . $image['url']; ?>" download><i class="bi bi-download" style="-webkit-text-stroke: 1px;"></i> download (<?php echo $image['size_mb']; ?> MB | <?php echo $image['resolution']; ?>)</a>
               </div>
             <?php endforeach; ?>
@@ -281,6 +281,93 @@ if ($artworkId > 0) {
           themeIcon.classList.add('bi-moon-fill');
         }
       }
+    </script>
+    <script>
+      let lazyloadImages = document.querySelectorAll(".lazy-load");
+      let imageContainer = document.getElementById("image-container");
+
+      // Set the default placeholder image
+      const defaultPlaceholder = "<?php echo $baseUrl; ?>/icon/bg.png";
+
+      if ("IntersectionObserver" in window) {
+        let imageObserver = new IntersectionObserver(function(entries, observer) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              let image = entry.target;
+              image.src = image.dataset.src;
+              imageObserver.unobserve(image);
+            }
+          });
+        });
+
+        lazyloadImages.forEach(function(image) {
+          image.src = defaultPlaceholder; // Apply default placeholder
+          imageObserver.observe(image);
+          image.style.filter = "blur(5px)"; // Apply initial blur to all images
+          image.addEventListener("load", function() {
+            image.style.filter = "none"; // Remove blur after image loads
+          });
+        });
+      } else {
+        let lazyloadThrottleTimeout;
+
+        function lazyload() {
+          if (lazyloadThrottleTimeout) {
+            clearTimeout(lazyloadThrottleTimeout);
+          }
+          lazyloadThrottleTimeout = setTimeout(function() {
+            let scrollTop = window.pageYOffset;
+            lazyloadImages.forEach(function(img) {
+              if (img.offsetTop < window.innerHeight + scrollTop) {
+                img.src = img.dataset.src;
+                img.classList.remove("lazy-load");
+              }
+            });
+            lazyloadImages = Array.from(lazyloadImages).filter(function(image) {
+              return image.classList.contains("lazy-load");
+            });
+            if (lazyloadImages.length === 0) {
+              document.removeEventListener("scroll", lazyload);
+              window.removeEventListener("resize", lazyload);
+              window.removeEventListener("orientationChange", lazyload);
+            }
+          }, 20);
+        }
+
+        document.addEventListener("scroll", lazyload);
+        window.addEventListener("resize", lazyload);
+        window.addEventListener("orientationChange", lazyload);
+      }
+
+      // Infinite scrolling
+      let loading = false;
+
+      function loadMoreImages() {
+        if (loading) return;
+        loading = true;
+
+        // Simulate loading delay for demo purposes
+        setTimeout(function() {
+          for (let i = 0; i < 10; i++) {
+            if (lazyloadImages.length === 0) {
+              break;
+            }
+            let image = lazyloadImages[0];
+            imageContainer.appendChild(image);
+            lazyloadImages = Array.from(lazyloadImages).slice(1);
+          }
+          loading = false;
+        }, 1000);
+      }
+
+      window.addEventListener("scroll", function() {
+        if (window.innerHeight + window.scrollY >= imageContainer.clientHeight) {
+          loadMoreImages();
+        }
+      });
+
+      // Initial loading
+      loadMoreImages();
     </script>
   </body>
 </html>
