@@ -15,7 +15,7 @@ if (!empty($imageUrl)) {
       FROM images
       JOIN users ON images.email = users.email
       LEFT JOIN daily ON images.id = daily.image_id AND daily.date BETWEEN :startOfYear AND :endOfYear
-      GROUP BY images.id, users.artist, users.pic, users.id
+      GROUP BY images.id
       ORDER BY views DESC, images.id DESC
     ");
 

@@ -7,6 +7,7 @@ $stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS user
   FROM images
   JOIN users ON images.email = users.email
   LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
+  GROUP BY images.id
   ORDER BY views DESC, images.id DESC LIMIT :offset, :limit");
 $stmt->bindValue(':currentDate', $currentDate, SQLITE3_TEXT);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
