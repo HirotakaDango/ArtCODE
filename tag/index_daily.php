@@ -37,6 +37,7 @@ $stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS user
   JOIN users ON images.email = users.email
   LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
   WHERE REPLACE(tags, ' ', '') LIKE :tagWithoutSpaces ESCAPE '\\' OR REPLACE(tags, ' ', '') LIKE :tag_start ESCAPE '\\' OR REPLACE(tags, ' ', '') LIKE :tag_end ESCAPE '\\' OR tags = :tag_exact
+  GROUP BY images.id
   ORDER BY views DESC, images.id DESC LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':tagWithoutSpaces', "{$tagWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':tag_start', "%,{$tagWithoutSpaces}", SQLITE3_TEXT);

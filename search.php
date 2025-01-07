@@ -72,7 +72,8 @@ if (isset($_GET['search'])) {
   $numImages = count($resultArray);
 
   // Redirect to the search page with the search term
-  header("Location: search/?q=$searchTerm");
+  $encodedSearchTerm = urlencode($searchTerm);
+  header("Location: search/?q=$encodedSearchTerm");
   exit(); // Ensure that no further code is executed after the redirect
 } else {
   // Retrieve all images if no search term is provided
@@ -83,8 +84,8 @@ if (isset($_GET['search'])) {
     $resultArray[] = $row;
   }
   $numImages = count($resultArray);
-  
-  // Redirect to the search page with the search term
+
+  // Redirect to the search page with no search term
   header("Location: search/?q=");
   exit(); // Ensure that no further code is executed after the redirect
 }

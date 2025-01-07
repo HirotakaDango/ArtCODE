@@ -41,6 +41,9 @@ if (!empty($conditions)) {
   $query .= " AND (" . implode(' OR ', $conditions) . ")";
 }
 
+// Group by image to aggregate views
+$query .= " GROUP BY images.id";
+
 // Check if q (search term) is empty
 if (empty($searchTerm)) {
   // If q is empty, order by view_count DESC
