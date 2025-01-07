@@ -4,27 +4,27 @@ $dbL = new SQLite3('../../database.sqlite');
 
 // Handle favorite/unfavorite action
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $email = $_SESSION['email'];
-  $image_id = isset($_POST['image_id']) ? intval($_POST['image_id']) : 0;
-  $action = isset($_POST['action']) ? $_POST['action'] : '';
+  $emailL = $_SESSION['email'];
+  $image_idL = isset($_POST['image_id']) ? intval($_POST['image_id']) : 0;
+  $actionL = isset($_POST['action']) ? $_POST['action'] : '';
 
-  if ($action === 'favorite') {
+  if ($actionL === 'favorite') {
     // Check if already favorited
-    $existing_fav = $dbL->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$email' AND image_id = $image_id");
+    $existing_favL = $dbL->querySingle("SELECT COUNT(*) FROM favorites WHERE email = '$emailL' AND image_id = $image_idL");
 
-    if ($existing_fav == 0) {
+    if ($existing_favL == 0) {
       // Insert into favorites table
-      $dbL->exec("INSERT INTO favorites (email, image_id) VALUES ('$email', $image_id)");
+      $dbL->exec("INSERT INTO favorites (email, image_id) VALUES ('$emailL', $image_idL)");
 
       // Return success response
       echo json_encode(['success' => true]);
     } else {
-      // Already favorited, return error or just success if desired
-      echo json_encode(['success' => true]); // Adjust as needed
+      // Already favorited, return success
+      echo json_encode(['success' => true]);
     }
-  } elseif ($action === 'unfavorite') {
+  } elseif ($actionL === 'unfavorite') {
     // Delete from favorites table
-    $dbL->exec("DELETE FROM favorites WHERE email = '$email' AND image_id = $image_id");
+    $dbL->exec("DELETE FROM favorites WHERE email = '$emailL' AND image_id = $image_idL");
 
     // Return success response
     echo json_encode(['success' => true]);
