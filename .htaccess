@@ -1,8 +1,10 @@
+# Turn on the rewrite engine
+RewriteEngine On
+
+# Enable error display
 php_value display_errors On
 php_value mbstring.http_input auto
 php_value date.timezone America/New_York
-
-RewriteEngine On
 
 # Redirect access to database.sqlite to denied.php
 RewriteCond %{REQUEST_URI} ^/database\.sqlite$
@@ -21,3 +23,8 @@ RewriteRule ^ /%1 [R=301,L]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^session/(.+)$ session/$1.php [L]
+
+# Redirect images/viewer.php patterns to denied.php
+RewriteCond %{REQUEST_URI} ^/images/viewer\.php$ [NC]
+RewriteCond %{QUERY_STRING} ^uid_\d+(/data(/imageid-\d+)?)?$ [NC]
+RewriteRule ^ /denied.php? [L,R=302]
