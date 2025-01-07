@@ -37,6 +37,7 @@ $stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS user
   JOIN users ON images.email = users.email
   LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
   WHERE REPLACE(parodies, ' ', '') LIKE :parodyWithoutSpaces ESCAPE '\\' OR REPLACE(parodies, ' ', '') LIKE :parody_start ESCAPE '\\' OR REPLACE(parodies, ' ', '') LIKE :parody_end ESCAPE '\\' OR parodies = :parody_exact
+  GROUP BY images.id
   ORDER BY views DESC, images.id DESC LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':parodyWithoutSpaces', "{$parodyWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':parody_start', "%,{$parodyWithoutSpaces}", SQLITE3_TEXT);

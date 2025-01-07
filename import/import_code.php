@@ -43,6 +43,10 @@ function createThumbnail($sourcePath, $destPath, $thumbWidth = 300) {
   return true;
 }
 
+function generateUniqueImageId() {
+  return bin2hex(random_bytes(6));
+}
+
 // Function to get the next available ID
 function getNextAvailableId($db, $table) {
   $stmt = $db->prepare("SELECT MAX(id) AS max_id FROM $table");
@@ -78,6 +82,23 @@ $response = ['status' => 'error', 'message' => 'An unexpected error occurred.'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zipfile'])) {
   $zipfile = $_FILES['zipfile'];
+  
+  // Get user ID from email
+  $email = $_SESSION['email'];
+  $db = new PDO('sqlite:../database.sqlite');
+  
+  $stmt = $db->prepare("SELECT id FROM users WHERE email = :email");
+  $stmt->bindParam(':email', $email);
+  $stmt->execute();
+  $user = $stmt->fetch();
+  
+  if (!$user || !isset($user['id'])) {
+    $response['message'] = "Error: Unable to find user ID";
+    echo json_encode($response);
+    exit;
+  }
+  
+  $user_id = $user['id'];
 
   if ($zipfile['type'] !== 'application/zip' && $zipfile['type'] !== 'application/x-zip-compressed') {
     $response['message'] = "Only ZIP files are allowed.";
@@ -104,8 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zipfile'])) {
       if (isset($data['images']) && isset($data['image_child'])) {
         $imagesData = $data['images'];
         $imageChildData = $data['image_child'];
-
-        $db = new PDO('sqlite:../database.sqlite');
+        $currentDate = date('Y-m-d H:i:s'); // Get current timestamp
 
         // Array to store old and new IDs
         $idMapping = [];
@@ -113,39 +133,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zipfile'])) {
         // Import images data
         foreach ($imagesData as $image) {
           $oldId = $image['id'];
-          $filename = handleFileConflict($db, 'images', $image['filename'], $extractPath);
+          $uniqueId = generateUniqueImageId();
+          $ext = pathinfo($image['filename'], PATHINFO_EXTENSION);
+          
+          // Generate new image ID
+          $newId = getNextAvailableId($db, 'images');
+          $idMapping[$oldId] = $newId;
+          
+          // Create new filename using the structure from upload.php
+          $newFilename = "uid_" . $user_id . "/data/imageid-" . $newId . "/imageassets_" . $uniqueId . "/" . $uniqueId . "_i0." . $ext;
 
-          // Generate a new date-based folder
-          $dateFolder = date('Y/m/d');
-          $uploadDir = '../images/' . $dateFolder . '/';
-          if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
+          // Create directories
+          $uploadDir = '../images/';
+          $thumbnailDir = '../thumbnails/';
+          
+          if (!is_dir(dirname($uploadDir . $newFilename))) {
+            mkdir(dirname($uploadDir . $newFilename), 0755, true);
+          }
+          if (!is_dir(dirname($thumbnailDir . $newFilename))) {
+            mkdir(dirname($thumbnailDir . $newFilename), 0755, true);
           }
 
-          // Update filename to include only one date folder
-          $newFilename = $dateFolder . '/' . basename($filename);
-
-          $stmt = $db->prepare("SELECT id FROM images WHERE id = :id");
-          $stmt->bindParam(':id', $oldId);
-          $stmt->execute();
-          if ($stmt->fetch()) {
-            $newId = getNextAvailableId($db, 'images');
-            $idMapping[$oldId] = $newId;
-          } else {
-            $newId = $oldId;
-          }
-
-          $stmt = $db->prepare("REPLACE INTO images (id, filename, original_filename, email, tags, title, imgdesc, link, date, view_count, type, episode_name, artwork_type, `group`, categories, language, parodies, characters) VALUES (:id, :filename, :original_filename, :email, :tags, :title, :imgdesc, :link, :date, :view_count, :type, :episode_name, :artwork_type, :group, :categories, :language, :parodies, :characters)");
+          $stmt = $db->prepare("INSERT INTO images (id, email, filename, original_filename, tags, title, imgdesc, link, type, episode_name, artwork_type, `group`, categories, language, parodies, characters, date) VALUES (:id, :email, :filename, :original_filename, :tags, :title, :imgdesc, :link, :type, :episode_name, :artwork_type, :group, :categories, :language, :parodies, :characters, :date)");
+          
           $stmt->bindParam(':id', $newId);
+          $stmt->bindParam(':email', $image['email']);
           $stmt->bindParam(':filename', $newFilename);
           $stmt->bindParam(':original_filename', $image['original_filename']);
-          $stmt->bindParam(':email', $image['email']);
           $stmt->bindParam(':tags', $image['tags']);
           $stmt->bindParam(':title', $image['title']);
           $stmt->bindParam(':imgdesc', $image['imgdesc']);
           $stmt->bindParam(':link', $image['link']);
-          $stmt->bindParam(':date', $image['date']);
-          $stmt->bindParam(':view_count', $image['view_count']);
           $stmt->bindParam(':type', $image['type']);
           $stmt->bindParam(':episode_name', $image['episode_name']);
           $stmt->bindParam(':artwork_type', $image['artwork_type']);
@@ -154,66 +172,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zipfile'])) {
           $stmt->bindParam(':language', $image['language']);
           $stmt->bindParam(':parodies', $image['parodies']);
           $stmt->bindParam(':characters', $image['characters']);
+          $stmt->bindParam(':date', $currentDate);
           $stmt->execute();
 
-          // Move original image to images folder
-          rename($extractPath . $filename, $uploadDir . basename($newFilename));
-
-          // Generate thumbnail for the main image
-          $thumbPath = '../thumbnails/' . $dateFolder . '/' . basename($newFilename);
-          if (!is_dir(dirname($thumbPath))) {
-            mkdir(dirname($thumbPath), 0755, true);
-          }
-          createThumbnail($uploadDir . basename($newFilename), $thumbPath);
+          // Move and process original image
+          rename($extractPath . $image['filename'], $uploadDir . $newFilename);
+          createThumbnail($uploadDir . $newFilename, $thumbnailDir . $newFilename);
         }
 
         // Import image_child data
         foreach ($imageChildData as $child) {
           $oldId = $child['id'];
-          $filename = handleFileConflict($db, 'image_child', $child['filename'], $extractPath);
+          $uniqueId = generateUniqueImageId();
+          $ext = pathinfo($child['filename'], PATHINFO_EXTENSION);
+          $parentId = $idMapping[$child['image_id']];
+          
+          // Create new filename for child image
+          $newFilename = "uid_" . $user_id . "/data/imageid-" . $parentId . "/imageassets_" . $uniqueId . "/" . $uniqueId . "_i" . $oldId . "." . $ext;
 
-          // Generate a new date-based folder for child images
-          $dateFolder = date('Y/m/d');
-          $uploadDir = '../images/' . $dateFolder . '/';
-          if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
+          // Create directories
+          if (!is_dir(dirname($uploadDir . $newFilename))) {
+            mkdir(dirname($uploadDir . $newFilename), 0755, true);
+          }
+          if (!is_dir(dirname($thumbnailDir . $newFilename))) {
+            mkdir(dirname($thumbnailDir . $newFilename), 0755, true);
           }
 
-          // Update filename to include only one date folder
-          $newFilename = $dateFolder . '/' . basename($filename);
-
-          $stmt = $db->prepare("SELECT id FROM image_child WHERE id = :id");
-          $stmt->bindParam(':id', $oldId);
-          $stmt->execute();
-          if ($stmt->fetch()) {
-            $newId = getNextAvailableId($db, 'image_child');
-          } else {
-            $newId = $oldId;
-          }
-
-          // Check if the image_id needs to be updated
-          $imageId = $child['image_id'];
-          if (isset($idMapping[$imageId])) {
-            $imageId = $idMapping[$imageId];
-          }
-
-          $stmt = $db->prepare("REPLACE INTO image_child (id, filename, original_filename, image_id, email) VALUES (:id, :filename, :original_filename, :image_id, :email)");
-          $stmt->bindParam(':id', $newId);
+          $stmt = $db->prepare("INSERT INTO image_child (filename, original_filename, image_id, email) VALUES (:filename, :original_filename, :image_id, :email)");
+          
           $stmt->bindParam(':filename', $newFilename);
           $stmt->bindParam(':original_filename', $child['original_filename']);
-          $stmt->bindParam(':image_id', $imageId);
+          $stmt->bindParam(':image_id', $parentId);
           $stmt->bindParam(':email', $child['email']);
           $stmt->execute();
 
-          // Move child image to images folder
-          rename($extractPath . $filename, $uploadDir . basename($newFilename));
-
-          // Generate thumbnail for the child image
-          $thumbPath = '../thumbnails/' . $dateFolder . '/' . basename($newFilename);
-          if (!is_dir(dirname($thumbPath))) {
-            mkdir(dirname($thumbPath), 0755, true);
-          }
-          createThumbnail($uploadDir . basename($newFilename), $thumbPath);
+          // Move and process child image
+          rename($extractPath . $child['filename'], $uploadDir . $newFilename);
+          createThumbnail($uploadDir . $newFilename, $thumbnailDir . $newFilename);
         }
 
         // Clean up
