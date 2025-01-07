@@ -33,6 +33,7 @@ $stmt = $db->prepare("
   SELECT images.*, users.artist, users.pic, users.id AS uid
   FROM images
   JOIN users ON images.email = users.email
+  GROUP BY images.id
   ORDER BY images.title DESC
   LIMIT 12
 ");

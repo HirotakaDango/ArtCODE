@@ -37,6 +37,7 @@ $stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS user
   JOIN users ON images.email = users.email
   LEFT JOIN daily ON images.id = daily.image_id AND daily.date = :currentDate
   WHERE REPLACE(`group`, ' ', '') LIKE :groupWithoutSpaces ESCAPE '\\' OR REPLACE(`group`, ' ', '') LIKE :group_start ESCAPE '\\' OR REPLACE(`group`, ' ', '') LIKE :group_end ESCAPE '\\' OR `group` = :group_exact
+  GROUP BY images.id
   ORDER BY views DESC, images.id DESC LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':groupWithoutSpaces', "{$groupWithoutSpaces},%", SQLITE3_TEXT);
 $stmt->bindValue(':group_start', "%,{$groupWithoutSpaces}", SQLITE3_TEXT);

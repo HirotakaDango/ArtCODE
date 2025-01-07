@@ -21,7 +21,7 @@ $stmt = $db->prepare("SELECT images.*,
 FROM images
 LEFT JOIN favorites ON images.id = favorites.image_id
 LEFT JOIN users ON images.email = users.email
-GROUP BY images.id, users.artist, users.pic, users.id
+GROUP BY images.id
 ORDER BY favorite_count DESC
 LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);

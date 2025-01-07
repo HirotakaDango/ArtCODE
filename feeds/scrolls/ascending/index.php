@@ -28,11 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-// Get all images from the database
+// Get unique images with users from the database
 $stmt = $db->prepare("
   SELECT images.*, users.artist, users.pic, users.id AS uid
   FROM images
   JOIN users ON images.email = users.email
+  GROUP BY images.id
   ORDER BY images.title ASC
   LIMIT 12
 ");

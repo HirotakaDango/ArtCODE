@@ -16,6 +16,7 @@ $limit = 12; // Number of images per batch
 $stmt = $db->prepare("SELECT images.*, users.artist, users.pic, users.id AS uid
   FROM images
   JOIN users ON images.email = users.email
+  GROUP BY images.id
   ORDER BY images.id ASC
   LIMIT :limit OFFSET :offset");
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
