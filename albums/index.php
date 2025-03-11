@@ -141,9 +141,6 @@ $db->close();
   </head>
   <body>
     <?php include('../header.php'); ?>
-    <button type="button" class="btn btn-primary position-fixed bottom-0 end-0 me-3 mb-3 fw-bold" data-bs-toggle="modal" data-bs-target="#createAlbum" style="z-index: 2;">
-      <i class="bi bi-plus-circle" style="-webkit-text-stroke: 1px;"></i> create new
-    </button>
     <!-- Display alerts -->
     <div class="container">
       <?php if (isset($_SESSION['success_message'])) { ?>
@@ -161,17 +158,17 @@ $db->close();
       <?php } ?>
     </div>
     <div class="modal fade" id="createAlbum" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
           <div class="modal-header border-0">
-            <h5 class="text-secondary fw-bold mt-2"><i class="bi bi-images"></i> Create New Album</h5>
+            <h5 class="fw-bold mt-2"><i class="bi bi-images"></i> Create New Album</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="post" class="container">
+            <form method="post">
               <div class="form-floating mb-2">
                 <input type="text" class="form-control rounded-3 border text-secondary fw-bold border-4" id="album_name" name="album_name" maxlength="25">
-                <label for="floatingInput" class="text-secondary fw-bold">Create new album</label>
+                <label for="floatingInput" class="fw-bold">Create new album</label>
               </div>
               <input class="form-control bg-primary text-white fw-bold" type="submit" value="Create">
             </form>
@@ -179,17 +176,22 @@ $db->close();
         </div>
       </div>
     </div>
-    <div class="dropdown">
-      <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-images"></i> sort by
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="dropdown">
+        <button class="btn btn-sm fw-bold rounded-pill ms-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-images"></i> sort by
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
+          <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
+          <li><a href="?by=order_asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
+          <li><a href="?by=order_desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
+        </ul> 
+      </div>
+      <button type="button" class="btn btn-sm fw-bold rounded-pill me-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>" data-bs-toggle="modal" data-bs-target="#createAlbum" style="z-index: 2;">
+        <i class="bi bi-plus-circle" style="-webkit-text-stroke: 1px;"></i> new album
       </button>
-      <ul class="dropdown-menu">
-        <li><a href="?by=newest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(!isset($_GET['by']) || $_GET['by'] == 'newest') echo 'active'; ?>">newest</a></li>
-        <li><a href="?by=oldest&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'oldest') echo 'active'; ?>">oldest</a></li>
-        <li><a href="?by=order_asc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_asc') echo 'active'; ?>">from A to Z</a></li>
-        <li><a href="?by=order_desc&page=<?php echo isset($_GET['page']) ? $_GET['page'] : '1'; ?>" class="dropdown-item fw-bold <?php if(isset($_GET['by']) && $_GET['by'] == 'order_desc') echo 'active'; ?>">from Z to A</a></li>
-      </ul> 
-    </div> 
+    </div>
         <?php 
         if(isset($_GET['by'])){
           $sort = $_GET['by'];
