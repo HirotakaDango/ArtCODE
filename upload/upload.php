@@ -4,7 +4,7 @@ require_once('../auth.php');
 // Connect to the SQLite database
 $db = new SQLite3('../database.sqlite');
 
-// Create the "images" table if it doesn't exist, adding the "original_filename" column
+// Create the "images" table if it doesn't exist, including the "original_filename" column
 $db->exec("
   CREATE TABLE IF NOT EXISTS images (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,7 +27,7 @@ $db->exec("
   )
 ");
 
-// Create the "image_child" table if it doesn't exist, adding the "original_filename" column
+// Create the "image_child" table if it doesn't exist, including the "original_filename" column
 $db->exec("
   CREATE TABLE IF NOT EXISTS image_child (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,7 +65,7 @@ if (isset($_FILES['image'])) {
   // Generate unique ID for this upload batch
   $uniqueId = generateUniqueImageId();
 
-  // Base directory for uploads
+  // Base directories for uploads and thumbnails
   $uploadDir = '../images/';
   $thumbnailDir = '../thumbnails/';
 
@@ -77,11 +77,11 @@ if (isset($_FILES['image'])) {
     mkdir($thumbnailDir, 0755, true);
   }
 
-  // Process main image
+  // Process main image (first file)
   $ext = pathinfo($images['name'][0], PATHINFO_EXTENSION);
   $originalFilename = basename($images['name'][0]);
 
-  // First, insert into database to get image_id
+  // Prepare tags, parodies, and characters
   $tags = filter_var($_POST['tags'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $tags = implode(",", array_values(array_filter(array_map('trim', explode(",", $tags)))));
 
@@ -91,13 +91,16 @@ if (isset($_FILES['image'])) {
   $characters = filter_var($_POST['characters'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);
   $characters = implode(",", array_values(array_filter(array_map('trim', explode(",", $characters)))));
 
-  // Insert main image into database
-  $stmt = $db->prepare("INSERT INTO images (email, filename, original_filename, tags, title, imgdesc, link, date, type, episode_name, artwork_type, `group`, categories, language, parodies, characters) VALUES (:email, :filename, :original_filename, :tags, :title, :imgdesc, :link, :date, :type, :episode_name, :artwork_type, :group, :categories, :language, :parodies, :characters)");
+  // Insert main image into the database with an initial placeholder filename
+  $stmt = $db->prepare("
+    INSERT INTO images 
+      (email, filename, original_filename, tags, title, imgdesc, link, date, type, episode_name, artwork_type, `group`, categories, language, parodies, characters) 
+    VALUES 
+      (:email, :filename, :original_filename, :tags, :title, :imgdesc, :link, :date, :type, :episode_name, :artwork_type, :group, :categories, :language, :parodies, :characters)
+  ");
 
-  // Initial filename placeholder
   $initial_filename = "uid_" . $user_id . "/data/imageid-0/imageassets_" . $uniqueId . "/" . $uniqueId . "_i0." . $ext;
-  
-  $date = date('Y-m-d'); // Get the current date in YYYY-MM-DD format
+  $date = date('Y-m-d');
 
   $stmt->bindValue(':email', $email);
   $stmt->bindValue(':filename', $initial_filename);
@@ -118,36 +121,37 @@ if (isset($_FILES['image'])) {
 
   $stmt->execute();
   
-  // Get the ID of the inserted image
+  // Get the inserted image's ID
   $image_id = $db->lastInsertRowID();
 
-  // Now create the final filename with the correct image_id
+  // Now update the filename with the actual image_id
   $filename = "uid_" . $user_id . "/data/imageid-" . $image_id . "/imageassets_" . $uniqueId . "/" . $uniqueId . "_i0." . $ext;
-  
-  // Update the filename with the actual image_id
   $stmt = $db->prepare("UPDATE images SET filename = :filename WHERE id = :id");
   $stmt->bindValue(':filename', $filename);
   $stmt->bindValue(':id', $image_id);
   $stmt->execute();
 
-  // Ensure the directory structure exists
+  // Ensure directory structure exists for main image
   $uploadPath = dirname($uploadDir . $filename);
   if (!is_dir($uploadPath)) {
     mkdir($uploadPath, 0755, true);
   }
-  $thumbnailPath = dirname($thumbnailDir . $filename);
-  if (!is_dir($thumbnailPath)) {
-    mkdir($thumbnailPath, 0755, true);
+  $thumbPath = dirname($thumbnailDir . $filename);
+  if (!is_dir($thumbPath)) {
+    mkdir($thumbPath, 0755, true);
   }
 
-  // Save the main image
-  move_uploaded_file($images['tmp_name'][0], $uploadDir . $filename);
+  // Save the main image file
+  if (!move_uploaded_file($images['tmp_name'][0], $uploadDir . $filename)) {
+    echo "Error: Failed to move main image.";
+    exit;
+  }
 
-  // Process the main image and create thumbnail
+  // Process the main image to create a thumbnail
   $image_info = getimagesize($uploadDir . $filename);
   $mime_type = $image_info['mime'];
 
-  // Create source image based on mime type
+  // Create source image using the restored switch
   switch ($mime_type) {
     case 'image/jpeg':
       $source = imagecreatefromjpeg($uploadDir . $filename);
@@ -162,7 +166,7 @@ if (isset($_FILES['image'])) {
       $source = imagecreatefromwebp($uploadDir . $filename);
       break;
     case 'image/avif':
-      $source = imagecreatefromavif($uploadDir . $filename);
+      $source = function_exists('imagecreatefromavif') ? imagecreatefromavif($uploadDir . $filename) : null;
       break;
     case 'image/bmp':
       $source = imagecreatefrombmp($uploadDir . $filename);
@@ -171,16 +175,15 @@ if (isset($_FILES['image'])) {
       $source = imagecreatefromwbmp($uploadDir . $filename);
       break;
     default:
-      echo "Error: Unsupported image format.";
-      exit;
+      $source = null;
   }
 
-  if ($source === false) {
+  if (!$source) {
     echo "Error: Failed to create image source.";
     exit;
   }
 
-  // Create thumbnail
+  // Create thumbnail image resource
   $original_width = imagesx($source);
   $original_height = imagesy($source);
   $ratio = $original_width / $original_height;
@@ -188,148 +191,169 @@ if (isset($_FILES['image'])) {
   $thumbnail_height = intval(300 / $ratio);
 
   $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-
-  if ($thumbnail === false) {
+  if (!$thumbnail) {
     echo "Error: Failed to create thumbnail.";
     exit;
   }
 
   imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height);
 
-  // Save thumbnail based on extension
-  switch ($ext) {
-    case 'jpg':
-    case 'jpeg':
-      imagejpeg($thumbnail, $thumbnailDir . $filename);
-      break;
-    case 'png':
-      imagepng($thumbnail, $thumbnailDir . $filename);
-      break;
-    case 'gif':
-      imagegif($thumbnail, $thumbnailDir . $filename);
-      break;
-    case 'webp':
-      imagewebp($thumbnail, $thumbnailDir . $filename);
-      break;
-    case 'avif':
-      imageavif($thumbnail, $thumbnailDir . $filename);
-      break;
-    case 'bmp':
-      imagebmp($thumbnail, $thumbnailDir . $filename);
-      break;
-    case 'wbmp':
-      imagewbmp($thumbnail, $thumbnailDir . $filename);
-      break;
-    default:
-      echo "Error: Unsupported image format.";
-      exit;
+  // Save main thumbnail using match expression (PHP 8)
+  $result = match (strtolower($ext)) {
+    'jpg', 'jpeg' => imagejpeg($thumbnail, $thumbnailDir . $filename),
+    'png'  => imagepng($thumbnail, $thumbnailDir . $filename),
+    'gif'  => imagegif($thumbnail, $thumbnailDir . $filename),
+    'webp' => imagewebp($thumbnail, $thumbnailDir . $filename),
+    'avif' => (function_exists('imageavif') ? imageavif($thumbnail, $thumbnailDir . $filename) : false),
+    'bmp'  => imagebmp($thumbnail, $thumbnailDir . $filename),
+    'wbmp' => imagewbmp($thumbnail, $thumbnailDir . $filename),
+    default => false,
+  };
+
+  if ($result === false) {
+    echo "Error: Failed to save main image thumbnail.";
+    exit;
   }
 
-  // Process additional images
+  // Process additional (child) images if any
   for ($i = 1; $i < count($images['name']); $i++) {
-    $image = array(
-      'name' => $images['name'][$i],
-      'type' => $images['type'][$i],
+    $image = [
+      'name'     => $images['name'][$i],
+      'type'     => $images['type'][$i],
       'tmp_name' => $images['tmp_name'][$i],
-      'error' => $images['error'][$i],
-      'size' => $images['size'][$i]
-    );
+      'error'    => $images['error'][$i],
+      'size'     => $images['size'][$i]
+    ];
 
-    if ($image['error'] == 0) {
-      $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
-      $child_filename = "uid_" . $user_id . "/data/imageid-" . $image_id . "/imageassets_" . $uniqueId . "/" . $uniqueId . "_i" . $i . "." . $ext;
+    if ($image['error'] === 0) {
+      $childExt = pathinfo($image['name'], PATHINFO_EXTENSION);
+      $child_filename = "uid_" . $user_id . "/data/imageid-" . $image_id . "/imageassets_" . $uniqueId . "/" . $uniqueId . "_i" . $i . "." . $childExt;
       $child_originalFilename = basename($image['name']);
 
-      // Create directories if needed
-      $uploadPath = dirname($uploadDir . $child_filename);
-      if (!is_dir($uploadPath)) {
-        mkdir($uploadPath, 0755, true);
+      // Ensure directory structure exists for child image
+      $childUploadPath = dirname($uploadDir . $child_filename);
+      if (!is_dir($childUploadPath)) {
+        mkdir($childUploadPath, 0755, true);
       }
-      $thumbnailPath = dirname($thumbnailDir . $child_filename);
-      if (!is_dir($thumbnailPath)) {
-        mkdir($thumbnailPath, 0755, true);
+      $childThumbPath = dirname($thumbnailDir . $child_filename);
+      if (!is_dir($childThumbPath)) {
+        mkdir($childThumbPath, 0755, true);
       }
 
-      // Save child image and create thumbnail
-      move_uploaded_file($image['tmp_name'], $uploadDir . $child_filename);
+      // Save the child image file
+      if (!move_uploaded_file($image['tmp_name'], $uploadDir . $child_filename)) {
+        echo "Error: Failed to move child image $i.";
+        continue;
+      }
 
-      // Process child image thumbnail (same process as main image)
-      $image_info = getimagesize($uploadDir . $child_filename);
-      $mime_type = $image_info['mime'];
+      // Get image information and mime type for the child image
+      $child_info = getimagesize($uploadDir . $child_filename);
+      $child_mime = $child_info['mime'];
 
-      switch ($mime_type) {
+      // Create source image for child image using the restored switch
+      switch ($child_mime) {
         case 'image/jpeg':
-          $source = imagecreatefromjpeg($uploadDir . $child_filename);
+          $childSource = imagecreatefromjpeg($uploadDir . $child_filename);
           break;
         case 'image/png':
-          $source = imagecreatefrompng($uploadDir . $child_filename);
+          $childSource = imagecreatefrompng($uploadDir . $child_filename);
           break;
         case 'image/gif':
-          $source = imagecreatefromgif($uploadDir . $child_filename);
+          $childSource = imagecreatefromgif($uploadDir . $child_filename);
           break;
         case 'image/webp':
-          $source = imagecreatefromwebp($uploadDir . $child_filename);
+          $childSource = imagecreatefromwebp($uploadDir . $child_filename);
           break;
         case 'image/avif':
-          $source = imagecreatefromavif($uploadDir . $child_filename);
+          $childSource = function_exists('imagecreatefromavif') ? imagecreatefromavif($uploadDir . $child_filename) : null;
           break;
         case 'image/bmp':
-          $source = imagecreatefrombmp($uploadDir . $child_filename);
+          $childSource = imagecreatefrombmp($uploadDir . $child_filename);
           break;
         case 'image/wbmp':
-          $source = imagecreatefromwbmp($uploadDir . $child_filename);
+          $childSource = imagecreatefromwbmp($uploadDir . $child_filename);
           break;
         default:
-          echo "Error: Unsupported image format.";
-          continue;
+          echo "Error: Unsupported child image format for image $i.";
+          continue 2; // Skip to next image in the loop
       }
 
-      if ($source === false) {
-        echo "Error: Failed to create image source.";
+      if (!$childSource) {
+        echo "Error: Failed to create source for child image $i.";
         continue;
       }
 
-      $original_width = imagesx($source);
-      $original_height = imagesy($source);
-      $ratio = $original_width / $original_height;
-      $thumbnail_width = 300;
-      $thumbnail_height = intval(300 / $ratio);
+      // Create thumbnail for child image
+      $child_original_width = imagesx($childSource);
+      $child_original_height = imagesy($childSource);
+      $child_ratio = $child_original_width / $child_original_height;
+      $child_thumb_width = 300;
+      $child_thumb_height = intval(300 / $child_ratio);
 
-      $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-
-      if ($thumbnail === false) {
-        echo "Error: Failed to create thumbnail.";
+      $childThumbnail = imagecreatetruecolor($child_thumb_width, $child_thumb_height);
+      if (!$childThumbnail) {
+        echo "Error: Failed to create thumbnail for child image $i.";
         continue;
       }
 
-      imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height);
+      imagecopyresampled($childThumbnail, $childSource, 0, 0, 0, 0, $child_thumb_width, $child_thumb_height, $child_original_width, $child_original_height);
 
-      switch ($ext) {
+      // Save child thumbnail using a switch (you can also use match if preferred)
+      switch (strtolower($childExt)) {
         case 'jpg':
         case 'jpeg':
-          imagejpeg($thumbnail, $thumbnailDir . $child_filename);
+          if (!imagejpeg($childThumbnail, $thumbnailDir . $child_filename)) {
+            echo "Error: Failed to save child thumbnail $i.";
+            continue 2;
+          }
           break;
         case 'png':
-          imagepng($thumbnail, $thumbnailDir . $child_filename);
+          if (!imagepng($childThumbnail, $thumbnailDir . $child_filename)) {
+            echo "Error: Failed to save child thumbnail $i.";
+            continue 2;
+          }
           break;
         case 'gif':
-          imagegif($thumbnail, $thumbnailDir . $child_filename);
+          if (!imagegif($childThumbnail, $thumbnailDir . $child_filename)) {
+            echo "Error: Failed to save child thumbnail $i.";
+            continue 2;
+          }
           break;
         case 'webp':
-          imagewebp($thumbnail, $thumbnailDir . $child_filename);
+          if (!imagewebp($childThumbnail, $thumbnailDir . $child_filename)) {
+            echo "Error: Failed to save child thumbnail $i.";
+            continue 2;
+          }
           break;
         case 'avif':
-          imageavif($thumbnail, $thumbnailDir . $child_filename);
+          if (function_exists('imageavif')) {
+            if (!imageavif($childThumbnail, $thumbnailDir . $child_filename)) {
+              echo "Error: Failed to save child thumbnail $i.";
+              continue 2;
+            }
+          } else {
+            echo "Error: AVIF not supported for child image $i.";
+            continue 2;
+          }
           break;
         case 'bmp':
-          imagebmp($thumbnail, $thumbnailDir . $child_filename);
+          if (!imagebmp($childThumbnail, $thumbnailDir . $child_filename)) {
+            echo "Error: Failed to save child thumbnail $i.";
+            continue 2;
+          }
           break;
         case 'wbmp':
-          imagewbmp($thumbnail, $thumbnailDir . $child_filename);
+          if (!imagewbmp($childThumbnail, $thumbnailDir . $child_filename)) {
+            echo "Error: Failed to save child thumbnail $i.";
+            continue 2;
+          }
           break;
+        default:
+          echo "Error: Unsupported file extension for child image $i.";
+          continue 2;
       }
 
-      // Insert child image into database
+      // Insert child image information into the database
       $stmt = $db->prepare("INSERT INTO image_child (filename, original_filename, image_id, email) VALUES (:filename, :original_filename, :image_id, :email)");
       $stmt->bindValue(':filename', $child_filename);
       $stmt->bindValue(':original_filename', $child_originalFilename);
