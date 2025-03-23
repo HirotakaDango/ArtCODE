@@ -8,207 +8,197 @@ if (!isset($_SESSION['email'])) {
 }
 
 $email = $_SESSION['email'];
-$image_id = $_GET['id'];
+$image_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-// Connect to the SQLite database
-$db = new SQLite3('../database.sqlite');
+if (!$image_id) {
+  die("Invalid image ID.");
+}
 
-if (!$db) {
-  die("Connection failed: " . $db->lastErrorMsg());
+// Connect to SQLite database with error handling
+try {
+  $db = new SQLite3('../database.sqlite', SQLITE3_OPEN_READWRITE);
+} catch (Exception $e) {
+  die("Database connection failed: " . $e->getMessage());
 }
 
 // Get user ID from email
 $stmt = $db->prepare("SELECT id FROM users WHERE email = :email");
-$stmt->bindValue(':email', $email);
+$stmt->bindValue(':email', $email, SQLITE3_TEXT);
 $result = $stmt->execute();
-$user = $result->fetchArray();
+$user = $result->fetchArray(SQLITE3_ASSOC);
 
 if (!$user || !isset($user['id'])) {
-  die("Error: Unable to find user ID");
+  die("Error: Unable to find user ID.");
 }
 
 $user_id = $user['id'];
 
-// Get the existing image information to get the unique ID from its filename
+// Get the existing image information
 $stmt = $db->prepare("SELECT filename FROM images WHERE id = :image_id AND email = :email");
-$stmt->bindValue(':image_id', $image_id);
-$stmt->bindValue(':email', $email);
+$stmt->bindValue(':image_id', $image_id, SQLITE3_INTEGER);
+$stmt->bindValue(':email', $email, SQLITE3_TEXT);
 $result = $stmt->execute();
-$image = $result->fetchArray();
+$image = $result->fetchArray(SQLITE3_ASSOC);
 
 if (!$image) {
-  die("Error: Image not found or access denied");
+  die("Error: Image not found or access denied.");
 }
 
-// Extract the unique ID from the existing filename
-// Assuming filename format: uid_X/data/imageid-Y/imageassets_UNIQUEID/UNIQUEID_i0.ext
-preg_match('/imageassets_([^\/]+)/', $image['filename'], $matches);
+// Extract the unique ID from filename using regex
+if (!preg_match('/imageassets_([^\/]+)/', $image['filename'], $matches)) {
+  die("Error: Could not determine unique ID from existing image.");
+}
+
 $uniqueId = $matches[1];
 
-if (!$uniqueId) {
-  die("Error: Could not determine unique ID from existing image");
-}
-
-// Check if any images were uploaded
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
-  ob_start();
-
   $images = $_FILES['image'];
-  
+
   // Base directories
   $uploadDir = '../images/';
   $thumbnailDir = '../thumbnails/';
 
-  // Create base directories if they don't exist
-  if (!is_dir($uploadDir)) {
-    mkdir($uploadDir, 0755, true);
-  }
-  if (!is_dir($thumbnailDir)) {
-    mkdir($thumbnailDir, 0755, true);
+  // Ensure directories exist
+  foreach ([$uploadDir, $thumbnailDir] as $dir) {
+    if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+      die("Error: Failed to create directory $dir.");
+    }
   }
 
-  // Get the count of existing child images for this image_id
+  // Get count of existing child images
   $stmt = $db->prepare("SELECT COUNT(*) as count FROM image_child WHERE image_id = :image_id");
-  $stmt->bindValue(':image_id', $image_id);
+  $stmt->bindValue(':image_id', $image_id, SQLITE3_INTEGER);
   $result = $stmt->execute();
-  $count = $result->fetchArray();
-  $startIndex = $count['count'] + 1;  // Start from the next available index
+  $count = $result->fetchArray(SQLITE3_ASSOC);
+  $startIndex = (int) $count['count'] + 1;
 
-  // Process each uploaded file
-  for ($i = 0; $i < count($images['name']); $i++) {
+  for ($i = 0, $len = count($images['name']); $i < $len; $i++) {
     $currentIndex = $startIndex + $i;
-    $ext = pathinfo($images['name'][$i], PATHINFO_EXTENSION);
-    
-    // Create filename using the same pattern as the main image
-    $filename = "uid_" . $user_id . "/data/imageid-" . $image_id . "/imageassets_" . $uniqueId . "/" . $uniqueId . "_i" . $currentIndex . "." . $ext;
+    $ext = strtolower(pathinfo($images['name'][$i], PATHINFO_EXTENSION));
+
+    // Validate file extension
+    $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'bmp', 'wbmp'];
+    if (!in_array($ext, $allowedExts, true)) {
+      echo "Error: Unsupported image format.";
+      continue;
+    }
+
+    // Generate file paths
+    $filename = "uid_{$user_id}/data/imageid-{$image_id}/imageassets_{$uniqueId}/{$uniqueId}_i{$currentIndex}.{$ext}";
+    $uploadPath = $uploadDir . $filename;
+    $thumbnailPath = $thumbnailDir . $filename;
     $originalFilename = basename($images['name'][$i]);
 
-    // Create directories if needed
-    $uploadPath = dirname($uploadDir . $filename);
-    if (!is_dir($uploadPath)) {
-      mkdir($uploadPath, 0755, true);
-    }
-    $thumbnailPath = dirname($thumbnailDir . $filename);
-    if (!is_dir($thumbnailPath)) {
-      mkdir($thumbnailPath, 0755, true);
+    // Create necessary directories
+    foreach ([dirname($uploadPath), dirname($thumbnailPath)] as $dir) {
+      if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+        echo "Error: Failed to create directory $dir.";
+        continue 2;
+      }
     }
 
-    // Save the main image
-    move_uploaded_file($images['tmp_name'][$i], $uploadDir . $filename);
+    // Save the uploaded file
+    if (!move_uploaded_file($images['tmp_name'][$i], $uploadPath)) {
+      echo "Error: Failed to save uploaded file.";
+      continue;
+    }
 
-    // Process the image and create thumbnail
-    $image_info = getimagesize($uploadDir . $filename);
-    $mime_type = $image_info['mime'];
-
-    // Create source image based on mime type
-    switch ($mime_type) {
+    // Create a thumbnail
+    $imageInfo = getimagesize($uploadPath);
+    $mime = $imageInfo['mime'];
+    
+    // Create source image based on mime type (Restored switch)
+    switch ($mime) {
       case 'image/jpeg':
-        $source = imagecreatefromjpeg($uploadDir . $filename);
+        $source = imagecreatefromjpeg($uploadPath);
         break;
       case 'image/png':
-        $source = imagecreatefrompng($uploadDir . $filename);
+        $source = imagecreatefrompng($uploadPath);
         break;
       case 'image/gif':
-        $source = imagecreatefromgif($uploadDir . $filename);
+        $source = imagecreatefromgif($uploadPath);
         break;
       case 'image/webp':
-        $source = imagecreatefromwebp($uploadDir . $filename);
+        $source = imagecreatefromwebp($uploadPath);
         break;
       case 'image/avif':
-        $source = imagecreatefromavif($uploadDir . $filename);
+        $source = function_exists('imagecreatefromavif') ? imagecreatefromavif($uploadPath) : null;
         break;
       case 'image/bmp':
-        $source = imagecreatefrombmp($uploadDir . $filename);
+        $source = imagecreatefrombmp($uploadPath);
         break;
       case 'image/wbmp':
-        $source = imagecreatefromwbmp($uploadDir . $filename);
+        $source = imagecreatefromwbmp($uploadPath);
         break;
       default:
-        echo "Error: Unsupported image format.";
-        continue;
+        $source = null;
     }
 
-    if ($source === false) {
+    if (!$source) {
       echo "Error: Failed to create image source.";
       continue;
     }
 
-    // Create thumbnail
-    $original_width = imagesx($source);
-    $original_height = imagesy($source);
-    $ratio = $original_width / $original_height;
-    $thumbnail_width = 300;
-    $thumbnail_height = intval(300 / $ratio);
+    // Resize image for thumbnail
+    $origWidth = imagesx($source);
+    $origHeight = imagesy($source);
+    $thumbWidth = 300;
+    $thumbHeight = (int) (300 / ($origWidth / $origHeight));
 
-    $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+    $thumbnail = imagecreatetruecolor($thumbWidth, $thumbHeight);
+    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbWidth, $thumbHeight, $origWidth, $origHeight);
 
-    if ($thumbnail === false) {
-      echo "Error: Failed to create thumbnail.";
-      continue;
-    }
-
-    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height);
-
-    // Save thumbnail based on extension
+    // Save thumbnail based on extension (Restored switch)
     switch ($ext) {
       case 'jpg':
       case 'jpeg':
-        imagejpeg($thumbnail, $thumbnailDir . $filename);
+        imagejpeg($thumbnail, $thumbnailPath);
         break;
       case 'png':
-        imagepng($thumbnail, $thumbnailDir . $filename);
+        imagepng($thumbnail, $thumbnailPath);
         break;
       case 'gif':
-        imagegif($thumbnail, $thumbnailDir . $filename);
+        imagegif($thumbnail, $thumbnailPath);
         break;
       case 'webp':
-        imagewebp($thumbnail, $thumbnailDir . $filename);
+        imagewebp($thumbnail, $thumbnailPath);
         break;
       case 'avif':
-        imageavif($thumbnail, $thumbnailDir . $filename);
+        function_exists('imageavif') ? imageavif($thumbnail, $thumbnailPath) : null;
         break;
       case 'bmp':
-        imagebmp($thumbnail, $thumbnailDir . $filename);
+        imagebmp($thumbnail, $thumbnailPath);
         break;
       case 'wbmp':
-        imagewbmp($thumbnail, $thumbnailDir . $filename);
+        imagewbmp($thumbnail, $thumbnailPath);
         break;
     }
 
-    // Insert child image into database
+    // Insert into database
     $stmt = $db->prepare("INSERT INTO image_child (filename, original_filename, image_id, email) VALUES (:filename, :original_filename, :image_id, :email)");
-    $stmt->bindValue(':filename', $filename);
-    $stmt->bindValue(':original_filename', $originalFilename);
-    $stmt->bindValue(':image_id', $image_id);
-    $stmt->bindValue(':email', $email);
+    $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+    $stmt->bindValue(':original_filename', $originalFilename, SQLITE3_TEXT);
+    $stmt->bindValue(':image_id', $image_id, SQLITE3_INTEGER);
+    $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->execute();
   }
 
-  // Redirect back to the referring page
-  $redirect_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/upload.php';
-  header("Location: " . $redirect_url);
+  header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '/upload.php'));
   exit;
 }
 
-// Get the current image information
+// Fetch image details
 $stmt = $db->prepare("SELECT * FROM images WHERE id = :image_id AND email = :email");
-$stmt->bindParam(':image_id', $image_id);
-$stmt->bindParam(':email', $email);
+$stmt->bindValue(':image_id', $image_id, SQLITE3_INTEGER);
+$stmt->bindValue(':email', $email, SQLITE3_TEXT);
 $result = $stmt->execute();
-
-if (!$result) {
-  echo "Error: " . $db->lastErrorMsg();
-  exit;
-}
-
 $image = $result->fetchArray(SQLITE3_ASSOC);
 
 if (!$image) {
   echo '<meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">
-       ';
-  exit();
+        <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">';
+  exit;
 }
 
 $db->close();
@@ -289,7 +279,7 @@ $db->close();
         </div>
       </div>
     </div>
-     <!-- Limitations Modal -->
+    <!-- Limitations Modal -->
     <?php include('limitations.php'); ?>
     <style>
       .text-stroke {
