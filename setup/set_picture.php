@@ -113,11 +113,13 @@ $db = null; // Close the PDO connection
       </h3>
       <p class="fw-semibold">Current profile picture:</p>
       <a class="card p-3 border-0 bg-body-tertiary rounded-4 text-decoration-none fs-5 my-4" href="#" data-bs-toggle="modal" data-bs-target="#originalImage">
-        <div class="d-flex align-items-center">
-          <div class="d-inline-flex align-items-center justify-content-center me-3">
-            <img id="previewImage" src="<?php echo !empty($current_pic) ? $current_pic : "../icon/bg.png"; ?>" alt="Current Background Picture" style="width: 128px; height: 128px;" class="border border-4 rounded-circle object-fit-cover">
+        <div class="row">
+          <div class="col-md-3 my-4 my-md-0">
+            <div class="d-flex justify-content-center align-items-center">
+              <img id="previewImage" src="<?php echo !empty($current_pic) ? $current_pic : '../icon/bg.png'; ?>" alt="Current Background Picture" style="width: 128px; height: 128px;" class="border border-4 rounded-circle object-fit-cover">
+            </div>
           </div>
-          <div>
+          <div class="col-md-9">
             <div class="fw-bold fs-2"><?php echo $artist; ?></div>
             <small class="text-muted fw-medium">
               <?php echo empty($bio) ? "user's description is empty" : substr($bio, 0, 240) . (strlen($bio) > 240 ? '...' : ''); ?>
