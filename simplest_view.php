@@ -294,6 +294,41 @@ if ($daily_view) {
             <a href="#" id="originalImageLink" data-bs-toggle="modal" data-bs-target="#originalImageModal" data-original-src="images/<?php echo $image['filename']; ?>">
               <img class="img-pointer shadow-lg rounded-r h-100 w-100" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
             </a>
+            
+            <!-- Original Image Modal -->
+            <div class="modal fade" id="originalImageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-fullscreen-sm-down">
+                <div class="modal-content border-0 p-0 rounded-min-4">
+                  <div class="d-flex align-items-center justify-content-between p-2">
+                    <h5 class="fw-medium text-truncate ms-2">Preview <?php echo $image['title']; ?></h5>
+                    <button type="button" class="btn border-0" data-bs-dismiss="modal">
+                      <i class="bi bi-chevron-down fs-5" style="-webkit-text-stroke: 3px;"></i>
+                    </button>
+                  </div>
+                  <iframe id="modalIframe" class="vh-100 w-100" sandbox="allow-scripts allow-same-origin"></iframe>
+                </div>
+              </div>
+            </div>
+            
+            <script>
+              document.addEventListener('DOMContentLoaded', function () {
+                var modalElement = document.getElementById('originalImageModal');
+                var iframeElement = document.getElementById('modalIframe');
+                var iframePath = '/artworkid.php?artworkid=<?php echo $image["id"]; ?>';
+                
+                // Load iframe content when modal is shown
+                modalElement.addEventListener('show.bs.modal', function () {
+                  iframeElement.src = iframePath;
+                });
+            
+                // Clear iframe content when modal is hidden
+                modalElement.addEventListener('hide.bs.modal', function () {
+                  iframeElement.src = '';
+                });
+              });
+            </script>
+            <!-- End of Original Image Modal -->
+
             <?php
               // Function to calculate the size of an image in MB
               function getImageSizeInMB($filename) {
