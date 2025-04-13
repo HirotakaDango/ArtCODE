@@ -19,7 +19,7 @@ $stmt->bindParam(':numpage', $default_numpage, PDO::PARAM_INT);
 $stmt->execute();
 
 // Redirect to a confirmation page or wherever you need
-header('Location: /');
+header('Location: /session/login');
 exit();
 
 $db = null; // Close the PDO connection

@@ -1,12 +1,19 @@
 <?php
 session_start(); // Start session for managing user sessions
 
+// If the user is already logged in, redirect to the next step
+if (isset($_SESSION['email'])) {
+  header('Location: /install/next.php');
+  exit();
+}
+
 // Define the path to the SQLite database
 $dbPath = '../database.sqlite';
 
 // Initialize status variables
 $databaseCreated = false;
 $adminCreated = false;
+$error_msg = '';
 
 try {
   $db = new PDO('sqlite:' . $dbPath);
@@ -117,7 +124,7 @@ try {
         $stmt->bindValue(':episode_name', 'Gradient Image', PDO::PARAM_STR); // Inserting episode name
         $stmt->execute();
 
-        // Directly log in the user
+        // Directly log in the user so they won't have to sign in again
         $_SESSION['email'] = $email;
         
         // Redirect to the next step
