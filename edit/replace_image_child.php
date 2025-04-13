@@ -10,20 +10,62 @@ if (!isset($_SESSION['email'])) {
   exit;
 }
 
-// Function to delete previous images
+// Function to delete previous images (modified to handle new path and old path)
 function deletePreviousImages($filename) {
-  $dateFolder = date('Y/m/d');
-  $previousImage = '../images/' . $dateFolder . '/' . $filename;
-  $previousThumbnail = '../thumbnails/' . $dateFolder . '/' . $filename;
-
-  if (file_exists($previousImage)) {
-    unlink($previousImage);
+  if (empty($filename)) {
+    return; // Nothing to delete if filename is empty
   }
 
-  if (file_exists($previousThumbnail)) {
-    unlink($previousThumbnail);
+  // New path structure: uid_{uid}/data/imageid-{image_parent_id}/imageassets_{imageassets_folder_name}/filename_i0.ext
+  if (strpos($filename, 'uid_') === 0) {
+    $baseDirImages = '../images/';
+    $baseDirThumbnails = '../thumbnails/';
+    $previousImage = $baseDirImages . $filename;
+    $previousThumbnail = $baseDirThumbnails . str_replace('images', 'thumbnails', $filename); // Assuming thumbnails are in the same structure
+
+    if (file_exists($previousImage)) {
+      unlink($previousImage);
+    }
+    if (file_exists($previousThumbnail)) {
+      unlink($previousThumbnail);
+    }
+    return; // Exit after deleting new path images
+  }
+
+  // Old path structure: date/date/date/filename
+  if (strpos($filename, '/') !== false && substr_count($filename, '/') >= 2) { // Check if it's an old path
+    $parts = explode('/', $filename);
+    if (count($parts) >= 3) {
+      $dateFolder = $parts[0] . '/' . $parts[1] . '/' . $parts[2];
+      $filename_only = $parts[3];
+      $previousImage = '../images/' . $dateFolder . '/' . $filename_only;
+      $previousThumbnail = '../thumbnails/' . $dateFolder . '/' . $filename_only;
+
+      if (file_exists($previousImage)) {
+        unlink($previousImage);
+      }
+      if (file_exists($previousThumbnail)) {
+        unlink($previousThumbnail);
+      }
+      return; // Exit after deleting old path images
+    }
   }
 }
+
+
+// Retrieve user ID from users table
+$user_email = $_SESSION['email'];
+$userStmt = $db->prepare('SELECT id FROM users WHERE email = :email');
+$userStmt->bindValue(':email', $user_email);
+$userResult = $userStmt->execute();
+$user = $userResult->fetchArray(SQLITE3_ASSOC);
+$users_id = $user['id'];
+
+if (!$users_id) {
+  echo "Error: User ID not found.";
+  exit;
+}
+
 
 // Retrieve image details with title from images table
 if (isset($_GET['id']) && isset($_GET['child_id'])) {
@@ -32,7 +74,7 @@ if (isset($_GET['id']) && isset($_GET['child_id'])) {
 
   $email = $_SESSION['email'];
   $stmt = $db->prepare('
-    SELECT ic.*, i.title 
+    SELECT ic.*, i.title, i.id as image_id_parent
     FROM image_child ic
     JOIN images i ON ic.image_id = i.id
     WHERE ic.id = :child_id AND ic.email = :email
@@ -61,9 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       deletePreviousImages($image['filename']);
     }
 
-    $dateFolder = date('Y/m/d');
-    $uploadDir = '../images/' . $dateFolder . '/';
-    $thumbnailDir = '../thumbnails/' . $dateFolder . '/';
+    $uid = $users_id; // From users.id
+    $image_parent_id = $image['image_id_parent']; // images.id
+    $image_child_id_val = $image['id']; // image_child.id, although not used in path, keeping for potential use.
+    $imageassets_folder_name = uniqid(); // Unique folder for assets
+
+    $uploadDir = '../images/uid_' . $uid . '/data/imageid-' . $image_parent_id . '/imageassets_' . $imageassets_folder_name . '/';
+    $thumbnailDir = '../thumbnails/uid_' . $uid . '/data/imageid-' . $image_parent_id . '/imageassets_' . $imageassets_folder_name . '/';
 
     // Create directories if they don't exist
     if (!is_dir($uploadDir)) {
@@ -74,9 +120,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-    $filename = uniqid() . '.' . $ext;
+    $filename_base = $imageassets_folder_name; // Changed: Use imageassets_folder_name as base
+    $index = '_i0'; // default index
+
+    if (!empty($image['filename'])) {
+      $path_parts = pathinfo($image['filename']);
+      $filename_no_ext = $path_parts['filename'];
+
+      // Match patterns like filename_i3, expecting an underscore followed by "i" and digits
+      if (preg_match('/^(.*)(_i\d+)$/', $filename_no_ext, $matches)) {
+        // $filename_base = $matches[1];  // No longer needed, we are using imageassets_folder_name
+        $index = $matches[2];          // The index part (e.g., "_i3")
+      } else {
+        // If the previous filename does not match the pattern, use the whole name as base
+        // $filename_base = $filename_no_ext; // No longer needed
+      }
+    } else {
+      // Generate a unique filename if no previous filename exists
+      // $filename_base = uniqid(); // No longer needed
+    }
+
+    $filename = $filename_base . $index . '.' . $ext; // e.g. imageassets_folder_name_i3.ext if previous was filename_i3
     $originalFilename = basename($_FILES['image']['name']);
     $uploadFile = $uploadDir . $filename;
+    $thumbnailFile = $thumbnailDir . $filename; // Thumbnail path also updated
 
     // Move the uploaded file to the destination directory
     if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
@@ -133,39 +200,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       switch ($ext) {
         case 'jpg':
         case 'jpeg':
-          imagejpeg($thumbnail, $thumbnailDir . $filename);
+          imagejpeg($thumbnail, $thumbnailFile);
           break;
         case 'png':
-          imagepng($thumbnail, $thumbnailDir . $filename);
+          imagepng($thumbnail, $thumbnailFile);
           break;
         case 'gif':
-          imagegif($thumbnail, $thumbnailDir . $filename);
+          imagegif($thumbnail, $thumbnailFile);
           break;
         case 'webp':
-          imagewebp($thumbnail, $thumbnailDir . $filename);
+          imagewebp($thumbnail, $thumbnailFile);
           break;
         case 'avif':
-          imageavif($thumbnail, $thumbnailDir . $filename);
+          imageavif($thumbnail, $thumbnailFile);
           break;
         case 'bmp':
-          imagebmp($thumbnail, $thumbnailDir . $filename);
+          imagebmp($thumbnail, $thumbnailFile);
           break;
         case 'wbmp':
-          imagewbmp($thumbnail, $thumbnailDir . $filename);
+          imagewbmp($thumbnail, $thumbnailFile);
           break;
         default:
           echo "Error: Unsupported image format.";
           exit;
       }
 
-      // Update the image details in the database
+      // Update the image details in the database with new relative path
+      $new_db_filename = 'uid_' . $uid . '/data/imageid-' . $image_parent_id . '/imageassets_' . $imageassets_folder_name . '/' . $filename;
       $stmt = $db->prepare('UPDATE image_child SET filename = :filename, original_filename = :original_filename WHERE id = :child_id');
-      $stmt->bindValue(':filename', $dateFolder . '/' . $filename, SQLITE3_TEXT);
+      $stmt->bindValue(':filename', $new_db_filename, SQLITE3_TEXT);
       $stmt->bindValue(':original_filename', $originalFilename, SQLITE3_TEXT);
       $stmt->bindValue(':child_id', $child_id, SQLITE3_INTEGER);
       $stmt->execute();
 
-      header('Location: all.php?id=' . urlencode($id) . '&child_id=' . urlencode($child_id) . '&page=' . urlencode($_GET['page']));
+      header('Location: all.php?id=' . urlencode($id) . '&page=' . urlencode($_GET['page']));
       exit();
     } else {
       echo 'Error uploading file.';
