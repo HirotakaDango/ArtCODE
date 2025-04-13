@@ -4,10 +4,11 @@ require_once('../auth.php');
 // Function to create a thumbnail
 function createThumbnail($sourcePath, $destPath, $thumbWidth = 300) {
   list($width, $height) = getimagesize($sourcePath);
-  $thumbHeight = (int) (($thumbWidth / $width) * $height);
+  $thumbHeight = (int)(($thumbWidth / $width) * $height);
   $thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
 
   $extension = strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION));
+  // Create source image from file for all supported formats
   switch ($extension) {
     case 'jpg':
     case 'jpeg':
@@ -19,12 +20,29 @@ function createThumbnail($sourcePath, $destPath, $thumbWidth = 300) {
     case 'gif':
       $sourceImage = imagecreatefromgif($sourcePath);
       break;
+    case 'webp':
+      $sourceImage = imagecreatefromwebp($sourcePath);
+      break;
+    case 'avif':
+      if (function_exists('imagecreatefromavif')) {
+        $sourceImage = imagecreatefromavif($sourcePath);
+      } else {
+        return false;
+      }
+      break;
+    case 'bmp':
+      $sourceImage = imagecreatefrombmp($sourcePath);
+      break;
+    case 'wbmp':
+      $sourceImage = imagecreatefromwbmp($sourcePath);
+      break;
     default:
       return false;
   }
 
   imagecopyresampled($thumb, $sourceImage, 0, 0, 0, 0, $thumbWidth, $thumbHeight, $width, $height);
 
+  // Save thumbnail based on file type
   switch ($extension) {
     case 'jpg':
     case 'jpeg':
@@ -35,6 +53,26 @@ function createThumbnail($sourcePath, $destPath, $thumbWidth = 300) {
       break;
     case 'gif':
       imagegif($thumb, $destPath);
+      break;
+    case 'webp':
+      if (function_exists('imagewebp')) {
+        imagewebp($thumb, $destPath);
+      }
+      break;
+    case 'avif':
+      if (function_exists('imageavif')) {
+        imageavif($thumb, $destPath);
+      }
+      break;
+    case 'bmp':
+      if (function_exists('imagebmp')) {
+        imagebmp($thumb, $destPath);
+      }
+      break;
+    case 'wbmp':
+      if (function_exists('imagewbmp')) {
+        imagewbmp($thumb, $destPath);
+      }
       break;
   }
 
@@ -127,23 +165,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zipfile'])) {
         $imageChildData = $data['image_child'];
         $currentDate = date('Y-m-d H:i:s'); // Get current timestamp
 
-        // Array to store old and new IDs
+        // Array to store mapping of old image ID to new image info (newId, assetName, and child counter)
         $idMapping = [];
 
-        // Import images data
+        // Import images data (main images)
         foreach ($imagesData as $image) {
           $oldId = $image['id'];
-          $uniqueId = generateUniqueImageId();
-          $ext = pathinfo($image['filename'], PATHINFO_EXTENSION);
+          // Generate one unique asset name for this image; it will be used in both folder and file names.
+          $assetName = generateUniqueImageId();
+          $ext = strtolower(pathinfo($image['filename'], PATHINFO_EXTENSION));
           
-          // Generate new image ID
+          // Generate new image ID and initialize child counter
           $newId = getNextAvailableId($db, 'images');
-          $idMapping[$oldId] = $newId;
+          $idMapping[$oldId] = [
+            'newId'     => $newId,
+            'assetName' => $assetName,
+            'child_index' => 1  // start numbering children at 1
+          ];
           
-          // Create new filename using the structure from upload.php
-          $newFilename = "uid_" . $user_id . "/data/imageid-" . $newId . "/imageassets_" . $uniqueId . "/" . $uniqueId . "_i0." . $ext;
+          // Create new filename using the structure:
+          // images/uid_{user_id}/data/imageid-{newId}/imageassets_{assetName}/{assetName}_i0.{ext}
+          $newFilename = "uid_" . $user_id . "/data/imageid-" . $newId 
+                       . "/imageassets_" . $assetName . "/" . $assetName . "_i0." . $ext;
 
-          // Create directories
+          // Create directories for original and thumbnail images
           $uploadDir = '../images/';
           $thumbnailDir = '../thumbnails/';
           
@@ -180,17 +225,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zipfile'])) {
           createThumbnail($uploadDir . $newFilename, $thumbnailDir . $newFilename);
         }
 
-        // Import image_child data
+        // Import image_child data (child images)
         foreach ($imageChildData as $child) {
-          $oldId = $child['id'];
-          $uniqueId = generateUniqueImageId();
-          $ext = pathinfo($child['filename'], PATHINFO_EXTENSION);
-          $parentId = $idMapping[$child['image_id']];
+          $parentOldId = $child['image_id'];
+          // Retrieve parent's new ID and assetName
+          if (!isset($idMapping[$parentOldId])) {
+            continue; // skip if parent not found
+          }
+          $parentInfo = $idMapping[$parentOldId];
+          $ext = strtolower(pathinfo($child['filename'], PATHINFO_EXTENSION));
           
-          // Create new filename for child image
-          $newFilename = "uid_" . $user_id . "/data/imageid-" . $parentId . "/imageassets_" . $uniqueId . "/" . $uniqueId . "_i" . $oldId . "." . $ext;
+          // Use the parent's child counter to get the index and then increment it
+          $childIndex = $parentInfo['child_index'];
+          $idMapping[$parentOldId]['child_index']++;
 
-          // Create directories
+          // Create new filename for child image:
+          // images/uid_{user_id}/data/imageid-{newId}/imageassets_{assetName}/{assetName}_i{childIndex}.{ext}
+          $newFilename = "uid_" . $user_id . "/data/imageid-" . $parentInfo['newId']
+                       . "/imageassets_" . $parentInfo['assetName'] . "/" . $parentInfo['assetName'] . "_i" . $childIndex . "." . $ext;
+
+          // Create directories for original and thumbnail images
           if (!is_dir(dirname($uploadDir . $newFilename))) {
             mkdir(dirname($uploadDir . $newFilename), 0755, true);
           }
@@ -202,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zipfile'])) {
           
           $stmt->bindParam(':filename', $newFilename);
           $stmt->bindParam(':original_filename', $child['original_filename']);
-          $stmt->bindParam(':image_id', $parentId);
+          $stmt->bindParam(':image_id', $parentInfo['newId']);
           $stmt->bindParam(':email', $child['email']);
           $stmt->execute();
 
@@ -211,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zipfile'])) {
           createThumbnail($uploadDir . $newFilename, $thumbnailDir . $newFilename);
         }
 
-        // Clean up
+        // Clean up extracted files and ZIP
         unlink($zipPath);
         array_map('unlink', glob("$extractPath/*"));
         rmdir($extractPath);
