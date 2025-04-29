@@ -232,7 +232,7 @@ $db->close();
             <label for="file-ip-1">
               <input class="form-control mb-2 border rounded-3 fw-medium border-4" type="file" name="image[]" id="file-ip-1" accept="image/*" multiple required>
               <p style="word-break: break-word;" class="badge bg-dark text-wrap" style="font-size: 15px;">Drag and drop files here</p>
-              <p><small><i class="bi bi-info-circle-fill"></i> type of extension you can upload: jpg, jpeg, png, gif</small></p>
+              <p><small><i class="bi bi-info-circle-fill"></i> Supported formats: JPG, PNG, GIF, WEBP, AVIF, BMP.</small></p>
               <div class="total-size"></div>
             </label>
           </div>

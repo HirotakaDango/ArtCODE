@@ -10,48 +10,25 @@ if (!isset($_SESSION['email'])) {
   exit;
 }
 
-// Function to delete previous images (modified to handle new path and old path)
+// Function to delete previous image files (main and thumbnail) based on relative path
 function deletePreviousImages($filename) {
   if (empty($filename)) {
-    return; // Nothing to delete if filename is empty
+    return;
   }
 
-  // New path structure: uid_{uid}/data/imageid-{image_parent_id}/imageassets_{imageassets_folder_name}/filename_i0.ext
-  if (strpos($filename, 'uid_') === 0) {
-    $baseDirImages = '../images/';
-    $baseDirThumbnails = '../thumbnails/';
-    $previousImage = $baseDirImages . $filename;
-    $previousThumbnail = $baseDirThumbnails . str_replace('images', 'thumbnails', $filename); // Assuming thumbnails are in the same structure
+  $baseDirImages = '../images/';
+  $baseDirThumbnails = '../thumbnails/';
 
-    if (file_exists($previousImage)) {
-      unlink($previousImage);
-    }
-    if (file_exists($previousThumbnail)) {
-      unlink($previousThumbnail);
-    }
-    return; // Exit after deleting new path images
+  $previousImage = $baseDirImages . $filename;
+  $previousThumbnail = $baseDirThumbnails . $filename;
+
+  if (file_exists($previousImage)) {
+    @unlink($previousImage);
   }
-
-  // Old path structure: date/date/date/filename
-  if (strpos($filename, '/') !== false && substr_count($filename, '/') >= 2) { // Check if it's an old path
-    $parts = explode('/', $filename);
-    if (count($parts) >= 3) {
-      $dateFolder = $parts[0] . '/' . $parts[1] . '/' . $parts[2];
-      $filename_only = $parts[3];
-      $previousImage = '../images/' . $dateFolder . '/' . $filename_only;
-      $previousThumbnail = '../thumbnails/' . $dateFolder . '/' . $filename_only;
-
-      if (file_exists($previousImage)) {
-        unlink($previousImage);
-      }
-      if (file_exists($previousThumbnail)) {
-        unlink($previousThumbnail);
-      }
-      return; // Exit after deleting old path images
-    }
+  if (file_exists($previousThumbnail)) {
+    @unlink($previousThumbnail);
   }
 }
-
 
 // Retrieve user ID from users table
 $user_email = $_SESSION['email'];
@@ -59,187 +36,316 @@ $userStmt = $db->prepare('SELECT id FROM users WHERE email = :email');
 $userStmt->bindValue(':email', $user_email);
 $userResult = $userStmt->execute();
 $user = $userResult->fetchArray(SQLITE3_ASSOC);
-$users_id = $user['id'];
+$users_id = $user['id'] ?? null;
 
 if (!$users_id) {
-  echo "Error: User ID not found.";
+  error_log("Error: User ID not found for email: " . $user_email);
+  echo "Error: User session is invalid or user not found. Please log in again.";
   exit;
 }
 
-
 // Retrieve image details with title from images table
 if (isset($_GET['id']) && isset($_GET['child_id'])) {
-  $id = $_GET['id'];
-  $child_id = $_GET['child_id'];
+  $id = $_GET['id']; // Parent image ID (from images.id)
+  $child_id = $_GET['child_id']; // Child image ID (from image_child.id)
 
   $email = $_SESSION['email'];
   $stmt = $db->prepare('
     SELECT ic.*, i.title, i.id as image_id_parent
     FROM image_child ic
     JOIN images i ON ic.image_id = i.id
-    WHERE ic.id = :child_id AND ic.email = :email
+    WHERE ic.id = :child_id AND ic.email = :email AND i.id = :parent_id
   ');
-  $stmt->bindValue(':child_id', $child_id);
-  $stmt->bindValue(':email', $email);
+  $stmt->bindValue(':child_id', $child_id, SQLITE3_INTEGER);
+  $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+  $stmt->bindValue(':parent_id', $id, SQLITE3_INTEGER);
   $result = $stmt->execute();
   $image = $result->fetchArray(SQLITE3_ASSOC);
 
   if (!$image) {
-    echo '<meta charset="UTF-8">
+    error_log("Access denied or image not found for user: {$email}, child_id: {$child_id}, parent_id: {$id}");
+    echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
-          <img src="../icon/403-Error-Forbidden.svg" style="height: 100%; width: 100%;">';
+          <title>Error</title>
+          <link rel="icon" type="image/png" href="../icon/favicon.png">';
+           include('bootstrapcss.php');
+    echo '</head><body>';
+           include('../header.php');
+    echo '<div class="container mt-3"><div class="alert alert-danger">Error: Image not found or you do not have permission to edit it.</div></div>';
+           include('bootstrapjs.php');
+    echo '</body></html>';
     exit();
   }
+
+  // Get current image details
+  $current_image_path = null;
+  $current_image_res = 'N/A';
+  $current_image_size = 'N/A';
+  if (!empty($image['filename'])) {
+    $current_image_path = '../images/' . $image['filename'];
+    if (file_exists($current_image_path)) {
+      $size_bytes = @filesize($current_image_path);
+      if ($size_bytes !== false) {
+        if ($size_bytes >= 1048576) {
+          $current_image_size = round($size_bytes / 1048576, 2) . ' MB';
+        } elseif ($size_bytes >= 1024) {
+          $current_image_size = round($size_bytes / 1024, 2) . ' KB';
+        } else {
+          $current_image_size = $size_bytes . ' bytes';
+        }
+      }
+
+      $image_info = @getimagesize($current_image_path);
+      if ($image_info !== false) {
+        $current_image_res = $image_info[0] . 'x' . $image_info[1];
+      }
+    }
+  }
+
 } else {
   // Redirect if id or child_id is missing
-  header('Location: all.php?id=' . urlencode($id) . '&child_id=' . urlencode($child_id) . '&page=' . urlencode($_GET['page']));
+  $redirect_url = 'all.php?';
+  if (isset($_GET['id'])) $redirect_url .= 'id=' . urlencode($_GET['id']);
+  if (isset($_GET['page'])) $redirect_url .= '&page=' . urlencode($_GET['page']);
+  if (!isset($_GET['id'])) {
+      header('Location: ../index.php');
+  } else {
+      header('Location: ' . $redirect_url);
+  }
   exit();
 }
 
 // Handle image update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-    if (!empty($image['filename'])) {
-      deletePreviousImages($image['filename']);
+  if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+
+    $previous_db_filename = $image['filename'];
+    $uid = $users_id;
+    $image_parent_id = $image['image_id_parent'];
+    $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+    $originalFilename = basename($_FILES['image']['name']);
+
+    $imageassets_folder_name_part = '';
+    $filename_base_part = '';
+    $index_part = '_i0';
+
+    // Determine path components, reusing unique ID if possible from previous path
+    if (!empty($previous_db_filename) && preg_match('/^uid_\d+\/data\/imageid-\d+\/(imageassets_[a-f0-9]+)\/(.+)$/', $previous_db_filename, $path_matches)) {
+      $imageassets_folder_name_part = $path_matches[1];
+      $previous_basename = $path_matches[2];
+      $previous_filename_no_ext = pathinfo($previous_basename, PATHINFO_FILENAME);
+
+      if (preg_match('/^(.*?)((_i\d+)?)$/', $previous_filename_no_ext, $filename_matches)) {
+        $filename_base_part = $filename_matches[1];
+        if (!empty($filename_matches[3])) {
+          $index_part = $filename_matches[3];
+        } else {
+          $index_part = '_i0';
+        }
+        $expected_base = str_replace('imageassets_', '', $imageassets_folder_name_part);
+        $filename_base_part = 'imageassets_' . $expected_base;
+
+      } else {
+         $filename_base_part = $imageassets_folder_name_part;
+         $index_part = '_i0';
+      }
+
+    } else {
+      // Generate new unique parts if previous path was old format or empty
+      $new_uniqid = uniqid();
+      $imageassets_folder_name_part = 'imageassets_' . $new_uniqid;
+      $filename_base_part = 'imageassets_' . $new_uniqid;
+
+      if (!empty($previous_db_filename)) {
+        $old_basename = basename($previous_db_filename);
+        $old_filename_no_ext = pathinfo($old_basename, PATHINFO_FILENAME);
+        if (preg_match('/(_i\d+)$/', $old_filename_no_ext, $old_index_matches)) {
+          $index_part = $old_index_matches[1];
+        } else {
+          $index_part = '_i0';
+        }
+      } else {
+         $index_part = '_i0';
+      }
     }
 
-    $uid = $users_id; // From users.id
-    $image_parent_id = $image['image_id_parent']; // images.id
-    $image_child_id_val = $image['id']; // image_child.id, although not used in path, keeping for potential use.
-    $imageassets_folder_name = uniqid(); // Unique folder for assets
+    // Construct final paths
+    $relative_base_dir = 'uid_' . $uid . '/data/imageid-' . $image_parent_id . '/' . $imageassets_folder_name_part . '/';
+    $filename = $filename_base_part . $index_part . '.' . $ext;
 
-    $uploadDir = '../images/uid_' . $uid . '/data/imageid-' . $image_parent_id . '/imageassets_' . $imageassets_folder_name . '/';
-    $thumbnailDir = '../thumbnails/uid_' . $uid . '/data/imageid-' . $image_parent_id . '/imageassets_' . $imageassets_folder_name . '/';
+    $uploadDir = '../images/' . $relative_base_dir;
+    $thumbnailDir = '../thumbnails/' . $relative_base_dir;
+    $uploadFile = $uploadDir . $filename;
+    $thumbnailFile = $thumbnailDir . $filename;
+    $new_db_filename = $relative_base_dir . $filename; // Path to store in DB
 
-    // Create directories if they don't exist
+    // Delete previous images before creating new directories
+    if (!empty($previous_db_filename)) {
+      deletePreviousImages($previous_db_filename);
+    }
+
+    // Create directories
     if (!is_dir($uploadDir)) {
-      mkdir($uploadDir, 0755, true);
+      if (!@mkdir($uploadDir, 0755, true)) {
+        error_log("Failed to create directory: " . $uploadDir);
+        echo "Error: Could not create image storage directory.";
+        exit;
+      }
     }
     if (!is_dir($thumbnailDir)) {
-      mkdir($thumbnailDir, 0755, true);
+       if (!@mkdir($thumbnailDir, 0755, true)) {
+        error_log("Failed to create directory: " . $thumbnailDir);
+        echo "Error: Could not create thumbnail storage directory.";
+        exit;
+       }
     }
 
-    $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-    $filename_base = $imageassets_folder_name; // Changed: Use imageassets_folder_name as base
-    $index = '_i0'; // default index
-
-    if (!empty($image['filename'])) {
-      $path_parts = pathinfo($image['filename']);
-      $filename_no_ext = $path_parts['filename'];
-
-      // Match patterns like filename_i3, expecting an underscore followed by "i" and digits
-      if (preg_match('/^(.*)(_i\d+)$/', $filename_no_ext, $matches)) {
-        // $filename_base = $matches[1];  // No longer needed, we are using imageassets_folder_name
-        $index = $matches[2];          // The index part (e.g., "_i3")
-      } else {
-        // If the previous filename does not match the pattern, use the whole name as base
-        // $filename_base = $filename_no_ext; // No longer needed
-      }
-    } else {
-      // Generate a unique filename if no previous filename exists
-      // $filename_base = uniqid(); // No longer needed
-    }
-
-    $filename = $filename_base . $index . '.' . $ext; // e.g. imageassets_folder_name_i3.ext if previous was filename_i3
-    $originalFilename = basename($_FILES['image']['name']);
-    $uploadFile = $uploadDir . $filename;
-    $thumbnailFile = $thumbnailDir . $filename; // Thumbnail path also updated
-
-    // Move the uploaded file to the destination directory
+    // Move uploaded file
     if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
       // Generate thumbnail
-      $image_info = getimagesize($uploadFile);
-      $mime_type = $image_info['mime'];
-      switch ($mime_type) {
-        case 'image/jpeg':
-          $source = imagecreatefromjpeg($uploadFile);
-          break;
-        case 'image/png':
-          $source = imagecreatefrompng($uploadFile);
-          break;
-        case 'image/gif':
-          $source = imagecreatefromgif($uploadFile);
-          break;
-        case 'image/webp':
-          $source = imagecreatefromwebp($uploadFile);
-          break;
-        case 'image/avif':
-          $source = imagecreatefromavif($uploadFile);
-          break;
-        case 'image/bmp':
-          $source = imagecreatefrombmp($uploadFile);
-          break;
-        case 'image/wbmp':
-          $source = imagecreatefromwbmp($uploadFile);
-          break;
-        default:
-          echo "Error: Unsupported image format.";
-          exit;
-      }
+      try {
+        $image_info = getimagesize($uploadFile);
+        if (!$image_info) {
+          throw new Exception("Could not get image size. Invalid image?");
+        }
+        $mime_type = $image_info['mime'];
+        $source = null;
 
-      if ($source === false) {
-        echo "Error: Failed to create image source.";
+        $create_funcs = [
+          'image/jpeg' => 'imagecreatefromjpeg',
+          'image/png'  => 'imagecreatefrompng',
+          'image/gif'  => 'imagecreatefromgif',
+          'image/webp' => 'imagecreatefromwebp',
+          'image/avif' => function_exists('imagecreatefromavif') ? 'imagecreatefromavif' : null,
+          'image/bmp'  => 'imagecreatefrombmp',
+          'image/wbmp' => 'imagecreatefromwbmp',
+          'image/x-ms-bmp' => 'imagecreatefrombmp',
+        ];
+
+        if (isset($create_funcs[$mime_type]) && $create_funcs[$mime_type]) {
+          $func = $create_funcs[$mime_type];
+          $source = @$func($uploadFile);
+        } else {
+          throw new Exception("Unsupported image format: " . $mime_type);
+        }
+
+        if ($source === false) {
+          throw new Exception("Failed to create image source from file.");
+        }
+
+        $original_width = imagesx($source);
+        $original_height = imagesy($source);
+        if ($original_width <= 0 || $original_height <= 0) {
+          imagedestroy($source);
+          throw new Exception("Invalid image dimensions.");
+        }
+
+        $ratio = $original_width / $original_height;
+        $thumbnail_width = 300; // Keep thumbnail width consistent
+        $thumbnail_height = max(1, intval($thumbnail_width / $ratio));
+
+        $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+        if ($thumbnail === false) {
+          imagedestroy($source);
+          throw new Exception("Failed to create thumbnail canvas.");
+        }
+
+        // Handle transparency
+        if (in_array($mime_type, ['image/png', 'image/gif', 'image/webp', 'image/avif'])) {
+          imagealphablending($thumbnail, false);
+          imagesavealpha($thumbnail, true);
+          $transparent_index = imagecolorallocatealpha($thumbnail, 0, 0, 0, 127);
+          imagefill($thumbnail, 0, 0, $transparent_index);
+        }
+
+        imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height);
+
+         $save_funcs = [
+           'jpg'  => 'imagejpeg',
+           'jpeg' => 'imagejpeg',
+           'png'  => 'imagepng',
+           'gif'  => 'imagegif',
+           'webp' => 'imagewebp',
+           'avif' => function_exists('imageavif') ? 'imageavif' : null,
+           'bmp'  => 'imagebmp',
+           'wbmp' => 'imagewbmp',
+         ];
+
+         // Save thumbnail
+         if (isset($save_funcs[$ext]) && $save_funcs[$ext]) {
+           $save_func = $save_funcs[$ext];
+           if (!$save_func($thumbnail, $thumbnailFile)) {
+             throw new Exception("Failed to save thumbnail file.");
+           }
+         } else {
+           imagedestroy($source);
+           imagedestroy($thumbnail);
+           throw new Exception("Cannot save thumbnail: Unsupported extension '$ext'.");
+         }
+
+        imagedestroy($source);
+        imagedestroy($thumbnail);
+
+      } catch (Exception $e) {
+        error_log("Thumbnail generation error: " . $e->getMessage() . " for file " . $uploadFile);
+        @unlink($uploadFile); // Clean up uploaded file if thumbnail fails
+        echo "Error generating thumbnail: " . htmlspecialchars($e->getMessage());
         exit;
       }
 
-      $original_width = imagesx($source);
-      $original_height = imagesy($source);
-      $ratio = $original_width / $original_height;
-      $thumbnail_width = 300;
-      $thumbnail_height = intval(300 / $ratio);
-
-      $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-      if ($thumbnail === false) {
-        echo "Error: Failed to create thumbnail.";
-        exit;
-      }
-
-      imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $original_width, $original_height);
-
-      // Save the thumbnail
-      switch ($ext) {
-        case 'jpg':
-        case 'jpeg':
-          imagejpeg($thumbnail, $thumbnailFile);
-          break;
-        case 'png':
-          imagepng($thumbnail, $thumbnailFile);
-          break;
-        case 'gif':
-          imagegif($thumbnail, $thumbnailFile);
-          break;
-        case 'webp':
-          imagewebp($thumbnail, $thumbnailFile);
-          break;
-        case 'avif':
-          imageavif($thumbnail, $thumbnailFile);
-          break;
-        case 'bmp':
-          imagebmp($thumbnail, $thumbnailFile);
-          break;
-        case 'wbmp':
-          imagewbmp($thumbnail, $thumbnailFile);
-          break;
-        default:
-          echo "Error: Unsupported image format.";
-          exit;
-      }
-
-      // Update the image details in the database with new relative path
-      $new_db_filename = 'uid_' . $uid . '/data/imageid-' . $image_parent_id . '/imageassets_' . $imageassets_folder_name . '/' . $filename;
+      // Update database
       $stmt = $db->prepare('UPDATE image_child SET filename = :filename, original_filename = :original_filename WHERE id = :child_id');
       $stmt->bindValue(':filename', $new_db_filename, SQLITE3_TEXT);
       $stmt->bindValue(':original_filename', $originalFilename, SQLITE3_TEXT);
       $stmt->bindValue(':child_id', $child_id, SQLITE3_INTEGER);
-      $stmt->execute();
 
-      header('Location: all.php?id=' . urlencode($id) . '&page=' . urlencode($_GET['page']));
-      exit();
+      if ($stmt->execute()) {
+        // Redirect on success
+        $redirect_url = 'all.php?id=' . urlencode($id);
+        if (isset($_GET['page'])) {
+            $redirect_url .= '&page=' . urlencode($_GET['page']);
+        }
+        header('Location: ' . $redirect_url);
+        exit();
+      } else {
+         // Handle database update error
+         error_log("Database update failed for child_id {$child_id}: " . $db->lastErrorMsg());
+         echo 'Error updating image record in database.';
+         @unlink($uploadFile); // Clean up files if DB fails
+         @unlink($thumbnailFile);
+         exit;
+      }
+
     } else {
-      echo 'Error uploading file.';
+      // Handle move_uploaded_file error
+      $error_code = $_FILES['image']['error'];
+      $php_errors = [
+          UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
+          UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
+          UPLOAD_ERR_PARTIAL    => 'The uploaded file was only partially uploaded.',
+          UPLOAD_ERR_NO_FILE    => 'No file was uploaded.',
+          UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder.',
+          UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+          UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the file upload.',
+      ];
+      $error_message = $php_errors[$error_code] ?? 'Unknown upload error';
+      error_log("Error uploading file: " . $error_message . " (code: $error_code)");
+      echo 'Error uploading file: ' . htmlspecialchars($error_message);
+      exit;
     }
+  } elseif (isset($_FILES['image']['error']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+      // Handle other upload errors
+      $error_code = $_FILES['image']['error'];
+      $php_errors = [ /* ... same as above ... */ ];
+      $error_message = $php_errors[$error_code] ?? 'Unknown upload error';
+      error_log("File upload failed: " . $error_message . " (code: $error_code)");
+      $upload_error_message = 'File upload failed: ' . htmlspecialchars($error_message);
+      // Let the form display again below with the error message
   } else {
-    echo 'No file uploaded.';
+    // No file was uploaded (or other non-error scenario like initial form load)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $upload_error_message = 'No file uploaded. Please select an image to replace the current one.';
+    }
   }
 }
 ?>
@@ -249,73 +355,229 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Replace Main Image of <?php echo $image['title']; ?></title>
+    <title>Replace Image - <?php echo $image['title']; ?></title>
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <?php include('bootstrapcss.php'); ?>
   </head>
   <body>
     <?php include('../header.php'); ?>
-    <div class="container">
+    <div class="container mt-3">
       <?php include('nav.php'); ?>
+      <h4 class="my-3">Replace Image for "<?php echo htmlspecialchars($image['title']); ?>"</h4>
+
+      <?php if (isset($upload_error_message)): ?>
+        <div class="alert alert-danger"><?php echo $upload_error_message; ?></div>
+      <?php endif; ?>
+
       <div class="row">
-        <div class="col-md-6 pe-md-1 mb-2">
-          <a data-bs-toggle="modal" data-bs-target="#originalImage">
-            <div id="file-preview-container" class="d-flex align-items-center justify-content-center h-100 border border-3 rounded-4">
-              <?php if (!empty($image['filename'])): ?>
-                <img src="../thumbnails/<?php echo $image['filename']; ?>" style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover" id="coverImage">
-              <?php else: ?>
+        <!-- Current Image Column -->
+        <div class="col-md-6 pe-md-1 mb-3">
+          <p class="text-muted small mb-1">Current Image:</p>
+          <!-- Current Image Preview Container -->
+          <div class="border border-3 rounded-4 mb-1 overflow-hidden">
+            <?php if (!empty($image['filename']) && $current_image_path): ?>
+              <?php $thumbnail_path = '../thumbnails/' . $image['filename']; ?>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#originalImageModal" title="View original image" class="d-block w-100 h-100">
+                <img src="<?php echo htmlspecialchars($thumbnail_path); ?>?t=<?php echo time(); // Cache buster ?>" alt="Current image thumbnail" class="w-100 h-100 object-fit-cover">
+              </a>
+            <?php else: ?>
+              <div class="d-flex align-items-center justify-content-center w-100 h-100 bg-light text-secondary">
                 <div class="text-center">
                   <h6><i class="bi bi-image fs-1"></i></h6>
-                  <h6>Your image cover here!</h6>
+                  <h6>No current image</h6>
                 </div>
-              <?php endif; ?>
-            </div>
-          </a>
+              </div>
+            <?php endif; ?>
+          </div>
+          <!-- Current Image Details -->
+          <div class="small text-muted">
+            Resolution: <?php echo htmlspecialchars($current_image_res); ?> | Size: <?php echo htmlspecialchars($current_image_size); ?>
+          </div>
         </div>
-        <div class="col-md-6 ps-md-1">
-          <form action="" method="post" enctype="multipart/form-data" oninput="showPreview(event)">
-            <input class="form-control border border-dark-subtle border-3 rounded-4 mb-2" type="file" id="image" name="image" accept="image/*" required>
-            <button class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold text-nowrap border border-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>-subtle border-3 rounded-4 w-100" type="submit">save changes</button>
+
+        <!-- Upload New Image Column -->
+        <div class="col-md-6 ps-md-1 mb-3">
+          <p class="text-muted small mb-1">Upload New Image:</p>
+          <form action="" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars($id); ?>">
+            <input type="hidden" name="child_id" value="<?php echo htmlspecialchars($child_id); ?>">
+
+            <!-- File Input -->
+            <div class="mb-2">
+              <input class="form-control border border-secondary-subtle border-3 rounded-4" type="file" id="image" name="image" accept="image/jpeg, image/png, image/gif, image/webp, image/avif, image/bmp" required onchange="showPreview(event)">
+              <div class="form-text">Select new image. Max size: <?php echo ini_get('upload_max_filesize'); ?>.</div>
+              <div class="form-text">Supported formats: JPG, PNG, GIF, WEBP, AVIF, BMP.</div>
+            </div>
+
+            <!-- New Image Preview Area (Initially Hidden) -->
+            <div id="new-image-preview-area" class="d-none">
+              <p class="text-muted small mb-1">New Image Preview:</p>
+              <!-- New Image Preview Container -->
+              <div class="border border-3 rounded-4 mb-1 overflow-hidden">
+                 <a href="#" id="newImagePreviewLink" data-bs-toggle="modal" data-bs-target="#newImagePreviewModal" title="View new image preview" class="d-block w-100 h-100">
+                   <img id="newImagePreview" src="#" alt="New image preview" class="w-100 h-100 object-fit-cover d-none" />
+                 </a>
+                 <div id="new-empty-state" class="d-flex align-items-center justify-content-center w-100 h-100 bg-light text-secondary">
+                    <div class="text-center">
+                      <h6><i class="bi bi-image-fill fs-1"></i></h6>
+                      <h6>New image preview</h6>
+                    </div>
+                 </div>
+              </div>
+              <!-- New Image Details -->
+              <div class="small text-muted">
+                Resolution: <span id="new-image-resolution">N/A</span> | Size: <span id="new-image-size">N/A</span>
+              </div>
+            </div>
+
+            <!-- Submit and Cancel Buttons -->
+            <button class="btn btn-primary fw-bold w-100 mt-3 border border-primary-subtle border-3 rounded-4" type="submit">
+              <i class="bi bi-save me-2"></i>Replace Image
+            </button>
+             <a href="all.php?id=<?php echo urlencode($id); ?><?php echo isset($_GET['page']) ? '&page='.urlencode($_GET['page']) : ''; ?>" class="btn btn-secondary w-100 mt-2 border border-secondary-subtle border-3 rounded-4">
+               <i class="bi bi-arrow-left me-2"></i>Cancel
+             </a>
           </form>
         </div>
       </div>
     </div>
     <div class="mt-5"></div>
-    <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <!-- Modal for Original Image -->
+    <?php if (!empty($image['filename']) && $current_image_path): ?>
+    <div class="modal fade" id="originalImageModal" tabindex="-1" aria-labelledby="originalImageModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-transparent border-0 rounded-0">
           <div class="modal-body position-relative">
-            <img class="object-fit-contain h-100 w-100 rounded" src="../images/<?php echo $image['filename']; ?>">
+            <img class="object-fit-contain w-100 h-100 rounded" src="<?php echo htmlspecialchars($current_image_path); ?>?t=<?php echo time(); ?>" alt="Original Image Full">
             <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
           </div>
         </div>
       </div>
     </div>
-    <script>
-      function showPreview(event) {
-        var fileInput = event.target;
-        var previewContainer = document.getElementById("file-preview-container");
+    <?php endif; ?>
 
-        if (fileInput.files.length > 0) {
-          var img = document.createElement("img");
-          img.src = URL.createObjectURL(fileInput.files[0]);
-          img.classList.add("d-block", "object-fit-cover");
-          img.style.borderRadius = "0.85em";
-          img.style.width = "100%";
-          img.style.height = "100%";
-          previewContainer.innerHTML = "";
-          previewContainer.appendChild(img);
-        } else {
-          // Show the existing cover image or default content if no file is selected
-          var currentImage = "<?php echo !empty($image['filename']) ? '../thumbnails/' . htmlspecialchars($image['filename']) : ''; ?>";
-          if (currentImage) {
-            previewContainer.innerHTML = '<img src="' + currentImage + '" style="border-radius: 0.85em; height: 100%; width: 100%;" class="d-block object-fit-cover">';
-          } else {
-            previewContainer.innerHTML = '<div class="text-center"><h6><i class="bi bi-image fs-1"></i></h6><h6>Your image cover here!</h6></div>';
+    <!-- Modal for New Image Preview -->
+    <div class="modal fade" id="newImagePreviewModal" tabindex="-1" aria-labelledby="newImagePreviewModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="modal-body position-relative">
+            <img id="newImageModalPreviewFull" class="object-fit-contain w-100 h-100 rounded" src="#" alt="New Image Preview Full">
+            <button type="button" class="btn border-0 position-absolute end-0 top-0 m-2" data-bs-dismiss="modal"><i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php include('bootstrapjs.php'); ?>
+    <script>
+      // Function to format bytes into KB/MB
+      function formatBytes(bytes, decimals = 2) {
+        if (!+bytes) return '0 Bytes' // Use +bytes to handle non-numeric or zero input
+
+        const k = 1024
+        const dm = decimals < 0 ? 0 : decimals
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+      }
+
+      // Function to show preview and details of the selected image
+      function showPreview(event) {
+        const fileInput = event.target;
+        const newPreviewArea = document.getElementById("new-image-preview-area");
+        const newImgPreview = document.getElementById("newImagePreview"); // The <img> tag for small preview
+        const newEmptyState = document.getElementById("new-empty-state"); // The placeholder div
+        const newImgModalPreview = document.getElementById("newImageModalPreviewFull"); // The <img> tag inside the modal
+        const newResolutionSpan = document.getElementById("new-image-resolution");
+        const newSizeSpan = document.getElementById("new-image-size");
+        const newPreviewLink = document.getElementById("newImagePreviewLink"); // The <a> tag wrapping the small preview
+
+        if (fileInput.files && fileInput.files[0]) {
+          const file = fileInput.files[0];
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            const dataUrl = e.target.result;
+
+            // Update small preview image source and make it visible
+            newImgPreview.src = dataUrl;
+            newImgPreview.classList.remove('d-none'); // Show image
+            newImgPreview.classList.add('d-block');
+
+            // Hide the placeholder empty state
+            newEmptyState.classList.add('d-none');
+            newEmptyState.classList.remove('d-flex');
+
+            // Show the entire preview area container
+            newPreviewArea.classList.remove('d-none');
+
+            // Update modal preview image source
+            newImgModalPreview.src = dataUrl;
+
+            // Enable the link to the modal
+            newPreviewLink.removeAttribute('data-bs-toggle'); // Temporarily remove toggle to avoid issues? Maybe not needed.
+            newPreviewLink.setAttribute('data-bs-toggle', 'modal');
+            newPreviewLink.style.cursor = 'pointer'; // Indicate it's clickable
+
+
+            // Get image dimensions using an Image object
+            const img = new Image();
+            img.onload = function() {
+              newResolutionSpan.textContent = `${this.naturalWidth}x${this.naturalHeight}`;
+            }
+            img.onerror = function() {
+               newResolutionSpan.textContent = 'N/A'; // Could not read dimensions
+            }
+            img.src = dataUrl;
+
+            // Get and format image size
+            newSizeSpan.textContent = formatBytes(file.size);
           }
+
+          reader.readAsDataURL(file); // Read the file as Data URL
+
+        } else {
+          // No file selected or selection cancelled
+          newImgPreview.src = '#'; // Clear src
+          newImgPreview.classList.add('d-none'); // Hide image
+          newImgPreview.classList.remove('d-block');
+
+          // Show the placeholder empty state
+          newEmptyState.classList.remove('d-none');
+          newEmptyState.classList.add('d-flex');
+
+          newImgModalPreview.src = '#'; // Clear modal source too
+          newResolutionSpan.textContent = 'N/A';
+          newSizeSpan.textContent = 'N/A';
+
+          // Hide the entire preview area if no file is selected
+          newPreviewArea.classList.add('d-none');
+
+          // Disable link to modal (optional, could just show empty modal)
+          newPreviewLink.removeAttribute('data-bs-toggle');
+          newPreviewLink.style.cursor = 'default';
         }
       }
+
+      // Initial setup on page load
+      document.addEventListener('DOMContentLoaded', function() {
+         // Make sure the link isn't clickable initially if no preview is shown
+         const newPreviewLink = document.getElementById("newImagePreviewLink");
+         const newImgPreview = document.getElementById("newImagePreview");
+         if (newPreviewLink && newImgPreview && newImgPreview.classList.contains('d-none')) {
+             newPreviewLink.removeAttribute('data-bs-toggle');
+             newPreviewLink.style.cursor = 'default';
+         }
+
+         // Optional: Trigger preview if browser remembers file input on page load/back
+         const fileInput = document.getElementById('image');
+         if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            showPreview({ target: fileInput });
+         }
+      });
     </script>
-    <?php include('bootstrapjs.php'); ?>
+
   </body>
 </html>
