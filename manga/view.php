@@ -61,6 +61,11 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
           height: 100vh;
         }
       }
+
+      .offcanvas-backdrop {
+        box-shadow: none !important;
+        background-color: transparent !important;
+      }
     </style>
   </head>
   <body>
@@ -87,7 +92,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
         </button>
       </div>
     </div>
-    <div class="">
+    <div class="bg-dark-subtle">
       <div class="position-fixed bottom-0 end-0 z-2 d-none d-md-block">
         <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
           <i class="bi bi-list text-stroke"></i> Menu
@@ -294,16 +299,17 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
           <?php } ?>
         </div>
       </div>
-      <div class="position-fixed bottom-0 start-0 z-2 d-none d-md-block">
-        <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" href="#">
-          <main id="swup" class="transition-main"><h6 class="pt-1 small"><?php echo $currentPage . ' / ' . $totalPages; ?></h6></main>
-        </a>
-      </div>
       <div class="btn-group container gap-3 mb-3 d-md-none">
-        <a class="btn w-50 rounded bg-body-tertiary link-body-emphasis fw-bold" href="preview.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Preview</a>
-        <a class="btn w-50 rounded bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Title</a>
+        <a class="btn w-50 rounded bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="preview.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Preview</a>
+        <a class="btn w-50 rounded bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="title.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $image_id; ?>">Back to Title</a>
       </div>
-      <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis fw-bold" href="<?php echo $web; ?>/download_images.php?artworkid=<?php echo $_GET['id']; ?>">Download Batch</a></h2>
+      <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="<?php echo $web; ?>/download_images.php?artworkid=<?php echo $_GET['id']; ?>">Download Batch</a></h2>
+    </div>
+    <div class="position-fixed bottom-0 start-0 z-2 m-2 ms-3">
+      <h6 class="small d-flex">
+        <main id="swup" class="transition-main me-1"><?php echo $currentPage; ?></main>
+        / <?php echo $totalPages; ?>
+      </h6>
     </div>
     <div class="offcanvas offcanvas-end border-0 rounded-start-4 bg-dark" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel" style="box-shadow: none; max-width: 300px;">
       <div class="container">
@@ -356,33 +362,33 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
             </div>
             <div class="container my-2">
               <main id="swup" class="transition-main">
-                <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" href="<?= $imageSource; ?>" download>
+                <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="<?= $imageSource; ?>" download>
                   <i class="bi bi-download me-2"></i> Download Current Image
                 </a>
               </main>
             </div>
             <div class="container my-2">
-              <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" href="<?= $web; ?>/download_images.php?artworkid=<?= urlencode($image_id); ?>">
+              <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="<?= $web; ?>/download_images.php?artworkid=<?= urlencode($image_id); ?>">
                 <i class="bi bi-file-earmark-arrow-down me-2"></i> Download Batch
               </a>
             </div>
             <div class="container my-2">
-              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" data-bs-toggle="modal" data-bs-target="#allEpisodesModal">
+              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#allEpisodesModal">
                 All Chapters
               </button>
             </div>
             <div class="container my-2">
-              <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" href="preview.php?title=<?= urlencode($episode_name); ?>&uid=<?= $user_id; ?>&id=<?= $image_id; ?>">
+              <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="preview.php?title=<?= urlencode($episode_name); ?>&uid=<?= $user_id; ?>&id=<?= $image_id; ?>">
                 All Previews
               </a>
             </div>
             <div class="container my-2">
-              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" data-bs-dismiss="offcanvas">
+              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" data-bs-dismiss="offcanvas">
                 Close Menu
               </button>
             </div>
             <div class="container my-2">
-              <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" href="title.php?title=<?= urlencode($episode_name); ?>&uid=<?= $user_id; ?>&id=<?= $image_id; ?>">
+              <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="title.php?title=<?= urlencode($episode_name); ?>&uid=<?= $user_id; ?>&id=<?= $image_id; ?>">
                 Back to Title
               </a>
             </div>
