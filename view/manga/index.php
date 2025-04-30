@@ -123,7 +123,7 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -160,9 +160,9 @@ try {
     </style>
   </head>
   <body>
-    <div class="bg-dark-subtle">
+    <div class="bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>-subtle">
       <div class="position-fixed bottom-0 end-0 z-2">
-        <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
+        <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2 shadow-sm" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
           <i class="bi bi-list text-stroke"></i> Menu
         </a>
       </div>
@@ -221,7 +221,7 @@ try {
                 ?>
                 <main id="swup" class="transition-main">
                   <?php foreach ($all_chapters as $chapter) : ?>
-                    <a class="w-100 btn btn-outline-light fw-bold p-3 text-start my-1 <?php echo ($chapter['id'] == $image_details['id']) ? 'active' : ''; ?>" href="?title=<?= urlencode($image_details['episode_name']) ?>&uid=<?= urlencode($image_details['userid']) ?>&artworkid=<?= urlencode($chapter['id']) ?>&page=1">
+                    <a class="w-100 btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold p-3 text-start my-1 <?php echo ($chapter['id'] == $image_details['id']) ? 'active' : ''; ?>" href="?title=<?= urlencode($image_details['episode_name']) ?>&uid=<?= urlencode($image_details['userid']) ?>&artworkid=<?= urlencode($chapter['id']) ?>&page=1">
                       <?= htmlspecialchars($chapter['title']); ?>
                     </a>
                   <?php endforeach; ?>
@@ -236,32 +236,32 @@ try {
       </div>
     </div>
     <!-- Offcanvas Menu -->
-    <div class="offcanvas offcanvas-end border-0 rounded-start-4 bg-dark" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel" style="box-shadow: none; max-width: 300px;">
+    <div class="offcanvas offcanvas-end border-0 rounded-start-4 bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> shadow-sm" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel" style="box-shadow: none; max-width: 300px;">
       <div class="container">
         <div class="d-flex justify-content-center align-items-center vh-100">
           <div class="w-100">
             <input type="text" class="form-control-plaintext fw-bold mb-3 px-3 pb-3 fs-3" value="<?= $image_details['title']; ?>" readonly>
             <div class="d-flex justify-content-center align-items-center container my-2">
               <?php
-                echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?artworkid=' . urlencode($image_id) . '&page=1"><i class="bi bi-chevron-double-left text-stroke"></i></a></main>';
+                echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis shadow-sm border-0 fw-medium" href="?artworkid=' . urlencode($image_id) . '&page=1"><i class="bi bi-chevron-double-left text-stroke"></i></a></main>';
                 // Previous navigation button (using our computed prevLink)
                 if ($currentPage > 1 || $current_chapter_index > 0) {
-                  echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="' . $prevLink . '"><i class="bi bi-chevron-left text-stroke"></i></a></main>';
+                  echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis shadow-sm border-0 fw-medium" href="' . $prevLink . '"><i class="bi bi-chevron-left text-stroke"></i></a></main>';
                 } else {
-                  echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="' . $backLink . '"><i class="bi bi-reply-fill"></i></a></main>';
+                  echo '<main id="swup" class="transition-main me-auto"><a class="btn bg-body-tertiary link-body-emphasis shadow-sm border-0 fw-medium" href="' . $backLink . '"><i class="bi bi-reply-fill"></i></a></main>';
                 }
                 echo '<main id="swup" class="transition-main"><h6 class="pt-1">' . $currentPage . ' / ' . $totalPages . '</h6></main>';
                 // Next navigation button (using our computed nextLink)
                 if ($currentPage < $totalPages || $current_chapter_index < count($all_chapters) - 1) {
-                  echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="' . $nextLink . '"><i class="bi bi-chevron-right text-stroke"></i></a></main>';
+                  echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis shadow-sm border-0 fw-medium" href="' . $nextLink . '"><i class="bi bi-chevron-right text-stroke"></i></a></main>';
                 } else {
-                  echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="' . $backLink . '"><i class="bi bi-reply-fill"></i></a></main>';
+                  echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis shadow-sm border-0 fw-medium" href="' . $backLink . '"><i class="bi bi-reply-fill"></i></a></main>';
                 }
-                echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis border-0 fw-medium" href="?artworkid=' . urlencode($image_id) . '&page=' . $totalPages . '"><i class="bi bi-chevron-double-right text-stroke"></i></a></main>';
+                echo '<main id="swup" class="transition-main ms-auto"><a class="btn bg-body-tertiary link-body-emphasis shadow-sm border-0 fw-medium" href="?artworkid=' . urlencode($image_id) . '&page=' . $totalPages . '"><i class="bi bi-chevron-double-right text-stroke"></i></a></main>';
               ?>
             </div>
             <div class="container my-2">
-              <button type="button" class="btn p-3 bg-body-tertiary link-body-emphasis border-0 fw-medium d-flex justify-content-between align-items-center w-100" data-bs-toggle="modal" data-bs-target="#pageModal">
+              <button type="button" class="btn p-3 bg-body-tertiary link-body-emphasis shadow-sm border-0 fw-medium d-flex justify-content-between align-items-center w-100" data-bs-toggle="modal" data-bs-target="#pageModal">
                 <div class="text-start d-flex justify-content-center gap-1">
                   Page <main id="swup" class="transition-main"><?php echo $currentPage; ?></main>
                 </div>
@@ -270,40 +270,41 @@ try {
                 </div>
               </button>
             </div>
-            <div class="container my-2">
-              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" data-bs-toggle="modal" data-bs-target="#commentsModal">
-                <i class="bi bi-chat-square-text me-2"></i> View Comments
+            <div class="container btn-group gap-2">
+              <button type="button" class="rounded btn w-75 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#commentsModal">
+                <i class="bi bi-chat-square-text"></i> View Comments
+              </button>
+              <button type="button" class="rounded btn w-25 p-3 bg-body-tertiary link-body-emphasis shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#shareLink">
+                <i class="bi bi-share-fill"></i>
               </button>
             </div>
             <div class="container my-2">
               <main id="swup" class="transition-main">
-                <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" href="<?= htmlspecialchars($imageSource); ?>" download>
+                <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="<?= htmlspecialchars($imageSource); ?>" download>
                   <i class="bi bi-download me-2"></i> Download Current Image
                 </a>
               </main>
             </div>
             <div class="container my-2">
-              <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" href="/download_images.php?artworkid=<?= urlencode($image_id) ?>">
+              <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="/download_images.php?artworkid=<?= urlencode($image_id) ?>">
                 <i class="bi bi-file-earmark-arrow-down me-2"></i> Download Batch
               </a>
             </div>
-            <div class="container my-2">
-              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" data-bs-toggle="modal" data-bs-target="#allEpisodesModal">
+            <div class="container btn-group gap-2">
+              <button type="button" class="rounded text-nowrap btn w-50 p-3 bg-body-tertiary link-body-emphasis shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#allEpisodesModal">
                 All Chapters
               </button>
-            </div>
-            <div class="container my-2">
-              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" data-bs-toggle="modal" data-bs-target="#previewMangaModal">
+              <button type="button" class="rounded text-nowrap btn w-50 p-3 bg-body-tertiary link-body-emphasis shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#previewMangaModal">
                 All Previews
               </button>
             </div>
             <div class="container my-2">
-              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" data-bs-dismiss="offcanvas">
+              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" data-bs-dismiss="offcanvas">
                 Close Menu
               </button>
             </div>
             <div class="container my-2">
-              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis fw-bold" onclick="window.location.href='/image.php?artworkid=<?= urlencode($image_id) ?>'">
+              <button type="button" class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" onclick="window.location.href='/image.php?artworkid=<?= urlencode($image_id) ?>'">
                 Back to Artwork
               </button>
             </div>
@@ -311,7 +312,6 @@ try {
         </div>
       </div>
     </div>
-    <!-- Modal for pages within the chapter -->
     <div class="modal fade" id="pageModal" tabindex="-1" aria-labelledby="pageModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content rounded-4 shadow border-0">
@@ -322,7 +322,7 @@ try {
           <div class="modal-body">
             <main id="swup" class="transition-main">
               <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                <a class="w-100 btn btn-outline-light border-0 fw-bold p-3 text-start my-1 <?= ($i == $currentPage) ? 'active' : ''; ?>" href="?artworkid=<?= urlencode($image_id) ?>&page=<?= $i ?>">
+                <a class="w-100 btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-0 fw-bold p-3 text-start my-1 <?= ($i == $currentPage) ? 'active' : ''; ?>" href="?artworkid=<?= urlencode($image_id) ?>&page=<?= $i ?>">
                   Page <?= $i ?>
                 </a>
               <?php endfor; ?>
@@ -331,9 +331,94 @@ try {
         </div>
       </div>
     </div>
+    <div class="modal fade" id="shareLink" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 rounded-0">
+          <div class="card rounded-4 p-4">
+            <p class="text-start fw-bold">share to:</p>
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+              <!-- Twitter -->
+              <a class="btn rounded-start-4" href="https://twitter.com/intent/tweet?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-twitter"></i>
+              </a>
+                                
+              <!-- Line -->
+              <a class="btn" href="https://social-plugins.line.me/lineit/share?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-line"></i>
+              </a>
+                                
+              <!-- Email -->
+              <a class="btn" href="mailto:?body=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
+                <i class="bi bi-envelope-fill"></i>
+              </a>
+                                
+              <!-- Reddit -->
+              <a class="btn" href="https://www.reddit.com/submit?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-reddit"></i>
+              </a>
+                                
+              <!-- Instagram -->
+              <a class="btn" href="https://www.instagram.com/?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-instagram"></i>
+              </a>
+                                
+              <!-- Facebook -->
+              <a class="btn rounded-end-4" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-facebook"></i>
+              </a>
+            </div>
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Share Buttons">
+              <!-- WhatsApp -->
+              <a class="btn rounded-start-4" href="https://wa.me/?text=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+    
+              <!-- Pinterest -->
+              <a class="btn" href="https://pinterest.com/pin/create/button/?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-pinterest"></i>
+              </a>
+    
+              <!-- LinkedIn -->
+              <a class="btn" href="https://www.linkedin.com/shareArticle?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-linkedin"></i>
+              </a>
+    
+              <!-- Messenger -->
+              <a class="btn" href="https://www.facebook.com/dialog/send?link=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>&app_id=YOUR_FACEBOOK_APP_ID" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-messenger"></i>
+              </a>
+    
+              <!-- Telegram -->
+              <a class="btn" href="https://telegram.me/share/url?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-telegram"></i>
+              </a>
+    
+              <!-- Snapchat -->
+              <a class="btn rounded-end-4" href="https://www.snapchat.com/share?url=<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-snapchat"></i>
+              </a>
+            </div>
+            <div class="input-group">
+              <input type="text" id="urlInput1" value="<?php echo 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" class="form-control border-2 fw-bold" readonly>
+              <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard1()">
+                <i class="bi bi-clipboard-fill"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <?php include('view_comments_modal.php'); ?>
     <?php include('preview_modal.php'); ?>
     <script>
+      function copyToClipboard1() {
+        var urlInput1 = document.getElementById('urlInput1');
+        urlInput1.select();
+        urlInput1.setSelectionRange(0, 99999); // For mobile devices
+
+        document.execCommand('copy');
+      }
+
       document.addEventListener('keydown', function(e) {
         // Skip if focused on an input or textarea
         if (['input', 'textarea'].includes(e.target.tagName.toLowerCase())) return;
