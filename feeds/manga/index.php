@@ -105,25 +105,35 @@ $limit = 24;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
       <?php
-      if (isset($_GET['search'])) {
-        echo 'Search: "' . $_GET['search'] . '"';
-      } elseif (isset($_GET['artist'])) {
-        echo 'Artist: "' . $_GET['artist'] . '"';
-      } elseif (isset($_GET['tag'])) {
-        echo 'Tag: "' . $_GET['tag'] . '"';
-      } elseif (isset($_GET['parody'])) {
-        echo 'Parody: "' . $_GET['parody'] . '"';
-      } elseif (isset($_GET['character'])) {
-        echo 'Character: "' . $_GET['character'] . '"';
-      } elseif (isset($_GET['group'])) {
-        echo 'Group: "' . $_GET['group'] . '"';
-      } elseif (isset($_GET['categories'])) {
-        echo 'Categories: "' . $_GET['categories'] . '"';
-      } elseif (isset($_GET['language'])) {
-        echo 'Language: "' . $_GET['language'] . '"';
-      } else {
-        echo 'ArtCODE - Manga';
-      }
+        if (isset($_GET['search'])) {
+          echo 'Search: "' . $_GET['search'] . '"';
+        } elseif (isset($_GET['artist'])) {
+          echo 'Artist: "' . $_GET['artist'] . '"';
+        } elseif (isset($_GET['uid'])) {
+          // Get artist name by uid
+          $stmt = $db->prepare("SELECT artist FROM users WHERE id = :uid LIMIT 1");
+          $stmt->execute([':uid' => $_GET['uid']]);
+          $user = $stmt->fetch(PDO::FETCH_ASSOC);
+          if ($user && !empty($user['artist'])) {
+            echo 'Artist: "' . $user['artist'] . '"';
+          } else {
+            echo 'Artist not found';
+          }
+        } elseif (isset($_GET['tag'])) {
+          echo 'Tag: "' . $_GET['tag'] . '"';
+        } elseif (isset($_GET['parody'])) {
+          echo 'Parody: "' . $_GET['parody'] . '"';
+        } elseif (isset($_GET['character'])) {
+          echo 'Character: "' . $_GET['character'] . '"';
+        } elseif (isset($_GET['group'])) {
+          echo 'Group: "' . $_GET['group'] . '"';
+        } elseif (isset($_GET['categories'])) {
+          echo 'Categories: "' . $_GET['categories'] . '"';
+        } elseif (isset($_GET['language'])) {
+          echo 'Language: "' . $_GET['language'] . '"';
+        } else {
+          echo 'ArtCODE - Manga';
+        }
       ?>
     </title>
     <?php include('../../bootstrapcss.php'); ?>

@@ -79,7 +79,9 @@ try {
     </style>
   </head>
   <body>
+    <?php include('../../header.php'); ?>
     <div class="container-fluid p-3">
+      <a class="btn bg-body-tertiary link-body-emphasis fw-bold mb-4" href="title.php?title=<?php echo urlencode($_GET['title']); ?>&uid=<?php echo $_GET['uid']; ?>&id=<?php echo $_GET['id']; ?>">Back to Title</a>
       <div class="d-flex justify-content-center align-items-center vh-100-sm">
         <div class="w-100">
           <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-1">

@@ -5,6 +5,16 @@
             echo 'Search: "' . $_GET['search'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['artist'])) {
             echo 'Artist: "' . $_GET['artist'] . '" (' . $totalImages . ')';
+          } elseif (isset($_GET['uid'])) {
+            // Get artist name by uid
+            $stmt = $db->prepare("SELECT artist FROM users WHERE id = :uid LIMIT 1");
+            $stmt->execute([':uid' => $_GET['uid']]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user && !empty($user['artist'])) {
+              echo 'Artist: "' . $user['artist'] . '" (' . $totalImages . ')';
+            } else {
+              echo 'Artist not found (' . $totalImages . ')';
+            }
           } elseif (isset($_GET['tag'])) {
             echo 'Tag: "' . $_GET['tag'] . '" (' . $totalImages . ')';
           } elseif (isset($_GET['parody'])) {

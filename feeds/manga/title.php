@@ -356,7 +356,7 @@ try {
               <img class="rounded w-100 rounded-4" src="/thumbnails/<?php echo htmlspecialchars($latest_cover['filename']); ?>" alt="<?php echo htmlspecialchars($latest_cover['title']); ?>">
             </a>
             <?php else: ?>
-            <div class="ratio ratio-1x1 bg-light rounded-4 d-flex align-items-center justify-content-center">
+            <div class="ratio ratio-1x1 bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 d-flex align-items-center justify-content-center">
               <span class="text-muted">No Cover Image</span>
             </div>
             <?php endif; ?>
@@ -365,39 +365,39 @@ try {
         <div class="col-md-8">
           <h1 class="mb-4 fw-bold mt-4 mt-md-0"><?php echo htmlspecialchars($episode_name); ?></h1>
           <div class="mb-4">
-            <p class="text-white shadowed-text fw-medium" style="word-break: break-word;">
+            <p class="shadowed-text fw-medium" style="word-break: break-word;">
               <?php
-              // Check if first_cover is not empty and imgdesc is set
-              if (!empty($first_cover) && !empty($first_cover['imgdesc'])) {
-                $messageText = $first_cover['imgdesc'];
-                // Remove HTML tags for display purposes in description section
-                $messageTextWithoutTags = strip_tags($messageText);
-                // Auto-link URLs
-                $pattern = '/\bhttps?:\/\/\S+/i';
-                $formattedText = preg_replace_callback($pattern, function ($matches) {
-                  $url = htmlspecialchars($matches[0]); // Sanitize URL
-                  return '<a href="' . $url . '" target="_blank">' . $url . '</a>'; // Open in new tab
-                }, $messageTextWithoutTags);
-                $charLimit = 400;
-                if (strlen($formattedText) > $charLimit) {
-                  $limitedText = substr($formattedText, 0, $charLimit);
-                  echo '<span id="limitedText">' . nl2br(htmlspecialchars($limitedText)) . '...</span>';
-                  echo '<span id="more" style="display: none;">' . nl2br(htmlspecialchars($formattedText)) . '</span>';
-                  echo '<br><button class="btn btn-sm mt-2 fw-medium p-0 border-0 text-white" onclick="toggleText()" id="toggleBtn"><small>read more</small></button>';
+                if (!empty($first_cover['imgdesc'])) {
+                  $messageText = $first_cover['imgdesc'];
+                  $messageTextWithoutTags = strip_tags($messageText);
+                  $pattern = '/\bhttps?:\/\/\S+/i';
+
+                  $formattedText = preg_replace_callback($pattern, function ($matches) {
+                    $url = htmlspecialchars($matches[0]);
+                    return '<a href="' . $url . '">' . $url . '</a>';
+                  }, $messageTextWithoutTags);
+
+                  $charLimit = 400; // Set your character limit
+
+                  if (strlen($formattedText) > $charLimit) {
+                    $limitedText = substr($formattedText, 0, $charLimit);
+                    echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
+                    echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                    echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0 text-white" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
+                  } else {
+                    // If the text is within the character limit, just display it with line breaks.
+                    echo nl2br($formattedText);
+                  }
+                } else {
+                  echo "User description is empty.";
                 }
-                else {
-                  echo nl2br(htmlspecialchars($formattedText));
-                }
-              }
-              else {
-                echo "User description is empty.";
-              }
               ?>
               <script>
-                function toggleText() {
+                function myFunction() {
                   var dots = document.getElementById("limitedText");
                   var moreText = document.getElementById("more");
-                  var btnText = document.getElementById("toggleBtn");
+                  var btnText = document.getElementById("myBtn");
+
                   if (moreText.style.display === "none") {
                     dots.style.display = "none";
                     moreText.style.display = "inline";
@@ -649,7 +649,7 @@ try {
           <?php foreach ($results as $image): ?>
           <div class="col">
             <div class="card border-0 bg-body-tertiary shadow h-100 rounded-4">
-              <a class="text-decoration-none link-body-emphasis" href="preview.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo htmlspecialchars($image['userid']); ?>&id=<?php echo htmlspecialchars($image['id']); ?>&page=1">
+              <a class="text-decoration-none link-body-emphasis" href="manga_preview.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo htmlspecialchars($image['userid']); ?>&id=<?php echo htmlspecialchars($image['id']); ?>&page=1">
                 <div class="row g-0">
                   <div class="col-4">
                     <div class="ratio ratio-1x1 rounded-top-4">
@@ -749,7 +749,7 @@ try {
               <img class="object-fit-contain w-100 rounded" src="/images/<?php echo htmlspecialchars($latest_cover['filename']); ?>">
             </a>
             <?php else: ?>
-            <div class="ratio ratio-16x9 bg-light rounded d-flex align-items-center justify-content-center">
+            <div class="ratio ratio-16x9 bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded d-flex align-items-center justify-content-center">
               <span class="text-muted">No Original Image Available</span>
             </div>
             <?php endif; ?>
@@ -774,7 +774,7 @@ try {
               let image = entry.target;
               const src = image.dataset.src;
               // Set a temporary blurred placeholder immediately
-              image.src = defaultPlaceholder; // Use a lightweight placeholder image
+              image.src = defaultPlaceholder; // Use a <?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>weight placeholder image
               image.style.filter = "blur(5px)"; // Apply blur
               // Load the actual image
               const actualImage = new Image();
