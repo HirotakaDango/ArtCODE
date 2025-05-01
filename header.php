@@ -209,7 +209,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <i class="bi bi-pencil-fill fs-5"></i>
                   <span class="d-md-none d-lg-inline d-lg-none">Text</span>
                 </a>
-                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if ((basename($_SERVER['PHP_SELF']) == 'index.php' || basename($_SERVER['PHP_SELF']) == 'favorite.php') && strpos($_SERVER['PHP_SELF'], '/manga/') !== false) echo 'opacity-75 shadow'; ?>" data-bs-toggle="collapse" href="#collapseManga" role="button" aria-expanded="false" aria-controls="collapseExample">
                   <i class="bi bi-journals fs-5"></i>
                   <span class="d-lg-inline">Manga</span>
                 </a>
@@ -222,6 +222,27 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/text/">Home</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/text/favorite.php">Favorites</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/text/?uid=<?php echo $user_id1; ?>">Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="collapse-content">
+                <div class="collapse mt-2" id="collapseManga">
+                  <div class="card card-body rounded-4 border-0 bg-body-tertiary">
+                    <div class="btn-group-vertical gap-2">
+                      <h6 class="fw-bold text-start">Manga</h6>
+                      <form action="/feeds/manga/" method="GET" class="my-3 w-100">
+                        <div class="input-group">
+                          <input type="text" name="search" class="form-control text-lowercase fw-bold rounded-end-0 rounded-4 border-0 bg-body-secondary" placeholder="Search">
+                          <button type="submit" class="btn bg-body-secondary link-body-emphasis border-0 rounded-start-0 rounded-4"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
+                        </div>
+                      </form>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga">Home</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/artists.php">Artists</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/tags.php">Tags</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/groups.php">Groups</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/parodies.php">Parodies</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/characters.php">Characters</a>
                     </div>
                   </div>
                 </div>
@@ -283,6 +304,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                   <div class="card card-body rounded-4 border-0 bg-body-tertiary">
                     <div class="btn-group-vertical gap-2">
                       <h6 class="fw-bold text-start">Music</h6>
+                      <form action="/feeds/music/" method="GET" class="my-3 w-100">
+                        <div class="input-group">
+                          <input type="text" name="q" class="form-control text-lowercase fw-bold rounded-end-0 rounded-4 border-0 bg-body-secondary" placeholder="Search title and artist">
+                          <button type="submit" class="btn bg-body-secondary link-body-emphasis border-0 rounded-start-0 rounded-4"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
+                        </div>
+                      </form>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/?mode=lists&by=newest_lists">Home</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/upload.php?mode=lists">Upload</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/favorite.php?mode=lists">Favorites</a>
@@ -454,7 +481,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                           <i class="bi bi-book-half fs-5"></i>
                           <span class="d-lg-inline">Novel</span>
                         </a>
-                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/manga/">
+                        <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-3 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/manga/') !== false) echo 'opacity-75 shadow'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseManga">
                           <i class="bi bi-journals fs-5"></i>
                           <span class="d-lg-inline">Manga</span>
                         </a>
@@ -566,6 +593,35 @@ $fav_count1 = $fav_result1->fetchArray()[0];
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="modalCollapseManga" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-4 border-0">
+          <div class="d-flex position-relative">
+            <h6 class="fw-bold text-start me-auto ms-3 mt-2">Manga</h6>
+            <button type="button" class="btn border-0 link-body-emphasis ms-auto" data-bs-dismiss="modal"><i class="bi bi-x text-stroke"></i></button>
+          </div>
+          <div class="modal-body">
+            <div class="card-body">
+              <form action="/feeds/manga/" method="GET" class="mb-3">
+                <div class="input-group">
+                  <input type="text" name="search" class="form-control text-lowercase fw-bold rounded-end-0 rounded-4 border-0 bg-body-tertiary" placeholder="Search">
+                  <button type="submit" class="btn bg-body-tertiary link-body-emphasis border-0 rounded-start-0 rounded-4"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
+                </div>
+              </form>
+              <div class="btn-group-vertical gap-2">
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga">Home</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/artists.php">Artists</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/tags.php">Tags</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/groups.php">Groups</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/parodies.php">Parodies</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/characters.php">Characters</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <div class="modal fade" id="modalCollapseText" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -596,6 +652,12 @@ $fav_count1 = $fav_result1->fetchArray()[0];
           </div>
           <div class="modal-body">
             <div class="card-body">
+              <form action="/feeds/music/" method="GET" class="mb-3">
+                <div class="input-group">
+                  <input type="text" name="q" class="form-control text-lowercase fw-bold rounded-end-0 rounded-4 border-0 bg-body-tertiary" placeholder="Search title and artist">
+                  <button type="submit" class="btn bg-body-tertiary link-body-emphasis border-0 rounded-start-0 rounded-4"><i class="bi bi-search" style="-webkit-text-stroke: 1px;"></i></button>
+                </div>
+              </form>
               <div class="btn-group-vertical gap-2">
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/?mode=lists&by=newest_lists">Home</a>
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/music/upload.php?mode=lists">Upload</a>
