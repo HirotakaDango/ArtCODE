@@ -116,39 +116,52 @@ if (isset($_GET['title']) && isset($_GET['uid'])) {
       $total_view_count += $image['view_count'];
     }
 
-    // Get the tags from the current title
-    $tags = [];
+    // --- TAGS LOGIC START ---
+    
+    // Build tags from all images for this episode (collect unique tags)
+    $tags = []; // This will store unique tags found in the current episode
     foreach ($results as $image) {
-      $imageTags = explode(',', $image['tags']);
-      foreach ($imageTags as $tag) {
-        $tag = trim($tag);
-        if (!empty($tag)) {
-          if (!isset($tags[$tag])) {
-            $tags[$tag] = 0;
+      // Ensure the 'tags' field exists and is not null before exploding
+      if (isset($image['tags']) && !is_null($image['tags'])) {
+        $imageTags = explode(',', $image['tags']);
+        foreach ($imageTags as $tag) {
+          $tag = trim($tag);
+          if (!empty($tag)) {
+            // Use the tag as the key. Initial count can be anything, will be overwritten.
+            $tags[$tag] = 0; // Add tag to the list if not already present
           }
         }
       }
     }
-
-    // Get the count of latest images by episode_name for each tag
-    $query = "
-      SELECT tags, COUNT(*) as count FROM (
-        SELECT tags, episode_name, MAX(id) as latest_image_id
+    
+    // Count for tags (Count how many unique episodes (manga type) globally contain each tag found in the current episode)
+    // Iterate through the unique tags collected from the current episode and query the global count for each.
+    if (!empty($tags)) {
+      $queryTagCount = "
+        SELECT COUNT(DISTINCT episode_name) AS count
         FROM images
         WHERE artwork_type = 'manga'
-        GROUP BY tags, episode_name
-      ) GROUP BY tags
-    ";
-    $stmt = $db->query($query);
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $tagList = explode(',', $row['tags']);
-      foreach ($tagList as $tag) {
-        $tag = trim($tag);
-        if (isset($tags[$tag])) {
-          $tags[$tag] += $row['count'];
-        }
+        AND (',' || tags || ',') LIKE :tag_pattern
+      ";
+      $stmtTagCount = $db->prepare($queryTagCount);
+    
+      foreach (array_keys($tags) as $tag) {
+        // Prepare the pattern to match the tag within the comma-separated string
+        $tagPattern = '%,' . $tag . ',%';
+        // Bind the parameter for the current tag in the prepared statement
+        $stmtTagCount->bindParam(':tag_pattern', $tagPattern);
+        $stmtTagCount->execute();
+        // Fetch the count for this specific tag
+        $count = $stmtTagCount->fetchColumn();
+        // Update the count for this specific tag in the $tags array
+        $tags[$tag] = $count;
       }
     }
+    // The $tags array now contains unique tags found in the current episode's images,
+    // with counts representing the total number of unique manga episodes containing that tag globally.
+    
+    // --- TAGS LOGIC END ---
+
 
     // Get the parodies from the current title
     $parodies = [];
