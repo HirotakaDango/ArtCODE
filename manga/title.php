@@ -209,7 +209,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               <?php endif; ?>
               <div class="mb-2 row align-items-center">
                 <label for="tags" class="col-3 col-form-label text-nowrap fw-medium">Tags</label>
-                <div class="col-9">
+                <div class="col-9 p-2">
                   <?php foreach($tags as $tag => $count): ?>
                     <div class="btn-group m-1">
                       <a href="./?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">
