@@ -136,25 +136,25 @@ try {
   // Count for tags (Count how many unique episodes (manga type) globally contain each tag found in the current episode)
   // Iterate through the unique tags collected from the current episode and query the global count for each.
   if (!empty($tags)) {
-      $queryTagCount = "
-          SELECT COUNT(DISTINCT episode_name) AS count
-          FROM images
-          WHERE artwork_type = 'manga'
-          AND (',' || tags || ',') LIKE :tag_pattern
-      ";
-      $stmtTagCount = $db->prepare($queryTagCount);
-
-      foreach (array_keys($tags) as $tag) {
-          // Prepare the pattern to match the tag within the comma-separated string
-          $tagPattern = '%,' . $tag . ',%';
-          // Bind the parameter for the current tag in the prepared statement
-          $stmtTagCount->bindParam(':tag_pattern', $tagPattern);
-          $stmtTagCount->execute();
-          // Fetch the count for this specific tag
-          $count = $stmtTagCount->fetchColumn();
-          // Update the count for this specific tag in the $tags array
-          $tags[$tag] = $count;
-      }
+    $queryTagCount = "
+      SELECT COUNT(DISTINCT episode_name) AS count
+      FROM images
+      WHERE artwork_type = 'manga'
+      AND (',' || tags || ',') LIKE :tag_pattern
+    ";
+    $stmtTagCount = $db->prepare($queryTagCount);
+  
+    foreach (array_keys($tags) as $tag) {
+      // Prepare the pattern to match the tag within the comma-separated string
+      $tagPattern = '%,' . $tag . ',%';
+      // Bind the parameter for the current tag in the prepared statement
+      $stmtTagCount->bindParam(':tag_pattern', $tagPattern);
+      $stmtTagCount->execute();
+      // Fetch the count for this specific tag
+      $count = $stmtTagCount->fetchColumn();
+      // Update the count for this specific tag in the $tags array
+      $tags[$tag] = $count;
+    }
   }
   // The $tags array now contains unique tags found in the current episode's images,
   // with counts representing the total number of unique manga episodes containing that tag globally.
@@ -351,17 +351,17 @@ try {
           <div class="cover-image">
             <?php if (!empty($latest_cover)): ?>
             <a data-bs-toggle="modal" data-bs-target="#originalImage">
-              <img class="rounded w-100 rounded-4" src="/thumbnails/<?php echo htmlspecialchars($latest_cover['filename']); ?>" alt="<?php echo htmlspecialchars($latest_cover['title']); ?>">
+              <img class="rounded w-100 rounded-4" src="/thumbnails/<?php echo $latest_cover['filename']; ?>" alt="<?php echo $latest_cover['title']; ?>">
             </a>
             <?php else: ?>
-            <div class="ratio ratio-1x1 bg-dark rounded-4 d-flex align-items-center justify-content-center">
+            <div class="ratio ratio-1x1 bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 d-flex align-items-center justify-content-center">
               <span class="text-muted">No Cover Image</span>
             </div>
             <?php endif; ?>
           </div>
         </div>
         <div class="col-md-8">
-          <h1 class="mb-4 fw-bold mt-4 mt-md-0"><?php echo htmlspecialchars($episode_name); ?></h1>
+          <h1 class="mb-4 fw-bold mt-4 mt-md-0"><?php echo $episode_name; ?></h1>
           <div class="mb-4">
             <p class="shadowed-text fw-medium" style="word-break: break-word;">
               <?php
@@ -371,7 +371,7 @@ try {
                   $pattern = '/\bhttps?:\/\/\S+/i';
 
                   $formattedText = preg_replace_callback($pattern, function ($matches) {
-                    $url = htmlspecialchars($matches[0]);
+                    $url = $matches[0];
                     return '<a href="' . $url . '">' . $url . '</a>';
                   }, $messageTextWithoutTags);
 
@@ -411,9 +411,9 @@ try {
           </div>
           <div class="mb-3">
             <div class="input-group">
-              <input type="text" id="urlInput2" value="<?php echo htmlspecialchars($currentUrl); ?>" class="form-control border-2 fw-bold" readonly style="display: none;">
+              <input type="text" id="urlInput2" value="<?php echo $currentUrl; ?>" class="form-control border-2 fw-bold" readonly style="display: none;">
               <button class="btn btn-sm bg-transparent border-0 rounded fw-bold p-0 link-body-emphasis text-muted text-start" onclick="copyUrlToClipboard()">
-                <small style="white-space: normal; word-break: break-word;"><?php echo htmlspecialchars(urlencode($episode_name)); ?>&uid=<?php echo htmlspecialchars($user_id); ?> <i class="bi bi-copy"></i></small>
+                <small style="white-space: normal; word-break: break-word;"><?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?> <i class="bi bi-copy"></i></small>
               </button>
             </div>
             <script>
@@ -421,22 +421,20 @@ try {
                 var urlInput2 = document.getElementById('urlInput2');
                 urlInput2.select();
                 urlInput2.setSelectionRange(0, 99999);
-                document.execCommand('copy'); // Deprecated but widely supported
-                // You might consider using the modern Clipboard API for better practice
-                // navigator.clipboard.writeText(urlInput2.value).then(function() { /* success */ }, function() { /* error */ });
+                document.execCommand('copy');
               }
             </script>
           </div>
           <?php if (!empty($latest_cover)): ?>
-          <div class="mb-2 row align-items-center">
-            <label class="col-3 col-form-label text-nowrap fw-medium">Artist</label>
-            <div class="col-9">
-              <div class="btn-group">
-                <a href="./?artist=<?php echo urlencode($latest_cover['artist']); ?>&uid=<?php echo htmlspecialchars($user_id); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo htmlspecialchars($latest_cover['artist']); ?></a>
-                <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo htmlspecialchars($artistImageCount); ?></a>
+            <div class="mb-2 row align-items-center">
+              <label class="col-3 col-form-label text-nowrap fw-medium">Artist</label>
+              <div class="col-9">
+                <div class="btn-group">
+                  <a href="./?artist=<?php echo urlencode($latest_cover['artist']); ?>&uid=<?php echo $user_id; ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $latest_cover['artist']; ?></a>
+                  <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo $artistImageCount; ?></a>
+                </div>
               </div>
             </div>
-          </div>
           <?php endif; ?>
           <?php
           $groupName = '';
@@ -448,54 +446,54 @@ try {
           }
           if (!empty($groupCounts)):
           ?>
-          <div class="mb-2 row align-items-center">
-            <label class="col-3 col-form-label text-nowrap fw-medium">Group</label>
-            <div class="col-9">
-              <div class="btn-group">
-                <a href="./?group=<?php echo urlencode($groupName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo htmlspecialchars($groupName); ?></a>
-                <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo htmlspecialchars($groupCount); ?></a>
+            <div class="mb-2 row align-items-center">
+              <label class="col-3 col-form-label text-nowrap fw-medium">Group</label>
+              <div class="col-9">
+                <div class="btn-group">
+                  <a href="./?group=<?php echo urlencode($groupName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $groupName; ?></a>
+                  <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo $groupCount; ?></a>
+                </div>
               </div>
             </div>
-          </div>
           <?php endif; ?>
           <?php if (!empty($parodies)): ?>
-          <div class="mb-2 row align-items-center">
-            <label class="col-3 col-form-label text-nowrap fw-medium">Parodies</label>
-            <div class="col-9">
-              <?php foreach ($parodies as $parody => $count): ?>
-              <div class="btn-group m-1">
-                <a href="./?parody=<?php echo urlencode($parody); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo htmlspecialchars($parody); ?></a>
-                <a href="#" class="btn btn-sm bg-body-tertiary fw-bold"><?php echo htmlspecialchars($count); ?></a>
+            <div class="mb-2 row align-items-center">
+              <label class="col-3 col-form-label text-nowrap fw-medium">Parodies</label>
+              <div class="col-9">
+                <?php foreach ($parodies as $parody => $count): ?>
+                <div class="btn-group m-1">
+                  <a href="./?parody=<?php echo urlencode($parody); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $parody; ?></a>
+                  <a href="#" class="btn btn-sm bg-body-tertiary fw-bold"><?php echo $count; ?></a>
+                </div>
+                <?php endforeach; ?>
               </div>
-              <?php endforeach; ?>
             </div>
-          </div>
           <?php endif; ?>
           <?php if (!empty($characters)): ?>
-          <div class="mb-2 row align-items-center">
-            <label class="col-3 col-form-label text-nowrap fw-medium">Characters</label>
-            <div class="col-9">
-              <?php foreach ($characters as $character => $count): ?>
-              <div class="btn-group m-1">
-                <a href="./?character=<?php echo urlencode($character); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo htmlspecialchars($character); ?></a>
-                <a href="#" class="btn btn-sm bg-body-tertiary fw-bold"><?php echo htmlspecialchars($count); ?></a>
+            <div class="mb-2 row align-items-center">
+              <label class="col-3 col-form-label text-nowrap fw-medium">Characters</label>
+              <div class="col-9">
+                <?php foreach ($characters as $character => $count): ?>
+                <div class="btn-group m-1">
+                  <a href="./?character=<?php echo urlencode($character); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $character; ?></a>
+                  <a href="#" class="btn btn-sm bg-body-tertiary fw-bold"><?php echo $count; ?></a>
+                </div>
+                <?php endforeach; ?>
               </div>
-              <?php endforeach; ?>
             </div>
-          </div>
           <?php endif; ?>
           <?php if (!empty($tags)): ?>
-          <div class="mb-2 row align-items-center">
-            <label class="col-3 col-form-label text-nowrap fw-medium">Tags</label>
-            <div class="col-9">
-              <?php foreach ($tags as $tag => $count): ?>
-              <div class="btn-group m-1">
-                <a href="./?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo htmlspecialchars($tag); ?></a>
-                <a href="#" class="btn btn-sm bg-body-tertiary fw-bold"><?php echo htmlspecialchars($count); ?></a>
+            <div class="mb-2 row align-items-center">
+              <label class="col-3 col-form-label text-nowrap fw-medium">Tags</label>
+              <div class="col-9 p-2">
+                <?php foreach ($tags as $tag => $count): ?>
+                <div class="btn-group m-1">
+                  <a href="./?tag=<?php echo urlencode($tag); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $tag; ?></a>
+                  <a href="#" class="btn btn-sm bg-body-tertiary fw-bold"><?php echo $count; ?></a>
+                </div>
+                <?php endforeach; ?>
               </div>
-              <?php endforeach; ?>
             </div>
-          </div>
           <?php endif; ?>
           <?php
           $categoriesName = '';
@@ -507,15 +505,15 @@ try {
           }
           ?>
           <?php if (!empty($categoriesCount)): ?>
-          <div class="mb-2 row align-items-center">
-            <label class="col-3 col-form-label text-nowrap fw-medium">Category</label>
-            <div class="col-9">
-              <div class="btn-group">
-                <a href="./?categories=<?php echo urlencode($categoriesName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo htmlspecialchars($categoriesName); ?></a>
-                <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo htmlspecialchars($categoriesCount); ?></a>
+            <div class="mb-2 row align-items-center">
+              <label class="col-3 col-form-label text-nowrap fw-medium">Category</label>
+              <div class="col-9">
+                <div class="btn-group">
+                  <a href="./?categories=<?php echo urlencode($categoriesName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $categoriesName; ?></a>
+                  <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo $categoriesCount; ?></a>
+                </div>
               </div>
             </div>
-          </div>
           <?php endif; ?>
           <?php
           $languageName = '';
@@ -527,99 +525,42 @@ try {
           }
           ?>
           <?php if (!empty($languageCount)): ?>
-          <div class="mb-2 row align-items-center">
-            <label class="col-3 col-form-label text-nowrap fw-medium">Language</label>
-            <div class="col-9">
-              <div class="btn-group">
-                <a href="./?language=<?php echo urlencode($languageName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo htmlspecialchars($languageName); ?></a>
-                <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo htmlspecialchars($languageCount); ?></a>
+            <div class="mb-2 row align-items-center">
+              <label class="col-3 col-form-label text-nowrap fw-medium">Language</label>
+              <div class="col-9">
+                <div class="btn-group">
+                  <a href="./?language=<?php echo urlencode($languageName); ?>" class="btn btn-sm bg-secondary-subtle fw-bold"><?php echo $languageName; ?></a>
+                  <a href="#" class="btn btn-sm bg-body-tertiary fw-bold" disabled><?php echo $languageCount; ?></a>
+                </div>
               </div>
             </div>
-          </div>
           <?php endif; ?>
           <div class="mb-2 row align-items-center">
             <label class="col-3 col-form-label text-nowrap fw-medium">Works</label>
             <div class="col-9">
-              <h6 class="form-control-plaintext fw-bold"><?php echo htmlspecialchars(count($results)); ?></h6>
+              <h6 class="form-control-plaintext fw-bold"><?php echo count($results); ?></h6>
             </div>
           </div>
           <div class="mb-2 row align-items-center">
             <label class="col-3 col-form-label text-nowrap fw-medium">Pages</label>
             <div class="col-9">
-              <h6 class="form-control-plaintext fw-bold"><?php echo htmlspecialchars($total_count); ?></h6>
+              <h6 class="form-control-plaintext fw-bold"><?php echo $total_count; ?></h6>
             </div>
           </div>
           <div class="mb-2 row align-items-center">
             <label class="col-3 col-form-label text-nowrap fw-medium">Views</label>
             <div class="col-9">
-              <h6 class="form-control-plaintext fw-bold"><?php echo htmlspecialchars($total_view_count); ?></h6>
+              <h6 class="form-control-plaintext fw-bold"><?php echo $total_view_count; ?></h6>
             </div>
           </div>
           <?php if (!empty($latest_cover)): ?>
           <div class="mb-2 row align-items-center">
             <label class="col-3 col-form-label text-nowrap fw-medium">Date</label>
             <div class="col-9">
-              <h6 class="form-control-plaintext fw-bold"><?php echo htmlspecialchars(date("l, d F, Y", strtotime($latest_cover['date']))); ?></h6>
+              <h6 class="form-control-plaintext fw-bold"><?php echo date("l, d F, Y", strtotime($latest_cover['date'])); ?></h6>
             </div>
           </div>
           <?php endif; ?>
-          <?php
-          // Favorite/unfavorite logic
-          function isFavorited($userId, $link, $db) {
-            $stmt = $db->prepare("SELECT COUNT(*) AS count FROM favorites WHERE user_id = ? AND link = ?");
-            $stmt->execute([$userId, $link]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['count'] > 0;
-          }
-
-          // Handle favorite/unfavorite action if form is submitted
-          if (isset($_POST['action']) && isset($_POST['link']) && isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id'];
-            $link = $_POST['link'];
-            // Ensure cover details are available before using them
-            $imageCover = isset($_POST['image_cover']) ? $_POST['image_cover'] : null;
-            $episodeName = isset($_POST['episode_name']) ? $_POST['episode_name'] : null;
-
-            if ($_POST['action'] === 'favorite') {
-              // Only insert if link, image_cover, and episode_name are not null/empty
-              if (!isFavorited($userId, $link, $db) && $imageCover && $episodeName) {
-                $stmt = $db->prepare("INSERT INTO favorites (user_id, link, image_cover, episode_name) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$userId, $link, $imageCover, $episodeName]);
-              }
-            }
-            elseif ($_POST['action'] === 'unfavorite') {
-              $stmt = $db->prepare("DELETE FROM favorites WHERE user_id = ? AND link = ?");
-              $stmt->execute([$userId, $link]);
-            }
-             // Redirect to prevent form resubmission on refresh
-            header("Location: " . $_SERVER['REQUEST_URI']);
-            exit();
-          }
-
-          // Fetch favorites for current user (to check if this item is favorited)
-          $isFavorited = false;
-          if (isset($_SESSION['user_id'])) {
-            $isFavorited = isFavorited($_SESSION['user_id'], $currentUrl, $db);
-          }
-          ?>
-          <form id="favoriteForm" method="post" action="">
-            <input type="hidden" name="link" value="<?php echo htmlspecialchars($currentUrl); ?>">
-            <?php if (!empty($latest_cover)): ?>
-            <input type="hidden" name="image_cover" value="/thumbnails/<?php echo htmlspecialchars($latest_cover['filename']); ?>">
-            <input type="hidden" name="episode_name" value="「<?php echo htmlspecialchars($latest_cover['artist']); ?>」<?php echo htmlspecialchars($episode_name); ?>">
-            <?php else: ?>
-            <input type="hidden" name="image_cover" value="/icon/favicon.png"> <!-- Default cover if none -->
-            <input type="hidden" name="episode_name" value="<?php echo htmlspecialchars($episode_name); ?>">
-            <?php endif; ?>
-
-            <?php if (isset($_SESSION['user_id'])): ?>
-              <?php if ($isFavorited): ?>
-                <button type="submit" name="action" value="unfavorite" class="btn btn-sm bg-body-tertiary link-body-emphasis rounded fw-bold">Remove from favorites</button>
-              <?php else: ?>
-                <button type="submit" name="action" value="favorite" class="btn btn-sm bg-body-tertiary link-body-emphasis rounded fw-bold">Add to favorites</button>
-              <?php endif; ?>
-            <?php endif; ?>
-          </form>
         </div>
       </div>
     </div>
@@ -627,18 +568,18 @@ try {
       <div class="rounded-5 border border-2"></div>
     </div>
     <div class="container mb-5">
-      <h5 class="my-3 fw-bold">All works in <?php echo htmlspecialchars($episode_name); ?> by <?php echo htmlspecialchars($latest_cover['artist'] ?? 'Unknown Artist'); ?></h5>
+      <h5 class="my-3 fw-bold">All works in <?php echo $episode_name; ?> by <?php echo $latest_cover['artist'] ?? 'Unknown Artist'; ?></h5>
       <div class="btn-group mb-2 w-100 gap-2">
         <?php if (!empty($first_cover)): ?>
-        <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="view.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo htmlspecialchars($user_id); ?>&id=<?php echo htmlspecialchars($first_cover['id']); ?>&page=1">read first</a>
+          <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="view.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $first_cover['id']; ?>&page=1">read first</a>
         <?php else: ?>
-        <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" disabled>read first</button>
+          <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" disabled>read first</button>
         <?php endif; ?>
-        <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50 d-none d-md-block" data-bs-toggle="modal" data-bs-target="#shareLink">share</button>
+          <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50 d-none d-md-block" data-bs-toggle="modal" data-bs-target="#shareLink">share</button>
         <?php if (!empty($first_cover)): ?>
-        <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="episode/?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo htmlspecialchars($user_id); ?>" target="_blank">original</a>
+          <a class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" href="/episode/?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>" target="_blank">original</a>
         <?php else: ?>
-        <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" disabled>original</button>
+          <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-50" disabled>original</button>
         <?php endif; ?>
       </div>
       <button class="btn bg-body-tertiary link-body-emphasis rounded-5 fw-bold w-100 mb-2 d-md-none" data-bs-toggle="modal" data-bs-target="#shareLink">share</button>
@@ -647,24 +588,24 @@ try {
           <?php foreach ($results as $image): ?>
           <div class="col">
             <div class="card border-0 bg-body-tertiary shadow h-100 rounded-4">
-              <a class="text-decoration-none link-body-emphasis" href="manga_preview.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo htmlspecialchars($image['userid']); ?>&id=<?php echo htmlspecialchars($image['id']); ?>&page=1">
+              <a class="text-decoration-none link-body-emphasis" href="manga_preview.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $image['userid']; ?>&id=<?php echo $image['id']; ?>&page=1">
                 <div class="row g-0">
                   <div class="col-4">
                     <div class="ratio ratio-1x1 rounded-top-4">
-                      <img class="object-fit-cover lazy-load h-100 w-100 rounded-top-4" data-src="/thumbnails/<?php echo htmlspecialchars($image['filename']); ?>" alt="<?php echo htmlspecialchars($image['title']); ?>">
+                      <img class="object-fit-cover lazy-load h-100 w-100 rounded-top-4" data-src="/thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
                     </div>
                   </div>
                   <div class="col-8">
                     <div class="card-body d-flex align-items-center justify-content-start h-100">
                       <div class="text-truncate">
-                        <h6 class="card-title fw-bold text-truncate"><?php echo htmlspecialchars($image['title']); ?></h6>
-                        <h6 class="card-title fw-bold small"><?php echo htmlspecialchars($image['view_count']); ?> views</h6>
+                        <h6 class="card-title fw-bold text-truncate"><?php echo $image['title']; ?></h6>
+                        <h6 class="card-title fw-bold small"><?php echo $image['view_count']; ?> views</h6>
                       </div>
                     </div>
                   </div>
                 </div>
               </a>
-              <a class="btn p-2 w-100 btn-dark rounded-bottom-4" href="view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo htmlspecialchars($image['userid']); ?>&id=<?php echo htmlspecialchars($image['id']); ?>&page=1">read</a>
+              <a class="btn p-2 w-100 btn-dark rounded-bottom-4 fw-medium" href="view.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $image['userid']; ?>&id=<?php echo $image['id']; ?>&page=1">read</a>
             </div>
           </div>
           <?php endforeach; ?>
@@ -718,7 +659,7 @@ try {
               </a>
             </div>
             <div class="input-group">
-              <input type="text" id="urlInput1" value="<?php echo htmlspecialchars($currentUrl); ?>" class="form-control border-2 fw-bold" readonly>
+              <input type="text" id="urlInput1" value="<?php echo $currentUrl; ?>" class="form-control border-2 fw-bold" readonly>
               <button class="btn btn-secondary opacity-50 fw-bold" onclick="copyToClipboard1()">
                 <i class="bi bi-clipboard-fill"></i>
               </button>
@@ -728,9 +669,7 @@ try {
                 var urlInput1 = document.getElementById('urlInput1');
                 urlInput1.select();
                 urlInput1.setSelectionRange(0, 99999);
-                document.execCommand('copy'); // Deprecated but widely supported
-                // You might consider using the modern Clipboard API for better practice
-                // navigator.clipboard.writeText(urlInput1.value).then(function() { /* success */ }, function() { /* error */ });
+                document.execCommand('copy');
               }
             </script>
           </div>
@@ -743,11 +682,11 @@ try {
         <div class="modal-content bg-transparent border-0 rounded-0">
           <div class="modal-body position-relative">
             <?php if (!empty($latest_cover)): ?>
-            <a href="view.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo htmlspecialchars($user_id); ?>&id=<?php echo htmlspecialchars($first_cover['id'] ?? $latest_cover['id']); ?>&page=1"> <!-- Link to view first page, fall back to latest if first not found -->
-              <img class="object-fit-contain w-100 rounded" src="/images/<?php echo htmlspecialchars($latest_cover['filename']); ?>">
+            <a href="view.php?title=<?php echo urlencode($episode_name); ?>&uid=<?php echo $user_id; ?>&id=<?php echo $first_cover['id'] ?? $latest_cover['id']; ?>&page=1">
+              <img class="object-fit-contain w-100 rounded" src="/images/<?php echo $latest_cover['filename']; ?>">
             </a>
             <?php else: ?>
-            <div class="ratio ratio-16x9 bg-dark rounded d-flex align-items-center justify-content-center">
+            <div class="ratio ratio-16x9 bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded d-flex align-items-center justify-content-center">
               <span class="text-muted">No Original Image Available</span>
             </div>
             <?php endif; ?>
@@ -755,60 +694,50 @@ try {
               <i class="bi bi-x fs-4" style="-webkit-text-stroke: 2px;"></i>
             </button>
             <?php if (!empty($latest_cover)): ?>
-            <a class="btn btn-primary fw-bold w-100 mt-2" href="/images/<?php echo htmlspecialchars($latest_cover['filename']); ?>" download>Download Cover Image</a>
+            <a class="btn btn-primary fw-bold w-100 mt-2" href="/images/<?php echo $latest_cover['filename']; ?>" download>Download Cover Image</a>
             <?php endif; ?>
           </div>
         </div>
       </div>
     </div>
     <script>
-      // Lazy-load images with a placeholder and blur effect
       let lazyloadImages = document.querySelectorAll(".lazy-load");
-      const defaultPlaceholder = "/icon/bg.png"; // Path to your default placeholder image
+      let imageContainer = document.getElementById("image-container");
+
+      // Set the default placeholder image
+      const defaultPlaceholder = "/icon/bg.png";
+
       if ("IntersectionObserver" in window) {
-        let imageObserver = new IntersectionObserver(function(entries) {
+        let imageObserver = new IntersectionObserver(function(entries, observer) {
           entries.forEach(function(entry) {
             if (entry.isIntersecting) {
               let image = entry.target;
-              const src = image.dataset.src;
-              // Set a temporary blurred placeholder immediately
-              image.src = defaultPlaceholder; // Use a darkweight placeholder image
-              image.style.filter = "blur(5px)"; // Apply blur
-              // Load the actual image
-              const actualImage = new Image();
-              actualImage.onload = function() {
-                image.src = this.src; // Set the actual image source
-                image.style.filter = "none"; // Remove blur after loading
-              };
-              actualImage.src = src; // Start loading the actual image
-
+              image.src = image.dataset.src;
               imageObserver.unobserve(image);
             }
           });
         });
+
         lazyloadImages.forEach(function(image) {
-           imageObserver.observe(image);
+          image.src = defaultPlaceholder; // Apply default placeholder
+          imageObserver.observe(image);
+          image.style.filter = "blur(5px)"; // Apply initial blur to all images
+          image.addEventListener("load", function() {
+            image.style.filter = "none"; // Remove blur after image loads
+          });
         });
-      }
-      else {
-        // Fallback for browsers that don't support IntersectionObserver
+      } else {
         let lazyloadThrottleTimeout;
+
         function lazyload() {
-          if (lazyloadThrottleTimeout) { clearTimeout(lazyloadThrottleTimeout); }
+          if (lazyloadThrottleTimeout) {
+            clearTimeout(lazyloadThrottleTimeout);
+          }
           lazyloadThrottleTimeout = setTimeout(function() {
             let scrollTop = window.pageYOffset;
             lazyloadImages.forEach(function(img) {
               if (img.offsetTop < window.innerHeight + scrollTop) {
-                const src = img.dataset.src;
-                 img.src = defaultPlaceholder; // Use placeholder
-                 img.style.filter = "blur(5px)"; // Apply blur
-                 const actualImage = new Image();
-                 actualImage.onload = function() {
-                   img.src = this.src; // Set actual source
-                   img.style.filter = "none"; // Remove blur
-                 };
-                 actualImage.src = src; // Start loading
-
+                img.src = img.dataset.src;
                 img.classList.remove("lazy-load");
               }
             });
@@ -820,14 +749,43 @@ try {
               window.removeEventListener("resize", lazyload);
               window.removeEventListener("orientationChange", lazyload);
             }
-          }, 20); // Throttle time
+          }, 20);
         }
+
         document.addEventListener("scroll", lazyload);
         window.addEventListener("resize", lazyload);
         window.addEventListener("orientationChange", lazyload);
-         // Initial load
-        lazyload();
       }
+
+      // Infinite scrolling
+      let loading = false;
+
+      function loadMoreImages() {
+        if (loading) return;
+        loading = true;
+
+        // Simulate loading delay for demo purposes
+        setTimeout(function() {
+          for (let i = 0; i < 10; i++) {
+            if (lazyloadImages.length === 0) {
+              break;
+            }
+            let image = lazyloadImages[0];
+            imageContainer.appendChild(image);
+            lazyloadImages = Array.from(lazyloadImages).slice(1);
+          }
+          loading = false;
+        }, 1000);
+      }
+
+      window.addEventListener("scroll", function() {
+        if (window.innerHeight + window.scrollY >= imageContainer.clientHeight) {
+          loadMoreImages();
+        }
+      });
+
+      // Initial loading
+      loadMoreImages();
     </script>
     <?php include('../../bootstrapjs.php'); ?>
   </body>
