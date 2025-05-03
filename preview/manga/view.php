@@ -256,8 +256,9 @@ try {
     </div>
     <div class="position-fixed bottom-0 start-0 z-2 m-2 ms-3">
       <h6 class="small d-flex">
-        <main id="swup" class="transition-main me-1"><?php echo $currentPage; ?></main>
-        / <?php echo $totalPages; ?>
+        <main id="swup" class="transition-main">
+          <?php echo $currentPage; ?> / <?php echo $totalPages; ?>
+        </main>
       </h6>
     </div>
 
