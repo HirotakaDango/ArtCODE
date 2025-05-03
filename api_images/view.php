@@ -1,5 +1,5 @@
 <?php
-include 'connect.php';
+include ('connect.php');
 
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $display = isset($_GET['display']) ? $_GET['display'] : '';
@@ -104,37 +104,37 @@ if ($artworkId > 0) {
                     }
                   }
                 </script>
-              <div class="my-2 row align-items-center">
-                <label for="views" class="col-md-3 col-4 col-form-label text-nowrap">Artist</label>
-                <div class="col-md-9 col-8">
-                  <h6 class="form-control-plaintext" id="views"><a class="btn border-0 p-0 fw-medium" href="./?uid=1"><?php echo $artworkData['images'][0]['artist_name']; ?></a></h6>
+                <div class="my-2 row align-items-center">
+                  <label for="views" class="col-md-3 col-4 col-form-label text-nowrap">Artist</label>
+                  <div class="col-md-9 col-8">
+                    <h6 class="form-control-plaintext" id="views"><a class="btn border-0 p-0 fw-medium" href="./?uid=1"><?php echo $artworkData['images'][0]['artist_name']; ?></a></h6>
+                  </div>
                 </div>
-              </div>
-              <div class="my-2 row align-items-center">
-                <label for="views" class="col-md-3 col-4 col-form-label text-nowrap">Views</label>
-                <div class="col-md-9 col-8">
-                  <h6 class="form-control-plaintext" id="views"><?php echo $artworkData['images'][0]['view_count']; ?></h6>
+                <div class="my-2 row align-items-center">
+                  <label for="views" class="col-md-3 col-4 col-form-label text-nowrap">Views</label>
+                  <div class="col-md-9 col-8">
+                    <h6 class="form-control-plaintext" id="views"><?php echo $artworkData['images'][0]['view_count']; ?></h6>
+                  </div>
                 </div>
-              </div>
-              <div class="mb-2 row align-items-center">
-                <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Favorites</label>
-                <div class="col-md-9 col-8">
-                  <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['favorites_count']; ?></h6>
+                <div class="mb-2 row align-items-center">
+                  <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Favorites</label>
+                  <div class="col-md-9 col-8">
+                    <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['favorites_count']; ?></h6>
+                  </div>
                 </div>
-              </div>
-              <div class="mb-2 row align-items-center">
-                <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Total Images</label>
-                <div class="col-md-9 col-8">
-                  <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['total_count']; ?></h6>
+                <div class="mb-2 row align-items-center">
+                  <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Total Images</label>
+                  <div class="col-md-9 col-8">
+                    <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['total_count']; ?></h6>
+                  </div>
                 </div>
-              </div>
-              <div class="mb-2 row align-items-center">
-                <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Total Size</label>
-                <div class="col-md-9 col-8">
-                  <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['total_size_mb']; ?> MB</h6>
+                <div class="mb-2 row align-items-center">
+                  <label for="favorites" class="col-md-3 col-4 col-form-label text-nowrap">Total Size</label>
+                  <div class="col-md-9 col-8">
+                    <h6 class="form-control-plaintext" id="favorites"><?php echo $artworkData['total_size_mb']; ?> MB</h6>
+                  </div>
                 </div>
-              </div>
-              <div class="card shadow border-0 rounded-4 bg-body-tertiary mt-3">
+                <div class="card shadow border-0 rounded-4 bg-body-tertiary mt-3">
                 <div class="card-body">
                   <!-- Tags -->
                   <h6 class="card-subtitle mb-2 fw-bold"><i class="bi bi-tags-fill"></i> Tags</h6>
@@ -147,7 +147,7 @@ if ($artworkId > 0) {
                         if (!empty($tag)) {
                           ?>
                           <a href="index.php?display=all_images&tag=<?php echo urlencode($tag); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
-                            <i class="bi bi-tag-fill"></i> <?php echo urlencode($tag); ?>
+                            <i class="bi bi-tag-fill"></i> <?php echo $tag; ?>
                           </a>
                           <?php
                         }
