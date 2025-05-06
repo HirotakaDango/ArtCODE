@@ -174,7 +174,7 @@ try {
     </style>
   </head>
   <body>
-    <div class="bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>-subtle">
+    <div class="bg-dark-subtle">
       <div class="position-fixed bottom-0 end-0 z-2">
         <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2 shadow-sm" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
           <i class="bi bi-list text-stroke"></i> Menu
@@ -277,7 +277,7 @@ try {
                     $chapter_link = '?title=' . urlencode($episode_name) . '&uid=' . urlencode($user_id) . '&id=' . urlencode($chapter['id']) . '&page=1';
                     $is_active = ($chapter['id'] == $image_id) ? 'active' : '';
                   ?>
-                  <a class="w-100 btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold p-3 text-start my-1 <?= $is_active ?>" href="<?= $chapter_link ?>">
+                  <a class="w-100 btn btn-outline-dark fw-bold p-3 text-start my-1 <?= $is_active ?>" href="<?= $chapter_link ?>">
                     <?= $chapter['title']; ?>
                   </a>
                 <?php endforeach; ?>
@@ -376,7 +376,7 @@ try {
                   $page_link = '?title=' . urlencode($episode_name) . '&uid=' . urlencode($user_id) . '&id=' . urlencode($image_id) . '&page=' . $i;
                   $is_active = ($i == $currentPage) ? 'active' : '';
                 ?>
-                <a class="w-100 btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> border-0 fw-bold p-3 text-start my-1 <?= $is_active ?>" href="<?= $page_link ?>">
+                <a class="w-100 btn btn-outline-dark border-0 fw-bold p-3 text-start my-1 <?= $is_active ?>" href="<?= $page_link ?>">
                   Page <?= $i ?>
                 </a>
               <?php endfor; ?>
