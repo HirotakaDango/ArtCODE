@@ -39,7 +39,7 @@ try {
     $user_id = $image_details['userid'];
 
     // Base URL for viewer (adjust path if necessary)
-    $viewerBaseUrl = "/feeds/manga/view.php";
+    $viewerBaseUrl = "/preview/manga/view.php";
 
   } else {
     echo '<p>Missing required title or id parameter.</p>';
