@@ -4,7 +4,7 @@
           <div class="col">
             <div class="position-relative">
               <a class="rounded ratio ratio-1x1" href="../image.php?artworkid=<?php echo $imageW['id']; ?>">
-                <img class="rounded shadow object-fit-cover lazy-load <?php echo ($imageW['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageW['filename']; ?>" alt="<?php echo $imageW['title']; ?>">
+                <img class="rounded rounded-bottom-0 shadow object-fit-cover lazy-load <?php echo ($imageW['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="../thumbnails/<?php echo $imageW['filename']; ?>" alt="<?php echo $imageW['title']; ?>">
               </a> 
               <?php
                 $current_image_id = $imageW['id'];
@@ -27,7 +27,6 @@
                 $totalImagesCount = $imageCount + $childImageCount;
               ?>
               <?php include('../rows_columns/image_counts.php'); ?>
-              <div class="position-absolute top-0 start-0">
                 <div class="dropdown">
                   <button class="btn border-0 p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical text-white link-body-emphasis fs-5" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;"></i>
