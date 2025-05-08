@@ -112,9 +112,60 @@ if (!empty($image_title)) {
   echo "Error: No title provided.";
 }
 ?>
+<style>
+  @media (max-width: 767px) {
+    .display-mobile-desktop-title {
+      max-width: 150px;
+    }
+
+    .display-mobile-desktop-artist {
+      max-width: 60px;
+    }
+  }
+      
+  @media (min-width: 768px) {
+    .display-mobile-desktop-title {
+      max-width: 165px;
+    }
+
+    .display-mobile-desktop-artist {
+      max-width: 75px;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .display-mobile-desktop-title {
+      max-width: 175px;
+    }
+
+    .display-mobile-desktop-artist {
+      max-width: 100px;
+    }
+  }
+
+  .overlay {
+    border-radius: 0.4em 0.4em 0 0 !important;
+    filter: blur(0) !important;
+    opacity: 1 !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    pointer-events: none !important;
+  }
+
+  .nsfw {
+    filter: blur(0) !important;
+    opacity: 0.1 !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    pointer-events: none !important;
+  }
+
+  .nsfw.overlay {
+    opacity: 0.2 !important;
+    background-color: rgba(0, 0, 0, 0.75) !important;
+  }
+</style>
 <div class="position-absolute bottom-0 start-0 mb-5 fw-bold text-white" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);">
   <div class="container">
-    <h6 class="small text-truncate text-nowrap overflow-hidden" style="max-width: 200px;">
+    <h6 class="small text-truncate text-nowrap overflow-hidden display-mobile-desktop-title">
       <?php echo $imageTitle; ?>
     </h6>
   </div>
@@ -123,7 +174,7 @@ if (!empty($image_title)) {
   <button class="fw-bold text-white btn border-0 link-body-emphasis p-0 d-flex align-items-center" type="button" data-bs-toggle="modal" data-bs-target="#userModal<?php echo urlencode($userId); ?>" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2); text-stroke: 2;">
     <img src="/<?php echo !empty($userPic) ? $userPic : 'icon/profile.svg'; ?>" alt="User Profile Picture" class="rounded-circle object-fit-cover border border-2 border-light shadow" style="width: 30px; height: 30px;">
     <div class="ms-1">
-      <h6 class="text-white link-body-emphasis text-truncate small my-auto ms-1" style="max-width: 100px;">
+      <h6 class="text-white link-body-emphasis text-truncate small my-auto display-mobile-desktop-artist ms-1">
         <?php echo $userArtist; ?>
       </h6>
     </div>
