@@ -11,7 +11,7 @@
           <div class="col position-relative">
             <div class="position-relative">
               <a class="rounded ratio ratio-1x1" href="/image.php?artworkid=<?php echo $image['id']; ?>">
-                <img class="rounded shadow object-fit-cover lazy-load <?php echo ($image['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="/thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
+                <img class="rounded rounded-bottom-0 shadow object-fit-cover lazy-load <?php echo ($image['type'] === 'nsfw') ? 'nsfw' : ''; ?>" data-src="/thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
               </a>
               <?php
                 $current_image_id = $image['id'];
@@ -47,9 +47,8 @@
                     $badgeClass = 'nothing text-white shadow'; // Default color for others
                 }
               ?>
-              <?php include('../../rows_columns/image_counts.php'); ?>
               <span class="position-absolute top-0 end-0 m-2 badge <?php echo $badgeClass; ?>" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);">No. <?php echo $j + 1; ?></span>
-              <div class="position-absolute top-0 start-0">
+              <?php include('../../rows_columns/image_counts.php'); ?>
                 <div class="dropdown">
                   <button class="btn border-0 p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical text-white link-body-emphasis fs-5" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);"></i>
