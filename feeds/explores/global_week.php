@@ -1,8 +1,35 @@
 <?php
-// Get images from the database using parameterized query
-$stmt = $db->prepare("SELECT images.*, users.email FROM images INNER JOIN users ON images.email = users.email ORDER BY images.id DESC LIMIT :limit OFFSET :offset");
+// Get the current date
+$currentDate = date('Y-m-d');
+
+// Get the start of the week (Monday) and end of the week (Sunday)
+$startOfWeek = date('Y-m-d', strtotime('monday this week'));
+$endOfWeek = date('Y-m-d', strtotime('sunday this week'));
+
+// Prepare the query
+$stmt = $db->prepare("
+    SELECT 
+        images.*, 
+        users.artist, 
+        users.pic, 
+        users.id AS user_id, 
+        COALESCE(SUM(daily.views), 0) AS views
+    FROM images
+    JOIN users ON images.email = users.email
+    LEFT JOIN daily ON images.id = daily.image_id 
+        AND daily.date BETWEEN :startOfWeek AND :endOfWeek
+    GROUP BY images.id
+    ORDER BY views DESC, images.id DESC
+    LIMIT :limit OFFSET :offset
+");
+
+// Bind parameters
+$stmt->bindValue(':startOfWeek', $startOfWeek, SQLITE3_TEXT);
+$stmt->bindValue(':endOfWeek', $endOfWeek, SQLITE3_TEXT);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+
+// Execute the query
 $result = $stmt->execute();
 ?>
 
