@@ -1,7 +1,7 @@
           <div class="col">
             <div class="card border-0 h-100 shadow-sm rounded-1 position-relative rounded-4 shadow">
               <a class="d-block" href="#" data-bs-toggle="modal" data-bs-target="#infoImage_<?php echo $image['id']; ?>">
-                <img class="lazy-load object-fit-cover rounded-4" style="width: 100%; height: 300px;" data-src="../../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
+                <img class="lazy-load object-fit-cover rounded-4 <?php echo ($image['type'] === 'nsfw') ? 'nsfw' : ''; ?>" style="width: 100%; height: 300px;" data-src="../../thumbnails/<?php echo $image['filename']; ?>" alt="<?php echo $image['title']; ?>">
               </a>
               <div class="position-absolute bottom-0 start-0 m-2">
                 <a class="link-light text-decoration-none text-shadow fw-bold" href="../../image.php?artworkid=<?php echo $image['id']; ?>">

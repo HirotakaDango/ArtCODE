@@ -1,16 +1,35 @@
 <?php
-// Get images from the database uploaded by users that the current user follows
+// Get the current date
+$currentDate = date('Y-m-d');
+
+// Get the first and last day of the current Year
+$startOfYear = date('Y-01-01');
+$endOfYear = date('Y-12-31');
+
+// Prepare the query
 $stmt = $db->prepare("
-    SELECT images.*
+    SELECT 
+        images.*, 
+        users.artist, 
+        users.pic, 
+        users.id AS user_id, 
+        COALESCE(SUM(daily.views), 0) AS views
     FROM images
-    INNER JOIN favorites ON images.id = favorites.image_id
-    WHERE favorites.email = :email
-    ORDER BY images.id DESC
+    JOIN users ON images.email = users.email
+    LEFT JOIN daily ON images.id = daily.image_id 
+        AND daily.date BETWEEN :startOfYear AND :endOfYear
+    GROUP BY images.id
+    ORDER BY views DESC, images.id DESC
     LIMIT :limit OFFSET :offset
 ");
-$stmt->bindValue(':email', $email, SQLITE3_TEXT);
+
+// Bind parameters
+$stmt->bindValue(':startOfYear', $startOfYear, SQLITE3_TEXT);
+$stmt->bindValue(':endOfYear', $endOfYear, SQLITE3_TEXT);
 $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
 $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+
+// Execute the query
 $result = $stmt->execute();
 ?>
 
@@ -30,7 +49,7 @@ $result = $stmt->execute();
               $id = $user['id'];
             }
           ?>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/feeds/notification/card_notification.php'); ?>
+          <?php include($_SERVER['DOCUMENT_ROOT'] . '/feeds/explores/card_explores.php'); ?>
         <?php endwhile; ?>
       </div>
     </div>
