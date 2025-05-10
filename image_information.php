@@ -281,7 +281,7 @@
                 </button>
 
                 <!-- Original Image Modal -->
-                <div class="modal fade" id="originalImageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="originalImageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-swup-reload>
                   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-fullscreen-sm-down">
                     <div class="modal-content border-0 p-0 rounded-min-4">
                       <div class="d-flex align-items-center justify-content-between p-2">
@@ -290,10 +290,34 @@
                           <i class="bi bi-chevron-down fs-5" style="-webkit-text-stroke: 3px;"></i>
                         </button>
                       </div>
-                      <iframe src="/artworkid.php?artworkid=<?php echo $image["id"]; ?>" class="vh-100 w-100" sandbox="allow-scripts allow-same-origin"></iframe>
+                      <iframe id="modalIframe" class="vh-100 w-100" sandbox="allow-scripts allow-same-origin"></iframe>
                     </div>
                   </div>
                 </div>
+                <script>
+                  function initializeModal() {
+                    const modalElement = document.getElementById('originalImageModal');
+                    const iframeElement = document.getElementById('modalIframe');
+
+                    if (modalElement) {
+                      modalElement.addEventListener('show.bs.modal', function () {
+                        if (!iframeElement.src) {
+                          iframeElement.src = '/artworkid.php?artworkid=<?php echo $image["id"]; ?>';
+                        }
+                      });
+
+                      modalElement.addEventListener('hidden.bs.modal', function () {
+                        iframeElement.src = ''; // Unload content when modal is closed
+                      });
+                    }
+                  }
+
+                  // Initialize modal functionality on page load
+                  document.addEventListener('DOMContentLoaded', initializeModal);
+
+                  // Reinitialize modal functionality after swup.js replaces the content
+                  document.addEventListener('swup:contentReplaced', initializeModal);
+                </script>
                 <!-- End of Original Image Modal -->
             
                 <!-- Data Modal -->
