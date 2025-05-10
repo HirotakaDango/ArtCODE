@@ -180,7 +180,7 @@ list($width, $height) = file_exists($original_image_path) ? getimagesize($origin
       <div class="position-absolute bottom-0 end-0 me-2 mb-2">
         <div class="btn-group">
           <div class="dropdown">
-            <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> opacity-75 rounded-3 rounded-end-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-sm btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold opacity-75 rounded-3 rounded-end-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-eye-fill"></i>
             </button>
             <ul class="dropdown-menu">

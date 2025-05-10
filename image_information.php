@@ -177,21 +177,35 @@
                     }
                   ?>
                   <script>
-                    function myFunction1() {
-                      var dots1 = document.getElementById("limitedText1");
-                      var moreText1 = document.getElementById("more1");
-                      var btnText1 = document.getElementById("myBtn1");
+                    function initializeReadMore() {
+                      function myFunction1() {
+                        var dots1 = document.getElementById("limitedText1");
+                        var moreText1 = document.getElementById("more1");
+                        var btnText1 = document.getElementById("myBtn1");
 
-                      if (moreText1.style.display === "none") {
-                        dots1.style.display = "none";
-                        moreText1.style.display = "inline";
-                        btnText1.innerHTML = "read less";
-                      } else {
-                        dots1.style.display = "inline";
-                        moreText1.style.display = "none";
-                        btnText1.innerHTML = "read more";
+                        if (moreText1.style.display === "none") {
+                          dots1.style.display = "none";
+                          moreText1.style.display = "inline";
+                          btnText1.innerHTML = "read less";
+                        } else {
+                          dots1.style.display = "inline";
+                          moreText1.style.display = "none";
+                          btnText1.innerHTML = "read more";
+                        }
+                      }
+
+                      // Attach the function to the button
+                      const btn = document.getElementById("myBtn1");
+                      if (btn) {
+                        btn.onclick = myFunction1;
                       }
                     }
+
+                    // Initialize functionality on page load
+                    document.addEventListener('DOMContentLoaded', initializeReadMore);
+
+                    // Reinitialize functionality after swup.js replaces content
+                    document.addEventListener('swup:contentReplaced', initializeReadMore);
                   </script>
                 </p>
               </div>
@@ -298,12 +312,11 @@
                   function initializeModal() {
                     const modalElement = document.getElementById('originalImageModal');
                     const iframeElement = document.getElementById('modalIframe');
+                    const iframeSrc = '/artworkid.php?artworkid=<?php echo $image["id"]; ?>';
 
                     if (modalElement) {
                       modalElement.addEventListener('show.bs.modal', function () {
-                        if (!iframeElement.src) {
-                          iframeElement.src = '/artworkid.php?artworkid=<?php echo $image["id"]; ?>';
-                        }
+                        iframeElement.src = iframeSrc; // Always reload the iframe when the modal is opened
                       });
 
                       modalElement.addEventListener('hidden.bs.modal', function () {
@@ -589,8 +602,8 @@
                 </div>
               </div>
               
-              <div class="d-none d-md-flex d-lg-flex mt-2 gap-2">
-                <?php if (basename($_SERVER['PHP_SELF']) !== 'simplest_view.php'): ?>
+              <?php if (basename($_SERVER['PHP_SELF']) !== 'simplest_view.php'): ?>
+                <div class="d-none d-md-flex d-lg-flex mt-2 mb-0 gap-2">
                   <?php if ($next_image): ?>
                     <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
                       <div class="position-relative">
@@ -654,9 +667,9 @@
                       </div>
                     </a>
                   <?php endif; ?>
-                <?php endif; ?>
-              </div>
-              <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 mt-2 fw-bold w-100" style="word-wrap: break-word;" href="/artist.php?id=<?php echo $user['id']; ?>">
+                </div>
+              <?php endif; ?>
+              <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 fw-bold w-100 mt-2" style="word-wrap: break-word;" href="/artist.php?id=<?php echo $user['id']; ?>">
                 <small>
                   view all <?php echo $user['artist']; ?>'s images
                 </small>
