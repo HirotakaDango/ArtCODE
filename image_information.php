@@ -262,27 +262,35 @@
                   <small>find similar image</small>
                 </a>
               </div>
-              <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 mb-2 w-100" href="/episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
-                  <small>all episodes from <?php echo $image['episode_name']; ?></small>
-                </a>
-                <div class="btn-group gap-2 w-100 mb-2">
-                  <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" target="_blank" href="/feeds/manga/title.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
-                    <small>go to manga</small>
+              <?php if (basename($_SERVER['PHP_SELF']) !== 'simplest_view.php'): ?>
+                <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
+                  <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 mb-2 w-100" href="/episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
+                    <small>all episodes from <?php echo $image['episode_name']; ?></small>
                   </a>
-                  <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" target="_blank" href="/view/manga/?artworkid=<?php echo $image['id']; ?>&page=1">
-                    <small>read in manga mode</small>
+                  <div class="btn-group gap-2 w-100 mb-2">
+                    <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" target="_blank" href="/feeds/manga/title.php?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
+                      <small>go to manga</small>
+                    </a>
+                    <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" target="_blank" href="/view/manga/?artworkid=<?php echo $image['id']; ?>&page=1">
+                      <small>read in manga mode</small>
+                    </a>
+                  </div>
+                <?php endif; ?>
+                <div class="btn-group w-100 gap-2 mb-2">
+                  <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" data-bs-toggle="modal" data-bs-target="#previewMangaModal">
+                    <small>all previews</small>
+                  </button>
+                  <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" href="#" id="originalImageLink" data-bs-toggle="modal" data-bs-target="#originalImageModal">
+                    <small>modal preview</small>
                   </a>
                 </div>
               <?php endif; ?>
-              <div class="btn-group w-100 gap-2 mb-2">
-                <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" data-bs-toggle="modal" data-bs-target="#previewMangaModal">
-                  <small>all previews</small>
+              <?php if (!in_array(basename($_SERVER['PHP_SELF']), ['simple_view.php', 'simplest_view.php', 'view.php']) && basename($_SERVER['PHP_SELF']) === 'full_view.php'): ?>
+                <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-100 mb-2" data-bs-toggle="modal" data-bs-target="#previewLatestPopularModal">
+                  <small>latest and popular</small>
                 </button>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 w-50" href="#" id="originalImageLink" data-bs-toggle="modal" data-bs-target="#originalImageModal">
-                  <small>modal preview</small>
-                </a>
-              </div>
+                <?php include('modal_latest_popular.php'); ?>
+              <?php endif; ?>
               <div class="btn-group w-100" role="group" aria-label="Basic example">
                 <button class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-start-4" data-bs-toggle="modal" data-bs-target="#shareLink">
                   <i class="bi bi-share-fill"></i> <small>share</small>
@@ -346,8 +354,8 @@
                           <div class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> text-center mt-2 mb-4">
                             <h6 class="fw-bold"><i class="bi bi-file-earmark-plus"></i> Total size of all images: <?php echo $total_size; ?> MB</h6>
                           </div>
-                          <button class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2" id="toggleButton3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage1" aria-expanded="false" aria-controls="collapseExample">
-                            <i class="bi bi-caret-down-fill"></i> <small>show more</small>
+                          <button class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataImage1" aria-expanded="false" aria-controls="collapseExample">
+                            <small>show more</small>
                           </button>
                           <div class="collapse mt-2" id="collapseDataImage1">
                             <?php foreach ($images as $index => $image) { ?>
@@ -592,6 +600,7 @@
                 <!-- End of Share Modal -->
 
               </div>
+
               <!-- Preview Modal -->
               <div class="modal fade" id="previewMangaModal" tabindex="-1" aria-labelledby="previewMangaModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-fullscreen m-0 p-0">
@@ -601,6 +610,7 @@
                   </div>
                 </div>
               </div>
+              <!-- End of Preview Modal -->
               
               <?php if (basename($_SERVER['PHP_SELF']) !== 'simplest_view.php'): ?>
                 <div class="d-none d-md-flex d-lg-flex mt-2 mb-0 gap-2">
@@ -806,41 +816,43 @@
                   <?php endif; ?>
                 </div>
               </div>
-              <div class="collapse" id="collapseExample">
-                <form class="mt-2" action="add_to_album.php" method="post">
-                  <input class="form-control" type="hidden" name="image_id" value="<?= $image['id']; ?>">
-                  <select class="form-select fw-bold rounded-4 mb-2" name="album_id">
-                    <option class="form-control" value=""><small>add to album:</small></option>
-                    <?php
-                      // Connect to the SQLite database
-                      $db = new SQLite3('database.sqlite');
+              <?php if (basename($_SERVER['PHP_SELF']) !== 'simplest_view.php'): ?>
+                <div class="collapse" id="collapseExample">
+                  <form class="mt-2" action="add_to_album.php" method="post">
+                    <input class="form-control" type="hidden" name="image_id" value="<?= $image['id']; ?>">
+                    <select class="form-select fw-bold rounded-4 mb-2" name="album_id">
+                      <option class="form-control" value=""><small>add to album:</small></option>
+                      <?php
+                        // Connect to the SQLite database
+                        $db = new SQLite3('database.sqlite');
 
-                      // Get the email of the current user
-                      $email = $_SESSION['email'];
+                        // Get the email of the current user
+                        $email = $_SESSION['email'];
 
-                      // Retrieve the list of albums created by the current user
-                      $stmt = $db->prepare('SELECT album_name, id FROM album WHERE email = :email');
-                      $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-                      $results = $stmt->execute();
+                        // Retrieve the list of albums created by the current user
+                        $stmt = $db->prepare('SELECT album_name, id FROM album WHERE email = :email');
+                        $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+                        $results = $stmt->execute();
 
-                      // Loop through each album and create an option in the dropdown list
-                      while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
-                        $album_name = $row['album_name'];
-                        $id = $row['id'];
-                        echo '<option value="' . $id. '">' . htmlspecialchars($album_name). '</option>';
-                      }
+                        // Loop through each album and create an option in the dropdown list
+                        while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+                          $album_name = $row['album_name'];
+                          $id = $row['id'];
+                          echo '<option value="' . $id. '">' . htmlspecialchars($album_name). '</option>';
+                        }
 
-                      $db->close();
-                    ?>
-                  </select>
-                  <button class="form-control text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4" type="submit"><small>add to album</small></button>
-                </form>
-                <iframe class="mt-2 rounded-4 shadow" style="width: 100%; height: 400px;" src="<?php echo $url_comment; ?>"></iframe>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-100 rounded-4 fw-bold mt-2" href="comments.php?imageid=<?php echo $image['id']; ?>"><small>view all comments</small></a>
-              </div>
-              <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 w-100 fw-bold text-center mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleButton">
-                <i class="bi bi-caret-down-fill"></i> <small id="toggleText">show more</small>
-              </a>
+                        $db->close();
+                      ?>
+                    </select>
+                    <button class="form-control text-bg-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4" type="submit"><small>add to album</small></button>
+                  </form>
+                  <iframe class="mt-2 rounded-4 shadow" style="width: 100%; height: 400px;" src="<?php echo $url_comment; ?>"></iframe>
+                  <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> w-100 rounded-4 fw-bold mt-2" href="comments.php?imageid=<?php echo $image['id']; ?>"><small>view all comments</small></a>
+                </div>
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 w-100 fw-bold text-center mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                  <small>show more</small>
+                </a>
+              <?php endif; ?>
             </div>
           </div> 
         </div>
