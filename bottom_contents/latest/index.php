@@ -82,8 +82,8 @@ $resultL = $stmtL->execute();
             // Total count of main images and associated images
             $totalImagesCount = $imageCountL + $childImageCountL;
             ?>
-            <?php include('rows_columns/image_counts_prev.php'); ?>
-            <div class="position-absolute top-0 start-0">
+            <?php include('rows_columns/image_counts_prev_artwork.php'); ?>
+            <div class="position-absolute top-0 end-0">
               <div class="dropdown">
                 <button class="btn border-0 p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi bi-three-dots-vertical text-white link-body-emphasis fs-5"
