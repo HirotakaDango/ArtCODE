@@ -56,7 +56,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                   $totalImagesCount = 0; // Handle error condition
                                 }
                                 ?>
-                                <?php include('rows_columns/image_counts_prev.php'); ?>
+                                <?php include('rows_columns/image_counts_prev_artwork.php'); ?>
                               </a>
                             </div>
                           <?php endfor; ?>
@@ -120,7 +120,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                   $totalImagesCount = 0; // Handle error condition
                                 }
                                 ?>
-                                <?php include('rows_columns/image_counts_prev.php'); ?>
+                                <?php include('rows_columns/image_counts_prev_artwork.php'); ?>
                               </a>
                             </div>
                           <?php endfor; ?>
