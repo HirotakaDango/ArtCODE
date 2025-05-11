@@ -106,9 +106,17 @@ $currentUrl = $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-          window.location.href = "<?php echo $redirectUrl; ?>";
+      document.addEventListener('DOMContentLoaded', function () {
+        const isMobile = window.innerWidth <= 767;
+        const mode = isMobile ? 'mobile' : 'desktop';
+
+        // Append mode dynamically to the redirect URL
+        const redirectUrl = new URL('<?php echo $redirectUrl; ?>', window.location.origin);
+        redirectUrl.searchParams.set('mode', mode);
+
+        setTimeout(function () {
+          // Redirect without reloading the current page twice
+          window.location.href = redirectUrl.toString();
         }, 3000); // Redirect after 3 seconds
       });
     </script>

@@ -123,11 +123,6 @@ if (isset($_POST['favorite'])) {
 
 $url_comment = "comments_preview.php?imageid=" . $image_id;
 
-// Increment the view count for the image
-$stmt = $db->prepare("UPDATE images SET view_count = view_count + 1 WHERE id = :artworkid");
-$stmt->bindParam(':artworkid', $artworkId);
-$stmt->execute();
-
 // Get the updated image information from the database
 $stmt = $db->prepare("SELECT * FROM images WHERE id = :artworkid");
 $stmt->bindParam(':artworkid', $artworkId);
@@ -136,37 +131,6 @@ $image = $stmt->fetch();
 
 // Retrieve the updated view count from the image information
 $viewCount = $image['view_count'];
-
-// Create the "history" table if it does not exist
-$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, history TEXT, email TEXT, image_artworkid TEXT, date_history DATETIME)");
-$stmt->execute();
-
-// Store the link URL and image ID into the "history" table
-if (isset($_GET['artworkid'])) {
-  $artworkId = $_GET['artworkid'];
-  $uri = $_SERVER['REQUEST_URI'];
-  $email = $_SESSION['email'];
-  $currentDate = date('Y-m-d'); // Get the current date
-
-  // Check if the same URL and image ID exist in the history for the current day
-  $stmt = $db->prepare("SELECT * FROM history WHERE history = :history AND image_artworkid = :artworkId AND email = :email AND date_history = :date_history");
-  $stmt->bindParam(':history', $uri);
-  $stmt->bindParam(':artworkId', $artworkId);
-  $stmt->bindParam(':email', $email);
-  $stmt->bindParam(':date_history', $currentDate);
-  $stmt->execute();
-  $existing_entry = $stmt->fetch();
-
-  if (!$existing_entry) {
-    // Insert the URL and image ID into the history table
-    $stmt = $db->prepare("INSERT INTO history (history, email, image_artworkid, date_history) VALUES (:history, :email, :artworkId, :date_history)");
-    $stmt->bindParam(':history', $uri);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':artworkId', $artworkId);
-    $stmt->bindParam(':date_history', $currentDate);
-    $stmt->execute();
-  }
-}
 
 // Get all child images associated with the current image from the "image_child" table
 $stmt = $db->prepare("SELECT * FROM image_child WHERE image_id = :image_id");
@@ -200,29 +164,6 @@ $reduction_percentage = ((($original_image_size - $thumbnail_image_size) / $orig
 
 // Get image dimensions
 list($width, $height) = getimagesize('images/' . $image['filename']);
-
-// Get the current date
-$currentDate = date('Y-m-d');
-
-// Check if there's already a record for today in the daily table
-$stmt = $db->prepare("SELECT * FROM daily WHERE image_id = :image_id AND date = :date");
-$stmt->bindParam(':image_id', $image['id']);
-$stmt->bindParam(':date', $currentDate);
-$stmt->execute();
-$daily_view = $stmt->fetch();
-
-if ($daily_view) {
-  // If there's already a record for today, increment the view count
-  $stmt = $db->prepare("UPDATE daily SET views = views + 1 WHERE id = :id");
-  $stmt->bindParam(':id', $daily_view['id']);
-  $stmt->execute();
-} else {
-  // If there's no record for today, insert a new record
-  $stmt = $db->prepare("INSERT INTO daily (image_id, views, date) VALUES (:image_id, 1, :date)");
-  $stmt->bindParam(':image_id', $image['id']);
-  $stmt->bindParam(':date', $currentDate);
-  $stmt->execute();
-}
 ?>
 
 <!DOCTYPE html>
@@ -325,7 +266,6 @@ if ($daily_view) {
           </div>
         </div>
       </div>
-      <?php include('view_option.php'); ?>
       <div class="position-absolute bottom-0 end-0 me-2 mb-2">
         <div class="btn-group">
           <div class="dropdown">

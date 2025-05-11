@@ -83,7 +83,7 @@
               <div class="d-flex d-md-none d-lg-none gap-2">
                 <?php if (basename($_SERVER['PHP_SELF']) !== 'simplest_view.php'): ?>
                   <?php if ($next_image): ?>
-                    <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
+                    <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $next_image['id']])) ?>">
                       <div class="position-relative">
                         <div class="ratio ratio-1x1">
                           <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
@@ -94,7 +94,7 @@
                       </div>
                     </a>
                   <?php else: ?>
-                    <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
+                    <a class="image-containerA shadow rounded" href="/artist.php?<?= http_build_query(array_merge($_GET, ['by' => 'newest', 'id' => $user['id']])) ?>">
                       <div class="position-relative">
                         <?php if (!empty($user['pic'])): ?>
                           <div class="ratio ratio-1x1">
@@ -111,13 +111,13 @@
                       </div>
                     </a>
                   <?php endif; ?>
-                  <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
+                  <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $image['id']])) ?>">
                     <div class="ratio ratio-1x1">
                       <img class="object-fit-cover opacity-50 rounded" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
                     </div>
                   </a>
                   <?php if ($prev_image): ?>
-                    <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
+                    <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $prev_image['id']])) ?>">
                       <div class="position-relative">
                         <div class="ratio ratio-1x1">
                           <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
@@ -128,7 +128,7 @@
                       </div>
                     </a>
                   <?php else: ?>
-                    <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
+                    <a class="image-containerA shadow rounded" href="/artist.php?<?= http_build_query(array_merge($_GET, ['by' => 'newest', 'id' => $user['id']])) ?>">
                       <div class="position-relative">
                         <?php if (!empty($user['pic'])): ?>
                           <div class="ratio ratio-1x1">
@@ -615,7 +615,7 @@
               <?php if (basename($_SERVER['PHP_SELF']) !== 'simplest_view.php'): ?>
                 <div class="d-none d-md-flex d-lg-flex mt-2 mb-0 gap-2">
                   <?php if ($next_image): ?>
-                    <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
+                    <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $next_image['id']])) ?>">
                       <div class="position-relative">
                         <div class="ratio ratio-1x1">
                           <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
@@ -626,7 +626,7 @@
                       </div>
                     </a>
                   <?php else: ?>
-                    <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
+                    <a class="image-containerA shadow rounded" href="/artist.php?<?= http_build_query(array_merge($_GET, ['by' => 'newest', 'id' => $user['id']])) ?>">
                       <div class="position-relative">
                         <?php if (!empty($user['pic'])): ?>
                           <div class="ratio ratio-1x1">
@@ -643,13 +643,13 @@
                       </div>
                     </a>
                   <?php endif; ?>
-                  <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
+                  <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $image['id']])) ?>">
                     <div class="ratio ratio-1x1">
                       <img class="object-fit-cover opacity-50 rounded" src="thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
                     </div>
                   </a>
                   <?php if ($prev_image): ?>
-                    <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
+                    <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $prev_image['id']])) ?>">
                       <div class="position-relative">
                         <div class="ratio ratio-1x1">
                           <img class="img-blur object-fit-cover rounded opacity-75" src="thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
@@ -660,7 +660,7 @@
                       </div>
                     </a>
                   <?php else: ?>
-                    <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
+                    <a class="image-containerA shadow rounded" href="/artist.php?<?= http_build_query(array_merge($_GET, ['by' => 'newest', 'id' => $user['id']])) ?>">
                       <div class="position-relative">
                         <?php if (!empty($user['pic'])): ?>
                           <div class="ratio ratio-1x1">
@@ -1077,3 +1077,34 @@
             margin-top: 8px; /* Add spacing between icon and text */
           }
         </style>
+        <script>
+          function adjustMode() {
+            const isMobile = window.innerWidth <= 767;
+        
+            // Extract current mode from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentMode = urlParams.get('mode');
+        
+            // Build new URL for redirection (remove search/hash, use current path)
+            function updateUrlModeParam(value) {
+              const params = new URLSearchParams();
+              for (const [key, val] of urlParams.entries()) {
+                if (key !== 'mode') params.append(key, val);
+              }
+              params.set('mode', value);
+              return window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+            }
+        
+            if (isMobile && currentMode !== 'mobile') {
+              // Redirect to mobile mode if not already on mobile mode
+              window.location.href = updateUrlModeParam('mobile');
+            } else if (!isMobile && currentMode !== 'desktop') {
+              // Redirect to desktop mode if not already on desktop mode
+              window.location.href = updateUrlModeParam('desktop');
+            }
+          }
+        
+          // Run after page load
+          window.addEventListener('DOMContentLoaded', adjustMode);
+          window.addEventListener('resize', adjustMode);
+        </script>

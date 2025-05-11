@@ -273,56 +273,7 @@ if ($daily_view) {
       </div>
       <?php include('image_bio.php'); ?>
       <div class="roow">
-        <div class="cool-6">
-          <div class="bg-body-tertiary d-flex justify-content-center d-md-none d-lg-none">
-            <?php if ($next_image): ?>
-              <a class="img-pointer btn me-auto border-0" href="?artworkid=<?= $next_image['id'] ?>">
-                <i class="bi bi-chevron-left text-stroke-2"></i>
-              </a>
-            <?php else: ?>
-              <a class="img-pointer btn me-auto border-0" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
-                <i class="bi bi-box-arrow-in-up-left text-stroke"></i>
-              </a>
-            <?php endif; ?>
-            <h6 class="mx-auto img-pointer user-select-none text-center fw-bold scrollable-title mt-2" style="overflow-x: auto; white-space: nowrap; margin: 0 auto;">
-              <?php echo $image['title']; ?>
-            </h6>
-            <?php if ($prev_image): ?>
-              <a class="img-pointer btn ms-auto border-0" href="?artworkid=<?= $prev_image['id'] ?>">
-                <i class="bi bi-chevron-right text-stroke-2"></i>
-              </a>
-            <?php else: ?>
-              <a class="img-pointer btn ms-auto border-0" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
-                <i class="bi bi-box-arrow-in-up-right text-stroke"></i>
-              </a>
-            <?php endif; ?>
-          </div>
-          <div class="caard position-relative">
-            <?php
-              $id    = (int)$image['id'];
-              $ratio = $width > 0 ? ($height/$width)*100 : 56.25;
-            ?>
-            <div id="iframeContainer<?= $id ?>" class="ratio" style="--bs-aspect-ratio: <?= $ratio ?>%;">
-              <a href="#" id="originalImageLink" data-bs-toggle="modal" data-bs-target="#originalImageModal" data-original-src="/images/<?php echo $image['filename']; ?>">
-                <iframe src="iframe_image_view.php?artworkid=<?= $id ?>" class="ratio-item border-0 img-pointer shadow-lg rounded-r h-100 w-100" allowfullscreen scrolling="no" frameborder="0"></iframe>
-              </a>
-            </div>
-            <?php if ($next_image): ?>
-              <div class="d-md-none d-lg-none">
-                <a class="btn btn-sm opacity-75 rounded fw-bold position-absolute start-0 top-50 translate-middle-y rounded-start-0" href="?artworkid=<?= $next_image['id'] ?>">
-                  <i class="bi bi-chevron-left display-f" style="-webkit-text-stroke: 4px;"></i>
-                </a>
-              </div>
-            <?php endif; ?> 
-            <?php if ($prev_image): ?>
-              <div class="d-md-none d-lg-none">
-                <a class="btn btn-sm opacity-75 rounded fw-bold position-absolute end-0 top-50 translate-middle-y rounded-end-0" href="?artworkid=<?= $prev_image['id'] ?>">
-                  <i class="bi bi-chevron-right display-f" style="-webkit-text-stroke: 4px;"></i>
-                </a>
-              </div>
-            <?php endif; ?>
-          </div>
-        </div>
+        <?php include('image_iframe.php'); ?>
         <?php include('image_information.php'); ?>
       </div>
     </div>

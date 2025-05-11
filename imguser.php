@@ -9,7 +9,8 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <p class="mt-3 fw-bold">
                 <i class="bi bi-images"></i> Latest images by <?php echo htmlspecialchars($user['artist']); ?>
               </p>
-            
+              
+              <?php if (isset($_GET['mode']) && $_GET['mode'] === 'desktop'): ?>
               <div class="container px-0 d-none d-md-block">
                 <div id="imageCarouselUser" class="carousel slide" data-bs-ride="carousel">
                   <div class="carousel-inner">
@@ -31,7 +32,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             $current_image_id = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
                           ?>
                             <div class="col">
-                              <a href="?artworkid=<?php echo $image_id; ?>" class="position-relative">
+                              <a href="?artworkid=<?php echo $image_id; ?>&mode=<?php echo $_GET['mode']; ?>" class="position-relative">
                                 <div class="ratio ratio-1x1">
                                   <img class="object-fit-cover rounded <?php echo ($imageU['type'] === 'nsfw') ? 'blurred' : ''; ?> <?php echo ($image_id == $current_image_id) ? 'opacity-50' : ''; ?>" src="thumbnails/<?php echo $image_url; ?>" alt="<?php echo htmlspecialchars($image_title); ?>" style="object-fit: cover;">
                                 </div>
@@ -74,6 +75,8 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   </div>
                 </div>
               </div>
+              <?php endif; ?>
+              <?php if (isset($_GET['mode']) && $_GET['mode'] === 'mobile'): ?>
               <div class="container px-0 d-md-none">
                 <div id="imageCarouselUserMobile" class="carousel slide" data-bs-ride="carousel">
                   <div class="carousel-inner">
@@ -95,7 +98,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             $current_image_id = isset($_GET['artworkid']) ? $_GET['artworkid'] : null;
                           ?>
                             <div class="col">
-                              <a href="?artworkid=<?php echo $image_id; ?>" class="position-relative">
+                              <a href="?artworkid=<?php echo $image_id; ?>&mode=<?php echo $_GET['mode']; ?>" class="position-relative">
                                 <div class="ratio ratio-1x1">
                                   <img class="object-fit-cover rounded <?php echo ($imageU['type'] === 'nsfw') ? 'blurred' : ''; ?> <?php echo ($image_id == $current_image_id) ? 'opacity-50' : ''; ?>" src="thumbnails/<?php echo $image_url; ?>" alt="<?php echo htmlspecialchars($image_title); ?>" style="object-fit: cover;">
                                 </div>
@@ -138,9 +141,10 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   </div>
                 </div>
               </div>
+              <?php endif; ?>
 
-<script>
-  var carousel = new bootstrap.Carousel(document.getElementById('imageCarouselUser'), {
-    interval: false // Disable auto sliding
-  });
-</script>
+              <script>
+                var carousel = new bootstrap.Carousel(document.getElementById('imageCarouselUser'), {
+                  interval: false // Disable auto sliding
+                });
+              </script>
