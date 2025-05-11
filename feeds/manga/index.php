@@ -170,7 +170,7 @@ $limit = 24;
         return (!isset($_GET['by']) && $sortType === 'newest') || (isset($_GET['by']) && $_GET['by'] === $sortType);
       }
     ?>
-    
+    <?php include('./header_manga.php'); ?>
     <div class="dropdown mt-1">
       <button class="btn btn-sm fw-bold rounded-pill ms-2 mb-2 btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-images"></i> sort by

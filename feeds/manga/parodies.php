@@ -87,6 +87,7 @@ $parodiesPage = array_slice($parodiesInCat, $offset, $perPage, true);
   </head>
   <body>
     <?php include('../../header.php'); ?>
+    <?php include('./header_manga.php'); ?>
     <div class="container my-3">
       <h1 class="mb-4 fw-bold">
         Parodies
