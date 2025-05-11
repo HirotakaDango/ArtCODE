@@ -124,63 +124,6 @@ if ($row) {
     <link rel="icon" type="image/png" href="../icon/favicon.png">
     <link rel="stylesheet" href="../style.css">
     <?php include('../bootstrapcss.php'); ?>
-    <script>
-      // Inline manifest
-      const manifest = {
-        "name": "ArtCODE",
-        "short_name": "ArtCODE",
-        "start_url": ".",
-        "display": "standalone",
-        "background_color": "#ffffff",
-        "theme_color": "#000000",
-        "icons": [
-          {
-            "src": "/icon/favicon.png",
-            "sizes": "192x192",
-            "type": "image/png"
-          }
-        ]
-      };
-
-      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-      const manifestURL = URL.createObjectURL(manifestBlob);
-      const link = document.createElement('link');
-      link.rel = 'manifest';
-      link.href = manifestURL;
-      document.head.appendChild(link);
-
-      // Inline service worker registration
-      if ('serviceWorker' in navigator) {
-        const swBlob = new Blob([`
-          self.addEventListener('install', function(event) {
-            event.waitUntil(
-              caches.open('ArtCODE-v0.1.13').then(function(cache) {
-                return cache.addAll([
-                  '/',
-                  '/home/index.php',
-                  '/icon/favicon.png'
-                ]);
-              })
-            );
-          });
-
-          self.addEventListener('fetch', function(event) {
-            event.respondWith(
-              caches.match(event.request).then(function(response) {
-                return response || fetch(event.request);
-              })
-            );
-          });
-        `], { type: 'application/javascript' });
-
-        const swURL = URL.createObjectURL(swBlob);
-        navigator.serviceWorker.register(swURL).then(function(registration) {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }).catch(function(error) {
-          console.log('ServiceWorker registration failed: ', error);
-        });
-      }
-    </script>
   </head>
   <body>
     <?php include('../header.php'); ?>
