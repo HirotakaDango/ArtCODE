@@ -1,5 +1,9 @@
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" rel="preload" as="style">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="preload" as="style">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    </noscript>
     <meta name="view-transition" content="same-origin">
 
     <style>
@@ -58,207 +62,146 @@
     </style>
 
     <script defer>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Enable the view transition API
-        if ('viewTransition' in document) {
-          document.documentElement.setAttribute('view-transition', 'enabled');
-        }
-
-        // Start caching images and content
-        cacheImagesAndContent();
-      });
-
-      // IndexedDB setup for caching images
+      // -- IndexedDB image cache with single-image caching (no arrays) --
       const DB_NAME = 'imageCacheDB';
-      const DB_VERSION = 1;
       const STORE_NAME = 'images';
-
       let db;
 
-      // Initialize IndexedDB database
-      function initDB() {
+      function openDB() {
         return new Promise((resolve, reject) => {
-          const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-          request.onupgradeneeded = function (e) {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(STORE_NAME)) {
-              db.createObjectStore(STORE_NAME);
-            }
+          const req = indexedDB.open(DB_NAME, 1);
+          req.onupgradeneeded = e => {
+            const _db = e.target.result;
+            if (!_db.objectStoreNames.contains(STORE_NAME)) _db.createObjectStore(STORE_NAME);
           };
-
-          request.onsuccess = function (e) {
-            db = e.target.result;
-            resolve(db);
-          };
-
-          request.onerror = function (e) {
-            reject('Error opening IndexedDB: ' + e.target.error);
-          };
+          req.onsuccess = e => { db = e.target.result; resolve(db); };
+          req.onerror = e => reject('IndexedDB error: ' + e.target.error);
         });
       }
 
-      // Function to store image in IndexedDB
-      function storeImageInDB(imageUrl, imageBlob) {
-        return new Promise((resolve, reject) => {
-          const transaction = db.transaction([STORE_NAME], 'readwrite');
-          const store = transaction.objectStore(STORE_NAME);
-          const request = store.put(imageBlob, imageUrl);
-
-          request.onsuccess = function () {
-            resolve();
+      function cacheImageDirect(url) {
+        return new Promise(async (resolve, reject) => {
+          const tx = db.transaction([STORE_NAME], 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const getReq = store.get(url);
+          getReq.onsuccess = async () => {
+            if (getReq.result) return resolve(getReq.result);
+            // Not cached, fetch and store
+            try {
+              const resp = await fetch(url, { cache: 'force-cache' });
+              const blob = await resp.blob();
+              const tx2 = db.transaction([STORE_NAME], 'readwrite');
+              tx2.objectStore(STORE_NAME).put(blob, url);
+              resolve(blob);
+            } catch (err) { reject(err); }
           };
-
-          request.onerror = function () {
-            reject('Error storing image in DB');
-          };
+          getReq.onerror = () => reject('Error reading IndexedDB');
         });
       }
 
-      // Function to get image from IndexedDB
-      function getImageFromDB(imageUrl) {
-        return new Promise((resolve, reject) => {
-          const transaction = db.transaction([STORE_NAME], 'readonly');
-          const store = transaction.objectStore(STORE_NAME);
-          const request = store.get(imageUrl);
-
-          request.onsuccess = function () {
-            resolve(request.result); // Return the image Blob
-          };
-
-          request.onerror = function () {
-            reject('Error retrieving image from DB');
-          };
-        });
-      }
-
-      // Function to cache image
-      async function cacheImage(imageUrl) {
-        try {
-          const cachedImage = await getImageFromDB(imageUrl);
-          if (cachedImage) {
-            return cachedImage; // Return cached image from IndexedDB
-          }
-
-          const response = await fetch(imageUrl);
-          const imageBlob = await response.blob();
-          await storeImageInDB(imageUrl, imageBlob); // Store image in IndexedDB
-          return imageBlob;
-        } catch (error) {
-          console.error(error);
-        }
-      }
-
-      // Function to lazy load and cache images when in the viewport
-      function lazyLoadAndCacheImages() {
-        const images = document.querySelectorAll('img[data-src]'); // Select images with data-src attribute
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const img = entry.target;
-              if (img.dataset.src && !img.src) {
-                img.src = URL.createObjectURL(await cacheImage(img.dataset.src)); // Set src using Blob URL
-                img.removeAttribute('data-src');
-              }
-              observer.unobserve(img); // Stop observing the image
-            }
+      function cacheAllImagesOnPage() {
+        openDB().then(() => {
+          document.querySelectorAll('img').forEach(img => {
+            const url = img.getAttribute('src') || img.dataset.src;
+            if (url) cacheImageDirect(url);
           });
         });
-
-        images.forEach(img => {
-          if (img.src) {
-            cacheImage(img.src); // Cache already loaded images
-          }
-          imageObserver.observe(img); // Start observing each image
-        });
       }
 
-      // Cache images and content
-      function cacheImagesAndContent() {
-        initDB().then(() => {
-          lazyLoadAndCacheImages(); // Start caching images
-
-          // Cache page content when clicked on <button> or <a> links
-          document.querySelectorAll('button, a').forEach(element => {
-            element.addEventListener('click', async function(event) {
-              const url = this.href || location.href; // For <a> elements, get the URL from href
-              if (!url) return;
-
-              const response = await fetch(url);
-              if (response.ok) {
-                const content = await response.text();
-                localStorage.setItem(url, content); // Cache the page content in localStorage
-              }
-            });
+      // -- Service Worker registration for app shell & image caching --
+      function registerAppShellSW(fileList) {
+        if (!('serviceWorker' in navigator)) return;
+        const swBlob = new Blob([`
+          self.addEventListener('install',e=>{
+            e.waitUntil(
+              caches.open('ArtCODE-v0.1.14').then(c=>c.addAll(${JSON.stringify(fileList)}))
+            );
           });
-
-          // Check if page content is already cached in localStorage
-          const cachedPage = localStorage.getItem(location.href);
-          if (cachedPage) {
-            document.body.innerHTML = cachedPage; // Load from cache
-          }
-        }).catch(error => {
-          console.error('Error initializing database:', error);
-        });
+          self.addEventListener('fetch',e=>{
+            e.respondWith(
+              caches.match(e.request).then(r=>r||fetch(e.request))
+            );
+          });
+        `], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(swBlob));
       }
-    </script>
-    
-    <script>
-        const installButton = document.getElementById('installButton');
 
-        // Check if the browser supports the beforeinstallprompt event
+      // -- Install Prompt (PWA) logic --
+      document.addEventListener('DOMContentLoaded', function () {
+        cacheAllImagesOnPage();
         if ('BeforeInstallPromptEvent' in window) {
-            let deferredPrompt;
-
-            window.addEventListener('beforeinstallprompt', (e) => {
-                console.log('beforeinstallprompt fired');
-                e.preventDefault(); // Prevent the default prompt
-                deferredPrompt = e; // Stash the event for later use
-
-                installButton.style.display = 'block'; // Make the install button visible
-                installButton.addEventListener('click', () => {
-                    console.log('Install button clicked');
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt(); // Show the install prompt
-                        deferredPrompt.userChoice.then((choiceResult) => {
-                            if (choiceResult.outcome === 'accepted') {
-                                console.log('User accepted the install prompt');
-                                installButton.style.display = 'none'; // Hide button after install
-                            } else {
-                                console.log('User dismissed the install prompt');
-                            }
-                            deferredPrompt = null; // Clear the deferredPrompt since it can only be used once
-                        });
-                    }
+          let deferredPrompt;
+          window.addEventListener('beforeinstallprompt', e => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('installButton');
+            if (btn) {
+              btn.style.display = 'block';
+              btn.onclick = () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choice => {
+                  if (choice.outcome === 'accepted') btn.style.display = 'none';
+                  deferredPrompt = null;
                 });
-            });
-
-            // Service Worker Registration (Embedded as a String - More complex logic is better in a separate file)
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register(URL.createObjectURL(new Blob([`
-                    self.addEventListener('install', function(event) {
-                        console.log('Service Worker: Install Event in single file');
-                        event.waitUntil(
-                            caches.open('v1').then(function(cache) {
-                                return cache.addAll([
-                                    './', // Cache the index.html (or whatever your main file is)
-                                    'icon-192x192.png' // Placeholder icon - make sure this file exists or remove
-                                ]);
-                            })
-                        );
-                    });
-
-                    self.addEventListener('fetch', function(event) {
-                        event.respondWith(
-                            caches.match(event.request).then(function(response) {
-                                return response || fetch(event.request);
-                            })
-                        );
-                    });
-                `], { type: 'text/javascript' }))); // Create a Blob URL for the service worker code
+              };
             }
-        } else {
-            installButton.style.display = 'none'; // Hide install button if install prompt not supported
-            console.log('Install prompt not supported in this browser.');
+          });
         }
+      });
+    </script>
+
+    <?php
+      $rootDir = __DIR__;
+      $excludeDirs = ['images', 'background_pictures', 'profile_pictures', 'thumbnails'];
+      function getFilesRecursive($dir, $baseUrl = '') {
+        $files = [];
+        $iterator = new RecursiveIteratorIterator(
+          new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS)
+        );
+        foreach ($iterator as $file) {
+          if ($file->isFile()) {
+            $ext = strtolower($file->getExtension());
+            if (in_array($ext, ['php', 'html', 'css', 'js', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico'])) {
+              $relativePath = str_replace('\\', '/', substr($file->getPathname(), strlen($dir)));
+              $relativePath = ltrim($relativePath, '/');
+              $isExcluded = false;
+              foreach ($GLOBALS['excludeDirs'] as $exDir) {
+                if (strpos($relativePath, $exDir . '/') === 0) { $isExcluded = true; break; }
+              }
+              // Add below: Exclude management.php explicitly
+              if ($relativePath === 'management.php') {
+                $isExcluded = true;
+              }
+              if (!$isExcluded) $files[] = $baseUrl . '/' . $relativePath;
+            }
+          }
+        }
+        return $files;
+      }
+      $fileList = getFilesRecursive($rootDir, '');
+      $fileList = array_values(array_unique(array_filter($fileList, fn($f) => strpos($f, '/') === 0)));
+      array_unshift($fileList, '/');
+      if (!in_array('/icon/favicon.png', $fileList)) $fileList[] = '/icon/favicon.png';
+      $jsFileList = json_encode($fileList, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    ?>
+
+    <!-- Manifest -->
+
+    <script>
+      const manifest = {
+        "name": "ArtCODE",
+        "short_name": "ArtCODE",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#ffffff",
+        "theme_color": "#000000",
+        "icons": [
+          { "src": "/icon/favicon.png", "sizes": "192x192", "type": "image/png" }
+        ]
+      };
+      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'manifest', href: URL.createObjectURL(manifestBlob) }));
+
+      // Register SW with all relevant files for offline/app-shell
+      registerAppShellSW(<?php echo $jsFileList; ?>);
     </script>

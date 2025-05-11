@@ -293,6 +293,10 @@ $categories = array();
       .text-stroke {
         -webkit-text-stroke: 1px;
       }
+      
+      .text-view-none {
+        display: none;
+      }
     </style> 
     <script>
       function goBack() {
