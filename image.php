@@ -75,6 +75,8 @@ $currentUrl = $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'
     <?php include('bootstrapcss.php'); ?>
     <title><?php echo $image['title'] ?? 'No Title'; ?></title>
     <meta name="description" content="<?php echo $image['imgdesc'] ?? 'No description.'; ?>">
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="<?php echo $currentUrl; ?>">
