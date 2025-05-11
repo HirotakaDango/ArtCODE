@@ -345,6 +345,7 @@ try {
   </head>
   <body>
     <?php include('../header_preview.php'); ?>
+    <?php include('./header_manga.php'); ?>
     <div class="container my-3">
       <div class="row">
         <div class="col-md-4">

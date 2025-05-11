@@ -84,6 +84,7 @@ $artistsPage = array_slice($artistsInCat, $offset, $perPage, true);
   </head>
   <body>
     <?php include('../header_preview.php'); ?>
+    <?php include('./header_manga.php'); ?>
     <div class="container my-3">
       <h1 class="mb-4 fw-bold">
         Artists <small class="text-muted">&mdash; Category <?php echo $selected; ?></small>

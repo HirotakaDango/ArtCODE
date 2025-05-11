@@ -87,6 +87,7 @@ $tagsPage = array_slice($tagsInCat, $offset, $perPage, true);
   </head>
   <body>
     <?php include('../header_preview.php'); ?>
+    <?php include('./header_manga.php'); ?>
     <div class="container my-3">
       <h1 class="mb-4 fw-bold">
         Tags <small class="text-muted">&mdash; Category <?php echo $selected; ?></small>

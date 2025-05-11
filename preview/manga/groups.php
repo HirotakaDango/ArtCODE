@@ -85,6 +85,7 @@ $groupsPage     = array_slice($groupsInCat, $offset, $perPage, true);
   </head>
   <body>
     <?php include('../header_preview.php'); ?>
+    <?php include('./header_manga.php'); ?>
     <div class="container my-3">
       <h1 class="mb-4 fw-bold">
         Groups
