@@ -21,12 +21,12 @@
             </a>
             <div class="collapse bg-secondary bg-opacity-25 mt-2 rounded" id="collapseModal">
               <div class="btn-group-vertical w-100">
-                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/manga/') === false) echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./"><i class="bi bi-house-fill"></i> Home</a>
-                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'parodies.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./parodies.php"><i class="bi bi-book-half"></i> Parodies</a>
-                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'characters.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./characters.php"><i class="bi bi-people-fill"></i> Characters</a>
-                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./tags.php"><i class="bi bi-tags-fill"></i> Tags</a>
-                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./artists.php"><i class="bi bi-person-circle"></i> Artists</a>
-                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'groups.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./groups.php"><i class="bi bi-person-fill"></i> Groups</a>
+                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/manga/') === false) echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./">Home</a>
+                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'parodies.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./parodies.php">Parodies</a>
+                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'characters.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./characters.php">Characters</a>
+                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./tags.php">Tags</a>
+                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./artists.php">Artists</a>
+                <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'groups.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./groups.php">Groups</a>
               </div>
               <form class="d-flex p-2" role="search" action="./">
                 <input class="form-control me-2 fw-medium" type="search" placeholder="Search" aria-label="Search" name="search">
