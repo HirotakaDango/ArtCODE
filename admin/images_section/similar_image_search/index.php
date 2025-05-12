@@ -80,7 +80,8 @@ $dropdownStyle = empty($imageUrl) ? 'display: none;' : '';
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Similar Image Search</title>
     <?php include('../../../bootstrapcss.php'); ?>
     <link rel="stylesheet" href="/style.css">
