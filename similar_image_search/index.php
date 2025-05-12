@@ -77,7 +77,8 @@ $dropdownStyle = empty($imageUrl) ? 'display: none;' : '';
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Similar Image Search</title>
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" type="image/png" href="/icon/favicon.png">
