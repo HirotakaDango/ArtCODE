@@ -68,7 +68,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
       }
     </style>
   </head>
-  <body>
+  <body class="bg-dark-subtle">
     <div id="displayHeader">
       <?php include('header.php'); ?>
     </div>
@@ -92,7 +92,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
         </button>
       </div>
     </div>
-    <div class="bg-dark-subtle">
+    <div>
       <div class="position-fixed bottom-0 end-0 z-2 d-none d-md-block">
         <a class="btn bg-body-tertiary border-0 link-body-emphasis fw-bold m-2" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
           <i class="bi bi-list text-stroke"></i> Menu
@@ -305,7 +305,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
       </div>
       <h2 class="text-center mt-md-5 mb-5 d-md-none"><a class="btn bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="<?php echo $web; ?>/download_images.php?artworkid=<?php echo $_GET['id']; ?>">Download Batch</a></h2>
     </div>
-    <div class="position-fixed bottom-0 start-0 z-2 m-2 ms-3">
+    <div class="position-fixed bottom-0 start-0 z-2 m-2 ms-3 d-none d-md-block">
       <h6 class="small d-flex">
         <main id="swup" class="transition-main me-1"><?php echo $currentPage; ?></main>
         / <?php echo $totalPages; ?>
