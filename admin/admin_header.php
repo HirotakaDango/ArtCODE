@@ -39,6 +39,7 @@
                     <li><a href="/admin/images_section/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All Images</a></li>
                     <li><a href="/admin/images_section/users/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">All Users</a></li>
                     <li><a href="/admin/images_section/favorites/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Favorites</a></li>
+                    <li><a href="/admin/images_section/advance_search/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Advance Search</a></li>
                     <li><a href="/admin/images_section/similar_image_search/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Similar Search</a></li>
                     <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a></li>
                     <li><a href="/admin/images_section/rankings/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Rankings</a></li>

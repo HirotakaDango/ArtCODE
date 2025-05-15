@@ -221,9 +221,6 @@ $limit = 24;
         case 'least':
         include "index_least.php";
         break;
-        case 'liked':
-        include "index_liked.php";
-        break;
         case 'order_asc':
         include "index_order_asc.php";
         break;

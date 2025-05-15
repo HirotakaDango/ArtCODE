@@ -1,0 +1,135 @@
+<?php
+$page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, ['options' => ['default' => 1, 'min_range' => 1]]) : 1;
+if ($page === false || $page < 1) {
+  $page = 1;
+}
+
+$offset = ($page - 1) * $limit;
+
+$whereClauses = [];
+$bindings = [];
+
+function addMultiLikeOrFilter(&$whereClauses, &$bindings, $getParamKey, $columnName, $paramPrefix) {
+  if (!empty($_GET[$getParamKey])) {
+    $value = trim($_GET[$getParamKey]);
+    $valuesToFilter = [];
+    if (strpos($value, ',') !== false) {
+      $valuesToFilter = array_map('trim', explode(',', $value));
+    } elseif (!empty($value)) {
+      $valuesToFilter = [$value];
+    }
+    $valuesToFilter = array_filter($valuesToFilter);
+
+    if (!empty($valuesToFilter)) {
+      $subClauses = [];
+      $counter = 0;
+      foreach ($valuesToFilter as $singleValue) {
+        $placeholder = ':' . $paramPrefix . '_' . $counter;
+        $subClauses[] = $columnName . " LIKE " . $placeholder;
+        $bindings[$placeholder] = '%' . $singleValue . '%';
+        $counter++;
+      }
+      if (!empty($subClauses)) {
+        $whereClauses[] = "(" . implode(" OR ", $subClauses) . ")";
+      }
+    }
+  }
+}
+
+if (!empty($_GET['q'])) {
+  $q_input_terms = array_filter(array_map('trim', explode(' ', trim($_GET['q']))));
+  if (!empty($q_input_terms)) {
+    $q_overall_and_clauses = [];
+    $q_search_fields = ["images.characters", "images.\"group\"", "images.categories", "images.tags", "images.parodies", "images.language"];
+    $q_term_idx = 0;
+    foreach ($q_input_terms as $q_term_value) {
+      $q_term_placeholder = ':search_q_term_' . $q_term_idx;
+      $bindings[$q_term_placeholder] = '%' . $q_term_value . '%';
+      $current_term_or_clauses = [];
+      foreach ($q_search_fields as $field) {
+        $current_term_or_clauses[] = $field . " LIKE " . $q_term_placeholder;
+      }
+      if (!empty($current_term_or_clauses)) {
+        $q_overall_and_clauses[] = "(" . implode(" OR ", $current_term_or_clauses) . ")";
+      }
+      $q_term_idx++;
+    }
+    if (!empty($q_overall_and_clauses)) {
+      $whereClauses[] = "(" . implode(" AND ", $q_overall_and_clauses) . ")";
+    }
+  }
+}
+
+addMultiLikeOrFilter($whereClauses, $bindings, 'character', 'images.characters', 'filter_char');
+addMultiLikeOrFilter($whereClauses, $bindings, 'parody', 'images.parodies', 'filter_parody');
+addMultiLikeOrFilter($whereClauses, $bindings, 'group', 'images."group"', 'filter_grp');
+addMultiLikeOrFilter($whereClauses, $bindings, 'tag', 'images.tags', 'filter_tag');
+
+if (!empty($_GET['language'])) {
+  $whereClauses[] = "images.language = :filter_language";
+  $bindings[':filter_language'] = trim($_GET['language']);
+}
+
+if (!empty($_GET['category'])) {
+  $whereClauses[] = "images.categories LIKE :filter_category";
+  $bindings[':filter_category'] = '%' . trim($_GET['category']) . '%';
+}
+
+if (!empty($_GET['type'])) {
+  $whereClauses[] = "images.type = :filter_type";
+  $bindings[':filter_type'] = trim($_GET['type']);
+}
+
+if (!empty($_GET['artwork_type'])) {
+  $whereClauses[] = "images.artwork_type = :filter_artwork_type";
+  $bindings[':filter_artwork_type'] = trim($_GET['artwork_type']);
+}
+
+if (!empty($_GET['uid']) && filter_var($_GET['uid'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
+  $whereClauses[] = "users.id = :filter_uid";
+  $bindings[':filter_uid'] = (int)$_GET['uid'];
+}
+
+$joinClause = "LEFT JOIN favorites ON images.id = favorites.image_id";
+$fromClause = "FROM images $joinClause";
+if (!empty($_GET['uid'])) {
+  $fromClause .= " INNER JOIN users ON images.email = users.email";
+}
+
+$whereClauses[] = "favorites.email = :email";
+$bindings[':email'] = $email;
+
+$sqlWhere = " WHERE " . implode(" AND ", $whereClauses);
+
+$totalQueryString = "SELECT COUNT(images.id) as total $fromClause $sqlWhere";
+$totalStmt = $db->prepare($totalQueryString);
+$total = 0;
+if ($totalStmt !== false) {
+  foreach ($bindings as $placeholder => $value) {
+    $paramType = is_int($value) ? SQLITE3_INTEGER : SQLITE3_TEXT;
+    $totalStmt->bindValue($placeholder, $value, $paramType);
+  }
+  $totalResult = $totalStmt->execute();
+  if ($totalResult) {
+    $totalRow = $totalResult->fetchArray(SQLITE3_ASSOC);
+    if ($totalRow) {
+      $total = (int)$totalRow['total'];
+    }
+  }
+}
+
+$imagesQueryString = "SELECT images.* $fromClause $sqlWhere ORDER BY images.id DESC LIMIT :page_limit OFFSET :page_offset";
+$stmt = $db->prepare($imagesQueryString);
+$result = false;
+if ($stmt !== false) {
+  foreach ($bindings as $placeholder => $value) {
+    $paramType = is_int($value) ? SQLITE3_INTEGER : SQLITE3_TEXT;
+    $stmt->bindValue($placeholder, $value, $paramType);
+  }
+  $stmt->bindValue(':page_limit', $limit, SQLITE3_INTEGER);
+  $stmt->bindValue(':page_offset', $offset, SQLITE3_INTEGER);
+  $result = $stmt->execute();
+}
+?>
+
+    <?php include('image_card_advance_search.php')?>

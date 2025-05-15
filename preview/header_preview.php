@@ -17,6 +17,7 @@
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/manga/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseManga">Manga</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/music/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseMusic">Music</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/search/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">Search</a>
+          <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/advance_search/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="/preview/advance_search/">Advance Search</a>
           <a class="btn border-0 fw-bold text-decoration-none text-dark link-body-emphasis" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseKeywords">Keywords</a>
         </div>
         <div class="dropdown nav-right">
@@ -108,7 +109,7 @@
                   </div>
                 </div>
               </div>
-              <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 mt-2 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/novel/') !== false) echo 'opacity-75 shadow'; ?>" data-bs-toggle="collapse" href="#collapseKeywords" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 mt-2 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/keyword/') !== false) echo 'opacity-75 shadow'; ?>" data-bs-toggle="collapse" href="#collapseKeywords" role="button" aria-expanded="false" aria-controls="collapseExample">
                 <span class="d-md-none d-lg-inline d-lg-none">Keywords</span>
               </a>
               <div class="collapse mt-2" id="collapseKeywords">
@@ -122,6 +123,9 @@
                   </div>
                 </div>
               </div>
+              <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 mt-2 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/preview/advance_search/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/preview/advance_search/">
+                <span class="d-md-none d-lg-inline d-lg-none">Advance Search</span>
+              </a>
             </ul>
             <!-- end -->
           </div>

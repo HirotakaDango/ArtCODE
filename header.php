@@ -145,10 +145,14 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 <div id="suggestions1"></div>
               </form>
 
+              <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-100 mt-2 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
+                <i class="bi bi-house-fill fs-5"></i>
+                <span class="d-md-none d-lg-inline d-lg-none">Home</span>
+              </a>
               <div class="btn-group gap-2 w-100 mt-2">
-                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/home/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/">
-                  <i class="bi bi-house-fill fs-5"></i>
-                  <span class="d-md-none d-lg-inline d-lg-none">Home</span>
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/upload/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
+                  <i class="bi bi-cloud-arrow-up-fill fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none">Upload</span>
                 </a>
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis position-relative rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/inboxes/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/inboxes/">
                   <div class="position-relative">
@@ -185,9 +189,9 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 </a>
               </div>
               <div class="btn-group gap-2 w-100 mt-2">
-                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/upload/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
-                  <i class="bi bi-cloud-arrow-up-fill fs-5"></i>
-                  <span class="d-md-none d-lg-inline d-lg-none">Upload</span>
+                <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/advance_search/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/advance_search/">
+                  <i class="bi bi-filter-left fs-5"></i>
+                  <span class="d-md-none d-lg-inline d-lg-none">Advance Search</span>
                 </a>
                 <a class="btn bg-body-tertiary border-0 link-body-emphasis rounded-4 fw-bold p-3 w-50 d-flex justify-content-center align-items-center text-center flex-column <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/similar_image_search/') !== false) echo 'opacity-75 shadow'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/similar_image_search/">
                   <i class="bi bi-search fs-5"></i>
@@ -387,48 +391,53 @@ $fav_count1 = $fav_result1->fetchArray()[0];
             <!-- Desktop -->
             <ul class="position-absolute top-50 start-50 translate-middle navbar-nav mb-lg-0 fw-bold d-none-md-lg" style="margin-top: 0.1em;">
               <li class="nav-item mx-1">
-                <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/home/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/home/') !== false) echo 'bg-dark-subtle rounded-pill'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>">
                   Home
                 </a>
               </li>
               <li class="nav-item mx-1">
-                <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/scrolls/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/scrolls/">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/scrolls/') !== false) echo 'bg-dark-subtle rounded-pill'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/scrolls/">
                   Scrolls
                 </a>
               </li>
               <li class="nav-item mx-1">
-                <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/gallerium/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/gallerium/">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/gallerium/') !== false) echo 'bg-dark-subtle rounded-pill'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/gallerium/">
                   Gallerium
                 </a>
               </li>
               <li class="nav-item mx-1">
-                <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/upload/index.php') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/upload/index.php') !== false) echo 'bg-dark-subtle rounded-pill'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/upload/">
                   Upload
                 </a>
               </li>
               <li class="nav-item mx-1">
-                <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'forum.php') echo 'bg-dark-subtle rounded-pill py-1' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/forum.php">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'forum.php') echo 'bg-dark-subtle rounded-pill' ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/forum.php">
                   Forum
                 </a>
               </li>
               <li class="nav-item mx-1">
-                <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if ((basename($_SERVER['PHP_SELF']) == 'index.php' || basename($_SERVER['PHP_SELF']) == 'favorite.php') && strpos($_SERVER['PHP_SELF'], '/text/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseText">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if ((basename($_SERVER['PHP_SELF']) == 'index.php' || basename($_SERVER['PHP_SELF']) == 'favorite.php') && strpos($_SERVER['PHP_SELF'], '/text/') !== false) echo 'bg-dark-subtle rounded-pill'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#modalCollapseText">
                   Text
                 </a>
               </li>
               <li class="nav-item mx-1">
-                <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/notification/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/feeds/notification/') !== false) echo 'bg-dark-subtle rounded-pill'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/feeds/notification/">
                   Notification
                 </a>
               </li>
               <li class="nav-item mx-1">
-                <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '//search/') !== false) echo 'bg-dark-subtle rounded-pill py-1'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchTerm">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/search/') !== false) echo 'bg-dark-subtle rounded-pill'; ?>" href="#" data-bs-toggle="modal" data-bs-target="#searchTerm">
                   Search
                 </a>
               </li>
               <li class="nav-item mx-1">
+                <a class="btn border-0 fw-bold text-decoration-none mb-1 text-nowrap text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/advance_search/') !== false) echo 'bg-dark-subtle rounded-pill'; ?>" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>/advance_search/">
+                  Advance Search
+                </a>
+              </li>
+              <li class="nav-item mx-1">
                 <div class="dropdown-center">
-                  <a class="btn border-0 fw-bold text-decoration-none text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false">
+                  <a class="btn border-0 fw-bold text-decoration-none mb-1 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> link-body-emphasis dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false">
                     More
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow border-0" style="width: 450px;">
