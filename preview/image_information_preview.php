@@ -19,7 +19,7 @@
                  <?php if (!empty($user['pic'])): ?>
                    <img class="object-fit-cover border border-1 rounded-circle" src="<?php echo $user['pic']; ?>" style="width: 32px; height: 32px;">
                   <?php else: ?>
-                    <img class="object-fit-cover border border-1 rounded-circle" src="icon/profile.svg" style="width: 32px; height: 32px;">
+                    <img class="object-fit-cover border border-1 rounded-circle" src="/icon/profile.svg" style="width: 32px; height: 32px;">
                   <?php endif; ?>
                   <?php echo (mb_strlen($user['artist']) > 20) ? mb_substr($user['artist'], 0, 20) . '...' : $user['artist']; ?> <small class="badge rounded-pill bg-dark"><i class="bi bi-globe-asia-australia"></i> <?php echo $user['region']; ?></small>
                 </a>
@@ -27,68 +27,70 @@
             </div>
             <div class="me-2 ms-2 rounded fw-bold">
               <div class="d-flex d-md-none d-lg-none gap-2">
-                <?php if ($next_image): ?>
-                  <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
-                    <div class="position-relative">
-                      <div class="ratio ratio-1x1">
-                        <img class="img-blur object-fit-cover rounded opacity-75" src="../thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                <?php if (basename($_SERVER['PHP_SELF']) !== 'simplest_view.php'): ?>
+                  <?php if ($next_image): ?>
+                    <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $next_image['id']])) ?>">
+                      <div class="position-relative">
+                        <div class="ratio ratio-1x1">
+                          <img class="img-blur object-fit-cover rounded opacity-75" src="/thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                        </div>
+                        <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
+                          <i class="bi bi-arrow-left-circle text-stroke"></i> Next
+                        </h6>
                       </div>
-                      <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-arrow-left-circle text-stroke"></i> Next
-                      </h6>
-                    </div>
-                  </a>
-                <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
-                    <div class="position-relative">
-                      <?php if (!empty($user['pic'])): ?>
-                        <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
-                        </div>
-                      <?php else: ?>
-                        <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
-                        </div>
-                      <?php endif; ?>
-                      <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
-                      </h6>
-                    </div>
-                  </a>
-                <?php endif; ?>
-                <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
-                  <div class="ratio ratio-1x1">
-                    <img class="object-fit-cover opacity-50 rounded" src="../thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
-                  </div>
-                </a>
-                <?php if ($prev_image): ?>
-                  <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
-                    <div class="position-relative">
-                      <div class="ratio ratio-1x1">
-                        <img class="img-blur object-fit-cover rounded opacity-75" src="../thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                    </a>
+                  <?php else: ?>
+                    <a class="image-containerA shadow rounded" href="/artist.php?<?= http_build_query(array_merge($_GET, ['by' => 'newest', 'id' => $user['id']])) ?>">
+                      <div class="position-relative">
+                        <?php if (!empty($user['pic'])): ?>
+                          <div class="ratio ratio-1x1">
+                            <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                          </div>
+                        <?php else: ?>
+                          <div class="ratio ratio-1x1">
+                            <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="/icon/profile.svg">
+                          </div>
+                        <?php endif; ?>
+                        <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
+                          <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
+                        </h6>
                       </div>
-                      <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
-                      </h6>
+                    </a>
+                  <?php endif; ?>
+                  <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $image['id']])) ?>">
+                    <div class="ratio ratio-1x1">
+                      <img class="object-fit-cover opacity-50 rounded" src="/thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
                     </div>
                   </a>
-                <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
-                    <div class="position-relative">
-                      <?php if (!empty($user['pic'])): ?>
+                  <?php if ($prev_image): ?>
+                    <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $prev_image['id']])) ?>">
+                      <div class="position-relative">
                         <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                          <img class="img-blur object-fit-cover rounded opacity-75" src="/thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
                         </div>
-                      <?php else: ?>
-                        <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
-                        </div>
-                      <?php endif; ?>
-                      <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
-                      </h6>
-                    </div>
-                  </a>
+                        <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
+                          Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
+                        </h6>
+                      </div>
+                    </a>
+                  <?php else: ?>
+                    <a class="image-containerA shadow rounded" href="/artist.php?<?= http_build_query(array_merge($_GET, ['by' => 'newest', 'id' => $user['id']])) ?>">
+                      <div class="position-relative">
+                        <?php if (!empty($user['pic'])): ?>
+                          <div class="ratio ratio-1x1">
+                            <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="<?php echo $user['pic']; ?>">
+                          </div>
+                        <?php else: ?>
+                          <div class="ratio ratio-1x1">
+                            <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="/icon/profile.svg">
+                          </div>
+                        <?php endif; ?>
+                        <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
+                          All <i class="bi bi-box-arrow-in-up-right text-stroke"></i>
+                        </h6>
+                      </div>
+                    </a>
+                  <?php endif; ?>
                 <?php endif; ?>
               </div>
               <h5 class="text-dark fw-bold text-center mt-3"><?php echo $image['title']; ?></h5>
@@ -344,20 +346,20 @@
                   </a>
                 </div>
               <?php endif; ?>
-              <div class="d-none d-md-flex d-lg-flex mt-2 gap-2">
+              <div class="d-none d-md-flex d-lg-flex mt-2 mb-0 gap-2">
                 <?php if ($next_image): ?>
-                  <a class="image-containerA shadow rounded" href="?artworkid=<?= $next_image['id'] ?>">
+                  <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $next_image['id']])) ?>">
                     <div class="position-relative">
                       <div class="ratio ratio-1x1">
-                        <img class="img-blur object-fit-cover rounded opacity-75" src="../thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="/thumbnails/<?php echo $next_image['filename']; ?>" alt="<?php echo $next_image['title']; ?>">
                       </div>
-                      <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                      <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
                         <i class="bi bi-arrow-left-circle text-stroke"></i> Next
                       </h6>
                     </div>
                   </a>
                 <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
+                  <a class="image-containerA shadow rounded" href="/artist.php?<?= http_build_query(array_merge($_GET, ['by' => 'newest', 'id' => $user['id']])) ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
                         <div class="ratio ratio-1x1">
@@ -365,33 +367,33 @@
                         </div>
                       <?php else: ?>
                         <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="/icon/profile.svg">
                         </div>
                       <?php endif; ?>
-                      <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                      <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
                         <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
                       </h6>
                     </div>
                   </a>
                 <?php endif; ?>
-                <a class="image-containerA shadow rounded" href="?artworkid=<?= $image['id'] ?>">
+                <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $image['id']])) ?>">
                   <div class="ratio ratio-1x1">
-                    <img class="object-fit-cover opacity-50 rounded" src="../thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
+                    <img class="object-fit-cover opacity-50 rounded" src="/thumbnails/<?= $image['filename'] ?>" alt="<?php echo $image['title']; ?>">
                   </div>
                 </a>
                 <?php if ($prev_image): ?>
-                  <a class="image-containerA shadow rounded" href="?artworkid=<?= $prev_image['id'] ?>">
+                  <a class="image-containerA shadow rounded" href="?<?= http_build_query(array_merge($_GET, ['artworkid' => $prev_image['id']])) ?>">
                     <div class="position-relative">
                       <div class="ratio ratio-1x1">
-                        <img class="img-blur object-fit-cover rounded opacity-75" src="../thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
+                        <img class="img-blur object-fit-cover rounded opacity-75" src="/thumbnails/<?php echo $prev_image['filename']; ?>" alt="<?php echo $prev_image['title']; ?>">
                       </div>
-                      <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
+                      <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
                         Prev <i class="bi bi-arrow-right-circle text-stroke"></i>
                       </h6>
                     </div>
                   </a>
                 <?php else: ?>
-                  <a class="image-containerA shadow rounded" href="/artist.php?by=newest&id=<?php echo $user['id']; ?>">
+                  <a class="image-containerA shadow rounded" href="/artist.php?<?= http_build_query(array_merge($_GET, ['by' => 'newest', 'id' => $user['id']])) ?>">
                     <div class="position-relative">
                       <?php if (!empty($user['pic'])): ?>
                         <div class="ratio ratio-1x1">
@@ -399,11 +401,11 @@
                         </div>
                       <?php else: ?>
                         <div class="ratio ratio-1x1">
-                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="icon/profile.svg">
+                          <img class="img-blur object-fit-cover rounded opacity-75" alt="<?php echo $user['artist']; ?>" src="/icon/profile.svg">
                         </div>
                       <?php endif; ?>
-                      <h6 class="fw-bold shadowed-text text-white position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-in-up-left text-stroke"></i> All
+                      <h6 class="fw-bold shadowed-text position-absolute text-white top-50 start-50 translate-middle">
+                        All <i class="bi bi-box-arrow-in-up-right text-stroke"></i>
                       </h6>
                     </div>
                   </a>

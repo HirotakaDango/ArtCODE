@@ -339,18 +339,65 @@ if ($daily_view) {
 
             <?php if ($next_image): ?>
               <div class="d-md-none d-lg-none">
-                <button class="btn btn-sm opacity-75 rounded fw-bold position-absolute start-0 top-50 translate-middle-y rounded-start-0"  onclick="location.href='?artworkid=<?= $next_image['id'] ?>'">
+                <a class="btn btn-sm opacity-75 rounded fw-bold position-absolute start-0 top-50 translate-middle-y rounded-start-0" href="?<?php echo http_build_query(array_merge($_GET, ['artworkid' => $next_image['id']])); ?>">
                   <i class="bi bi-chevron-left display-f" style="-webkit-text-stroke: 4px;"></i>
-                </button>
+                </a>
               </div>
             <?php endif; ?> 
             <?php if ($prev_image): ?>
               <div class="d-md-none d-lg-none">
-                <button class="btn btn-sm opacity-75 rounded fw-bold position-absolute end-0 top-50 translate-middle-y rounded-end-0"  onclick="location.href='?artworkid=<?= $prev_image['id'] ?>'">
+                <a class="btn btn-sm opacity-75 rounded fw-bold position-absolute end-0 top-50 translate-middle-y rounded-end-0" href="?<?php echo http_build_query(array_merge($_GET, ['artworkid' => $prev_image['id']])); ?>">
                   <i class="bi bi-chevron-right display-f" style="-webkit-text-stroke: 4px;"></i>
-                </button>
+                </a>
               </div>
             <?php endif; ?>  
+            <script>
+              document.addEventListener('keydown', function(e) {
+                // Skip if focused on an input or textarea
+                if (['input', 'textarea'].includes(e.target.tagName.toLowerCase())) return;
+                if (e.key === 'ArrowRight') {
+                  const prevLink = document.getElementById('prevPageLink');
+                  if (prevLink) {
+                    prevLink.click();
+                  }
+                } else if (e.key === 'ArrowLeft') {
+                  const nextLink = document.getElementById('nextPageLink');
+                  if (nextLink) {
+                    nextLink.click();
+                  }
+                }
+              });
+
+              function adjustMode() {
+                const isMobile = window.innerWidth <= 767;
+            
+                // Extract current mode from the URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const currentMode = urlParams.get('mode');
+            
+                // Build new URL for redirection (remove search/hash, use current path)
+                function updateUrlModeParam(value) {
+                  const params = new URLSearchParams();
+                  for (const [key, val] of urlParams.entries()) {
+                    if (key !== 'mode') params.append(key, val);
+                  }
+                  params.set('mode', value);
+                  return window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+                }
+            
+                if (isMobile && currentMode !== 'mobile') {
+                  // Redirect to mobile mode if not already on mobile mode
+                  window.location.href = updateUrlModeParam('mobile');
+                } else if (!isMobile && currentMode !== 'desktop') {
+                  // Redirect to desktop mode if not already on desktop mode
+                  window.location.href = updateUrlModeParam('desktop');
+                }
+              }
+            
+              // Run after page load
+              window.addEventListener('DOMContentLoaded', adjustMode);
+              window.addEventListener('resize', adjustMode);
+            </script>
             <button id="showProgressBtn" class="fw-bold btn btn-sm btn-dark position-absolute top-50 start-50 translate-middle text-nowrap rounded-pill opacity-75" style="display: none;">
               progress
             </button>

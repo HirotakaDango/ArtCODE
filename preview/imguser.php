@@ -9,7 +9,8 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <p class="mt-3 fw-bold">
                 <i class="bi bi-images"></i> Latest images by <?php echo htmlspecialchars($user['artist']); ?>
               </p>
-            
+
+              <?php if (isset($_GET['mode']) && $_GET['mode'] === 'desktop'): ?>
               <div class="container px-0 d-none d-md-block">
                 <div id="imageCarouselUser" class="carousel slide" data-bs-ride="carousel">
                   <div class="carousel-inner">
@@ -74,6 +75,8 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   </div>
                 </div>
               </div>
+              <?php endif; ?>
+              <?php if (isset($_GET['mode']) && $_GET['mode'] === 'mobile'): ?>
               <div class="container px-0 d-md-none">
                 <div id="imageCarouselUserMobile" class="carousel slide" data-bs-ride="carousel">
                   <div class="carousel-inner">
@@ -138,6 +141,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   </div>
                 </div>
               </div>
+              <?php endif; ?>
 
 <script>
   var carousel = new bootstrap.Carousel(document.getElementById('imageCarouselUser'), {
