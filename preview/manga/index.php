@@ -68,7 +68,11 @@ if (isset($_GET['language'])) {
 
 // Filter by search terms if provided
 if (isset($_GET['search'])) {
-  $searchTerms = explode(',', $_GET['search']);
+  // Support both commas and whitespace as delimiters
+  // First, replace all commas with spaces, then split by any whitespace
+  $searchInput = str_replace(',', ' ', $_GET['search']);
+  $searchTerms = preg_split('/\s+/', $searchInput, -1, PREG_SPLIT_NO_EMPTY);
+
   foreach ($searchTerms as $index => $term) {
     $paramName = ":term$index";
     $conditions[] = "(images.title LIKE $paramName OR images.tags LIKE $paramName OR images.episode_name LIKE $paramName OR users.artist LIKE $paramName)";

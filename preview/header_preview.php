@@ -22,11 +22,12 @@
         </div>
         <div class="dropdown nav-right">
           <div class="btn-group gap-1">
-            <a class="btn border-0 btn-sm link-body-emphasis px-0 fw-bold d-md-none" href="/session/login">sign in</a>
-            <a class="btn border-0 btn-sm link-body-emphasis px-0 fw-bold d-none d-md-block" href="/session/login">login</a>
-            <a class="btn border-0 btn-sm link-body-emphasis px-0 fw-bold d-none d-md-block" href="#"> / </a>
-            <a class="btn border-0 btn-sm link-body-emphasis px-0 fw-bold d-none d-md-block" href="/session/register">register</a>
+            <button class="btn border-0 btn-sm link-body-emphasis px-0 fw-bold d-md-none" onclick="location.href='/session/login'">sign in</button>
+            <button class="btn border-0 btn-sm link-body-emphasis px-0 fw-bold d-none d-md-block" onclick="location.href='/session/login'">login</button>
+            <button class="btn border-0 btn-sm link-body-emphasis px-0 fw-bold d-none d-md-block" disabled>/</button>
+            <button class="btn border-0 btn-sm link-body-emphasis px-0 fw-bold d-none d-md-block" onclick="location.href='/session/register'">register</button>
           </div>
+        </div>
         <div class="offcanvas offcanvas-start" tabindex="-1" id="navbar" aria-labelledby="navbarLabel">
           <div class="offcanvas-header">
             <a class="text-decoration-none link-body-emphasis link-light" href="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']; ?>"><h5 class="offcanvas-title fw-bold" id="navbarLabel">ArtCODE</h5></a>
