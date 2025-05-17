@@ -176,7 +176,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               <?php if (isset($parodies) && !empty($parodies)): ?>
                 <div class="mb-2 row align-items-center">
                   <label for="parodies" class="col-3 col-form-label text-nowrap fw-medium">Parodies</label>
-                  <div class="col-9">
+                  <div class="col-9 p-2">
                     <?php foreach($parodies as $parody => $count): ?>
                       <div class="btn-group m-1">
                         <a href="./?parody=<?php echo urlencode($parody); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">
@@ -193,7 +193,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY AUTOINCR
               <?php if (isset($characters) && !empty($characters)): ?>
                 <div class="mb-2 row align-items-center">
                   <label for="characters" class="col-3 col-form-label text-nowrap fw-medium">Characters</label>
-                  <div class="col-9">
+                  <div class="col-9 p-2">
                     <?php foreach($characters as $character => $count): ?>
                       <div class="btn-group m-1">
                         <a href="./?character=<?php echo urlencode($character); ?>" class="btn btn-sm bg-secondary-subtle fw-bold">

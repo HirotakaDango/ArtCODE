@@ -51,9 +51,9 @@
           <a href="./"><img src="<?php echo $web; ?>/icon/favicon.png" height="38" width="38"></a>
           <form class="d-flex w-100" role="search" action="./">
             <input class="form-control fw-medium w-100 rounded-1 rounded-end-0 border-0 bg-dark-subtle" type="search" placeholder="Search" aria-label="Search" name="search" value="<?php echo isset($_GET['search']) && $_GET['search'] !== '' ? htmlspecialchars($_GET['search']) : ''; ?>">
-            <button class="btn btn-dark rounded-1 rounded-start-0" type="submit"><i class="bi bi-search"></i></button>
+            <button class="btn btn-light rounded-1 rounded-start-0" type="submit"><i class="bi bi-search"></i></button>
           </form>
-          <a class="btn btn-dark rounded-1 p-0 px-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseModal">
+          <a class="btn btn-light rounded-1 p-0 px-2" data-bs-toggle="collapse" href="#collapseModal" role="button" aria-expanded="false" aria-controls="collapseModal">
             <span style="font-size: 1.5em;">&#9776;</span>
           </a>
         </div>
