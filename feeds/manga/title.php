@@ -5,6 +5,14 @@ $db = new PDO('sqlite:../../database.sqlite');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $email = $_SESSION['email'];
 
+// Update: Adjust favorites_manga table schema per new requirements (remove link, image_cover, add episode_name, uid)
+$db->exec("CREATE TABLE IF NOT EXISTS favorites_manga (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL,
+  episode_name TEXT,
+  uid TEXT
+)");
+
 // Build the current URL for sharing links
 $currentUrl = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
@@ -19,7 +27,6 @@ $user_id = $_GET['uid'];
 
 try {
   // Get the latest image for the specified episode and user
-  // This is often used for the cover image and date
   $queryLatest = "
     SELECT
       images.*,
@@ -40,7 +47,6 @@ try {
   $latest_cover = $stmtLatest->fetch(PDO::FETCH_ASSOC);
 
   // Get the first image for the specified episode and user
-  // This is often used for the description and starting the read
   $queryFirst = "
     SELECT
       images.*,
@@ -69,8 +75,6 @@ try {
   }
 
   // Get the total count of pages (from images and image_child) for this episode
-  // Note: This counts total pages across all images for this episode_name,
-  // including child images.
   $queryCount = "
     SELECT COUNT(*) AS total_count
     FROM (
@@ -88,7 +92,6 @@ try {
   $total_count = $stmtCount->fetchColumn();
 
   // Get all images for the specified episode and user
-  // This 'results' set is used to collect all tags, parodies, characters
   $queryImages = "
     SELECT
       images.*,
@@ -106,37 +109,28 @@ try {
   $stmtImages->bindParam(':user_id', $user_id);
   $stmtImages->execute();
   $results = $stmtImages->fetchAll(PDO::FETCH_ASSOC);
-  // Remove email field from all results (security/privacy)
   foreach ($results as &$result) {
     unset($result['email']);
   }
 
-  // Calculate total view count from the images fetched
   $total_view_count = 0;
   foreach ($results as $image) {
     $total_view_count += $image['view_count'];
   }
 
   // --- TAGS LOGIC START ---
-
-  // Build tags from all images for this episode (collect unique tags)
-  $tags = []; // This will store unique tags found in the current episode
+  $tags = [];
   foreach ($results as $image) {
-    // Ensure the 'tags' field exists and is not null before exploding
     if (isset($image['tags']) && !is_null($image['tags'])) {
       $imageTags = explode(',', $image['tags']);
       foreach ($imageTags as $tag) {
         $tag = trim($tag);
         if (!empty($tag)) {
-          // Use the tag as the key. Initial count can be anything, will be overwritten.
-          $tags[$tag] = 0; // Add tag to the list if not already present
+          $tags[$tag] = 0;
         }
       }
     }
   }
-
-  // Count for tags (Count how many unique episodes (manga type) globally contain each tag found in the current episode)
-  // Iterate through the unique tags collected from the current episode and query the global count for each.
   if (!empty($tags)) {
     $queryTagCount = "
       SELECT COUNT(DISTINCT episode_name) AS count
@@ -145,26 +139,17 @@ try {
       AND (',' || tags || ',') LIKE :tag_pattern
     ";
     $stmtTagCount = $db->prepare($queryTagCount);
-  
     foreach (array_keys($tags) as $tag) {
-      // Prepare the pattern to match the tag within the comma-separated string
       $tagPattern = '%,' . $tag . ',%';
-      // Bind the parameter for the current tag in the prepared statement
       $stmtTagCount->bindParam(':tag_pattern', $tagPattern);
       $stmtTagCount->execute();
-      // Fetch the count for this specific tag
       $count = $stmtTagCount->fetchColumn();
-      // Update the count for this specific tag in the $tags array
       $tags[$tag] = $count;
     }
   }
-  // The $tags array now contains unique tags found in the current episode's images,
-  // with counts representing the total number of unique manga episodes containing that tag globally.
-
   // --- TAGS LOGIC END ---
 
-
-  // Build parodies from the images (similar logic to tags, but keeping original counting for now)
+  // Build parodies from the images
   $parodies = [];
   foreach ($results as $image) {
      if (isset($image['parodies']) && !is_null($image['parodies'])) {
@@ -177,7 +162,6 @@ try {
       }
     }
   }
-  // Original Counting logic for Parodies (Can be updated similarly to Tags if needed)
   $queryParodies = "
     SELECT parodies, COUNT(*) AS count FROM (
       SELECT parodies, episode_name, MAX(id) AS latest_image_id
@@ -197,7 +181,7 @@ try {
     }
   }
 
-  // Build characters from the images (similar logic to tags, but keeping original counting for now)
+  // Build characters from the images
   $characters = [];
   foreach ($results as $image) {
     if (isset($image['characters']) && !is_null($image['characters'])) {
@@ -210,7 +194,6 @@ try {
       }
     }
   }
-  // Original Counting logic for Characters (Can be updated similarly to Tags if needed)
   $queryCharacters = "
     SELECT characters, COUNT(*) AS count FROM (
       SELECT characters, episode_name, MAX(id) AS latest_image_id
@@ -231,9 +214,6 @@ try {
   }
 
   // Get group counts based on current title for this user
-  // This query counts unique episodes (identified by episode_name and user email/id)
-  // that have a specific group associated with them, but limits this count
-  // to groups that are present in the current episode.
   $queryGroupCounts = "
     SELECT images.`group`, COUNT(DISTINCT latest_images.episode_name) AS count
     FROM (
@@ -262,9 +242,6 @@ try {
   $groupCounts = $stmtGroupCounts->fetchAll(PDO::FETCH_ASSOC);
 
   // Get categories count for current title
-  // This query counts unique episodes (identified by episode_name and artwork_type)
-  // that have a specific category associated with them, but limits this count
-  // to categories that are present in the current episode.
   $queryCategoriesCounts = "
     SELECT images.categories, COUNT(DISTINCT latest_images.episode_name) AS count
     FROM (
@@ -289,9 +266,6 @@ try {
   $categoriesCounts = $stmtCategoriesCounts->fetchAll(PDO::FETCH_ASSOC);
 
   // Get language counts for current title
-  // This query counts unique episodes (identified by episode_name and artwork_type)
-  // that have a specific language associated with them, but limits this count
-  // to languages that are present in the current episode.
   $queryLanguageCounts = "
     SELECT images.language, COUNT(DISTINCT latest_images.episode_name) AS count
     FROM (
@@ -315,9 +289,7 @@ try {
   $stmtLanguageCounts->execute();
   $languageCounts = $stmtLanguageCounts->fetchAll(PDO::FETCH_ASSOC);
 
-
   // Count how many latest images by the current artist (grouped per episode)
-  // This counts the number of unique 'manga' episodes by this artist
   $queryArtistCount = "
     SELECT COUNT(DISTINCT episode_name) AS count
     FROM images
@@ -329,10 +301,50 @@ try {
   $stmtArtistCount->execute();
   $artistImageCount = $stmtArtistCount->fetchColumn();
 
-
 } catch (PDOException $e) {
   echo "<p>Error: " . $e->getMessage() . "</p>";
   exit;
+}
+
+// Function to check if a title is already favorited by the user (by episode_name + uid)
+function isFavorited($email, $episode_name, $uid, $db) {
+  $stmt = $db->prepare("SELECT COUNT(*) as count FROM favorites_manga WHERE email = ? AND episode_name = ? AND uid = ?");
+  $stmt->execute([$email, $episode_name, $uid]);
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $result['count'] > 0;
+}
+
+// Favorite/unfavorite logic
+if (isset($_POST['action']) && isset($_SESSION['email']) && isset($_GET['uid']) && isset($_GET['title'])) {
+  $userEmail = $_SESSION['email'];
+  $episodeName = $_GET['title'];
+  $uid = $_GET['uid'];
+  if ($_POST['action'] === 'favorite') {
+    // Check if already favorited
+    if (!isFavorited($userEmail, $episodeName, $uid, $db)) {
+      $stmt = $db->prepare("INSERT INTO favorites_manga (email, episode_name, uid) VALUES (?, ?, ?)");
+      $stmt->execute([$userEmail, $episodeName, $uid]);
+    }
+  } elseif ($_POST['action'] === 'unfavorite') {
+    $stmt = $db->prepare("DELETE FROM favorites_manga WHERE email = ? AND episode_name = ? AND uid = ?");
+    $stmt->execute([$userEmail, $episodeName, $uid]);
+  }
+
+  // Redirect to current URL after action to prevent resubmission on reload
+  $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+  $currentUrl = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+  header("Location: $currentUrl");
+  exit();
+}
+
+// Fetch user's favorites_manga
+if (isset($_SESSION['email'])) {
+  $userEmail = $_SESSION['email'];
+  $stmt = $db->prepare("SELECT * FROM favorites_manga WHERE email = ?");
+  $stmt->execute([$userEmail]);
+  $favorites_manga = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+  $favorites_manga = [];
 }
 ?>
 
@@ -378,15 +390,14 @@ try {
                     return '<a href="' . $url . '">' . $url . '</a>';
                   }, $messageTextWithoutTags);
 
-                  $charLimit = 400; // Set your character limit
+                  $charLimit = 400;
 
                   if (strlen($formattedText) > $charLimit) {
                     $limitedText = substr($formattedText, 0, $charLimit);
-                    echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>'; // Display the capped text with line breaks and "..."
-                    echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>'; // Display the full text initially hidden with line breaks
+                    echo '<span id="limitedText">' . nl2br($limitedText) . '...</span>';
+                    echo '<span id="more" style="display: none;">' . nl2br($formattedText) . '</span>';
                     echo '</br><button class="btn btn-sm mt-2 fw-medium p-0 border-0 text-white" onclick="myFunction()" id="myBtn"><small>read more</small></button>';
                   } else {
-                    // If the text is within the character limit, just display it with line breaks.
                     echo nl2br($formattedText);
                   }
                 } else {
@@ -564,6 +575,20 @@ try {
             </div>
           </div>
           <?php endif; ?>
+
+          <!-- FAVORITE BUTTON FORM: episode_name and uid only, no htmlspecialchars! -->
+          <form id="favoriteForm" method="post" action="">
+            <input type="hidden" name="episode_name" value="<?php echo $episode_name; ?>">
+            <input type="hidden" name="uid" value="<?php echo $user_id; ?>">
+            <?php if (isset($_SESSION['email'])): ?>
+              <?php if (isFavorited($_SESSION['email'], $episode_name, $user_id, $db)): ?>
+                <button type="submit" name="action" value="unfavorite" class="btn btn-sm bg-body-tertiary link-body-emphasis rounded fw-bold">Remove from favorites</button>
+              <?php else: ?>
+                <button type="submit" name="action" value="favorite" class="btn btn-sm bg-body-tertiary link-body-emphasis rounded fw-bold">Add to favorites</button>
+              <?php endif; ?>
+            <?php endif; ?>
+          </form>
+
         </div>
       </div>
     </div>
@@ -722,11 +747,11 @@ try {
         });
 
         lazyloadImages.forEach(function(image) {
-          image.src = defaultPlaceholder; // Apply default placeholder
+          image.src = defaultPlaceholder;
           imageObserver.observe(image);
-          image.style.filter = "blur(5px)"; // Apply initial blur to all images
+          image.style.filter = "blur(5px)";
           image.addEventListener("load", function() {
-            image.style.filter = "none"; // Remove blur after image loads
+            image.style.filter = "none";
           });
         });
       } else {
@@ -767,7 +792,6 @@ try {
         if (loading) return;
         loading = true;
 
-        // Simulate loading delay for demo purposes
         setTimeout(function() {
           for (let i = 0; i < 10; i++) {
             if (lazyloadImages.length === 0) {
@@ -787,7 +811,6 @@ try {
         }
       });
 
-      // Initial loading
       loadMoreImages();
     </script>
     <?php include('../../bootstrapjs.php'); ?>

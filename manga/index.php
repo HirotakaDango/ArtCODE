@@ -153,7 +153,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCRE
                   <div class="ratio ratio-cover">
                     <img class="rounded rounded-bottom-0 object-fit-cover lazy-load" data-src="<?= $web . '/thumbnails/' . $image['filename']; ?>" alt="<?= $image['title']; ?>">
                   </div>
-                  <h6 class="text-center fw-bold text-light text-decoration-none bg-dark-subtle p-2 rounded rounded-top-0" id="episode-name_img<?= $image['id']; ?>_<?= $image['userid']; ?>">「<?= $image['artist']; ?>」<?= $image['episode_name']; ?> 「<?= $image['language']; ?>」</h6>
+                  <h6 class="text-center fw-bold text-light text-decoration-none bg-dark-subtle p-2 rounded rounded-top-0" id="episode-name_img<?= $image['id']; ?>_<?= $image['userid']; ?>">「<?= $image['artist']; ?>」<?= $image['episode_name']; ?>「<?= $image['language']; ?>」</h6>
                 </a>
               </div>
             </div>

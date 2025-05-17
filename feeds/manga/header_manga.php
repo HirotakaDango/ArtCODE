@@ -8,6 +8,7 @@
                 <a class="btn py-2 rounded link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./tags.php">Tags</a>
                 <a class="btn py-2 rounded link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./artists.php">Artists</a>
                 <a class="btn py-2 rounded link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'groups.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./groups.php">Groups</a>
+                <a class="btn py-2 rounded link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'favorites.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./favorites.php">Favorites</a>
                 <form class="d-flex ms-4" role="search" action="./">
                   <input class="form-control fw-medium w-100 rounded rounded-end-0" type="search" placeholder="Search" aria-label="Search" name="search" value="<?php echo isset($_GET['search']) && $_GET['search'] !== '' ? $_GET['search'] : ''; ?>">
                   <button class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded rounded-start-0" type="submit"><i class="bi bi-search"></i></button>
@@ -34,6 +35,7 @@
               <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'tags.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./tags.php">Tags</a>
               <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'artists.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./artists.php">Artists</a>
               <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'groups.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./groups.php">Groups</a>
+              <a class="btn py-2 rounded text-start link-body-emphasis <?php if(basename($_SERVER['PHP_SELF']) == 'favorites.php') echo 'fw-bold'; else echo 'fw-medium'; ?>" href="./favorites.php">Favorites</a>
             </div>
           </div>
         </nav>
