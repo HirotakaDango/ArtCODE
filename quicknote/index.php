@@ -12,14 +12,14 @@ $email = $_SESSION['email'];
     <title>ArtCODE QuickNote</title>
     <link rel="icon" type="image/svg+xml" href="/icon/favicon.png" />
     <?php include('../bootstrapcss.php'); ?>
-  
+
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="ArtCODE QuickNote" />
     <meta property="og:description" content="This is a simple note taking app." />
     <meta property="og:image" content="/icon/favicon.png" />
-  
+
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="ArtCODE QuickNote" />
     <meta property="twitter:domain" content="/" />
@@ -27,87 +27,233 @@ $email = $_SESSION['email'];
     <meta name="twitter:title" content="NoteTakeApp" />
     <meta name="twitter:description" content="This is a simple note taking app." />
     <meta name="twitter:image" content="/icon/favicon.png" />
-  
+
     <style>
       .note-card {
         cursor: pointer;
         transition: transform 0.2s;
       }
-
       .note-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
-
       .note-card:hover {
         transform: scale(1.02);
       }
-  
       .action-btn {
         background: none;
         border: none;
         color: inherit;
       }
-  
-      .paragraph-counter {
-        font-size: 0.75rem;
-        padding: 2em;
-        text-wrap: nowrap;
-        font-weight: bold;
-        margin-top: -45px;
-        color: wwhite;
-        position: absolute;
-        text-align: center;
-        min-width: 35px;
-        user-select: none;
-        z-index: 10;
+      .category-badge {
+        font-size: 0.7em;
+        margin-left: 0.5em;
+        background: #6c757d;
+        color: #fff;
+        border-radius: 0.5em;
+        padding: 0.15em 0.6em;
       }
-  
-      .word-counter-container {
-        position: absolute;
-        left: 0;
-        top: 44px;
-        width: 80px;
-        height: calc(100svh - 44px);
+      @media (max-width: 991.98px) {
+        #singleNoteSidebarColumn {
+          display: none !important;
+        }
+      }
+      @media (min-width: 992px) {
+        #singleNoteSidebarColumn {
+          display: flex !important;
+        }
+      }
+      #singleNoteDualCol {
+        min-height: 100vh;
+        max-height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+      }
+      #singleNoteSidebarColumn {
+        border-right: 1px solid #343a40;
+        min-width: 350px;
+        max-width: 400px;
+        background: #23272b;
+        height: 100vh;
         overflow-y: auto;
-        background-color: rgba(33, 37, 41, 0.5);
-        padding: 10px 0;
-        /* Hide scrollbar but keep functionality */
-        scrollbar-width: none;
-        /* Firefox */
-        -ms-overflow-style: none;
-        /* IE and Edge */
+        display: flex;
+        flex-direction: column;
       }
-  
-      /* Hide scrollbar for Chrome, Safari and Opera */
-      .word-counter-container::-webkit-scrollbar {
+      #singleNoteSidebarColumn .note-card {
+        margin-bottom: 0.5rem;
+        border-left: 4px solid transparent;
+        border-radius: 0 0.5rem 0.5rem 0;
+      }
+      #singleNoteSidebarColumn .note-card.active {
+        border-left: 4px solid #0d6efd;
+        background-color: #222b34;
+      }
+      #singleNoteMainColumn {
+        flex: 1;
+        min-width: 0;
+        background: var(--bs-body-bg);
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+      #singleNoteSidebarColumn::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+      #singleNoteSidebarColumn {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      #wordCounter {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 1055;
+        background: #282c34d9;
+        color: white;
+        border-radius: 8px 0 0 0;
+        padding: 0.3em 1.3em;
+        user-select: none;
+        pointer-events: none;
+      }
+      #noteContent {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: #222b34;
+        color: #fff;
+        resize: none;
+        padding: 2rem 2.5rem 2rem 2.5rem;
+        font-size: 1rem;
+      }
+      .word-counter-container { display: none !important; }
+      .single-note-card-actions {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 2;
+      }
+      .single-note-card-content {
+        padding-right: 2.5rem;
+      }
+      .dropdown-item-category {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+      .add-category-btn {
+        margin-top: 0.5em;
+      }
+      .categorize-selected-btn {
+        margin-left: 8px;
+      }
+      .categories-sort-row {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .categories-sort-row .form-select { min-width: 180px; }
+      .categories-sort-row .form-control { min-width: 180px; }
+      .categories-sort-row .sort-select { margin-left: auto; min-width: 120px; }
+      .categories-sort-row .search-input { margin-left: 0; flex: 1 1 auto; }
+      .copied-indicator {
+        position: absolute;
+        top: 0.5rem;
+        right: 3.3rem;
+        z-index: 10;
+        background: #2bc48a;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 6px;
+        padding: 0.15em 0.6em;
+        font-size: 0.95em;
+        opacity: 0;
+        transition: opacity 0.2s;
+        pointer-events: none;
+      }
+      .copied-indicator.show {
+        opacity: 1;
+      }
+      #installButton {
+        position: fixed;
+        bottom: 22px;
+        left: 22px;
+        z-index: 2000;
         display: none;
+      }
+      /* Pagination controls */
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 16px 0 0 0;
+        user-select: none;
+      }
+      .pagination-btn {
+        border: none;
+        background: #23272b;
+        color: #fff;
+        border-radius: 6px;
+        padding: 0.2em 1em;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background .15s;
+      }
+      .pagination-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: #333;
+      }
+      .pagination-page {
+        font-weight: bold;
+        font-size: 1em;
+        color: #0d6efd;
+      }
+      .load-more-btn {
+        display: block;
+        width: 90%;
+        margin: 0.7em auto 1em auto;
+        border: none;
+        border-radius: 10px;
+        background: #343a40;
+        color: #fff;
+        font-weight: 500;
+        font-size: 1em;
+        padding: 0.4em 0;
+        transition: background .15s;
+      }
+      .load-more-btn:hover:not(:disabled) {
+        background: #0d6efd;
       }
     </style>
   </head>
-  
   <body>
     <?php include('../header.php'); ?>
     <div class="w-100">
       <!-- All Notes View -->
       <div class="container mb-5 mt-3" id="allNotesView">
-        <input id="searchInput" class="form-control rounded-pill mb-3 w-100" type="text" placeholder="🔍 Search..." />
-        <!-- Categories Navigation -->
-        <ul class="nav nav-tabs my-3">
-          <select id="sortSelect" class="form-select border-0 fw-medium focus-ring focus-ring-dark" style="width: auto;">
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-          </select>
+        <ul class="nav nav-tabs border-0 my-2 bg-dark-subtle p-3 rounded-4 align-items-center">
+          <li class="nav-item">
+            <input id="searchInput" class="form-control rounded search-input w-100 border-0" type="text" placeholder="🔍 Search..." />
+          </li>
           <li class="nav-item ms-auto">
-            <a class="nav-link active" href="#" id="allNotesTab"><i class="bi bi-card-text"></i></a>
+            <a class="nav-link active border-0 rounded" href="#" id="allNotesTab"><i class="bi bi-card-text"></i></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" id="favoritesTab"><i class="bi bi-star-fill"></i></a>
+            <a class="nav-link border-0 rounded" href="#" id="favoritesTab"><i class="bi bi-star-fill"></i></a>
           </li>
           <div class="dropdown">
-            <button class="btn border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-three-dots-vertical"></i>
+            <button class="btn border-0 rounded" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              &#9776;
             </button>
             <ul class="dropdown-menu rounded-4">
               <li>
@@ -115,6 +261,14 @@ $email = $_SESSION['email'];
                   <i class="bi bi-plus-circle"></i> New Note
                 </button>
               </li>
+              <li>
+                <button id="addCategoryBtn" class="dropdown-item dropdown-item-category">
+                  <i class="bi bi-tag"></i> Add Category
+                </button>
+              </li>
+              <div class="px-3">
+                <div class="border border-2 my-2"></div>
+              </div>
               <li>
                 <button id="exportBtn" class="dropdown-item">
                   <i class="bi bi-download"></i> Export
@@ -128,196 +282,220 @@ $email = $_SESSION['email'];
             </ul>
           </div>
         </ul>
-  
         <!-- Selected notes actions -->
-        <div id="selectedNotesActions" class="mb-3" style="display: none;">
+        <div id="selectedNotesActions" class="my-4" style="display: none;">
           <div class="d-flex justify-content-between align-items-center">
             <div class="select-all-container align-items-center">
               <input type="checkbox" id="selectAllCheckbox" class="form-check-input">
               <label for="selectAllCheckbox" class="mx-2">Select All</label>
             </div>
-            <button id="deleteSelectedBtn" class="btn btn-danger btn-sm ms-2">
-              <i class="bi bi-trash3"></i> Delete Selected (<span id="selectedCount">0</span>)
-            </button>
+            <div>
+              <button id="categorizeSelectedBtn" class="btn btn-secondary btn-sm ms-2 categorize-selected-btn" title="Set Category">
+                <i class="bi bi-tags"></i> Categorize
+              </button>
+              <button id="deleteSelectedBtn" class="btn btn-danger btn-sm ms-2">
+                <i class="bi bi-trash3"></i> Delete (<span id="selectedCount">0</span>)
+              </button>
+            </div>
           </div>
         </div>
-  
+        <div class="categories-sort-row">
+          <select id="categoryFilter" class="form-select"></select>
+          <select id="sortSelect" class="form-select sort-select" style="width: auto;">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </div>
         <div id="noteList" class="list-group">
           <!-- Notes will be listed here -->
         </div>
+        <div id="paginationContainer" class="pagination-container"></div>
       </div>
-  
-      <!-- Single Note View -->
+      <!-- Single Note Dual Column View -->
       <div id="singleNoteView" style="display: none;">
-        <div class="container d-flex justify-content-between align-items-center bg-dark-subtle py-1">
-          <div class="d-flex gap-3">
-            <button id="backBtn" class="btn border-0">
-              <i class="bi bi-chevron-left link-body-emphasis" style="-webkit-text-stroke: 2px;"></i>
-            </button>
-            <!-- Undo/Redo Buttons -->
-            <button id="undoBtn" class="btn border-0">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
+        <div id="singleNoteDualCol" class="d-flex flex-row">
+          <!-- Sidebar: Note List (desktop only) -->
+          <div id="singleNoteSidebarColumn" class="d-flex flex-column vh-100 overflow-auto p-3 gap-1" style="display: flex;min-width:350px;max-width:420px;">
+            <div class="fw-bold mb-2">All Notes</div>
+            <div id="singleNoteSidebarList" class="flex-grow-1"></div>
+            <button id="sidebarLoadMoreBtn" class="load-more-btn w-100" style="display:none;">Load More...</button>
           </div>
-          <h6 id="noteDate" class="text-muted mx-auto my-auto"></h6>
-          <div class="d-flex gap-3">
-            <button id="redoBtn" class="btn border-0">
-              <i class="bi bi-arrow-clockwise"></i>
-            </button>
-            <button id="deleteSingleBtn" class="btn border-0">
-              <i class="bi bi-trash3-fill link-body-emphasis"></i>
-            </button>
+          <!-- Main: Note Content -->
+          <div id="singleNoteMainColumn" class="flex-grow-1 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center bg-dark-subtle py-1 px-3">
+              <div class="d-flex gap-3">
+                <button id="backBtn" class="btn border-0">
+                  <i class="bi bi-chevron-left link-body-emphasis" style="-webkit-text-stroke: 2px;"></i>
+                </button>
+                <button id="undoBtn" class="btn border-0">
+                  <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span id="noteDate" class="text-muted"></span>
+                <span>|</span>
+                <select id="noteCategorySelect" class="form-select form-select-sm w-auto ms-0"></select>
+              </div>
+              <div class="d-flex gap-3">
+                <button id="redoBtn" class="btn border-0">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <button id="deleteSingleBtn" class="btn border-0">
+                  <i class="bi bi-trash3-fill link-body-emphasis"></i>
+                </button>
+              </div>
+            </div>
+            <textarea id="noteContent"
+              style="height: calc(100svh - 44px); max-height: calc(100svh - 44px); min-height: calc(100svh - 44px); box-sizing: border-box;"
+              class="form-control rounded-0 p-4 border-0 bg-dark-subtle focus-ring focus-ring-dark flex-grow-1"></textarea>
           </div>
         </div>
-        <h2 id="noteTitle" class="d-none"></h2>
-        <!-- Paragraph word counter (only visible on desktop) -->
-        <div id="wordCounterContainer" class="word-counter-container d-none d-md-block">
-          <!-- Word counters will be added here dynamically -->
-        </div>
-        <textarea id="noteContent"
-          style="height: calc(100svh - 44px); max-height: calc(100svh - 44px); min-height: calc(100svh - 44px); box-sizing: border-box;"
-          class="container form-control rounded-0 p-4 border-0 bg-dark-subtle focus-ring focus-ring-dark"></textarea>
       </div>
     </div>
-  
     <input type="file" id="importInput" style="display: none;" accept=".json" />
-  
-    <!-- Word Counter (initially hidden) -->
-    <div id="wordCounter" class="position-fixed bottom-0 end-0 fw-medium rounded-end-0 rounded-bottom-0 rounded-top-3 rounded-end-0 p-1" style="display: none; font-size: 12px;">Words: 0</div>
-  
+    <div id="wordCounter" style="display: none;">Words: 0</div>
+
+    <button id="installButton" class="btn btn-primary shadow-lg">
+      <i class="bi bi-download"></i> Install App
+    </button>
+
     <script>
+      // --- Data & Storage ---
+      let notes = {};
+      let currentNote = null;
+      let currentCategory = 'all';
+      let selectedNotes = new Set();
+      let filteredNoteIds = [];
+      let undoStack = [];
+      let redoStack = [];
+      let lastRecordedContent = '';
+      let autoSaveTimeout = null;
+      // Categories (dynamically managed)
+      let categories = [];
+      // --- Pagination State ---
+      const PAGE_SIZE = 25;
+      let currentPage = 1;
+      let sidebarPage = 1;
+  
+      // --- DOM ---
       const allNotesView = document.getElementById('allNotesView');
       const singleNoteView = document.getElementById('singleNoteView');
-      const newNoteBtn = document.getElementById('newNoteBtn');
-      const sortSelect = document.getElementById('sortSelect');
       const noteList = document.getElementById('noteList');
-      const noteTitle = document.getElementById('noteTitle');
-      const noteDate = document.getElementById('noteDate');
-      const noteContent = document.getElementById('noteContent');
-      const deleteSingleBtn = document.getElementById('deleteSingleBtn');
-      const backBtn = document.getElementById('backBtn');
       const searchInput = document.getElementById('searchInput');
+      const sortSelect = document.getElementById('sortSelect');
+      const newNoteBtn = document.getElementById('newNoteBtn');
       const exportBtn = document.getElementById('exportBtn');
       const importBtn = document.getElementById('importBtn');
       const importInput = document.getElementById('importInput');
       const allNotesTab = document.getElementById('allNotesTab');
       const favoritesTab = document.getElementById('favoritesTab');
+      const deleteSingleBtn = document.getElementById('deleteSingleBtn');
+      const backBtn = document.getElementById('backBtn');
       const undoBtn = document.getElementById('undoBtn');
       const redoBtn = document.getElementById('redoBtn');
+      const noteContent = document.getElementById('noteContent');
+      const noteDate = document.getElementById('noteDate');
       const wordCounter = document.getElementById('wordCounter');
-      const wordCounterContainer = document.getElementById('wordCounterContainer');
       const selectedNotesActions = document.getElementById('selectedNotesActions');
       const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
       const selectAllCheckbox = document.getElementById('selectAllCheckbox');
       const selectedCount = document.getElementById('selectedCount');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const singleNoteSidebarList = document.getElementById('singleNoteSidebarList');
+      const addCategoryBtn = document.getElementById('addCategoryBtn');
+      const noteCategorySelect = document.getElementById('noteCategorySelect');
+      const categorizeSelectedBtn = document.getElementById('categorizeSelectedBtn');
+      const installButton = document.getElementById('installButton');
+      const paginationContainer = document.getElementById('paginationContainer');
+      const sidebarLoadMoreBtn = document.getElementById('sidebarLoadMoreBtn');
   
-      let notes = {};
-      let currentNote = null;
-      let autoSaveTimeout = null;
-      // For undo/redo functionality
-      let undoStack = [];
-      let redoStack = [];
-      let lastRecordedContent = '';
-      // Selected notes for bulk deletion
-      let selectedNotes = new Set();
-      // Store paragraph positions for word counters
-      let paragraphPositions = [];
-      // Filtered notes for select all functionality
-      let filteredNoteIds = [];
-  
-      // Current category: "all" or "favorites"
-      let currentCategory = 'all';
-  
-      function htmlSpecialChars(str) {
-        if (!str) return '';
-        return str.replace(/[&<>"']/g, function (match) {
-          switch (match) {
-            case '&':
-              return '&amp;';
-            case '<':
-              return '&lt;';
-            case '>':
-              return '&gt;';
-            case '"':
-              return '&quot;';
-            case "'":
-              return '&#039;';
-          }
-        });
+      // --- Category dropdowns ---
+      function renderCategoryFilterDropdown() {
+        categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
+        for (const cat of categories) {
+          categoryFilter.innerHTML += `<option value="${cat}">${cat}</option>`;
+        }
+        categoryFilter.value = categoryFilter.value || "all";
       }
-  
-      function loadNotes() {
-        const savedNotes = localStorage.getItem('notes');
-        if (savedNotes) {
-          try {
-            notes = JSON.parse(savedNotes);
-          } catch (e) {
-            console.error('Error parsing saved notes:', e);
-            notes = {};
-          }
+      function renderNoteCategoryDropdown(selectedCat) {
+        noteCategorySelect.innerHTML = '';
+        if (!categories.length) {
+          categories.push('all');
+        }
+        for (const cat of categories) {
+          let opt = document.createElement('option');
+          opt.value = cat;
+          opt.textContent = cat;
+          if (selectedCat === cat) opt.selected = true;
+          noteCategorySelect.appendChild(opt);
         }
       }
-  
+      // --- Note CRUD ---
+      function loadNotes() {
+        try {
+          notes = JSON.parse(localStorage.getItem('notes')) || {};
+        } catch { notes = {}; }
+        // load categories from notes if any
+        categories = [];
+        for (let n of Object.values(notes)) {
+          if (n.category && !categories.includes(n.category)) categories.push(n.category);
+        }
+        if (!categories.length) categories.push('all');
+      }
       function saveNotes() {
         localStorage.setItem('notes', JSON.stringify(notes));
       }
-  
-      function saveNote() {
-        if (currentNote && notes[currentNote]) {
-          const currentContent = noteContent.value || '';
-          notes[currentNote].content = currentContent;
-          const titleLine = currentContent.split('\n')[0] || 'Untitled';
-          notes[currentNote].title = titleLine;
-          notes[currentNote].date = new Date().toISOString();
-          saveNotes();
-          noteTitle.textContent = htmlSpecialChars(notes[currentNote].title);
-          noteDate.textContent = new Date(notes[currentNote].date).toLocaleDateString('en-US');
-          updateNoteList();
-          updateTotalWordCounter();
-          updateParagraphWordCounters(); // Update paragraph counters after saving
-        }
-      }
-  
       function createNote() {
+        if (!categories.length) categories.push("all");
         const noteId = Date.now().toString();
         notes[noteId] = {
           title: 'New Note',
           content: '',
           date: new Date().toISOString(),
           favorite: false,
+          category: categories[0] || "all"
         };
         currentNote = noteId;
         saveNotes();
         showSingleNote();
-        updateTotalWordCounter(); // Reset counter for new note
-        updateParagraphWordCounters(); // Initialize paragraph counters
+        updateTotalWordCounter();
       }
-  
       function deleteNote() {
         if (currentNote && notes[currentNote]) {
           if (confirm('Are you sure you want to delete this note?')) {
             delete notes[currentNote];
             saveNotes();
-            currentNote = null;
-            showAllNotes();
+            // Show the newest note after delete, or go back to main menu if none
+            let noteArr = Object.entries(notes).sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
+            if (noteArr.length > 0) {
+              currentNote = noteArr[0][0];
+              showSingleNote();
+            } else {
+              currentNote = null;
+              showAllNotes();
+            }
           }
         }
       }
-  
       function deleteNoteFromList(noteId) {
         if (notes[noteId] && confirm('Are you sure you want to delete this note?')) {
           delete notes[noteId];
-          // Also remove from selected notes if it was selected
           selectedNotes.delete(noteId);
           saveNotes();
           updateNoteList();
           updateSelectedNotesUI();
           if (noteId === currentNote) {
-            showAllNotes();
+            let noteArr = Object.entries(notes).sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
+            if (noteArr.length > 0) {
+              currentNote = noteArr[0][0];
+              showSingleNote();
+            } else {
+              currentNote = null;
+              showAllNotes();
+            }
           }
         }
       }
-  
       function toggleFavorite(noteId) {
         if (notes[noteId]) {
           notes[noteId].favorite = !notes[noteId].favorite;
@@ -325,272 +503,251 @@ $email = $_SESSION['email'];
           updateNoteList();
         }
       }
-  
-      function showAllNotes() {
-        allNotesView.style.display = 'block';
-        singleNoteView.style.display = 'none';
-        currentNote = null;
-        updateNoteList();
-        // Hide word counters on home view
-        if (wordCounter) {
-          wordCounter.style.display = 'none';
-        }
-        // Show selected notes actions if any are selected
-        updateSelectedNotesUI();
-      }
-  
-      function showSingleNote() {
-        allNotesView.style.display = 'none';
-        singleNoteView.style.display = 'block';
-        // Display the word counter only in single note view
-        if (wordCounter) {
-          wordCounter.style.display = 'block';
-        }
+      function saveNote() {
         if (currentNote && notes[currentNote]) {
-          noteTitle.textContent = htmlSpecialChars(notes[currentNote].title);
-          noteDate.textContent = new Date(notes[currentNote].date).toLocaleDateString('en-US');
-          noteContent.value = notes[currentNote].content || '';
-          // Add left margin to the textarea when in desktop view (for the counter)
-          noteContent.classList.add('note-content-with-counter');
-          // Reset undo/redo stacks when opening a note
-          undoStack = [];
-          redoStack = [];
-          lastRecordedContent = noteContent.value;
+          notes[currentNote].content = noteContent.value || '';
+          const titleLine = notes[currentNote].content.split('\n')[0] || 'Untitled';
+          notes[currentNote].title = titleLine;
+          notes[currentNote].date = new Date().toISOString();
+          notes[currentNote].category = noteCategorySelect.value || "all";
+          saveNotes();
+          updateNoteList();
           updateTotalWordCounter();
-          setTimeout(() => {
-            calculateParagraphPositions();
-            updateParagraphWordCounters(); // Initialize paragraph counters
-          }, 100);
         }
       }
-  
-      // Helper function to copy text with fallback (prevent scrolling)
-      function copyTextToClipboard(text) {
-        if (!text) text = '';
-  
-        if (navigator.clipboard && window.isSecureContext) {
-          return navigator.clipboard.writeText(text);
-        } else {
-          const textArea = document.createElement("textarea");
-          textArea.value = text;
-          textArea.style.position = "fixed";
-          textArea.style.top = "0";
-          textArea.style.left = "0";
-          textArea.style.width = "1px";
-          textArea.style.height = "1px";
-          textArea.style.padding = "0";
-          textArea.style.border = "none";
-          textArea.style.outline = "none";
-          textArea.style.boxShadow = "none";
-          textArea.style.background = "transparent";
-          document.body.appendChild(textArea);
-          if (typeof textArea.focus === "function") {
-            try {
-              textArea.focus({preventScroll: true});
-            } catch (e) {
-              textArea.focus();
-            }
-          } else {
-            textArea.focus();
+      function exportNotes() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes));
+        const a = document.createElement('a');
+        a.href = dataStr;
+        a.download = "notes_export.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+      function importNotes(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+          try {
+            const imported = JSON.parse(evt.target.result);
+            notes = {...notes, ...imported};
+            saveNotes();
+            loadNotes();
+            renderCategoryFilterDropdown();
+            updateNoteList();
+            alert('Notes imported successfully!');
+          } catch {
+            alert("Failed to import. File is not valid JSON.");
           }
-          textArea.select();
-          return new Promise((resolve, reject) => {
-            try {
-              const successful = document.execCommand('copy');
-              document.body.removeChild(textArea);
-              successful ? resolve() : reject(new Error("Copy command was unsuccessful"));
-            } catch (err) {
-              document.body.removeChild(textArea);
-              reject(err);
-            }
-          });
-        }
+        };
+        reader.readAsText(file);
       }
-  
-      function updateNoteList() {
-        if (!noteList) return;
-  
-        noteList.innerHTML = '';
-  
-        const query = searchInput.value.toLowerCase();
-        let filteredNotes = Object.entries(notes).filter(([id, note]) =>
-          (note.title && note.title.toLowerCase().includes(query)) ||
-          (note.content && note.content.toLowerCase().includes(query))
-        );
-        if (currentCategory === 'favorites') {
-          filteredNotes = filteredNotes.filter(([id, note]) => note.favorite);
+      // --- UI: List and Sidebar Cards ---
+      function getCategoryBadge(cat) {
+        return `<span class="category-badge">${cat}</span>`;
+      }
+      function showCopiedIndicator(parentEl) {
+        let indicator = parentEl.querySelector('.copied-indicator');
+        if (!indicator) {
+          indicator = document.createElement('span');
+          indicator.className = 'copied-indicator';
+          indicator.textContent = 'Copied!';
+          parentEl.appendChild(indicator);
         }
-        const sortedNotes = filteredNotes.sort((a, b) => {
-          const dateA = new Date(a[1].date);
-          const dateB = new Date(b[1].date);
-          return sortSelect.value === 'newest' ? dateB - dateA : dateA - dateB;
-        });
-  
-        // Store filtered note IDs for "Select All" functionality
-        filteredNoteIds = sortedNotes.map(([id]) => id);
-  
-        sortedNotes.forEach(([noteId, note]) => {
-          const card = document.createElement('div');
-          card.className = 'card bg-body-tertiary mb-3 note-card border-0 rounded-3 ps-5 position-relative';
-          card.style.cursor = 'pointer';
-          card.style.position = 'relative';
-  
-          // Add checkbox for note selection
-          const checkboxContainer = document.createElement('div');
-          checkboxContainer.className = 'position-absolute top-50 start-0 p-0 translate-middle-y ms-4';
-  
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.className = 'form-check-input note-checkbox';
-          checkbox.checked = selectedNotes.has(noteId);
-          checkbox.addEventListener('change', (e) => {
+        indicator.classList.add('show');
+        setTimeout(() => indicator.classList.remove('show'), 1200);
+      }
+      function renderNoteCard(note, noteId, {showCheckbox=false, selected=false, showCategory=true, showActions=true, active=false, limitChars=200}={}) {
+        let card = document.createElement('div');
+        let isSingleViewSidebar = !showCheckbox && showActions && limitChars===200 && !selected;
+        card.className = 'card bg-body-tertiary mb-3 note-card border-0 rounded-3 position-relative' + (isSingleViewSidebar ? '' : ' ps-5');
+        if (active) card.classList.add('active');
+        card.style.cursor = 'pointer';
+        card.style.position = 'relative';
+        if (showCheckbox) {
+          const cbDiv = document.createElement('div');
+          cbDiv.className = "position-absolute top-50 start-0 p-0 translate-middle-y ms-4";
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.className = 'form-check-input note-checkbox';
+          cb.checked = selected;
+          cb.addEventListener('change', e => {
             e.stopPropagation();
-            if (checkbox.checked) {
-              selectedNotes.add(noteId);
-            } else {
-              selectedNotes.delete(noteId);
-              // Uncheck "Select All" if any individual note is unchecked
-              if (selectAllCheckbox) {
-                selectAllCheckbox.checked = false;
-              }
-            }
+            if (cb.checked) selectedNotes.add(noteId);
+            else selectedNotes.delete(noteId);
             updateSelectedNotesUI();
           });
-  
-          checkboxContainer.appendChild(checkbox);
-          card.appendChild(checkboxContainer);
-  
-          // Main card content
-          const cardBody = document.createElement('div');
-          cardBody.className = 'card-body';
-  
-          const noteHeader = document.createElement('div');
-          noteHeader.className = 'note-header';
-  
-          const dateElement = document.createElement('small');
-          dateElement.className = 'fw-medium';
-          dateElement.textContent = new Date(note.date).toLocaleDateString('en-US');
-  
-          const buttonsDiv = document.createElement('div');
-  
-          const copyBtn = document.createElement('button');
+          cbDiv.appendChild(cb);
+          card.appendChild(cbDiv);
+        }
+        let cardBody = document.createElement('div');
+        cardBody.className = "card-body";
+        let noteHeader = document.createElement('div');
+        noteHeader.className = "note-header";
+        let dateElem = document.createElement('small');
+        dateElem.className = "fw-medium";
+        dateElem.textContent = new Date(note.date).toLocaleDateString('en-US');
+        let categoryElem = document.createElement('span');
+        categoryElem.className = "category-badge ms-1";
+        categoryElem.textContent = note.category || "all";
+        let leftHeader = document.createElement('span');
+        leftHeader.appendChild(dateElem);
+        if (showCategory) {
+          leftHeader.appendChild(categoryElem);
+        }
+        let buttonsDiv = document.createElement('div');
+        buttonsDiv.className = "";
+        if (showActions) {
+          let copyBtn = document.createElement('button');
           copyBtn.className = 'action-btn copy-btn';
           copyBtn.innerHTML = '<i class="bi bi-copy"></i>';
-  
-          const downloadBtn = document.createElement('button');
+          copyBtn.onclick = e => {
+            e.preventDefault(); e.stopPropagation();
+            navigator.clipboard.writeText(note.content || '').then(() => {
+              showCopiedIndicator(card);
+            });
+          };
+          let downloadBtn = document.createElement('button');
           downloadBtn.className = 'action-btn download-btn';
           downloadBtn.innerHTML = '<i class="bi bi-download"></i>';
-  
-          const favoriteBtn = document.createElement('button');
-          favoriteBtn.className = 'action-btn favorite-btn';
-          favoriteBtn.innerHTML = `<i class="bi ${note.favorite ? 'bi-star-fill' : 'bi-star'}"></i>`;
-  
-          const deleteBtn = document.createElement('button');
-          deleteBtn.className = 'action-btn delete-btn';
-          deleteBtn.innerHTML = '<i class="bi bi-trash3-fill"></i>';
-  
-          buttonsDiv.appendChild(copyBtn);
-          buttonsDiv.appendChild(downloadBtn);
-          buttonsDiv.appendChild(favoriteBtn);
-          buttonsDiv.appendChild(deleteBtn);
-  
-          noteHeader.appendChild(dateElement);
-          noteHeader.appendChild(buttonsDiv);
-  
-          const contentDiv = document.createElement('div');
-          contentDiv.className = 'mt-3';
-          const safeContent = note.content || '';
-          contentDiv.textContent = safeContent.substring(0, 200) + (safeContent.length > 200 ? '...' : '');
-  
-          cardBody.appendChild(noteHeader);
-          cardBody.appendChild(contentDiv);
-          card.appendChild(cardBody);
-  
-          card.addEventListener('click', (e) => {
-            if (!e.target.closest('button') && !e.target.closest('input')) {
-              currentNote = noteId;
-              showSingleNote();
-            }
-          });
-  
-          copyBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            copyTextToClipboard(note.content || '')
-              .then(() => {
-                const copyIndicator = document.createElement('span');
-                copyIndicator.textContent = 'Copied!';
-                copyIndicator.style.position = 'absolute';
-                copyIndicator.style.top = '10px';
-                copyIndicator.style.right = '10px';
-                copyIndicator.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-                copyIndicator.style.color = 'white';
-                copyIndicator.style.padding = '5px 10px';
-                copyIndicator.style.borderRadius = '5px';
-                copyIndicator.style.fontSize = '0.9em';
-                card.appendChild(copyIndicator);
-                setTimeout(() => {
-                  copyIndicator.remove();
-                }, 2000);
-              })
-              .catch(err => {
-                console.error('Failed to copy note content: ', err);
-              });
-          });
-  
-          downloadBtn.addEventListener('click', (e) => {
+          downloadBtn.onclick = e => {
             e.stopPropagation();
             const content = note.content || '';
-            let firstSentence = (content.split('.')[0] || '').trim();
-            if (!firstSentence) {
-              firstSentence = "Untitled";
-            }
-            let words = firstSentence.split(/\s+/).slice(0, 4).join(' ');
-            let defaultName = words || "Untitled";
-            let customName = prompt("Enter filename:", defaultName);
-            if (customName === null) {
-              return;
-            }
-            const filename = `${customName}.txt`;
+            let fn = (content.split('.')[0] || '').trim().split(/\s+/).slice(0,4).join(' ') || "Untitled";
+            let filename = prompt("Enter filename:", fn);
+            if (filename === null) return;
+            filename = filename.trim() === "" ? fn : filename.trim();
             const blob = new Blob([content], {type: 'text/plain;charset=utf-8'});
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(a.href); // Clean up to avoid memory leaks
-          });
+            a.href = URL.createObjectURL(blob); a.download = filename + ".txt"; a.click();
+            URL.revokeObjectURL(a.href);
+          };
+          let favBtn = document.createElement('button');
+          favBtn.className = 'action-btn favorite-btn';
+          favBtn.innerHTML = `<i class="bi ${note.favorite ? "bi-star-fill":"bi-star"}"></i>`;
+          favBtn.onclick = e => { e.stopPropagation(); toggleFavorite(noteId); };
+          let delBtn = document.createElement('button');
+          delBtn.className = 'action-btn delete-btn';
+          delBtn.innerHTML = '<i class="bi bi-trash3-fill"></i>';
+          delBtn.onclick = e => { e.stopPropagation(); deleteNoteFromList(noteId); };
+          buttonsDiv.append(copyBtn, downloadBtn, favBtn, delBtn);
+        }
+        noteHeader.append(leftHeader, buttonsDiv);
+        let contentDiv = document.createElement('div');
+        contentDiv.className = 'mt-3';
+        let safeContent = (note.content||'').substring(0, limitChars)+(note.content.length>limitChars?"...":"");
+        contentDiv.textContent = safeContent;
+        cardBody.append(noteHeader, contentDiv);
+        card.append(cardBody);
+        if (showActions) {
+          buttonsDiv.className = "single-note-card-actions";
+          cardBody.classList.add("single-note-card-content");
+        }
+        return card;
+      }
   
-          favoriteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleFavorite(noteId);
+      // --- Pagination for allNotesView ---
+      function getFilteredNotesArr() {
+        let query = (searchInput.value || '').toLowerCase();
+        let catFilter = categoryFilter.value;
+        let arr = Object.entries(notes).filter(([id,n]) =>
+          ((n.title && n.title.toLowerCase().includes(query)) ||
+          (n.content && n.content.toLowerCase().includes(query)))
+          && (currentCategory !== "favorites" || n.favorite)
+          && (catFilter==="all" || n.category===catFilter)
+        );
+        arr = arr.sort((a, b) => {
+          const da = new Date(a[1].date), db = new Date(b[1].date);
+          return sortSelect.value === 'newest' ? db-da : da-db;
+        });
+        return arr;
+      }
+      function updateNoteList() {
+        if (!noteList) return;
+        noteList.innerHTML = '';
+        let notesArr = getFilteredNotesArr();
+        filteredNoteIds = notesArr.map(([id])=>id);
+        // Pagination logic
+        let totalPages = Math.ceil(notesArr.length / PAGE_SIZE) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        let pageNotes = notesArr.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+        pageNotes.forEach(([noteId, note]) => {
+          let card = renderNoteCard(note, noteId, {
+            showCheckbox:true, selected:selectedNotes.has(noteId), showCategory:true, showActions:true, limitChars:200
           });
-  
-          deleteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            deleteNoteFromList(noteId);
-          });
-  
+          card.onclick = e => { if (!e.target.closest('button') && !e.target.closest('input')) { currentNote = noteId; showSingleNote(); } };
           noteList.appendChild(card);
         });
+        renderPagination(notesArr.length, totalPages);
   
         updateSelectedNotesUI();
       }
+      function renderPagination(totalNotes, totalPages) {
+        paginationContainer.innerHTML = '';
+        if (totalPages <= 1) return;
+        // Prev Button
+        let prevBtn = document.createElement('button');
+        prevBtn.className = 'pagination-btn';
+        prevBtn.innerHTML = '&lt; Prev';
+        prevBtn.disabled = currentPage <= 1;
+        prevBtn.onclick = () => { currentPage = Math.max(1, currentPage-1); updateNoteList(); };
+        paginationContainer.appendChild(prevBtn);
+        // Page number
+        let pageText = document.createElement('span');
+        pageText.className = 'pagination-page';
+        pageText.textContent = `Page ${currentPage} of ${totalPages}`;
+        paginationContainer.appendChild(pageText);
+        // Next Button
+        let nextBtn = document.createElement('button');
+        nextBtn.className = 'pagination-btn';
+        nextBtn.innerHTML = 'Next &gt;';
+        nextBtn.disabled = currentPage >= totalPages;
+        nextBtn.onclick = () => { currentPage = Math.min(totalPages, currentPage+1); updateNoteList(); };
+        paginationContainer.appendChild(nextBtn);
+      }
   
-      // Handle bulk delete for selected notes
+      // --- Sidebar pagination for singleNoteView ---
+      function getFilteredSidebarArr() {
+        let filter = (searchInput.value||'').toLowerCase();
+        let catFilter = categoryFilter.value;
+        let arr = Object.entries(notes).filter(([id,n]) =>
+          ((n.title && n.title.toLowerCase().includes(filter)) ||
+          (n.content && n.content.toLowerCase().includes(filter)))
+          && (catFilter==="all" || n.category===catFilter)
+        );
+        arr = arr.sort((a, b) => {
+          const da = new Date(a[1].date), db = new Date(b[1].date);
+          return sortSelect.value === 'newest' ? db-da : da-db;
+        });
+        return arr;
+      }
+      function renderSingleNoteSidebarList(resetPage) {
+        if (resetPage) sidebarPage = 1;
+        singleNoteSidebarList.innerHTML = '';
+        let arr = getFilteredSidebarArr();
+        let shownArr = arr.slice(0, sidebarPage * PAGE_SIZE);
+        shownArr.forEach(([noteId, note]) => {
+          let card = renderNoteCard(note, noteId, {
+            showCheckbox:false, showCategory:true, showActions:true, active:noteId===currentNote, limitChars:200
+          });
+          card.onclick = e => { if (!e.target.closest('button') && !e.target.closest('input')) { currentNote = noteId; showSingleNote(); } };
+          singleNoteSidebarList.appendChild(card);
+        });
+        // Load more logic
+        if (arr.length > shownArr.length) {
+          sidebarLoadMoreBtn.style.display = '';
+        } else {
+          sidebarLoadMoreBtn.style.display = 'none';
+        }
+      }
+  
+      // --- Multi-select UI ---
       function updateSelectedNotesUI() {
         if (!selectedNotesActions || !selectedCount) return;
-  
-        // Always show the actions bar if we have any notes at all
-        if (Object.keys(notes).length > 0) {
-          selectedNotesActions.style.display = 'block';
-        } else {
-          selectedNotesActions.style.display = 'none';
-        }
-  
-        // Update the selected count
+        if (Object.keys(notes).length > 0) selectedNotesActions.style.display = 'block';
+        else selectedNotesActions.style.display = 'none';
         selectedCount.textContent = selectedNotes.size;
-  
-        // Update "Select All" checkbox state
         if (selectAllCheckbox) {
           if (filteredNoteIds.length > 0 && selectedNotes.size === filteredNoteIds.length) {
             selectAllCheckbox.checked = true;
@@ -603,348 +760,208 @@ $email = $_SESSION['email'];
           }
         }
       }
-  
       function deleteSelectedNotes() {
         if (selectedNotes.size === 0) return;
-  
         if (confirm(`Are you sure you want to delete ${selectedNotes.size} note(s)?`)) {
-          selectedNotes.forEach((noteId) => {
-            delete notes[noteId];
-          });
+          selectedNotes.forEach(noteId => delete notes[noteId]);
           saveNotes();
           selectedNotes.clear();
           updateSelectedNotesUI();
           updateNoteList();
         }
       }
-  
-      // Total word counter update function
+      // --- Categorize Multiple Selected ---
+      function categorizeSelectedNotes() {
+        if (selectedNotes.size === 0) return;
+        let cat = prompt('Enter category for selected notes (no commas):', "");
+        if (!cat) return;
+        cat = cat.trim();
+        if (!cat || cat.includes(',')) {
+          alert("Invalid category.");
+          return;
+        }
+        if (!categories.includes(cat)) {
+          categories.push(cat);
+          renderCategoryFilterDropdown();
+        }
+        selectedNotes.forEach(noteId => {
+          if (notes[noteId]) notes[noteId].category = cat;
+        });
+        saveNotes();
+        updateNoteList();
+        renderSingleNoteSidebarList(true);
+      }
+      // --- Word Counter (total only) ---
       function updateTotalWordCounter() {
         if (!wordCounter || !noteContent) return;
-  
-        const text = noteContent.value || '';
-        const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+        wordCounter.style.display = singleNoteView.style.display === 'block' ? 'block' : 'none';
+        let text = noteContent.value || '';
+        let words = text.trim().split(/\s+/).filter(w => w.length>0);
         wordCounter.textContent = 'Words: ' + words.length;
       }
-  
-      // Calculate the actual positions of paragraphs in the textarea
-      function calculateParagraphPositions() {
-        if (!noteContent) return;
-  
-        paragraphPositions = [];
-        const text = noteContent.value || '';
-        const paragraphs = text.split('\n\n');
-  
-        let charOffset = 0;
-        paragraphs.forEach((paragraph, index) => {
-          if (paragraph.trim() !== '') {
-            try {
-              const position = getCaretCoordinates(noteContent, charOffset);
-              paragraphPositions.push({
-                index: index + 1,
-                top: position.top,
-                wordCount: paragraph.trim().split(/\s+/).filter(word => word.length > 0).length
-              });
-            } catch (e) {
-              console.error('Error calculating paragraph position:', e);
-            }
-          }
-          charOffset += paragraph.length + 2; // +2 for '\n\n'
-        });
+      // --- Navigation ---
+      function showAllNotes() {
+        allNotesView.style.display = 'block';
+        singleNoteView.style.display = 'none';
+        currentNote = null;
+        updateNoteList();
+        wordCounter.style.display = 'none';
       }
-  
-      // Paragraph word counter implementation
-      function updateParagraphWordCounters() {
-        if (!wordCounterContainer) return;
-  
-        // Clear previous counters
-        wordCounterContainer.innerHTML = '';
-  
-        if (!currentNote) return;
-  
-        calculateParagraphPositions();
-  
-        paragraphPositions.forEach((para) => {
-          // Create counter element
-          const counter = document.createElement('div');
-          counter.className = 'paragraph-counter';
-          counter.textContent = `P${para.index}: ${para.wordCount}`;
-          counter.style.top = `${para.top}px`;
-  
-          wordCounterContainer.appendChild(counter);
-        });
-      }
-  
-      // Helper function to get exact coordinates of caret position
-      // This is a simplified version of textarea-caret-position library
-      function getCaretCoordinates(element, position) {
-        if (!element) {
-          throw new Error('Element is required for getCaretCoordinates');
+      function showSingleNote() {
+        allNotesView.style.display = 'none';
+        singleNoteView.style.display = 'block';
+        if (currentNote && notes[currentNote]) {
+          noteDate.textContent = new Date(notes[currentNote].date).toLocaleDateString('en-US');
+          noteContent.value = notes[currentNote].content || '';
+          renderNoteCategoryDropdown(notes[currentNote].category || "all");
+          noteCategorySelect.onchange = () => {
+            notes[currentNote].category = noteCategorySelect.value;
+            saveNotes();
+            renderSingleNoteSidebarList(true);
+            updateNoteList();
+          };
+          undoStack = [];
+          redoStack = [];
+          lastRecordedContent = noteContent.value;
+          updateTotalWordCounter();
+          renderSingleNoteSidebarList(true);
         }
-  
-        const div = document.createElement('div');
-        const style = div.style;
-        const computed = window.getComputedStyle(element);
-  
-        style.whiteSpace = 'pre-wrap';
-        style.wordWrap = 'break-word';
-        style.position = 'absolute';
-        style.visibility = 'hidden';
-        style.width = `${element.clientWidth}px`;
-        style.fontSize = computed.fontSize;
-        style.fontFamily = computed.fontFamily;
-        style.fontWeight = computed.fontWeight;
-        style.lineHeight = computed.lineHeight;
-        style.padding = computed.padding;
-        style.border = computed.border;
-        style.boxSizing = computed.boxSizing;
-  
-        const text = element.value.substring(0, position) || '';
-        const span = document.createElement('span');
-        span.textContent = element.value.substring(position) || '.';
-  
-        div.textContent = text;
-        div.appendChild(span);
-  
-        document.body.appendChild(div);
-        const coordinates = {
-          top: span.offsetTop + parseInt(computed.borderTopWidth) + parseInt(computed.paddingTop),
-          left: span.offsetLeft + parseInt(computed.borderLeftWidth) + parseInt(computed.paddingLeft),
-          height: parseInt(computed.lineHeight)
-        };
-        document.body.removeChild(div);
-  
-        return coordinates;
       }
-  
-      // Event Listener Setup
+      // --- Category Management ---
+      function addCategory() {
+        let name = prompt("Enter new category name (no commas):", "");
+        if (!name) return;
+        name = name.trim();
+        if (!name || name.includes(',') || categories.includes(name)) {
+          alert("Invalid or duplicate category.");
+          return;
+        }
+        categories.push(name);
+        renderCategoryFilterDropdown();
+        renderNoteCategoryDropdown(noteCategorySelect.value);
+      }
+      // --- Event Listeners ---
       function setupEventListeners() {
-        // Category tab event listeners
-        if (allNotesTab) {
-          allNotesTab.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentCategory = 'all';
-            allNotesTab.classList.add('active');
-            if (favoritesTab) {
-              favoritesTab.classList.remove('active');
-            }
-            updateNoteList();
-          });
-        }
-  
-        if (favoritesTab) {
-          favoritesTab.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentCategory = 'favorites';
-            favoritesTab.classList.add('active');
-            if (allNotesTab) {
-              allNotesTab.classList.remove('active');
-            }
-            updateNoteList();
-          });
-        }
-  
-        // Textarea event listeners
-        if (noteContent) {
-          // Basic Undo/Redo implementation
-          noteContent.addEventListener('input', () => {
-            if (noteContent.value !== lastRecordedContent) {
-              undoStack.push(lastRecordedContent);
-              lastRecordedContent = noteContent.value;
-              redoStack = [];
-            }
-            clearTimeout(autoSaveTimeout);
-            autoSaveTimeout = setTimeout(() => {
-              saveNote();
-              updateParagraphWordCounters();
-            }, 300);
-            updateTotalWordCounter();
-          });
-  
-          // Handle scroll sync between textarea and word counters
-          noteContent.addEventListener('scroll', () => {
-            // Update paragraph counters on scroll to handle any position changes
-            const scrollTop = noteContent.scrollTop;
-            const counters = document.querySelectorAll('.paragraph-counter');
-            counters.forEach((counter) => {
-              const counterTop = parseInt(counter.style.top);
-              counter.style.transform = `translateY(-${scrollTop}px)`;
-            });
-          });
-        }
-  
-        if (undoBtn) {
-          undoBtn.addEventListener('click', () => {
-            if (undoStack.length > 0) {
-              const previousState = undoStack.pop();
-              redoStack.push(noteContent.value);
-              noteContent.value = previousState;
-              lastRecordedContent = previousState;
-              saveNote();
-              updateTotalWordCounter();
-              updateParagraphWordCounters();
-            }
-          });
-        }
-  
-        if (redoBtn) {
-          redoBtn.addEventListener('click', () => {
-            if (redoStack.length > 0) {
-              const nextState = redoStack.pop();
-              undoStack.push(noteContent.value);
-              noteContent.value = nextState;
-              lastRecordedContent = nextState;
-              saveNote();
-              updateTotalWordCounter();
-              updateParagraphWordCounters();
-            }
-          });
-        }
-  
-        // Handle window resize events
-        window.addEventListener('resize', () => {
-          if (currentNote) {
-            setTimeout(updateParagraphWordCounters, 100);
-          }
-        });
-  
-        // Handle "Select All" checkbox
+        categoryFilter.onchange = () => { currentPage = 1; updateNoteList(); };
+        allNotesTab.onclick = e => { e.preventDefault(); currentCategory='all'; allNotesTab.classList.add('active'); favoritesTab.classList.remove('active'); currentPage = 1; updateNoteList(); };
+        favoritesTab.onclick = e => { e.preventDefault(); currentCategory='favorites'; favoritesTab.classList.add('active'); allNotesTab.classList.remove('active'); currentPage = 1; updateNoteList(); };
+        sortSelect.onchange = () => { currentPage = 1; updateNoteList(); };
+        searchInput.oninput = () => { currentPage = 1; updateNoteList(); };
+        newNoteBtn.onclick = createNote;
+        exportBtn.onclick = exportNotes;
+        importBtn.onclick = ()=>importInput.click();
+        importInput.onchange = importNotes;
+        deleteSingleBtn.onclick = deleteNote;
+        backBtn.onclick = showAllNotes;
         if (selectAllCheckbox) {
-          selectAllCheckbox.addEventListener('change', () => {
-            if (selectAllCheckbox.checked) {
-              // Select all filtered notes
-              filteredNoteIds.forEach(id => selectedNotes.add(id));
-            } else {
-              // Deselect all notes
-              selectedNotes.clear();
-            }
+          selectAllCheckbox.onchange = () => {
+            if (selectAllCheckbox.checked) filteredNoteIds.forEach(id => selectedNotes.add(id));
+            else selectedNotes.clear();
             updateNoteList();
             updateSelectedNotesUI();
-          });
-        }
-  
-        // Set up other button event listeners
-        if (newNoteBtn) {
-          newNoteBtn.addEventListener('click', createNote);
-        }
-  
-        if (deleteSingleBtn) {
-          deleteSingleBtn.addEventListener('click', deleteNote);
-        }
-  
-        if (backBtn) {
-          backBtn.addEventListener('click', showAllNotes);
-        }
-  
-        if (sortSelect) {
-          sortSelect.addEventListener('change', updateNoteList);
-        }
-  
-        if (searchInput) {
-          searchInput.addEventListener('input', updateNoteList);
-        }
-  
-        if (exportBtn) {
-          exportBtn.addEventListener('click', exportNotes);
-        }
-  
-        if (importBtn && importInput) {
-          importBtn.addEventListener('click', () => importInput.click());
-          importInput.addEventListener('change', importNotes);
-        }
-  
-        if (deleteSelectedBtn) {
-          deleteSelectedBtn.addEventListener('click', deleteSelectedNotes);
-        }
-      }
-  
-      function exportNotes() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "notes_export.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-      }
-  
-      function importNotes(event) {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            try {
-              const importedNotes = JSON.parse(e.target.result);
-              notes = {...notes, ...importedNotes};
-              saveNotes();
-              updateNoteList();
-              alert('Notes imported successfully!');
-            } catch (error) {
-              alert('Error importing notes. Please make sure the file is a valid JSON export.');
-            }
           };
-          reader.readAsText(file);
         }
+        if (deleteSelectedBtn) deleteSelectedBtn.onclick = deleteSelectedNotes;
+        if (categorizeSelectedBtn) categorizeSelectedBtn.onclick = categorizeSelectedNotes;
+        noteContent.oninput = () => {
+          if (noteContent.value !== lastRecordedContent) {
+            undoStack.push(lastRecordedContent);
+            lastRecordedContent = noteContent.value;
+            redoStack = [];
+          }
+          clearTimeout(autoSaveTimeout);
+          autoSaveTimeout = setTimeout(() => { saveNote(); }, 250);
+          updateTotalWordCounter();
+        };
+        undoBtn.onclick = () => {
+          if (undoStack.length > 0) {
+            const prev = undoStack.pop();
+            redoStack.push(noteContent.value);
+            noteContent.value = prev;
+            lastRecordedContent = prev;
+            saveNote();
+            updateTotalWordCounter();
+          }
+        };
+        redoBtn.onclick = () => {
+          if (redoStack.length > 0) {
+            const next = redoStack.pop();
+            undoStack.push(noteContent.value);
+            noteContent.value = next;
+            lastRecordedContent = next;
+            saveNote();
+            updateTotalWordCounter();
+          }
+        };
+        addCategoryBtn.onclick = addCategory;
+        window.addEventListener('resize', updateTotalWordCounter);
+        sidebarLoadMoreBtn.onclick = () => {
+          sidebarPage += 1;
+          renderSingleNoteSidebarList();
+        };
       }
   
-      // Initialize app
-      function initApp() {
-        loadNotes();
-        setupEventListeners();
-        showAllNotes();
+      // --- PWA Install Option (no manifest/sw.js needed) ---
+      let deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installButton.style.display = 'block';
+      });
+      installButton.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+          installButton.style.display = 'none';
+        }
+      });
+      window.addEventListener('appinstalled', () => {
+        installButton.style.display = 'none';
+        deferredPrompt = null;
+      });
   
-        // Set up service worker
+      // --- Service Worker/Offline Caching ---
+      function registerServiceWorkerInline() {
         if ('serviceWorker' in navigator) {
           const swCode = `
-              const CACHE_NAME = 'notetakeapp-v1';
-              const urlsToCache = [
-                location.href,
-                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
-                'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
-                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
-              ];
-              self.addEventListener('install', event => {
-                event.waitUntil(
-                  caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-                );
-                self.skipWaiting();
-              });
-              self.addEventListener('activate', event => {
-                event.waitUntil(self.clients.claim());
-              });
-              self.addEventListener('fetch', event => {
-                event.respondWith(
-                  fetch(event.request)
-                    .then(response => response)
-                    .catch(() => {
-                      return caches.match(event.request)
-                        .then(response => response || caches.match(location.href));
-                    })
-                );
-              });
-            `;
+            const CACHE_NAME = 'notetakeapp-v2';
+            const urlsToCache = [
+              location.href,
+              'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
+              'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
+              'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
+            ];
+            self.addEventListener('install', e => {
+              e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
+              self.skipWaiting();
+            });
+            self.addEventListener('activate', e => { e.waitUntil(self.clients.claim()); });
+            self.addEventListener('fetch', e => {
+              e.respondWith(
+                fetch(e.request).then(r=>r).catch(() => caches.match(e.request).then(r=>r||caches.match(location.href)))
+              );
+            });
+          `;
           try {
             const blob = new Blob([swCode], {type: 'application/javascript'});
             const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl)
-              .then(registration => {
-                console.log('Service Worker registered with scope:', registration.scope);
-              })
-              .catch(error => {
-                console.log('Service Worker registration failed:', error);
-              });
-          } catch (e) {
-            console.error('Error registering service worker:', e);
-          }
+            navigator.serviceWorker.register(swUrl);
+          } catch {}
         }
       }
   
-      // Start the app when DOM is fully loaded
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initApp);
-      } else {
-        initApp();
+      // --- INIT ---
+      function init() {
+        loadNotes();
+        renderCategoryFilterDropdown();
+        renderNoteCategoryDropdown("all");
+        updateNoteList();
+        setupEventListeners();
+        registerServiceWorkerInline();
       }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+      else init();
     </script>
     <?php include('../bootstrapjs.php'); ?>
   </body>
