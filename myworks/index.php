@@ -91,6 +91,17 @@ while ($image = $result->fetchArray()) {
 
 $fav_result = $db->query("SELECT COUNT(*) FROM favorites WHERE email = '{$_SESSION['email']}'");
 $fav_count = $fav_result->fetchArray()[0];
+
+// Get all of the images uploaded by the current user
+$stmt = $db->prepare("SELECT * FROM images WHERE email = :email ORDER BY id DESC");
+$stmt->bindValue(':email', $email, SQLITE3_TEXT);
+$result = $stmt->execute();
+
+$totalImages = [];
+while ($imageRow = $result->fetchArray(SQLITE3_ASSOC)) {
+  $totalImages[] = $imageRow;
+}
+$totalImageCount = count($totalImages);
 ?>
 
 <!DOCTYPE html>

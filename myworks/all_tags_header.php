@@ -1,4 +1,13 @@
-<div class="px-2 d-flex">
+<div class="px-2 d-flex justify-content-between align-items-center">
+  <h6 class="my-auto fw-bold <?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
+    <?php 
+      if ($totalImageCount == 1) {
+        echo '1 image';
+      } else {
+        echo $totalImageCount . ' images';
+      }
+    ?>
+  </h6>
   <button type="button" class="btn border-0 ms-auto fw-bold link-body-emphasis" data-bs-toggle="modal" data-bs-target="#allTagsModal">
     <i class="bi bi-filter-left fs-5" style="-webkit-text-stroke: 1px;"></i> All Tags
   </button>
