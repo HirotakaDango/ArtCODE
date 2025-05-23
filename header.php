@@ -247,6 +247,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/groups.php">Groups</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/parodies.php">Parodies</a>
                       <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/characters.php">Characters</a>
+                      <a class="text-start btn bg-body-tertiary link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/favorites.php">Favorites</a>
                     </div>
                   </div>
                 </div>
@@ -625,6 +626,7 @@ $fav_count1 = $fav_result1->fetchArray()[0];
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/groups.php">Groups</a>
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/parodies.php">Parodies</a>
                 <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/characters.php">Characters</a>
+                <a class="text-start btn link-body-emphasis rounded-4 w-100 border-0 fw-bold" href="/feeds/manga/favorites.php">Favorites</a>
               </div>
             </div>
           </div>

@@ -93,8 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include('sections.php'); ?>
     <div class="container">
       <?php include('nav.php'); ?>
-    </div>
-    <div class="container-fluid">
       <div class="mt-3">
         <div class="row g-2">
           <div class="col-md-6">
@@ -190,40 +188,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-md-6">
           <div class="">
             <form method="POST">
-              <div class="form-floating mb-2">
-                <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['title']; ?>" name="title" placeholder="Image title" maxlength="500" required>  
+              <div class="form-floating">
+                <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['title']; ?>" name="title" placeholder="Image title" maxlength="500" required>  
                 <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter title for your image</label>
               </div>
-              <div class="form-floating mb-2">
-                <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['tags']; ?>" name="tags" placeholder="Image tag" maxlength="500" required>
+              <h6 class="fw-medium mt-2 mb-4 small">(Note: Enter the title for your artwork)</h6>
+
+              <div class="form-floating">
+                <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['tags']; ?>" name="tags" placeholder="Image tag" maxlength="500" required>
                 <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter tag for your image</label>
               </div>
-              <div class="form-floating mb-2">
-                <textarea class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" oninput="stripHtmlTags(this)" type="text" value="<?php echo $image['imgdesc']; ?>" name="imgdesc" placeholder="Image description" maxlength="5000" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
+              <h6 class="fw-medium mt-2 mb-4 small">(Note: To separate tags, use comma ",")</h6>
+
+              <div class="form-floating">
+                <textarea class="form-control rounded-3 fw-medium border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" oninput="stripHtmlTags(this)" type="text" value="<?php echo $image['imgdesc']; ?>" name="imgdesc" placeholder="Image description" maxlength="5000" style="height: 200px;" required><?php echo strip_tags($image['imgdesc']); ?></textarea>
                 <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter description for your image</label>
               </div>
-              <h6 class="fw-medium mb-2 mt-4">Group is optional, to displaying group names for <a class="text-decoration-none fw-medium" target="_blank" href="/manga/?group=">manga section only!</a></h6>
-              <div class="form-floating mb-2">
-                <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['group']; ?>" name="group" placeholder="Image group" maxlength="4500">  
+              <h6 class="fw-medium mt-2 mb-4 small">(Note: Make sure use "http" or "https" for url link)</h6>
+
+              <div class="form-floating">
+                <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['group']; ?>" name="group" placeholder="Image group" maxlength="4500">  
                 <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter group for your image</label>
               </div>
-              <h6 class="fw-medium mb-2 mt-4">Characters is optional, to displaying character names for <a class="text-decoration-none fw-medium" target="_blank" href="/manga/?character=">manga section only!</a></h6>
-              <div class="form-floating mb-2">
-                <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['characters']; ?>" name="characters" placeholder="Image characters" maxlength="4500">
+              <h6 class="fw-medium mt-2 mb-4 small">(Note: Group is optional, to displaying group names for <a class="text-decoration-none fw-medium" target="_blank" href="/feeds/manga/?group=">manga section only!</a>)</h6>
+
+              <div class="form-floating">
+                <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['characters']; ?>" name="characters" placeholder="Image characters" maxlength="4500">
                 <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter characters for your image</label>
               </div>
-              <h6 class="fw-medium mb-2 mt-4">Parodies is optional, to displaying fiction names for <a class="text-decoration-none fw-medium" target="_blank" href="/manga/?parody=">manga section only!</a></h6>
-              <div class="form-floating mb-4">
-                <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['parodies']; ?>" name="parodies" placeholder="Image parodies" maxlength="4500">
+              <h6 class="fw-medium mt-2 mb-4 small">(Note: Characters is optional, to displaying character names for <a class="text-decoration-none fw-medium" target="_blank" href="/feeds/manga/?character=">manga section only!</a>)</h6>
+
+              <div class="form-floating">
+                <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['parodies']; ?>" name="parodies" placeholder="Image parodies" maxlength="4500">
                 <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter parodies for your image</label>
               </div>
-              <h6 class="fw-medium mb-2 mt-4">Episode name is optional, to displaying manga title names for <a class="text-decoration-none fw-medium" target="_blank" href="/manga/">manga section only!</a></h6>
-              <div class="form-floating mb-2">
-                <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['episode_name']; ?>" readonly>
+              <h6 class="fw-medium mt-2 mb-4 small">(Note: Parodies is optional, to displaying fiction names for <a class="text-decoration-none fw-medium" target="_blank" href="/feeds/manga/?parody=">manga section only!</a>)</h6>
+
+              <div class="form-floating">
+                <input class="form-control rounded-3 fw-medium border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['episode_name']; ?>" readonly>
                 <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Episode name</label>
               </div>
-              <div class="form-floating mb-4">
-                <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> shadow rounded-3 fw-medium py-0 text-start" name="episode_name">
+              <div class="form-floating mt-2">
+                <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium py-0 text-start" name="episode_name">
                   <option class="form-control" value="">Make it empty to add your own episode:</option>
                   <?php
                     // Retrieve the list of albums created by the current user
@@ -243,23 +249,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   ?>
                 </select>
               </div>
-              <div class="row g-2">
+              <h6 class="fw-medium mt-2 mb-4 small">(Note: Episode name is optional, to displaying manga title names for <a class="text-decoration-none fw-medium" target="_blank" href="/feeds/manga/">manga section only!</a>)</h6>
+
+              <div class="row g-2 mb-2">
                 <div class="col-md-6">
-                  <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="artwork_type" aria-label="Large select example" required>
+                  <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium" style="height: 58px;" name="artwork_type" aria-label="Large select example" required>
                     <option value="illustration" <?php echo ($image['artwork_type'] === 'illustration') ? 'selected' : ''; ?>>Illustration</option>
                     <option value="manga" <?php echo ($image['artwork_type'] === 'manga') ? 'selected' : ''; ?>>Manga</option>
                   </select>
                 </div>
                 <div class="col-md-6">
-                  <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="type" aria-label="Large select example" required>
+                  <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium" style="height: 58px;" name="type" aria-label="Large select example" required>
                     <option value="safe" <?php echo ($image['type'] === 'safe') ? 'selected' : ''; ?>>Safe For Works</option>
                     <option value="nsfw" <?php echo ($image['type'] === 'nsfw') ? 'selected' : ''; ?>>NSFW/R-18</option>
                   </select>
                 </div>
               </div>
-              <div class="row g-2">
+              <div class="row g-2 mb-2">
                 <div class="col-md-6">
-                  <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="categories" aria-label="Large select example" required>
+                  <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium" style="height: 58px;" name="categories" aria-label="Large select example" required>
                     <option value="artworks/illustrations" <?php echo ($image['categories'] === 'artworks/illustrations') ? 'selected' : ''; ?>>artworks/illustrations</option>
                     <option value="3DCG" <?php echo ($image['categories'] === '3DCG') ? 'selected' : ''; ?>>3DCG</option>
                     <option value="real" <?php echo ($image['categories'] === 'real') ? 'selected' : ''; ?>>real</option>
@@ -273,7 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   </select>
                 </div>
                 <div class="col-md-6">
-                  <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> shadow rounded-3 fw-medium mb-2" style="height: 58px;" name="language" aria-label="Large select example" required>
+                  <select class="form-select border-0 bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?> rounded-3 fw-medium" style="height: 58px;" name="language" aria-label="Large select example" required>
                     <option value="English" <?php echo ($image['language'] === 'English') ? 'selected' : ''; ?>>English</option>
                     <option value="Japanese" <?php echo ($image['language'] === 'Japanese') ? 'selected' : ''; ?>>Japanese</option>
                     <option value="Chinese" <?php echo ($image['language'] === 'Chinese') ? 'selected' : ''; ?>>Chinese</option>
@@ -286,10 +294,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   </select>
                 </div>
               </div>
-              <div class="form-floating mb-2">
-                <input class="form-control rounded-3 fw-medium border-0 shadow bg-body-tertiary focus-ring focus-ring-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/mode.php'); ?>" type="text" value="<?php echo $image['link']; ?>" name="link" placeholder="Image link" maxlength="300"> 
-                <label for="floatingInput" class="text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium">Enter link for your image</label>
-              </div>
               <div class="btn-group gap-2 w-100 mb-2">
                 <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded" data-bs-toggle="modal" data-bs-target="#deleteImage">
                   <i class="bi bi-trash-fill"></i> delete
@@ -298,17 +302,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <i class="bi bi-floppy-fill"></i> save
                 </button>
               </div>
+              <button type="button" class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-100 rounded mb-2" data-bs-toggle="modal" data-bs-target="#previewModal">
+                Preview
+              </button>
               <div class="btn-group gap-2 w-100 mb-2">
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded" href="upload.php?id=<?php echo $image['id']; ?>">
-                  <i class="bi bi-cloud-arrow-up-fill"></i> upload new images child
-                </a>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded" href="all.php?id=<?php echo $image['id']; ?>">
-                  <i class="bi bi-images"></i> view all images child
-                </a>
-              </div>
-              <div class="btn-group w-100 mb-2">
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50" href="redirect.php?back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/profile.php'); ?>">Back to Profile</a>
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50" href="../image.php?artworkid=<?php echo $image['id']; ?>">Back to Artwork</a>
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded" href="redirect.php?back=<?php echo urlencode(isset($_GET['back']) ? $_GET['back'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/profile.php'); ?>">Back to Profile</a>
+                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium w-50 rounded" href="../image.php?artworkid=<?php echo $image['id']; ?>">Back to Artwork</a>
               </div>
               <a class="btn w-100 btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-medium" href="export.php?artworkid=<?php echo $image['id']; ?>">Export Your Artwork</a>
               <div class="mt-5"></div>
@@ -318,6 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
     <div class="mt-5"></div>
+    <?php include('modal_preview.php'); ?>
     <div class="modal fade" id="originalImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-transparent border-0 rounded-0">

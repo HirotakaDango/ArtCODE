@@ -341,52 +341,107 @@ $db->close();
         handleFiles(files);
       });
     
-      function handleFiles(files) {
-        var filesArray = Array.from(files).sort(function(a, b) {
+      function getFileSignature(file) {
+        return `${file.name}-${file.size}-${file.lastModified}`;
+      }
+    
+      function handleFiles(newlySelectedFiles) {
+        const initialExistingFiles = Array.from(fileInput.files);
+        const newFilesAttemptedArray = Array.from(newlySelectedFiles);
+    
+        const initialExistingSignatures = new Set(initialExistingFiles.map(getFileSignature));
+    
+        let combinedFiles = [...initialExistingFiles];
+        let acceptedFileSignatures = new Set(initialExistingSignatures);
+    
+        let currentTotalSize = initialExistingFiles.reduce((sum, file) => sum + file.size, 0);
+        let filesAddedThisBatch = 0;
+        let filesSkippedThisBatch = 0;
+    
+        for (const file of newFilesAttemptedArray) {
+          const signature = getFileSignature(file);
+    
+          if (acceptedFileSignatures.has(signature)) {
+            filesSkippedThisBatch++;
+            continue;
+          }
+    
+          if (combinedFiles.length >= 20) {
+            filesSkippedThisBatch++;
+            continue;
+          }
+    
+          if (currentTotalSize + file.size > (20 * 1024 * 1024)) { // 20MB limit
+            filesSkippedThisBatch++;
+            continue;
+          }
+    
+          combinedFiles.push(file);
+          acceptedFileSignatures.add(signature);
+          currentTotalSize += file.size;
+          filesAddedThisBatch++;
+        }
+    
+        if (newFilesAttemptedArray.length > 0) {
+          if (filesAddedThisBatch === 0) {
+            let alertMessage = "No new files were added. ";
+            if (initialExistingFiles.length >= 20) {
+              alertMessage += "You've already selected the maximum of 20 files.";
+            } else {
+              let allNewAreDuplicatesOfInitial = true;
+              for (const file of newFilesAttemptedArray) {
+                if (!initialExistingSignatures.has(getFileSignature(file))) {
+                  allNewAreDuplicatesOfInitial = false;
+                  break;
+                }
+              }
+              if (allNewAreDuplicatesOfInitial) {
+                alertMessage += "All new files are duplicates of those already selected.";
+              } else {
+                alertMessage += "This could be due to the total size limit (20MB) being exceeded, or file limits being hit by some of the new files.";
+              }
+            }
+            alert(alertMessage);
+          } else if (filesSkippedThisBatch > 0) {
+            alert(`${filesSkippedThisBatch} of the newly selected files were not added. This is likely due to reaching the 20-file limit, the 20MB total size limit, or them being duplicates of files already selected or earlier in the new batch.`);
+          }
+        }
+    
+        combinedFiles.sort(function(a, b) {
           return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
         });
     
-        // Limit to 20 files and 20MB
-        if (filesArray.length > 20) {
-          alert('You can only upload up to 20 images.');
-          return;
-        }
+        updateFileInput(combinedFiles);
     
-        var totalSize = filesArray.reduce(function(sum, file) {
-          return sum + file.size;
-        }, 0);
-    
-        if (totalSize > 20 * 1024 * 1024) {
-          alert('Total file size cannot exceed 20MB.');
-          return;
-        }
-    
-        updateFileInput(filesArray);
-    
-        var fileCount = filesArray.length;
-        var message = fileCount + '/20 images selected';
+        var fileCount = combinedFiles.length;
+        var message = fileCount + (fileCount === 1 ? ' image' : ' images') + ' selected (Max 20)';
         var messageElement = dropZone.querySelector('p');
-        messageElement.textContent = message;
+        if (messageElement) {
+          messageElement.textContent = message;
+        }
     
         var existingTotalSizeElement = dropZone.querySelector('.total-size');
         if (existingTotalSizeElement) {
           existingTotalSizeElement.remove();
         }
     
-        var totalSizeInMB = totalSize / (1024 * 1024);
-        var totalSizeText = Math.round(totalSizeInMB * 100) / 100 + ' MB';
+        if (fileCount > 0) {
+          var finalTotalSize = combinedFiles.reduce(function(sum, file) { return sum + file.size; }, 0);
+          var totalSizeInMB = finalTotalSize / (1024 * 1024);
+          var totalSizeText = (Math.round(totalSizeInMB * 100) / 100) + ' MB (Max 20MB)';
     
-        var totalSizeContainer = document.createElement('div');
-        totalSizeContainer.classList.add('total-size');
+          var totalSizeContainer = document.createElement('div');
+          totalSizeContainer.classList.add('total-size');
     
-        var totalSizeLabel = document.createElement('small');
-        totalSizeLabel.classList.add('fw-medium');
-        totalSizeLabel.textContent = 'Total Size: ' + totalSizeText;
+          var totalSizeLabel = document.createElement('small');
+          totalSizeLabel.classList.add('fw-medium');
+          totalSizeLabel.textContent = 'Total Size: ' + totalSizeText;
     
-        totalSizeContainer.appendChild(totalSizeLabel);
-        dropZone.appendChild(totalSizeContainer);
+          totalSizeContainer.appendChild(totalSizeLabel);
+          dropZone.appendChild(totalSizeContainer);
+        }
     
-        showPreview(filesArray);
+        showPreview(combinedFiles);
       }
     
       function updateFileInput(sortedFiles) {
@@ -400,23 +455,27 @@ $db->close();
       uploadForm.addEventListener('submit', function(e) {
         e.preventDefault();
         var files = fileInput.files;
+        if (files.length === 0) {
+          alert("Please select at least one image to upload.");
+          return;
+        }
         uploadFiles(files);
       });
     
       function uploadFiles(files) {
         var formData = new FormData(uploadForm);
+        // Explicitly append files with 'image[]' as the key for server-side array processing.
         for (var i = 0; i < files.length; i++) {
           formData.append('image[]', files[i]);
         }
-      
+    
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '');
-      
+        xhr.open('POST', ''); // Ensure 'upload.php' is the correct endpoint
+    
         var startTime;
         var totalBytes = 0;
         var uploadedBytes = 0;
-        var progressInfo = document.getElementById('progress-info');
-      
+    
         xhr.upload.addEventListener('progress', function(e) {
           if (e.lengthComputable) {
             if (!startTime) {
@@ -424,222 +483,172 @@ $db->close();
               totalBytes = e.total;
             }
             uploadedBytes = e.loaded;
-      
+    
             var percent = Math.round((uploadedBytes / totalBytes) * 100);
             progressBar.style.width = percent + '%';
             progressBar.textContent = percent + '%';
-      
+    
             var elapsedTime = (Date.now() - startTime) / 1000; // in seconds
             var uploadSpeed = uploadedBytes / elapsedTime / 1024; // kb/s
             var remainingBytes = totalBytes - uploadedBytes;
             var estimatedTimeLeft = (remainingBytes / (uploadSpeed * 1024)).toFixed(1); // in seconds
-      
+    
             progressInfo.innerHTML = `
-              Upload Speed: ${uploadSpeed.toFixed(1)} kb/s<br>
-              Time Left: ${Math.max(0, Math.ceil(estimatedTimeLeft))} s
+              Upload Speed: ${uploadSpeed > 0 ? uploadSpeed.toFixed(1) : '0.0'} kb/s<br>
+              Time Left: ${elapsedTime > 0 && uploadSpeed > 0 ? Math.max(0, Math.ceil(estimatedTimeLeft)) : 'Calculating...'} s
             `;
           }
         });
-      
+    
         xhr.onreadystatechange = function() {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             progressBarContainer.style.display = 'none';
             uploadButton.style.display = 'block';
             uploadButton.disabled = false;
-      
-            // Hide progress info
             progressInfo.style.display = 'none';
-      
+    
             if (xhr.status === 200) {
               showSuccessMessage();
+              // Optionally clear selection after successful upload:
+              // updateFileInput([]);
+              // var messageElement = dropZone.querySelector('p');
+              // if(messageElement) messageElement.textContent = "0/20 images selected";
+              // var existingTotalSizeElement = dropZone.querySelector('.total-size');
+              // if (existingTotalSizeElement) existingTotalSizeElement.remove();
+              // showPreview([]);
             } else {
               showErrorMessage();
             }
           }
         };
-      
+    
         xhr.send(formData);
         progressBarContainer.style.display = 'block';
         uploadButton.style.display = 'none';
-        progressInfo.style.display = 'block'; // Show progress info during upload
+        progressInfo.style.display = 'block';
       }
     
       function showSuccessMessage() {
-        // Hide the modal
-        var uploadModal = document.getElementById('uploadModal');
-        var modal = bootstrap.Modal.getInstance(uploadModal);
-        modal.hide();
-      
+        var uploadModalEl = document.getElementById('uploadModal');
+        if (uploadModalEl) {
+          var modal = bootstrap.Modal.getInstance(uploadModalEl);
+          if (modal) {
+            modal.hide();
+          }
+        }
+    
         var toastContainer = document.createElement('div');
         toastContainer.classList.add('toast-container', 'position-fixed', 'bottom-0', 'end-0', 'p-3');
-      
+        toastContainer.style.zIndex = "1090"; // Ensure it's above modals if any remain
+    
         var toast = document.createElement('div');
         toast.classList.add('toast');
         toast.setAttribute('role', 'alert');
         toast.setAttribute('aria-live', 'assertive');
         toast.setAttribute('aria-atomic', 'true');
-      
+    
         var toastHeader = document.createElement('div');
         toastHeader.classList.add('toast-header', 'border-0');
-      
-        var toastTitle = document.createElement('strong');
-        toastTitle.classList.add('me-auto');
-        toastTitle.textContent = 'ArtCODE';
-      
-        var toastTime = document.createElement('small');
-        toastTime.textContent = 'Just now';
-      
-        var closeButton = document.createElement('button');
-        closeButton.type = 'button';
-        closeButton.classList.add('btn-close');
-        closeButton.setAttribute('data-bs-dismiss', 'toast');
-        closeButton.setAttribute('aria-label', 'Close');
-      
+        toastHeader.innerHTML = `
+          <strong class="me-auto">ArtCODE</strong>
+          <small>Just now</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        `;
+    
         var toastBody = document.createElement('div');
         toastBody.classList.add('toast-body', 'fw-medium');
-        toastBody.textContent = 'File uploaded successfully.';
-      
-        var actionButtons = document.createElement('div');
-        actionButtons.classList.add('mt-2', 'pt-2', 'border-top');
-      
-        var buttonGroup = document.createElement('div');
-        buttonGroup.classList.add('btn-group', 'w-100', 'gap-2');
-      
-        var goToHomeButton = document.createElement('a');
-        goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
-        goToHomeButton.textContent = 'Go to Artwork';
-        goToHomeButton.href = '/image.php?artworkid=<?php echo $_GET['id']; ?>';
-      
-        var goToProfileButton = document.createElement('a');
-        goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
-        goToProfileButton.textContent = 'Go to Profile';
-        goToProfileButton.href = '../profile.php';
-      
-        buttonGroup.appendChild(goToHomeButton);
-        buttonGroup.appendChild(goToProfileButton);
-      
-        actionButtons.appendChild(buttonGroup);
-      
-        var closeButtonInToast = document.createElement('button');
-        closeButtonInToast.type = 'button';
-        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-medium', 'w-100');
-        closeButtonInToast.setAttribute('data-bs-dismiss', 'toast');
-        closeButtonInToast.textContent = 'Close';
-      
-        toastHeader.appendChild(toastTitle);
-        toastHeader.appendChild(toastTime);
-        toastHeader.appendChild(closeButton);
-      
-        toastBody.appendChild(actionButtons);
-        toastBody.appendChild(closeButtonInToast);
-      
+        toastBody.textContent = 'File(s) uploaded successfully.';
+        toastBody.innerHTML += `
+          <div class="mt-2 pt-2 border-top">
+            <div class="btn-group w-100 gap-2">
+              <a href="/" class="btn btn-primary btn-sm fw-medium rounded">Go to Home</a>
+              <a href="../profile.php" class="btn btn-primary btn-sm fw-medium rounded">Go to Profile</a>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm mt-2 fw-medium w-100" data-bs-dismiss="toast">Close</button>
+          </div>
+        `;
+    
         toast.appendChild(toastHeader);
         toast.appendChild(toastBody);
-      
         toastContainer.appendChild(toast);
-      
         document.body.appendChild(toastContainer);
-      
-        // Show the toast
+    
         var toastElement = new bootstrap.Toast(toast);
         toastElement.show();
-      
-        // Automatically hide the toast after 1 minute (60000 milliseconds)
-        setTimeout(function () {
-          toastElement.hide();
-        }, 60000);
+        setTimeout(() => { toastElement.hide(); toastContainer.remove(); }, 60000);
       }
-      
+    
       function showErrorMessage() {
         var toastContainer = document.createElement('div');
         toastContainer.classList.add('toast-container', 'position-fixed', 'bottom-0', 'end-0', 'p-3');
-      
+        toastContainer.style.zIndex = "1090";
+    
         var toast = document.createElement('div');
-        toast.classList.add('toast', 'bg-danger');
+        toast.classList.add('toast', 'bg-danger', 'text-white');
         toast.setAttribute('role', 'alert');
         toast.setAttribute('aria-live', 'assertive');
         toast.setAttribute('aria-atomic', 'true');
-      
+    
         var toastHeader = document.createElement('div');
-        toastHeader.classList.add('toast-header', 'border-0');
-      
-        var toastTitle = document.createElement('strong');
-        toastTitle.classList.add('me-auto');
-        toastTitle.textContent = 'ArtCODE';
-      
-        var toastTime = document.createElement('small');
-        toastTime.textContent = 'Just now';
-      
-        var closeButton = document.createElement('button');
-        closeButton.type = 'button';
-        closeButton.classList.add('btn-close');
-        closeButton.setAttribute('data-bs-dismiss', 'toast');
-        closeButton.setAttribute('aria-label', 'Close');
-      
+        toastHeader.classList.add('toast-header', 'border-0', 'bg-danger', 'text-white');
+        toastHeader.innerHTML = `
+          <strong class="me-auto">ArtCODE</strong>
+          <small>Just now</small>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        `;
+    
         var toastBody = document.createElement('div');
-        toastBody.classList.add('toast-body', 'fw-medium', 'text-light');
+        toastBody.classList.add('toast-body', 'fw-medium');
         toastBody.textContent = 'Image upload failed. Please try again.';
-      
-        var closeButtonInToast = document.createElement('button');
-        closeButtonInToast.type = 'button';
-        closeButtonInToast.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-2', 'fw-medium', 'w-100');
-        closeButtonInToast.setAttribute('data-bs-dismiss', 'toast');
-        closeButtonInToast.textContent = 'Close';
-      
-        toastHeader.appendChild(toastTitle);
-        toastHeader.appendChild(toastTime);
-        toastHeader.appendChild(closeButton);
-      
-        toastBody.appendChild(closeButtonInToast);
-      
+        toastBody.innerHTML += `
+          <button type="button" class="btn btn-light btn-sm mt-2 fw-medium w-100" data-bs-dismiss="toast">Close</button>
+        `;
+    
         toast.appendChild(toastHeader);
         toast.appendChild(toastBody);
-      
         toastContainer.appendChild(toast);
-      
         document.body.appendChild(toastContainer);
-      
-        // Show the toast
+    
         var toastElement = new bootstrap.Toast(toast);
         toastElement.show();
+        setTimeout(() => { toastElement.hide(); toastContainer.remove(); }, 60000);
       }
     
       function showPreview(files) {
         var container = document.getElementById("preview-container");
-        container.innerHTML = "";
+        container.innerHTML = ""; // Clear previous previews
     
-        // Add Bootstrap row classes to the container
-        container.className = "row g-1 container-fluid mx-auto mb-3";
+        container.className = "row g-1 container-fluid mx-auto mb-3"; // Reset classes
     
-        if (window.innerWidth >= 768) {
-          container.classList.add("row-cols-6");
-        } else {
-          container.classList.add(files.length > 1 ? "row-cols-2" : "row-col-1");
+        if (files.length > 0) {
+          if (window.innerWidth >= 768) {
+            container.classList.add("row-cols-6");
+          } else {
+            container.classList.add(files.length > 1 ? "row-cols-2" : "row-cols-1");
+          }
         }
     
         var html = '';
-    
         for (var i = 0; i < files.length; i++) {
-          var imgSrc = URL.createObjectURL(files[i]);
-          var fileSize = files[i].size / (1024 * 1024); // Convert to MB
-          var fileSizeRounded = Math.round(fileSize * 100) / 100; // Round to 2 decimal places
+          var file = files[i];
+          var imgSrc = URL.createObjectURL(file);
+          var fileSize = file.size / (1024 * 1024);
+          var fileSizeRounded = Math.round(fileSize * 100) / 100;
           var fileSizeText = fileSizeRounded + " MB";
-          var fileName = files[i].name;
-        
-          // Truncate filename to 20 characters with ellipsis if necessary
+          var fileName = file.name;
           var truncatedFileName = fileName.length > 20 ? fileName.substring(0, 17) + '...' : fileName;
-        
+    
           html += `
             <div class="col position-relative">
               <div class="ratio ratio-1x1">
-                <img src="${imgSrc}" class="w-100 rounded object-fit-cover rounded-bottom-0">
+                <img src="${imgSrc}" class="w-100 rounded object-fit-cover rounded-bottom-0" alt="Preview of ${truncatedFileName}">
               </div>
-              <button class="btn btn-sm border-0 position-absolute top-0 end-0 m-1" id="remove-image-${i}" data-index="${i}">
+              <button class="btn btn-sm border-0 position-absolute top-0 end-0 m-1" id="remove-image-${i}" data-index="${i}" title="Remove ${fileName}">
                 <i class="bi bi-x-lg text-danger" style="-webkit-text-stroke: 1.5px;"></i>
               </button>
               <div class="rounded-1 d-flex align-items-center bg-body-secondary rounded-top-0 w-100 p-3 pb-2 text-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?>">
                 <div class="my-auto">
-                  <h6 class="fw-medium small">${truncatedFileName}</h6>
+                  <h6 class="fw-medium small" title="${fileName}">${truncatedFileName}</h6>
                   <h6 class="fw-medium small pb-0 mb-0">${fileSizeText}</h6>
                   <button class="btn btn-sm fw-medium border-0 p-0 m-0" id="view-info-${i}" data-index="${i}">
                     view more info
@@ -648,21 +657,21 @@ $db->close();
               </div>
             </div>`;
         }
-    
         container.innerHTML = html;
     
-        // Add click event listeners after the HTML has been inserted
-        var infoButtons = container.querySelectorAll('button[id^="view-info-"]');
-        infoButtons.forEach((button) => {
+        // Add event listeners after HTML is inserted
+        var currentFilesForListeners = Array.from(fileInput.files);
+    
+        container.querySelectorAll('button[id^="view-info-"]').forEach((button) => {
           button.addEventListener("click", function () {
             var index = parseInt(this.getAttribute('data-index'), 10);
-            displayMetadata(files[index]);
+            if (index >= 0 && index < currentFilesForListeners.length) {
+              displayMetadata(currentFilesForListeners[index]);
+            }
           });
         });
     
-        // Add event listener for remove buttons
-        var removeButtons = container.querySelectorAll('button[id^="remove-image-"]');
-        removeButtons.forEach(button => {
+        container.querySelectorAll('button[id^="remove-image-"]').forEach(button => {
           button.addEventListener('click', function() {
             var index = parseInt(this.getAttribute('data-index'), 10);
             removeFile(index);
@@ -671,144 +680,128 @@ $db->close();
       }
     
       function removeFile(index) {
-        var files = Array.from(fileInput.files);
-        files.splice(index, 1); // Remove file at index
-        updateFileInput(files); // Update the file input with the new file list
-        showPreview(files); // Update the preview
+        var filesArray = Array.from(fileInput.files);
+        if (index >= 0 && index < filesArray.length) { // Boundary check
+          filesArray.splice(index, 1);
+        }
+        updateFileInput(filesArray);
     
-        // Update file count message
-        var fileCount = files.length;
-        var message = fileCount + '/20 images selected';
+        var fileCount = filesArray.length;
+        var message = fileCount + (fileCount === 1 ? ' image' : ' images') + ' selected (Max 20)';
         var messageElement = dropZone.querySelector('p');
-        messageElement.textContent = message;
-    
-        // Recalculate and update total size
-        var totalSize = files.reduce(function(sum, file) {
-          return sum + file.size;
-        }, 0);
+        if (messageElement) {
+          messageElement.textContent = message;
+        }
     
         var existingTotalSizeElement = dropZone.querySelector('.total-size');
         if (existingTotalSizeElement) {
           existingTotalSizeElement.remove();
         }
     
-        var totalSizeInMB = totalSize / (1024 * 1024);
-        var totalSizeText = Math.round(totalSizeInMB * 100) / 100 + ' MB';
+        if (fileCount > 0) {
+          var totalSize = filesArray.reduce((sum, file) => sum + file.size, 0);
+          var totalSizeInMB = totalSize / (1024 * 1024);
+          var totalSizeText = (Math.round(totalSizeInMB * 100) / 100) + ' MB (Max 20MB)';
     
-        var totalSizeContainer = document.createElement('div');
-        totalSizeContainer.classList.add('total-size');
-    
-        var totalSizeLabel = document.createElement('small');
-        totalSizeLabel.classList.add('fw-medium');
-        totalSizeLabel.textContent = 'Total Size: ' + totalSizeText;
-    
-        totalSizeContainer.appendChild(totalSizeLabel);
-        dropZone.appendChild(totalSizeContainer);
+          var totalSizeContainer = document.createElement('div');
+          totalSizeContainer.classList.add('total-size');
+          var totalSizeLabel = document.createElement('small');
+          totalSizeLabel.classList.add('fw-medium');
+          totalSizeLabel.textContent = 'Total Size: ' + totalSizeText;
+          totalSizeContainer.appendChild(totalSizeLabel);
+          dropZone.appendChild(totalSizeContainer);
+        }
+        showPreview(filesArray);
       }
     
       function displayMetadata(file) {
         var metadataContainer = document.getElementById("metadata-container");
-        metadataContainer.innerHTML = "";
+        metadataContainer.innerHTML = ""; // Clear previous metadata
     
         var fileName = file.name;
-        var fileSize = file.size / (1024 * 1024); // Convert to MB
-        var fileSizeRounded = Math.round(fileSize * 100) / 100; // Round to 2 decimal places
+        var fileSize = file.size / (1024 * 1024);
+        var fileSizeRounded = Math.round(fileSize * 100) / 100;
         var fileSizeText = fileSizeRounded + " MB";
         var fileType = file.type;
     
-        // Create row for image
         var imgRow = document.createElement('div');
         imgRow.classList.add('row', 'g-4');
     
-        // Image column
         var imgCol = document.createElement('div');
         imgCol.classList.add('col-md-6');
-    
-        // Image
         var img = new Image();
-        img.src = URL.createObjectURL(file);
+        var imgSrc = URL.createObjectURL(file);
+        img.src = imgSrc;
         img.classList.add('rounded', 'mb-3', 'mb-md-0', 'w-100', 'shadow');
         imgCol.appendChild(img);
         imgRow.appendChild(imgCol);
     
-        // Metadata column
         var metadataCol = document.createElement('div');
         metadataCol.classList.add('col-md-6');
+        metadataCol.appendChild(createMetadataElement('Image Name', fileName));
+        metadataCol.appendChild(createMetadataElement('Image Size', fileSizeText));
+        metadataCol.appendChild(createMetadataElement('Image Type', fileType));
+        metadataCol.appendChild(createMetadataElement('Image Date', formatDate(new Date(file.lastModified))));
     
-        // Image Name
-        var fileNameElement = createMetadataElement('Image Name', fileName);
-        metadataCol.appendChild(fileNameElement);
-    
-        // Image Size
-        var fileSizeElement = createMetadataElement('Image Size', fileSizeText);
-        metadataCol.appendChild(fileSizeElement);
-    
-        // Image Type
-        var fileTypeElement = createMetadataElement('Image Type', fileType);
-        metadataCol.appendChild(fileTypeElement);
-    
-        // Image Date
-        var imageDateElement = createMetadataElement('Image Date', formatDate(file.lastModifiedDate));
-        metadataCol.appendChild(imageDateElement);
-    
-        // Image Resolution
         var imgResolutionElement = document.createElement('div');
         imgResolutionElement.classList.add('mb-3', 'row', 'g-2');
-    
         var resolutionLabel = document.createElement('label');
         resolutionLabel.classList.add('col-sm-4', 'col-form-label', 'text-nowrap', 'fw-medium');
         resolutionLabel.innerText = 'Image Resolution';
         imgResolutionElement.appendChild(resolutionLabel);
-    
-        var resolutionValue = document.createElement('div');
-        resolutionValue.classList.add('col-sm-8');
+        var resolutionValueDiv = document.createElement('div');
+        resolutionValueDiv.classList.add('col-sm-8');
         var resolutionInput = document.createElement('input');
         resolutionInput.classList.add('form-control-plaintext', 'fw-medium');
         resolutionInput.type = 'text';
         resolutionInput.readOnly = true;
-        resolutionValue.appendChild(resolutionInput);
-        imgResolutionElement.appendChild(resolutionValue);
-    
+        resolutionValueDiv.appendChild(resolutionInput);
+        imgResolutionElement.appendChild(resolutionValueDiv);
         metadataCol.appendChild(imgResolutionElement);
     
-        // Load image resolution
         var imgForResolution = new Image();
-        imgForResolution.src = URL.createObjectURL(file);
+        var resSrc = URL.createObjectURL(file);
         imgForResolution.onload = function () {
           resolutionInput.value = this.naturalWidth + 'x' + this.naturalHeight;
+          URL.revokeObjectURL(resSrc); // Revoke object URL after use
         };
+        imgForResolution.onerror = function() {
+          resolutionInput.value = "N/A";
+          URL.revokeObjectURL(resSrc); // Revoke object URL on error
+        };
+        imgForResolution.src = resSrc;
     
-        // Append metadata column to row
         imgRow.appendChild(metadataCol);
-    
-        // Append row to container
         metadataContainer.appendChild(imgRow);
     
-        // Show Modal
-        var modal = new bootstrap.Modal(document.getElementById("metadataModal"));
+        var metadataModalEl = document.getElementById("metadataModal");
+        var modal = new bootstrap.Modal(metadataModalEl);
+    
+        // Revoke main image object URL when modal is hidden to free memory
+        metadataModalEl.addEventListener('hidden.bs.modal', function onModalHide() {
+          URL.revokeObjectURL(imgSrc);
+        }, { once: true }); // Ensure listener is called only once and cleans itself up
+    
         modal.show();
+      }
     
-        function createMetadataElement(label, value) {
-          var div = document.createElement('div');
-          div.classList.add('mb-3', 'row', 'g-2');
-    
-          var labelElement = document.createElement('label');
-          labelElement.classList.add('col-sm-4', 'col-form-label', 'text-nowrap', 'fw-medium');
-          labelElement.innerText = label;
-          div.appendChild(labelElement);
-    
-          var valueElement = document.createElement('div');
-          valueElement.classList.add('col-sm-8');
-          var inputElement = document.createElement('input');
-          inputElement.classList.add('form-control-plaintext', 'fw-medium');
-          inputElement.type = 'text';
-          inputElement.value = value;
-          inputElement.readOnly = true;
-          valueElement.appendChild(inputElement);
-          div.appendChild(valueElement);
-    
-          return div;
-        }
+      function createMetadataElement(label, value) {
+        var div = document.createElement('div');
+        div.classList.add('mb-3', 'row', 'g-2');
+        var labelElement = document.createElement('label');
+        labelElement.classList.add('col-sm-4', 'col-form-label', 'text-nowrap', 'fw-medium');
+        labelElement.innerText = label;
+        div.appendChild(labelElement);
+        var valueElement = document.createElement('div');
+        valueElement.classList.add('col-sm-8');
+        var inputElement = document.createElement('input');
+        inputElement.classList.add('form-control-plaintext', 'fw-medium');
+        inputElement.type = 'text';
+        inputElement.value = value;
+        inputElement.readOnly = true;
+        valueElement.appendChild(inputElement);
+        div.appendChild(valueElement);
+        return div;
       }
     
       function formatDate(date) {
