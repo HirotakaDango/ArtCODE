@@ -482,12 +482,12 @@ require_once('../auth.php');
         var goToHomeButton = document.createElement('a');
         goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToHomeButton.textContent = 'Go to Myworks';
-        goToHomeButton.href = '/myworks/';
+        goToHomeButton.href = '/myworks.php';
       
         var goToProfileButton = document.createElement('a');
         goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToProfileButton.textContent = 'Go to Profile';
-        goToProfileButton.href = '/profile/';
+        goToProfileButton.href = '/profile.php';
       
         buttonGroup.appendChild(goToHomeButton);
         buttonGroup.appendChild(goToProfileButton);
