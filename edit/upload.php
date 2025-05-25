@@ -565,7 +565,7 @@ $db->close();
         var goToProfileButton = document.createElement('a');
         goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToProfileButton.textContent = 'Go to Profile';
-        goToProfileButton.href = '/profile/';
+        goToProfileButton.href = '/profile.php';
       
         buttonGroup.appendChild(goToHomeButton);
         buttonGroup.appendChild(goToProfileButton);
