@@ -481,13 +481,13 @@ require_once('../auth.php');
       
         var goToHomeButton = document.createElement('a');
         goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
-        goToHomeButton.textContent = 'Go to Artwork';
-        goToHomeButton.href = '/image.php?artworkid=<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : ''; ?>';
+        goToHomeButton.textContent = 'Go to Myworks';
+        goToHomeButton.href = '/myworks/';
       
         var goToProfileButton = document.createElement('a');
         goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToProfileButton.textContent = 'Go to Profile';
-        goToProfileButton.href = '../profile.php';
+        goToProfileButton.href = '/profile/';
       
         buttonGroup.appendChild(goToHomeButton);
         buttonGroup.appendChild(goToProfileButton);
