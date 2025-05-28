@@ -46,7 +46,7 @@
       </div>
       
       <!-- Mobile -->
-      <div class="d-md-none d-lg-none bg-secondary p-2 bg-opacity-25">
+      <div class="d-md-none d-lg-none bg-body-tertiary p-2">
         <div class="d-flex align-items-center gap-2">
           <a href="./"><img src="<?php echo $web; ?>/icon/favicon.png" height="38" width="38"></a>
           <form class="d-flex w-100" role="search" action="./">
