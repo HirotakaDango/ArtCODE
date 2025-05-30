@@ -11,6 +11,7 @@ $bindings = [];
 $selectClause = "SELECT images.*";
 $fromClause = "FROM images";
 $joinClause = "";
+$needsUsersJoin = false;
 
 function addMultiLikeOrFilter(&$whereClauses, &$bindings, $getParamKey, $columnName, $paramPrefix) {
   if (!empty($_GET[$getParamKey])) {
@@ -43,13 +44,14 @@ if (!empty($_GET['q'])) {
   $q_input_terms = array_filter(array_map('trim', explode(' ', trim($_GET['q']))));
   if (!empty($q_input_terms)) {
     $q_overall_and_clauses = [];
-    $q_search_fields = ["images.characters", "images.\"group\"", "images.categories", "images.tags", "images.parodies", "images.language"];
+    $q_search_fields = ["users.artist", "images.title", "images.characters", "images.\"group\"", "images.categories", "images.tags", "images.parodies", "images.language"];
+    $needsUsersJoin = true;
 
     $q_term_idx = 0;
     foreach ($q_input_terms as $q_term_value) {
       $q_term_placeholder = ':search_q_term_' . $q_term_idx;
       $bindings[$q_term_placeholder] = '%' . $q_term_value . '%';
-      
+
       $current_term_or_clauses = [];
       foreach ($q_search_fields as $field) {
         $current_term_or_clauses[] = $field . " LIKE " . $q_term_placeholder;
@@ -65,6 +67,11 @@ if (!empty($_GET['q'])) {
   }
 }
 
+addMultiLikeOrFilter($whereClauses, $bindings, 'artist', 'users.artist', 'filter_artist');
+if (!empty($_GET['artist'])) {
+  $needsUsersJoin = true;
+}
+addMultiLikeOrFilter($whereClauses, $bindings, 'title', 'images.title', 'filter_title');
 addMultiLikeOrFilter($whereClauses, $bindings, 'character', 'images.characters', 'filter_char');
 addMultiLikeOrFilter($whereClauses, $bindings, 'parody', 'images.parodies', 'filter_parody');
 addMultiLikeOrFilter($whereClauses, $bindings, 'group', 'images."group"', 'filter_grp');
@@ -91,12 +98,65 @@ if (!empty($_GET['artwork_type'])) {
 }
 
 if (!empty($_GET['uid']) && filter_var($_GET['uid'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
-  if (empty($joinClause)) {
-    $joinClause = " INNER JOIN users ON images.email = users.email";
-  }
+  $needsUsersJoin = true;
   $whereClauses[] = "users.id = :filter_uid";
   $bindings[':filter_uid'] = (int)$_GET['uid'];
 }
+
+if ($needsUsersJoin) {
+  $joinClause = " INNER JOIN users ON images.email = users.email";
+}
+
+function addDateInFilter(&$whereClauses, &$bindings, $paramName, $sqliteDatePart, $prefix) {
+  if (!empty($_GET[$paramName])) {
+    $values = array_filter(array_map('trim', explode(',', $_GET[$paramName])));
+    $intValues = [];
+    foreach ($values as $val) {
+      if (ctype_digit($val)) {
+        $intValues[] = intval($val);
+      }
+    }
+    if (!empty($intValues)) {
+      $placeholders = [];
+      foreach ($intValues as $i => $intVal) {
+        $ph = ":{$prefix}_{$i}";
+        $placeholders[] = $ph;
+        $bindings[$ph] = $intVal;
+      }
+      $whereClauses[] = "CAST(strftime('{$sqliteDatePart}', images.date) AS INTEGER) IN (" . implode(",", $placeholders) . ")";
+    }
+  }
+}
+
+function addDateRangeFilter(&$whereClauses, &$bindings, $startParam, $endParam, $sqliteDatePart, $prefix) {
+  $startVal = isset($_GET[$startParam]) && ctype_digit($_GET[$startParam]) ? intval($_GET[$startParam]) : null;
+  $endVal = isset($_GET[$endParam]) && ctype_digit($_GET[$endParam]) ? intval($_GET[$endParam]) : null;
+
+  if ($startVal !== null && $endVal !== null) {
+    if ($startVal > $endVal) {
+      $tmp = $startVal;
+      $startVal = $endVal;
+      $endVal = $tmp;
+    }
+    $whereClauses[] = "CAST(strftime('{$sqliteDatePart}', images.date) AS INTEGER) BETWEEN :{$prefix}_start AND :{$prefix}_end";
+    $bindings[":{$prefix}_start"] = $startVal;
+    $bindings[":{$prefix}_end"] = $endVal;
+  } elseif ($startVal !== null) {
+    $whereClauses[] = "CAST(strftime('{$sqliteDatePart}', images.date) AS INTEGER) >= :{$prefix}_start";
+    $bindings[":{$prefix}_start"] = $startVal;
+  } elseif ($endVal !== null) {
+    $whereClauses[] = "CAST(strftime('{$sqliteDatePart}', images.date) AS INTEGER) <= :{$prefix}_end";
+    $bindings[":{$prefix}_end"] = $endVal;
+  }
+}
+
+addDateInFilter($whereClauses, $bindings, 'year', '%Y', 'filter_year');
+addDateInFilter($whereClauses, $bindings, 'month', '%m', 'filter_month');
+addDateInFilter($whereClauses, $bindings, 'day', '%d', 'filter_day');
+
+addDateRangeFilter($whereClauses, $bindings, 'year_start', 'year_end', '%Y', 'filter_year');
+addDateRangeFilter($whereClauses, $bindings, 'month_start', 'month_end', '%m', 'filter_month');
+addDateRangeFilter($whereClauses, $bindings, 'day_start', 'day_end', '%d', 'filter_day');
 
 $sqlWhere = "";
 if (!empty($whereClauses)) {
