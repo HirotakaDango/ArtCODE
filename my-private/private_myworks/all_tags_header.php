@@ -16,15 +16,15 @@
         <?php
         try {
           // Connect to the SQLite3 database
-          $db = new SQLite3('../database.sqlite');
+          $db = new SQLite3('../../database.sqlite');
           
           // Get user ID from session (adjust if needed)
           $email = $_SESSION['email'];
           
           // SQL query to get all tags from the user's images
           $queryTags = "SELECT tags
-                        FROM images
-                        JOIN users ON images.email = users.email
+                        FROM private_images
+                        JOIN users ON private_images.email = users.email
                         WHERE users.id = :id";
           
           // Prepare the SQL statement

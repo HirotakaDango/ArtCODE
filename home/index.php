@@ -5,7 +5,15 @@ $email = $_SESSION['email'];
 
 // Connect to the SQLite database using parameterized query
 $db = new SQLite3('../database.sqlite');
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS private_images (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, email TEXT, tags TEXT, title TEXT, imgdesc TEXT, link TEXT, date DATETIME, view_count INT DEFAULT 0, type TEXT, episode_name TEXT, artwork_type TEXT, `group` TEXT, categories TEXT, language TEXT, parodies TEXT, characters TEXT, original_filename TEXT)");
+$stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS private_image_child (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT NOT NULL, image_id INTEGER NOT NULL, email TEXT NOT NULL, original_filename TEXT NOT NULL, FOREIGN KEY (image_id) REFERENCES images (id))");
+$stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS private_favorites (id INTEGER PRIMARY KEY AUTOINCREMENT, image_id INTEGER, email TEXT)");
+$stmt->execute();
 $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS daily (id INTEGER PRIMARY KEY AUTOINCREMENT, image_id TEXT NOT NULL, views INT DEFAULT 0, date DATETIME)");
+$stmt->execute();
+$stmt = $db->prepare("CREATE TABLE IF NOT EXISTS private_daily (id INTEGER PRIMARY KEY AUTOINCREMENT, image_id TEXT NOT NULL, views INT DEFAULT 0, date DATETIME)");
 $stmt->execute();
 $stmt = $db->prepare("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, email TEXT, tags TEXT, title TEXT, imgdesc TEXT, link TEXT, date DATETIME, view_count INT DEFAULT 0, type TEXT, episode_name TEXT, artwork_type TEXT, `group` TEXT, categories TEXT, language TEXT, parodies TEXT, characters TEXT, original_filename TEXT)");
 $stmt->execute();

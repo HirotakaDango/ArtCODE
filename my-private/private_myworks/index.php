@@ -1,8 +1,8 @@
 <?php
-require_once('../auth.php');
+require_once('../../auth.php');
 
 // Connect to the SQLite database
-$db = new SQLite3('../database.sqlite');
+$db = new SQLite3('../../database.sqlite');
 
 // Get the artist name from the database
 $email = $_SESSION['email'];
@@ -58,10 +58,10 @@ if (isset($_POST['favorite'])) {
   $image_id = $_POST['image_id'];
 
   // Check if the image has already been favorited by the current user
-  $existing_fav = $db->query("SELECT COUNT(*) FROM favorites WHERE email = '{$_SESSION['email']}' AND image_id = $image_id")->fetchArray()[0];
+  $existing_fav = $db->query("SELECT COUNT(*) FROM private_favorites WHERE email = '{$_SESSION['email']}' AND image_id = $image_id")->fetchArray()[0];
 
   if ($existing_fav == 0) {
-    $db->exec("INSERT INTO favorites (email, image_id) VALUES ('{$_SESSION['email']}', $image_id)");
+    $db->exec("INSERT INTO private_favorites (email, image_id) VALUES ('{$_SESSION['email']}', $image_id)");
   }
 
   // Get the current page URL
@@ -73,7 +73,7 @@ if (isset($_POST['favorite'])) {
 
 } elseif (isset($_POST['unfavorite'])) {
   $image_id = $_POST['image_id'];
-  $db->exec("DELETE FROM favorites WHERE email = '{$_SESSION['email']}' AND image_id = $image_id");
+  $db->exec("DELETE FROM private_favorites WHERE email = '{$_SESSION['email']}' AND image_id = $image_id");
 
   // Get the current page URL
   $currentUrl = $_SERVER['REQUEST_URI'];
@@ -89,11 +89,11 @@ while ($image = $result->fetchArray()) {
   $count++;
 }
 
-$fav_result = $db->query("SELECT COUNT(*) FROM favorites WHERE email = '{$_SESSION['email']}'");
+$fav_result = $db->query("SELECT COUNT(*) FROM private_favorites WHERE email = '{$_SESSION['email']}'");
 $fav_count = $fav_result->fetchArray()[0];
 
 // Get all of the images uploaded by the current user
-$stmt = $db->prepare("SELECT * FROM images WHERE email = :email ORDER BY id DESC");
+$stmt = $db->prepare("SELECT * FROM private_images WHERE email = :email ORDER BY id DESC");
 $stmt->bindValue(':email', $email, SQLITE3_TEXT);
 $result = $stmt->execute();
 
@@ -111,11 +111,11 @@ $totalImageCount = count($totalImages);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $artist; ?></title>
     <link rel="icon" type="image/png" href="/icon/favicon.png">
-    <?php include('../bootstrapcss.php'); ?>
+    <?php include('../../bootstrapcss.php'); ?>
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <?php include('../header.php'); ?>
+    <?php include('../../header.php'); ?>
     <?php
     $validTaggedFilters = ['tagged_oldest', 'tagged_newest', 'tagged_popular', 'tagged_view', 'tagged_least', 'tagged_liked', 'tagged_order_asc', 'tagged_order_desc', 'tagged_daily', 'tagged_week', 'tagged_month', 'tagged_year'];
     $validHeaderPages = ['myworks_tagged_asc.php', 'myworks_tagged_desc.php', 'myworks_tagged_pop.php', 'myworks_tagged_view.php', 'myworks_tagged_least.php', 'myworks_tagged_like.php', 'myworks_tagged_order_asc.php', 'myworks_tagged_order_desc.php', 'myworks_tagged_daily.php', 'myworks_tagged_week.php', 'myworks_tagged_month.php', 'myworks_tagged_year.php'];
@@ -197,7 +197,7 @@ $totalImageCount = count($totalImages);
     
         // SQL query to get the most popular tags and their counts based on the user's email
         $queryTagsMyworks = "SELECT SUBSTR(tags, 1, INSTR(tags, ',') - 1) as first_tag, COUNT(*) as tag_count 
-                            FROM images 
+                            FROM private_images 
                             WHERE tags LIKE :patternMyworks AND email = :email 
                             GROUP BY first_tag 
                             ORDER BY tag_count ASC 
@@ -484,6 +484,6 @@ $totalImageCount = count($totalImages);
       // Initial loading
       loadMoreImages();
     </script>
-    <?php include('../bootstrapjs.php'); ?>
+    <?php include('../../bootstrapjs.php'); ?>
   </body>
 </html>
