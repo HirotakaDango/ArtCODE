@@ -148,28 +148,26 @@ if ($display === 'info') {
 
     <!-- Settings Modal -->
     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content rounded-4 border-0">
           <div class="modal-header border-0">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Filter</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <form action="" method="get" class="modal-body border-0">
-            <input type="hidden" name="display" class="form-control bg-body-tertiary border-0" placeholder="Display" value="<?php echo $display; ?>">
+            <input type="hidden" name="display" class="form-control p-3 fw-medium bg-body-tertiary border-0" placeholder="Display" value="<?php echo $display; ?>">
             <div class="mb-2">
-              <input type="text" name="search" class="form-control bg-body-tertiary border-0" placeholder="Search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>">
+              <input type="text" name="search" class="form-control p-3 fw-medium bg-body-tertiary border-0" placeholder="Search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
-            <div class="mb-2">
-              <select name="sortby" class="form-select bg-body-tertiary border-0">
+            <div class="input-group gap-2 mb-2">
+              <select name="sortby" class="form-select p-3 rounded fw-medium bg-body-tertiary border-0">
                 <option value="newest" <?php echo $sortBy === 'newest' ? 'selected' : ''; ?>>Newest</option>
                 <option value="oldest" <?php echo $sortBy === 'oldest' ? 'selected' : ''; ?>>Oldest</option>
                 <option value="popular" <?php echo $sortBy === 'popular' ? 'selected' : ''; ?>>Most Popular</option>
                 <option value="view" <?php echo $sortBy === 'view' ? 'selected' : ''; ?>>Most Viewed</option>
                 <option value="least" <?php echo $sortBy === 'least' ? 'selected' : ''; ?>>Least Viewed</option>
               </select>
-            </div>
-            <div class="mb-2">
-              <select name="rankings" class="form-select bg-body-tertiary border-0">
+              <select name="rankings" class="form-select p-3 rounded fw-medium bg-body-tertiary border-0">
                 <option value="" <?php echo empty($rankings) ? 'selected' : ''; ?>>No Ranking</option>
                 <option value="daily" <?php echo $rankings === 'daily' ? 'selected' : ''; ?>>Daily</option>
                 <option value="weekly" <?php echo $rankings === 'weekly' ? 'selected' : ''; ?>>Weekly</option>
@@ -177,36 +175,32 @@ if ($display === 'info') {
                 <option value="yearly" <?php echo $rankings === 'yearly' ? 'selected' : ''; ?>>Yearly</option>
               </select>
             </div>
-            <div class="mb-2">
-              <select name="artwork_type" class="form-select bg-body-tertiary border-0">
+            <div class="input-group gap-2 mb-2">
+              <select name="artwork_type" class="form-select p-3 rounded fw-medium bg-body-tertiary border-0">
                 <option value="" <?php echo empty($rankings) ? 'selected' : ''; ?>>No Artwork Type</option>
                 <option value="illustration" <?php echo $artworkType === 'illustration' ? 'selected' : ''; ?>>Illustration</option>
                 <option value="manga" <?php echo $artworkType === 'manga' ? 'selected' : ''; ?>>Manga</option>
-                <!-- Add more options as needed -->
               </select>
-            </div>
-            <div class="mb-2">
-              <select name="type" class="form-select bg-body-tertiary border-0">
+              <select name="type" class="form-select p-3 rounded fw-medium bg-body-tertiary border-0">
                 <option value="" <?php echo empty($rankings) ? 'selected' : ''; ?>>No Type</option>
                 <option value="safe" <?php echo $type === 'safe' ? 'selected' : ''; ?>>Safe</option>
                 <option value="nsfw" <?php echo $type === 'nsfw' ? 'selected' : ''; ?>>NSFW</option>
-                <!-- Add more options as needed -->
               </select>
             </div>
             <div class="mb-2">
-              <input type="text" name="tag" class="form-control bg-body-tertiary border-0" placeholder="Tag" value="<?php echo $tag; ?>">
+              <input type="text" name="tag" class="form-control p-3 fw-medium bg-body-tertiary border-0" placeholder="Tag" value="<?php echo urldecode($tag); ?>">
             </div>
             <div class="mb-2">
-              <input type="text" name="character" class="form-control bg-body-tertiary border-0" placeholder="Character" value="<?php echo $character; ?>">
+              <input type="text" name="character" class="form-control p-3 fw-medium bg-body-tertiary border-0" placeholder="Character" value="<?php echo $character; ?>">
             </div>
             <div class="mb-2">
-              <input type="text" name="parody" class="form-control bg-body-tertiary border-0" placeholder="Parody" value="<?php echo $parody; ?>">
+              <input type="text" name="parody" class="form-control p-3 fw-medium bg-body-tertiary border-0" placeholder="Parody" value="<?php echo $parody; ?>">
             </div>
             <div class="mb-2">
-              <input type="number" name="uid" class="form-control bg-body-tertiary border-0" placeholder="User ID" value="<?php echo $uid; ?>">
+              <input type="number" name="uid" class="form-control p-3 fw-medium bg-body-tertiary border-0" placeholder="User ID" value="<?php echo $uid; ?>">
             </div>
             <div class="mb-2">
-              <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+              <button type="submit" class="btn btn-primary fw-medium w-100">Apply Filters</button>
             </div>
           </form>
         </div>
