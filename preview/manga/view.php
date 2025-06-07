@@ -329,7 +329,7 @@ try {
             </div>
             <div class="container my-2">
               <main id="swup" class="transition-main">
-                <a class="btn w-100 p-3 text-start bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="<?= $imageSource; ?>" download>
+                <a class="btn w-100 p-3 text-start text-nowrap bg-body-tertiary link-body-emphasis shadow-sm fw-bold" href="<?= $imageSource; ?>" download>
                   <i class="bi bi-download"></i> Download Current Image
                 </a>
               </main>
