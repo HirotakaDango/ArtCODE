@@ -29,6 +29,7 @@ require_once('../../auth.php');
   </head>
   <body>
     <?php include('../../header.php'); ?>
+    <?php include('sections.php'); ?>
     <div class="mt-2">
       <div id="preview-container" class="mb-2"></div>
       <div class="caard container">
@@ -480,12 +481,12 @@ require_once('../../auth.php');
         var goToHomeButton = document.createElement('a');
         goToHomeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
         goToHomeButton.textContent = 'Go to Myworks';
-        goToHomeButton.href = '/myworks.php';
+        goToHomeButton.href = '../myworks/?by=newest';
       
         var goToProfileButton = document.createElement('a');
         goToProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'fw-medium', 'rounded');
-        goToProfileButton.textContent = 'Go to Profile';
-        goToProfileButton.href = '/profile.php';
+        goToProfileButton.textContent = 'Go to Home';
+        goToProfileButton.href = '../';
       
         buttonGroup.appendChild(goToHomeButton);
         buttonGroup.appendChild(goToProfileButton);

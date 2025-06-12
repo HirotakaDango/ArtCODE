@@ -1,0 +1,5 @@
+    <div class="btn-group w-100 gap-2 my-3 container d-flex justify-content-center">
+      <a class="btn bg-body-tertiary p-4 fw-bold w-50 rounded-4 shadow <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/my-private/private_upload/') !== false) echo 'opacity-75'; ?>" href="/my-private/private_upload/">Upload</a>
+      <a class="btn bg-body-tertiary p-4 fw-bold w-50 rounded-4 shadow <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/my-private/private_import/') !== false) echo 'opacity-75'; ?>" href="/my-private/private_import/">Import</a>
+      <a class="btn bg-body-tertiary p-4 fw-bold w-50 rounded-4 shadow <?php if(basename($_SERVER['PHP_SELF']) == 'episode.php') echo 'opacity-75' ?>" href="/my-private/private_upload/episode.php">Episode</a>
+    </div> 

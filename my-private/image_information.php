@@ -248,11 +248,6 @@
                   </ul>
                 </div>
               </div>
-              <div class="w-100 my-2">
-                <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> rounded-4 fw-bold w-100" href="/similar_image_search/?image=/../private_images/<?php echo urlencode($image['filename']); ?>">
-                  <small>find similar image</small>
-                </a>
-              </div>
               <?php if (basename($_SERVER['PHP_SELF']) !== 'private_simplest_view.php'): ?>
                 <?php if (isset($image['episode_name']) && !empty($image['episode_name'])): ?>
                   <a class="btn btn-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold rounded-4 mb-2 w-100" href="/my-private/episode/?title=<?php echo urlencode($image['episode_name']); ?>&uid=<?php echo $user['id']; ?>">
@@ -474,7 +469,7 @@
                           <i class="bi bi-cloud-arrow-down-fill"></i> Download first image (<?php echo getImageSizeInMB($image['filename']); ?> MB)
                         </a>
                         <?php if ($total_size > 10): ?>
-                          <a type="button" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="/download_images.php?artworkid=<?php echo $image['id']; ?>">
+                          <a type="button" class="btn btn-outline-<?php include($_SERVER['DOCUMENT_ROOT'] . '/appearance/opposite.php'); ?> fw-bold w-100 mb-2 text-center rounded-3" href="/private_download_images.php?artworkid=<?php echo $image['id']; ?>">
                             <p><i class="bi bi-file-earmark-zip-fill"></i> Download all private_images (<?php echo $total_size; ?> MB)</p>
                             <p><small>This file is too big. The total size is <?php echo $total_size; ?> MB.</small></p>
                           </a>
@@ -491,7 +486,7 @@
                           <small>1. Download can take a really long time, wait until progress bar reach 100% or appear download pop up in the notification.</small>
                         </p>
                         <p class="fw-bold text-center container">
-                          <small>2. If you found download error or failed, <a class="text-decoration-none" href="download_batch.php?artworkid=<?= $image_id; ?>">click this link</a> for third option if download all private_images error or failed.</small>
+                          <small>2. If you found download error or failed, <a class="text-decoration-none" href="/private_download_batch.php?artworkid=<?= $image_id; ?>">click this link</a> for third option if download all private_images error or failed.</small>
                         </p>
                         <p class="fw-bold text-center container">
                           <small>3. If you found problem where the zip contain empty file or 0b, download the private_images manually.</small>
