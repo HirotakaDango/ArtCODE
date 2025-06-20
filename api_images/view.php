@@ -169,7 +169,7 @@ if ($artworkId > 0) {
                         if (!empty($character)) {
                           ?>
                           <a href="index.php?display=all_images&character=<?php echo urlencode($character); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
-                            <i class="bi bi-person-fill"></i> <?php echo urlencode($character); ?>
+                            <i class="bi bi-person-fill"></i> <?php echo $character; ?>
                           </a>
                           <?php
                         }
@@ -189,7 +189,7 @@ if ($artworkId > 0) {
                         if (!empty($parody)) {
                           ?>
                           <a href="index.php?display=all_images&parody=<?php echo urlencode($parody); ?>" class="badge bg-dark text-decoration-none rounded-4 py-2">
-                            <i class="bi bi-journal"></i> <?php echo urlencode($parody); ?>
+                            <i class="bi bi-journal"></i> <?php echo $parody; ?>
                           </a>
                           <?php
                         }
