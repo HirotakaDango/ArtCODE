@@ -3,6 +3,10 @@
 
 ![ArtCODE Banner](https://github.com/user-attachments/assets/69e3b07d-b529-404b-b387-88f0c50408f1)
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=HirotakaDango/ArtCODE&type=Date)](https://www.star-history.com/#HirotakaDango/ArtCODE&Date)
+
 ## 🌟 Introduction
 
 Welcome to ArtCODE, a groundbreaking platform that's redefining the landscape of digital art sharing. Born from a humble school assignment, ArtCODE has blossomed into a vibrant ecosystem where creativity knows no bounds. Our mission is to connect artists, enthusiasts, and collectors in a seamless digital environment that celebrates the diversity and power of visual expression.
