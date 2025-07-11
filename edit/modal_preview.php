@@ -5,7 +5,7 @@
   $result = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
   $display = $result['display'] ?? 'simple_view';
   $artworkId = htmlspecialchars($_GET['id']);
-  $iframeSrc = "/demo_full_{$display}.php?artworkid={$artworkId}";
+  $iframeSrc = "/demo_{$display}.php?artworkid={$artworkId}";
 ?>
 <!-- Preview Modal -->
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
