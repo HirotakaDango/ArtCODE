@@ -3,9 +3,7 @@
 
 ![ArtCODE Banner](https://github.com/user-attachments/assets/69e3b07d-b529-404b-b387-88f0c50408f1)
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=HirotakaDango/ArtCODE&type=Date)](https://www.star-history.com/#HirotakaDango/ArtCODE&Date)
+## Note: This project is now abandoned, I am no longer update this project. I am now focus on [PHP-Music](https://https://github.com/HirotakaDango/PHP-Music).
 
 ## 🌟 Introduction
 
